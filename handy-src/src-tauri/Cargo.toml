@@ -1,7 +1,7 @@
 [package]
 name = "muvox"
-version = "0.8.3"
-description = "MuVox"
+version = "2.1.0"
+description = "VoCript"
 authors = ["cjpais"]
 edition = "2021"
 license = "MIT"
