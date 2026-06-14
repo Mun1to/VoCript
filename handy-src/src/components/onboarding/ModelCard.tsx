@@ -54,6 +54,9 @@ interface ModelCardProps {
   downloadProgress?: number;
   downloadSpeed?: number; // MB/s
   showRecommended?: boolean;
+  // When set, shows a highlighted badge (e.g. "Recommended for Spanish").
+  // Independent of the static `is_recommended` flag.
+  recommendedLabel?: string;
 }
 
 const ModelCard: React.FC<ModelCardProps> = ({
@@ -69,6 +72,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
   downloadProgress,
   downloadSpeed,
   showRecommended = true,
+  recommendedLabel,
 }) => {
   const { t } = useTranslation();
   const isFeatured = variant === "featured";
@@ -138,7 +142,10 @@ const ModelCard: React.FC<ModelCardProps> = ({
             >
               {displayName}
             </h3>
-            {showRecommended && model.is_recommended && (
+            {recommendedLabel && (
+              <Badge variant="primary">{recommendedLabel}</Badge>
+            )}
+            {showRecommended && model.is_recommended && !recommendedLabel && (
               <Badge variant="primary">{t("onboarding.recommended")}</Badge>
             )}
             {status === "active" && (

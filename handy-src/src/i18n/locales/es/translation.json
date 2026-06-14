@@ -183,7 +183,8 @@
       },
       "noModelsMatch": "Ningún modelo coincide con este filtro.",
       "yourModels": "Modelos descargados",
-      "availableModels": "Disponibles para descargar"
+      "availableModels": "Disponibles para descargar",
+      "recommendedForLanguage": "Recomendado para {{language}}"
     },
     "general": {
       "title": "General",

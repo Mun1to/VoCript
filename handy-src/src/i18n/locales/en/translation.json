@@ -214,6 +214,7 @@
       },
       "yourModels": "Downloaded Models",
       "availableModels": "Available to Download",
+      "recommendedForLanguage": "Recommended for {{language}}",
       "downloaded": "Downloaded",
       "available": "Available to Download",
       "deleteConfirm": "Are you sure you want to delete {{modelName}}? You will need to download it again to use it.",

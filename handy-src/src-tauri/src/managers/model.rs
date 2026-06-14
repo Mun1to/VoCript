@@ -667,8 +667,10 @@ impl ModelManager {
     }
 
     fn migrate_bundled_models(&self) -> Result<()> {
-        // Check for bundled models and copy them to user directory
-        let bundled_models = ["ggml-small.bin"]; // Add other bundled models here if any
+        // Check for bundled models and copy them to user directory.
+        // VoCript ships Whisper Medium inside the installer so dictation works
+        // out of the box (good Spanish accuracy) without a first-run download.
+        let bundled_models = ["whisper-medium-q4_1.bin", "ggml-small.bin"];
 
         for filename in &bundled_models {
             let bundled_path = self.app_handle.path().resolve(
