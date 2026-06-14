@@ -12,7 +12,10 @@ jobs:
   build-windows:
     permissions:
       contents: write # necesario para crear la Release y subir el instalador
-    runs-on: windows-latest
+    # windows-2022 = Visual Studio 2022 estable. NO usar windows-latest: ahora
+    # redirige a la imagen vs2026 (preview), cuyo toolchain rompe la compilación
+    # de whisper.cpp (errores STL1000 / C1083 en vulkan-shaders-gen).
+    runs-on: windows-2022
 
     steps:
       - name: Descargar el código
