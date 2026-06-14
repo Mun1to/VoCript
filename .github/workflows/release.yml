@@ -57,14 +57,12 @@ jobs:
         working-directory: handy-src
         run: bun install
 
-      - name: Descargar modelos (Silero VAD + Whisper Medium para empaquetar)
+      - name: Descargar modelo Silero VAD (recurso requerido)
         working-directory: handy-src
         shell: bash
         run: |
           mkdir -p src-tauri/resources/models
           curl -L -o src-tauri/resources/models/silero_vad_v4.onnx https://blob.handy.computer/silero_vad_v4.onnx
-          # Whisper Medium se empaqueta en el instalador (funciona sin descargar nada al instalar)
-          curl -L -o src-tauri/resources/models/whisper-medium-q4_1.bin https://blob.handy.computer/whisper-medium-q4_1.bin
 
       - name: Compilar, firmar y publicar la Release
         uses: tauri-apps/tauri-action@v0
