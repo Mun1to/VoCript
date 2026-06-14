@@ -76,6 +76,10 @@ jobs:
           # "expected Clang 20 or newer").
           CC: cl
           CXX: cl
+          # Target dir CORTO: whisper.cpp (vulkan-shaders-gen) crea rutas muy
+          # anidadas que superan el límite de 260 caracteres de Windows y rompen
+          # cl.exe (C1083). Un target corto las mantiene dentro del límite.
+          CARGO_TARGET_DIR: C:\t
           # Claves de firma del auto-updater (se configuran como secrets del repo).
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
