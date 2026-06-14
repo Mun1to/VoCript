@@ -5,7 +5,7 @@
 
 <p align="center">
   <a href="https://github.com/Mun1to/Vocript/releases/latest">
-    <img src="https://img.shields.io/github/v/release/Mun1to/Vocript?label=Descargar%20VoCript&style=for-the-badge&color=2563eb" alt="Descargar VoCript" />
+    <img src="https://img.shields.io/badge/⬇-Descargar%20VoCript-2563eb?style=for-the-badge&logo=windows&logoColor=white" alt="Descargar VoCript" />
   </a>
 </p>
 
