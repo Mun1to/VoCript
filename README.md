@@ -4,9 +4,13 @@
 > Fork de [Handy](https://github.com/cjpais/handy) v0.8.3 · Modelo Whisper Turbo.
 
 <p align="center">
-  <a href="https://github.com/Mun1to/Vocript/releases/latest">
-    <img src="https://img.shields.io/badge/⬇-Descargar%20VoCript-2563eb?style=for-the-badge&logo=windows&logoColor=white" alt="Descargar VoCript" />
+  <a href="https://github.com/Mun1to/Vocript/releases/latest/download/VoCript-Setup.exe">
+    <img src="brand/download-button.svg" alt="Descargar VoCript" width="320" height="72" />
   </a>
+</p>
+<p align="center">
+  <sub>El botón descarga el instalador directamente. ¿Problemas? Entra en
+  <a href="https://github.com/Mun1to/Vocript/releases/latest">Releases</a>.</sub>
 </p>
 
 ---

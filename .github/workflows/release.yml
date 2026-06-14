@@ -91,3 +91,15 @@ jobs:
           releaseDraft: false
           prerelease: false
           includeUpdaterJson: true
+
+      # Sube una copia del instalador con nombre fijo (sin versión) para que
+      # el botón de descarga del README ("...releases/latest/download/VoCript-Setup.exe")
+      # funcione siempre, sin importar la versión publicada.
+      - name: Subir copia del instalador con nombre fijo
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          installer=$(find C:/t/release/bundle/nsis -maxdepth 1 -name "*-setup.exe" | head -n1)
+          cp "$installer" VoCript-Setup.exe
+          gh release upload "${{ github.ref_name }}" VoCript-Setup.exe --clobber --repo ${{ github.repository }}
