@@ -1,6 +1,9 @@
-use crate::audio_toolkit::{list_input_devices, vad::SmoothedVad, AudioRecorder, SileroVad};
+use crate::audio_toolkit::{
+    get_cpal_host, list_input_devices, list_output_devices, vad::SmoothedVad, AudioRecorder,
+    SileroVad,
+};
 use crate::helpers::clamshell;
-use crate::settings::{get_settings, AppSettings};
+use crate::settings::{get_settings, AppSettings, AudioSource};
 use crate::utils;
 use log::{debug, error, info};
 use std::sync::atomic::{AtomicU64, Ordering};
@@ -153,6 +156,12 @@ pub struct AudioRecordingManager {
     is_recording: Arc<Mutex<bool>>,
     did_mute: Arc<Mutex<bool>>,
     close_generation: Arc<AtomicU64>,
+
+    /// Fuente de audio que se usará en la próxima grabación (micrófono o sistema).
+    current_source: Arc<Mutex<AudioSource>>,
+    /// Fuente con la que está abierto el stream actual (None si está cerrado).
+    /// Permite reabrir el stream cuando cambia la fuente entre grabaciones.
+    open_source: Arc<Mutex<Option<AudioSource>>>,
 }
 
 impl AudioRecordingManager {
@@ -176,6 +185,9 @@ impl AudioRecordingManager {
             is_recording: Arc::new(Mutex::new(false)),
             did_mute: Arc::new(Mutex::new(false)),
             close_generation: Arc::new(AtomicU64::new(0)),
+
+            current_source: Arc::new(Mutex::new(AudioSource::Microphone)),
+            open_source: Arc::new(Mutex::new(None)),
         };
 
         // Always-on?  Open immediately.
@@ -210,6 +222,25 @@ impl AudioRecordingManager {
                 .map(|d| d.device),
             Err(e) => {
                 debug!("Failed to list devices, using default: {}", e);
+                None
+            }
+        }
+    }
+
+    /// Dispositivo desde el que capturar el audio del sistema (loopback).
+    /// En el backend WASAPI de cpal, abrir un dispositivo de *salida* como
+    /// entrada activa el loopback de forma transparente, así que devolvemos el
+    /// dispositivo de salida por defecto (lo que el usuario está oyendo).
+    fn get_system_audio_device(&self) -> Option<cpal::Device> {
+        use cpal::traits::HostTrait;
+        if let Some(default) = get_cpal_host().default_output_device() {
+            return Some(default);
+        }
+        // Fallback: primer dispositivo de salida disponible.
+        match list_output_devices() {
+            Ok(devices) => devices.into_iter().next().map(|d| d.device),
+            Err(e) => {
+                debug!("Failed to list output devices for system capture: {}", e);
                 None
             }
         }
@@ -295,19 +326,37 @@ impl AudioRecordingManager {
         let mut did_mute_guard = self.did_mute.lock().unwrap();
         *did_mute_guard = false;
 
-        // Get the selected device from settings, considering clamshell mode
+        // Choose the capture device based on the active audio source.
         let settings = get_settings(&self.app_handle);
-        let selected_device = self.get_effective_microphone_device(&settings);
+        let source = *self.current_source.lock().unwrap();
+        let selected_device = match source {
+            AudioSource::Microphone => self.get_effective_microphone_device(&settings),
+            AudioSource::System => self.get_system_audio_device(),
+        };
 
-        // Pre-flight check: if no device was selected/configured AND no devices
-        // exist at all, fail early with a clear error instead of letting cpal
-        // produce a cryptic backend-specific message.
-        if selected_device.is_none() {
-            let has_any_device = list_input_devices()
-                .map(|devices| !devices.is_empty())
-                .unwrap_or(false);
-            if !has_any_device {
-                return Err(anyhow::anyhow!("No input device found"));
+        // Pre-flight check: fail early with a clear error instead of letting
+        // cpal produce a cryptic backend-specific message.
+        match source {
+            AudioSource::Microphone => {
+                // None means "use the default input"; only fail if there are no
+                // input devices at all.
+                if selected_device.is_none() {
+                    let has_any_device = list_input_devices()
+                        .map(|devices| !devices.is_empty())
+                        .unwrap_or(false);
+                    if !has_any_device {
+                        return Err(anyhow::anyhow!("No input device found"));
+                    }
+                }
+            }
+            AudioSource::System => {
+                // For system capture we must have an explicit output device to
+                // open in loopback mode; None means none was found.
+                if selected_device.is_none() {
+                    return Err(anyhow::anyhow!(
+                        "No audio output device found for system audio capture"
+                    ));
+                }
             }
         }
 
@@ -321,6 +370,7 @@ impl AudioRecordingManager {
         }
 
         *open_flag = true;
+        *self.open_source.lock().unwrap() = Some(source);
         // This timing covers through cpal's stream.play() returning — i.e. the
         // point cpal surfaces as "stream running." It does NOT guarantee the
         // host audio device is producing samples yet; the first input callback
@@ -355,6 +405,7 @@ impl AudioRecordingManager {
         }
 
         *open_flag = false;
+        *self.open_source.lock().unwrap() = None;
         debug!("Microphone stream stopped");
     }
 
@@ -387,15 +438,34 @@ impl AudioRecordingManager {
         let mut state = self.state.lock().unwrap();
 
         if let RecordingState::Idle = *state {
-            // Ensure microphone is open in on-demand mode
-            if matches!(*self.mode.lock().unwrap(), MicrophoneMode::OnDemand) {
-                // Cancel any pending lazy close
+            // Determine the audio source for this recording: the dedicated
+            // system-audio binding captures the system (loopback); every other
+            // binding always uses the microphone.
+            let desired_source = if binding_id == "transcribe_system" {
+                AudioSource::System
+            } else {
+                AudioSource::Microphone
+            };
+            *self.current_source.lock().unwrap() = desired_source;
+
+            // (Re)open the stream when it is closed, or when it is open with a
+            // different source than the one we need now. Otherwise (on-demand,
+            // already open with the right source) just cancel the pending close.
+            let is_open = *self.is_open.lock().unwrap();
+            let open_source = *self.open_source.lock().unwrap();
+            let on_demand = matches!(*self.mode.lock().unwrap(), MicrophoneMode::OnDemand);
+
+            if !is_open || open_source != Some(desired_source) {
                 self.close_generation.fetch_add(1, Ordering::SeqCst);
+                self.stop_microphone_stream();
                 if let Err(e) = self.start_microphone_stream() {
                     let msg = format!("{e}");
-                    error!("Failed to open microphone stream: {msg}");
+                    error!("Failed to open audio stream: {msg}");
                     return Err(msg);
                 }
+            } else if on_demand {
+                // Cancel any pending lazy close
+                self.close_generation.fetch_add(1, Ordering::SeqCst);
             }
 
             if let Some(rec) = self.recorder.lock().unwrap().as_ref() {

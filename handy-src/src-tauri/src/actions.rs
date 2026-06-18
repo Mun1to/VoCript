@@ -20,6 +20,7 @@ use std::sync::Arc;
 use std::time::Instant;
 use tauri::Manager;
 use tauri::{AppHandle, Emitter};
+use tauri_plugin_clipboard_manager::ClipboardExt;
 
 #[derive(Clone, serde::Serialize)]
 struct RecordingErrorEvent {
@@ -602,6 +603,22 @@ impl ShortcutAction for TranscribeAction {
                             if processed.final_text.is_empty() {
                                 utils::hide_recording_overlay(&ah);
                                 change_tray_icon(&ah, TrayIconState::Idle);
+                            } else if get_settings(&ah).clipboard_only {
+                                // Copy to clipboard and show a confirmation in
+                                // the overlay instead of pasting into the active
+                                // app — ideal when capturing system audio so the
+                                // text doesn't land on top of the video/call.
+                                let final_text = processed.final_text;
+                                if let Err(e) = ah.clipboard().write_text(final_text) {
+                                    error!("Failed to copy transcription to clipboard: {}", e);
+                                }
+                                utils::show_copied_overlay(&ah);
+                                let ah_hide = ah.clone();
+                                std::thread::spawn(move || {
+                                    std::thread::sleep(std::time::Duration::from_millis(1800));
+                                    utils::hide_recording_overlay(&ah_hide);
+                                    change_tray_icon(&ah_hide, TrayIconState::Idle);
+                                });
                             } else {
                                 let ah_clone = ah.clone();
                                 let paste_time = Instant::now();
@@ -708,6 +725,12 @@ pub static ACTION_MAP: Lazy<HashMap<String, Arc<dyn ShortcutAction>>> = Lazy::ne
     map.insert(
         "transcribe_with_post_process".to_string(),
         Arc::new(TranscribeAction { post_process: true }) as Arc<dyn ShortcutAction>,
+    );
+    map.insert(
+        "transcribe_system".to_string(),
+        Arc::new(TranscribeAction {
+            post_process: false,
+        }) as Arc<dyn ShortcutAction>,
     );
     map.insert(
         "cancel".to_string(),

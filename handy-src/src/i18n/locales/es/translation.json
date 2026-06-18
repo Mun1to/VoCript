@@ -208,6 +208,10 @@
           "transcribe_with_post_process": {
             "name": "Tecla de Post Procesamiento",
             "description": "Opcional: Una tecla de acceso rápido dedicada que siempre aplica post procesamiento con IA a tu transcripción."
+          },
+          "transcribe_system": {
+            "name": "Atajo de Audio del Sistema",
+            "description": "El atajo de teclado para transcribir el audio que suena en el ordenador (por ejemplo un vídeo) en vez del micrófono."
           }
         },
         "errors": {
@@ -227,6 +231,10 @@
       "pushToTalk": {
         "label": "Presionar para Hablar",
         "description": "Activado: mantén pulsadas las teclas para grabar y suéltalas para parar. Desactivado: pulsa una vez para empezar y otra vez para parar (modo manos libres)."
+      },
+      "clipboardOnly": {
+        "label": "Copiar al portapapeles (sin pegar automáticamente)",
+        "description": "Al terminar la transcripción, copia el texto al portapapeles y muestra un aviso en vez de pegarlo en la app activa. Recomendado al capturar audio del sistema, para que el texto no caiga encima del vídeo o la llamada."
       }
     },
     "sound": {
@@ -624,6 +632,7 @@
   },
   "overlay": {
     "transcribing": "Transcribiendo...",
-    "processing": "Procesando..."
+    "processing": "Procesando...",
+    "copied": "✓ Copiado"
   }
 }

@@ -177,6 +177,10 @@
           "transcribe_with_post_process": {
             "name": "Post-Processing Hotkey",
             "description": "Optional: A dedicated hotkey that always applies AI post-processing to your transcription."
+          },
+          "transcribe_system": {
+            "name": "System Audio Hotkey",
+            "description": "The keyboard shortcut to transcribe the audio playing on your computer (e.g. a video) instead of the microphone."
           }
         },
         "errors": {
@@ -196,6 +200,10 @@
       "pushToTalk": {
         "label": "Push To Talk",
         "description": "On: hold the keys to record, release to stop. Off: press once to start and again to stop (hands-free mode)."
+      },
+      "clipboardOnly": {
+        "label": "Copy to clipboard (don't paste automatically)",
+        "description": "When transcription finishes, copy the text to the clipboard and show a confirmation instead of pasting it into the active app. Recommended when capturing system audio, so the text doesn't land on top of the video or call."
       }
     },
     "models": {
@@ -624,6 +632,7 @@
   },
   "overlay": {
     "transcribing": "Transcribing...",
-    "processing": "Processing..."
+    "processing": "Processing...",
+    "copied": "✓ Copied"
   }
 }

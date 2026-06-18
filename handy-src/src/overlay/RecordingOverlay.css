@@ -75,6 +75,15 @@
   animation: transcribing-pulse 1.5s infinite ease-in-out;
 }
 
+.copied-text {
+  color: #bbf7d0;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
 @keyframes transcribing-pulse {
   0%,
   100% {

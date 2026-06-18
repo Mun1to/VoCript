@@ -286,14 +286,31 @@ impl AudioRecorder {
         // in run_consumer() downsample to 16kHz. This avoids forcing hardware into
         // a non-native rate which can cause issues on some devices (Bluetooth
         // codecs, certain ALSA drivers, etc.).
-        let default_config = device.default_input_config()?;
+        // For a normal microphone we read the device's *input* config. For
+        // system-audio (loopback) capture the device is an *output* device,
+        // which has no input config — in that case cpal expects us to use its
+        // output config and build an input stream on it (WASAPI loopback). So
+        // we try input first and transparently fall back to output.
+        let (default_config, is_loopback) = match device.default_input_config() {
+            Ok(cfg) => (cfg, false),
+            Err(_) => (device.default_output_config()?, true),
+        };
         let target_rate = default_config.sample_rate();
 
         // Try to find the best sample format at the device's default rate
-        let supported_configs = match device.supported_input_configs() {
+        let supported_configs = if is_loopback {
+            device
+                .supported_output_configs()
+                .map(|configs| configs.collect::<Vec<_>>())
+        } else {
+            device
+                .supported_input_configs()
+                .map(|configs| configs.collect::<Vec<_>>())
+        };
+        let supported_configs = match supported_configs {
             Ok(configs) => configs,
             Err(e) => {
-                log::warn!("Could not enumerate input configs ({e}), using device default");
+                log::warn!("Could not enumerate configs ({e}), using device default");
                 return Ok(default_config);
             }
         };
@@ -442,27 +459,29 @@ fn run_consumer(
     }
 
     loop {
-        let chunk = match sample_rx.recv() {
-            Ok(c) => c,
-            Err(_) => break, // stream closed
-        };
+        // Wait for the next audio chunk, but time out periodically so commands
+        // (Stop/Shutdown) are still handled when no audio is arriving. WASAPI
+        // loopback (system-audio capture) delivers no samples while the system
+        // is silent, which would otherwise block this loop forever and hang
+        // stop()/close() — freezing the app when cancelling a silent capture.
+        match sample_rx.recv_timeout(Duration::from_millis(200)) {
+            Ok(AudioChunk::Samples(raw)) => {
+                // ---------- spectrum processing -------------------------- //
+                if let Some(buckets) = visualizer.feed(&raw) {
+                    if let Some(cb) = &level_cb {
+                        cb(buckets);
+                    }
+                }
 
-        let raw = match chunk {
-            AudioChunk::Samples(s) => s,
-            AudioChunk::EndOfStream => continue,
-        };
-
-        // ---------- spectrum processing ---------------------------------- //
-        if let Some(buckets) = visualizer.feed(&raw) {
-            if let Some(cb) = &level_cb {
-                cb(buckets);
+                // ---------- existing pipeline ---------------------------- //
+                frame_resampler.push(&raw, &mut |frame: &[f32]| {
+                    handle_frame(frame, recording, &vad, &mut processed_samples)
+                });
             }
+            Ok(AudioChunk::EndOfStream) => {}
+            Err(mpsc::RecvTimeoutError::Timeout) => {}
+            Err(mpsc::RecvTimeoutError::Disconnected) => break, // stream closed
         }
-
-        // ---------- existing pipeline ------------------------------------ //
-        frame_resampler.push(&raw, &mut |frame: &[f32]| {
-            handle_frame(frame, recording, &vad, &mut processed_samples)
-        });
 
         // non-blocking check for a command
         while let Ok(cmd) = cmd_rx.try_recv() {

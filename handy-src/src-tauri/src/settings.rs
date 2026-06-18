@@ -114,6 +114,18 @@ pub enum OverlayPosition {
     Bottom,
 }
 
+/// De dónde se toma el audio a transcribir.
+/// `System` captura lo que suena en el ordenador (loopback) en vez del
+/// micrófono — útil para transcribir un vídeo, una llamada, etc. En Windows
+/// usa el loopback de WASAPI (captura el dispositivo de salida como entrada).
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type, Default)]
+#[serde(rename_all = "lowercase")]
+pub enum AudioSource {
+    #[default]
+    Microphone,
+    System,
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum ModelUnloadTimeout {
@@ -383,6 +395,8 @@ pub struct AppSettings {
     pub paste_method: PasteMethod,
     #[serde(default)]
     pub clipboard_handling: ClipboardHandling,
+    #[serde(default)]
+    pub clipboard_only: bool,
     #[serde(default = "default_auto_submit")]
     pub auto_submit: bool,
     #[serde(default)]
@@ -764,6 +778,26 @@ pub fn get_default_settings() -> AppSettings {
         },
     );
 
+    #[cfg(target_os = "windows")]
+    let default_system_shortcut = "ctrl+alt+space";
+    #[cfg(target_os = "macos")]
+    let default_system_shortcut = "option+ctrl+space";
+    #[cfg(target_os = "linux")]
+    let default_system_shortcut = "ctrl+alt+space";
+    #[cfg(not(any(target_os = "windows", target_os = "macos", target_os = "linux")))]
+    let default_system_shortcut = "alt+ctrl+space";
+
+    bindings.insert(
+        "transcribe_system".to_string(),
+        ShortcutBinding {
+            id: "transcribe_system".to_string(),
+            name: "Transcribe System Audio".to_string(),
+            description: "Transcribes the audio playing on your computer (e.g. a video) instead of the microphone.".to_string(),
+            default_binding: default_system_shortcut.to_string(),
+            current_binding: default_system_shortcut.to_string(),
+        },
+    );
+
     AppSettings {
         bindings,
         push_to_talk: true,
@@ -790,6 +824,7 @@ pub fn get_default_settings() -> AppSettings {
         recording_retention_period: default_recording_retention_period(),
         paste_method: PasteMethod::default(),
         clipboard_handling: ClipboardHandling::default(),
+        clipboard_only: false,
         auto_submit: default_auto_submit(),
         auto_submit_key: AutoSubmitKey::default(),
         post_process_enabled: default_post_process_enabled(),

@@ -7,7 +7,7 @@ import { commands } from "@/bindings";
 import i18n, { syncLanguageFromSettings } from "@/i18n";
 import { getLanguageDirection } from "@/lib/utils/rtl";
 
-type OverlayState = "recording" | "transcribing" | "processing";
+type OverlayState = "recording" | "transcribing" | "processing" | "copied";
 
 const BAR_COUNT = 9;
 const ZERO_LEVELS = Array(BAR_COUNT).fill(0);
@@ -113,6 +113,9 @@ const RecordingOverlay: React.FC = () => {
         )}
         {state === "processing" && (
           <div className="transcribing-text">{t("overlay.processing")}</div>
+        )}
+        {state === "copied" && (
+          <div className="copied-text">{t("overlay.copied")}</div>
         )}
       </div>
 
