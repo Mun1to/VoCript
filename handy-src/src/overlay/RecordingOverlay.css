@@ -17,6 +17,21 @@
   align-items: center;
 }
 
+/* Logo de VoCript clicable: abre la ventana principal de la app. */
+.overlay-logo {
+  cursor: pointer;
+  border-radius: 8px;
+  transition: transform 120ms ease-out;
+}
+
+.overlay-logo:hover {
+  transform: scale(1.12);
+}
+
+.overlay-logo:active {
+  transform: scale(0.94);
+}
+
 .overlay-middle {
   display: flex;
   align-items: center;
@@ -43,9 +58,9 @@
   width: 6px;
   background: #dbeafe;
   max-height: 20px;
-  border-radius: 2px;
-  transition: height 80ms linear;
+  border-radius: 3px;
   min-height: 4px;
+  box-shadow: 0 0 4px rgba(147, 197, 253, 0.5);
 }
 
 .recording-overlay.fade-in {

@@ -226,7 +226,7 @@
       },
       "pushToTalk": {
         "label": "Presionar para Hablar",
-        "description": "Mantén presionado para grabar, suelta para detener"
+        "description": "Activado: mantén pulsadas las teclas para grabar y suéltalas para parar. Desactivado: pulsa una vez para empezar y otra vez para parar (modo manos libres)."
       }
     },
     "sound": {
