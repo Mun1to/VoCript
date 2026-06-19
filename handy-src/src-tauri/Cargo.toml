@@ -1,6 +1,6 @@
 [package]
 name = "vocript"
-version = "2.4.1"
+version = "2.5.0"
 description = "VoCript"
 authors = ["cjpais"]
 edition = "2021"
@@ -52,6 +52,10 @@ cpal = "0.16.0"
 anyhow = "1.0.95"
 rubato = "0.16.2"
 hound = "3.5.1"
+# Decoding of imported audio/video files (mp3, mp4/m4a/aac, wav, flac, ogg…).
+# default-features keeps the royalty-free readers (wav, flac, ogg/vorbis, pcm,
+# adpcm, mkv); the extra features add MP3, AAC and the ISO-MP4 container reader.
+symphonia = { version = "0.5", features = ["mp3", "aac", "isomp4", "alac"] }
 log = "0.4.25"
 env_filter = "0.1.0"
 tokio = "1.43.0"

@@ -11,6 +11,7 @@
   "sidebar": {
     "general": "General",
     "models": "Models",
+    "fileTranscription": "Transcribe",
     "advanced": "Advanced",
     "postProcessing": "Post Process",
     "history": "History",
@@ -155,6 +156,31 @@
     "modelSettings": {
       "title": "{{model}} Settings",
       "noSettingsNeeded": "This model works automatically with no configuration needed."
+    },
+    "fileTranscription": {
+      "title": "Transcribe file",
+      "description": "Transcribe an audio or video file to text or subtitles (.srt). Everything is processed on your device, offline.",
+      "dropzone": "Drag an audio or video file here",
+      "selectFile": "or click to choose one",
+      "changeFile": "Click to change the file",
+      "supportedFormats": "Supported formats: MP3, WAV, FLAC, OGG, M4A, MP4, AAC, MKV… (Opus not supported).",
+      "fileFilter": "Audio or video",
+      "format": "Format:",
+      "formatText": "Text",
+      "formatSrt": "Subtitles (SRT)",
+      "transcribe": "Transcribe",
+      "transcribing": "Transcribing… (this may take a while)",
+      "duration": "Duration: {{duration}}",
+      "copy": "Copy",
+      "copied": "Copied",
+      "save": "Save…",
+      "saved": "File saved",
+      "errors": {
+        "failed": "Could not transcribe the file",
+        "unsupported": "Unsupported file format",
+        "copy": "Could not copy to clipboard",
+        "save": "Could not save the file"
+      }
     },
     "general": {
       "title": "General",

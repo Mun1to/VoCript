@@ -11,6 +11,7 @@
   "sidebar": {
     "general": "General",
     "models": "Modelos",
+    "fileTranscription": "Transcribir",
     "advanced": "Avanzado",
     "postProcessing": "Post Proceso",
     "history": "Historial",
@@ -155,6 +156,31 @@
     "modelSettings": {
       "title": "Configuración de {{model}}",
       "noSettingsNeeded": "Este modelo funciona automáticamente sin necesidad de configuración."
+    },
+    "fileTranscription": {
+      "title": "Transcribir archivo",
+      "description": "Transcribe un archivo de audio o vídeo a texto o subtítulos (.srt). Todo se procesa en tu equipo, sin conexión.",
+      "dropzone": "Arrastra aquí un archivo de audio o vídeo",
+      "selectFile": "o haz clic para elegirlo",
+      "changeFile": "Haz clic para cambiar el archivo",
+      "supportedFormats": "Formatos compatibles: MP3, WAV, FLAC, OGG, M4A, MP4, AAC, MKV… (Opus no soportado).",
+      "fileFilter": "Audio o vídeo",
+      "format": "Formato:",
+      "formatText": "Texto",
+      "formatSrt": "Subtítulos (SRT)",
+      "transcribe": "Transcribir",
+      "transcribing": "Transcribiendo… (puede tardar)",
+      "duration": "Duración: {{duration}}",
+      "copy": "Copiar",
+      "copied": "Copiado",
+      "save": "Guardar…",
+      "saved": "Archivo guardado",
+      "errors": {
+        "failed": "No se pudo transcribir el archivo",
+        "unsupported": "Formato de archivo no compatible",
+        "copy": "No se pudo copiar al portapapeles",
+        "save": "No se pudo guardar el archivo"
+      }
     },
     "models": {
       "title": "Modelos de Transcripción",

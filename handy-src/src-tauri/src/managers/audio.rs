@@ -575,12 +575,12 @@ impl AudioRecordingManager {
                 // System audio (loopback) follows the app/system volume, which
                 // is often low — boost quiet captures so Whisper gets a usable
                 // signal. The microphone path is left untouched.
-                let samples =
-                    if matches!(*self.current_source.lock().unwrap(), AudioSource::System) {
-                        normalize_peak(samples, 0.95)
-                    } else {
-                        samples
-                    };
+                let samples = if matches!(*self.current_source.lock().unwrap(), AudioSource::System)
+                {
+                    normalize_peak(samples, 0.95)
+                } else {
+                    samples
+                };
 
                 // In on-demand mode, close the mic (lazily if the setting is enabled)
                 if matches!(*self.mode.lock().unwrap(), MicrophoneMode::OnDemand) {

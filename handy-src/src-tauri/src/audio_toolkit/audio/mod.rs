@@ -1,4 +1,5 @@
 // Re-export all audio components
+mod decode;
 mod device;
 #[cfg(windows)]
 mod process_loopback;
@@ -7,6 +8,7 @@ mod resampler;
 mod utils;
 mod visualizer;
 
+pub use decode::decode_audio_file_16k_mono;
 pub use device::{list_input_devices, list_output_devices, CpalDeviceInfo};
 #[cfg(windows)]
 pub use process_loopback::{find_pid_by_name, list_audio_apps, AudioApp};

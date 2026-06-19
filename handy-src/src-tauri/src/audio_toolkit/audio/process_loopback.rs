@@ -213,7 +213,10 @@ pub fn run_capture<R, C, S>(
         }
         eos_sent = false;
 
-        if capture_client.read_from_device_to_deque(&mut queue).is_err() {
+        if capture_client
+            .read_from_device_to_deque(&mut queue)
+            .is_err()
+        {
             break;
         }
 

@@ -793,6 +793,34 @@ async unloadModelManually() : Promise<Result<null, string>> {
     else return { status: "error", error: e  as any };
 }
 },
+/**
+ * Decode an arbitrary audio/video file and transcribe it to text + SRT.
+ * 
+ * Runs on a blocking worker thread (not the UI thread) so a long file won't
+ * freeze the window. The model is loaded on demand if not already in memory,
+ * using the user's currently selected model and language.
+ */
+async transcribeFile(path: string) : Promise<Result<FileTranscriptionResult, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("transcribe_file", { path }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Save UTF-8 text (e.g. a transcription or SRT) to an arbitrary path chosen
+ * by the user via the save dialog. Done on the backend to avoid having to
+ * widen the frontend filesystem scope beyond `$APPDATA`.
+ */
+async saveTextFile(path: string, content: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("save_text_file", { path, content }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async getHistoryEntries(cursor: number | null, limit: number | null) : Promise<Result<PaginatedHistory, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_history_entries", { cursor, limit }) };
@@ -891,6 +919,11 @@ export type BindingResponse = { success: boolean; binding: ShortcutBinding | nul
 export type ClipboardHandling = "dont_modify" | "copy_to_clipboard"
 export type CustomSounds = { start: boolean; stop: boolean }
 export type EngineType = "Whisper" | "Parakeet" | "Moonshine" | "MoonshineStreaming" | "SenseVoice" | "GigaAM" | "Canary" | "Cohere"
+/**
+ * Result of transcribing an imported audio/video file. Both the plain text
+ * and the SRT subtitle string are returned so the UI can offer either.
+ */
+export type FileTranscriptionResult = { text: string; srt: string; duration_secs: number }
 /**
  * A speech model found elsewhere on the computer that can be reused by VoCript
  * without re-downloading. Returned by `scan_for_external_models`.

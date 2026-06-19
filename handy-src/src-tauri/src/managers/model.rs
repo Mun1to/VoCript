@@ -1773,15 +1773,7 @@ impl ModelManager {
             for sub in ["Downloads", "Documents", "Desktop"] {
                 let dir = profile.join(sub);
                 if dir.is_dir() {
-                    Self::scan_loose_dir(
-                        &dir,
-                        0,
-                        2,
-                        &known,
-                        &self.models_dir,
-                        &mut out,
-                        &mut seen,
-                    );
+                    Self::scan_loose_dir(&dir, 0, 2, &known, &self.models_dir, &mut out, &mut seen);
                 }
             }
         }

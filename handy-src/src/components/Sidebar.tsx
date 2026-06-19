@@ -8,6 +8,7 @@ import {
   Sparkles,
   Cpu,
   AudioLines,
+  FileAudio,
 } from "lucide-react";
 import HandyTextLogo from "./icons/HandyTextLogo";
 import { useSettings } from "../hooks/useSettings";
@@ -19,6 +20,7 @@ import {
   AboutSettings,
   PostProcessingSettings,
   ModelsSettings,
+  FileTranscription,
 } from "./settings";
 
 export type SidebarSection = keyof typeof SECTIONS_CONFIG;
@@ -49,6 +51,12 @@ export const SECTIONS_CONFIG = {
     labelKey: "sidebar.models",
     icon: Cpu,
     component: ModelsSettings,
+    enabled: () => true,
+  },
+  file: {
+    labelKey: "sidebar.fileTranscription",
+    icon: FileAudio,
+    component: FileTranscription,
     enabled: () => true,
   },
   advanced: {
