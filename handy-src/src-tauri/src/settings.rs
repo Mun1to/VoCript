@@ -371,6 +371,10 @@ pub struct AppSettings {
     pub clamshell_microphone: Option<String>,
     #[serde(default)]
     pub selected_output_device: Option<String>,
+    /// Executable name of the app to capture for system-audio transcription
+    /// (e.g. "Spotify.exe"). `None` = capture the whole system mix.
+    #[serde(default)]
+    pub system_audio_app: Option<String>,
     #[serde(default = "default_translate_to_english")]
     pub translate_to_english: bool,
     #[serde(default = "default_selected_language")]
@@ -812,6 +816,7 @@ pub fn get_default_settings() -> AppSettings {
         selected_microphone: None,
         clamshell_microphone: None,
         selected_output_device: None,
+        system_audio_app: None,
         translate_to_english: false,
         selected_language: "es".to_string(),
         overlay_position: default_overlay_position(),

@@ -202,8 +202,13 @@
         "description": "On: hold the keys to record, release to stop. Off: press once to start and again to stop (hands-free mode)."
       },
       "clipboardOnly": {
-        "label": "Copy to clipboard (don't paste automatically)",
+        "label": "Copy to clipboard",
         "description": "When transcription finishes, copy the text to the clipboard and show a confirmation instead of pasting it into the active app. Recommended when capturing system audio, so the text doesn't land on top of the video or call."
+      },
+      "systemAudioApp": {
+        "title": "System audio app",
+        "description": "Choose what the system-audio shortcut captures: the whole computer, or just one specific app (e.g. Spotify). The app must be playing audio to appear in the list; use the refresh button.",
+        "wholeSystem": "Whole system"
       }
     },
     "models": {

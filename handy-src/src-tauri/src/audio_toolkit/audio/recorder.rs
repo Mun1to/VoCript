@@ -36,6 +36,12 @@ pub struct AudioRecorder {
     worker_handle: Option<std::thread::JoinHandle<()>>,
     vad: Option<Arc<Mutex<Box<dyn vad::VoiceActivityDetector>>>>,
     level_cb: Option<Arc<dyn Fn(Vec<f32>) + Send + Sync + 'static>>,
+    /// Capture thread + shutdown flag for the WASAPI process-loopback path
+    /// (per-app system audio, Windows only). `None` for the cpal path.
+    #[cfg(windows)]
+    capture_handle: Option<std::thread::JoinHandle<()>>,
+    #[cfg(windows)]
+    capture_shutdown: Option<Arc<AtomicBool>>,
 }
 
 impl AudioRecorder {
@@ -46,6 +52,10 @@ impl AudioRecorder {
             worker_handle: None,
             vad: None,
             level_cb: None,
+            #[cfg(windows)]
+            capture_handle: None,
+            #[cfg(windows)]
+            capture_shutdown: None,
         })
     }
 
@@ -195,6 +205,82 @@ impl AudioRecorder {
         }
     }
 
+    /// Open the recorder capturing the audio of a single application via WASAPI
+    /// process loopback (Windows only). Reuses the same consumer pipeline (VAD,
+    /// resampling, level callback) as the cpal path — only the producer differs.
+    #[cfg(windows)]
+    pub fn open_process_loopback(&mut self, pid: u32) -> Result<(), Box<dyn std::error::Error>> {
+        if self.worker_handle.is_some() {
+            return Ok(()); // already open
+        }
+
+        let (sample_tx, sample_rx) = mpsc::channel::<AudioChunk>();
+        let (cmd_tx, cmd_rx) = mpsc::channel::<Cmd>();
+        let (init_tx, init_rx) = mpsc::sync_channel::<Result<(), String>>(1);
+
+        // `stop_flag` is shared with run_consumer (its Stop arm toggles it) and
+        // read by the capture thread to emit EndOfStream. `shutdown_flag` ends
+        // the capture thread on close().
+        let stop_flag = Arc::new(AtomicBool::new(false));
+        let shutdown_flag = Arc::new(AtomicBool::new(false));
+
+        let cap_stop = stop_flag.clone();
+        let cap_shutdown = shutdown_flag.clone();
+        let chunk_tx = sample_tx.clone();
+        let eos_tx = sample_tx;
+
+        let capture = std::thread::spawn(move || {
+            super::process_loopback::run_capture(
+                pid,
+                true, // include child processes (helpers, e.g. browser tabs)
+                cap_stop,
+                cap_shutdown,
+                move |ready| {
+                    let _ = init_tx.send(ready);
+                },
+                move |mono| {
+                    let _ = chunk_tx.send(AudioChunk::Samples(mono));
+                },
+                move || {
+                    let _ = eos_tx.send(AudioChunk::EndOfStream);
+                },
+            );
+        });
+
+        match init_rx.recv() {
+            Ok(Ok(())) => {}
+            Ok(Err(msg)) => {
+                shutdown_flag.store(true, Ordering::Relaxed);
+                let _ = capture.join();
+                return Err(Box::new(Error::new(std::io::ErrorKind::Other, msg)));
+            }
+            Err(e) => {
+                shutdown_flag.store(true, Ordering::Relaxed);
+                let _ = capture.join();
+                return Err(Box::new(Error::new(
+                    std::io::ErrorKind::Other,
+                    format!("Process loopback init failed: {e}"),
+                )));
+            }
+        }
+
+        let sample_rate = super::process_loopback::capture_sample_rate();
+        // Bypass VAD for system/app audio: we want to transcribe whatever the
+        // app is playing (music, quiet/low-volume playback, etc.), not gate it
+        // like close-mic speech — the VAD would otherwise discard most of it.
+        let level_cb = self.level_cb.clone();
+        let worker = std::thread::spawn(move || {
+            run_consumer(sample_rate, None, sample_rx, cmd_rx, level_cb, stop_flag);
+        });
+
+        self.device = None;
+        self.cmd_tx = Some(cmd_tx);
+        self.worker_handle = Some(worker);
+        self.capture_handle = Some(capture);
+        self.capture_shutdown = Some(shutdown_flag);
+        Ok(())
+    }
+
     pub fn start(&self) -> Result<(), Box<dyn std::error::Error>> {
         if let Some(tx) = &self.cmd_tx {
             tx.send(Cmd::Start)?;
@@ -214,7 +300,16 @@ impl AudioRecorder {
         if let Some(tx) = self.cmd_tx.take() {
             let _ = tx.send(Cmd::Shutdown);
         }
+        // Signal the process-loopback capture thread to exit (Windows).
+        #[cfg(windows)]
+        if let Some(flag) = self.capture_shutdown.take() {
+            flag.store(true, Ordering::Relaxed);
+        }
         if let Some(h) = self.worker_handle.take() {
+            let _ = h.join();
+        }
+        #[cfg(windows)]
+        if let Some(h) = self.capture_handle.take() {
             let _ = h.join();
         }
         self.device = None;

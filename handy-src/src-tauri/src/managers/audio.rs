@@ -104,6 +104,21 @@ fn set_mute(mute: bool) {
 
 const WHISPER_SAMPLE_RATE: usize = 16000;
 
+/// Peak-normalize quiet audio so low-volume system/loopback captures stay
+/// audible to Whisper (the loopback follows the app/system volume). Only
+/// amplifies — never attenuates — and caps the gain so near-silence/noise isn't
+/// blown up.
+fn normalize_peak(mut samples: Vec<f32>, target_peak: f32) -> Vec<f32> {
+    let peak = samples.iter().fold(0f32, |m, &s| m.max(s.abs()));
+    if peak > 0.0008 && peak < target_peak {
+        let gain = (target_peak / peak).min(12.0);
+        for s in samples.iter_mut() {
+            *s = (*s * gain).clamp(-1.0, 1.0);
+        }
+    }
+    samples
+}
+
 /* ──────────────────────────────────────────────────────────────── */
 
 #[derive(Clone, Debug)]
@@ -326,9 +341,37 @@ impl AudioRecordingManager {
         let mut did_mute_guard = self.did_mute.lock().unwrap();
         *did_mute_guard = false;
 
-        // Choose the capture device based on the active audio source.
         let settings = get_settings(&self.app_handle);
         let source = *self.current_source.lock().unwrap();
+
+        // Windows: when the user picked a target app for system transcription,
+        // capture only that application's audio via WASAPI process loopback.
+        #[cfg(windows)]
+        if matches!(source, AudioSource::System) {
+            if let Some(app_name) = settings.system_audio_app.clone() {
+                let pid = crate::audio_toolkit::find_pid_by_name(&app_name).ok_or_else(|| {
+                    anyhow::anyhow!(
+                        "La app seleccionada ('{}') no esta reproduciendo audio ahora mismo",
+                        app_name
+                    )
+                })?;
+                self.preload_vad()?;
+                if let Some(rec) = self.recorder.lock().unwrap().as_mut() {
+                    rec.open_process_loopback(pid)
+                        .map_err(|e| anyhow::anyhow!("Failed to open app loopback: {}", e))?;
+                }
+                *open_flag = true;
+                *self.open_source.lock().unwrap() = Some(source);
+                info!(
+                    "App loopback stream initialized for '{}' in {:?}",
+                    app_name,
+                    start_time.elapsed()
+                );
+                return Ok(());
+            }
+        }
+
+        // Choose the capture device based on the active audio source.
         let selected_device = match source {
             AudioSource::Microphone => self.get_effective_microphone_device(&settings),
             AudioSource::System => self.get_system_audio_device(),
@@ -528,6 +571,16 @@ impl AudioRecordingManager {
                 };
 
                 *self.is_recording.lock().unwrap() = false;
+
+                // System audio (loopback) follows the app/system volume, which
+                // is often low — boost quiet captures so Whisper gets a usable
+                // signal. The microphone path is left untouched.
+                let samples =
+                    if matches!(*self.current_source.lock().unwrap(), AudioSource::System) {
+                        normalize_peak(samples, 0.95)
+                    } else {
+                        samples
+                    };
 
                 // In on-demand mode, close the mic (lazily if the setting is enabled)
                 if matches!(*self.mode.lock().unwrap(), MicrophoneMode::OnDemand) {

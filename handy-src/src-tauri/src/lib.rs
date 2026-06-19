@@ -365,6 +365,8 @@ pub fn run(cli_args: CliArgs) {
             shortcut::update_custom_words,
             shortcut::suspend_binding,
             shortcut::resume_binding,
+            shortcut::set_system_audio_app,
+            shortcut::list_system_audio_apps,
             shortcut::change_clipboard_only_setting,
             shortcut::change_mute_while_recording_setting,
             shortcut::change_append_trailing_space_setting,

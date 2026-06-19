@@ -1044,6 +1044,36 @@ pub fn set_post_process_selected_prompt(app: AppHandle, id: String) -> Result<()
 
 #[tauri::command]
 #[specta::specta]
+pub fn set_system_audio_app(app: AppHandle, app_name: Option<String>) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    // Empty string means "whole system".
+    settings.system_audio_app = match app_name {
+        Some(s) if !s.trim().is_empty() => Some(s),
+        _ => None,
+    };
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
+/// List the executable names of apps that currently have an audio session
+/// (Windows only — used to populate the per-app capture selector).
+#[tauri::command]
+#[specta::specta]
+pub fn list_system_audio_apps() -> Vec<String> {
+    #[cfg(windows)]
+    {
+        crate::audio_toolkit::list_audio_apps()
+            .map(|apps| apps.into_iter().map(|a| a.name).collect())
+            .unwrap_or_default()
+    }
+    #[cfg(not(windows))]
+    {
+        Vec::new()
+    }
+}
+
+#[tauri::command]
+#[specta::specta]
 pub fn change_clipboard_only_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
     let mut settings = settings::get_settings(&app);
     settings.clipboard_only = enabled;

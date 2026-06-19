@@ -233,8 +233,13 @@
         "description": "Activado: mantén pulsadas las teclas para grabar y suéltalas para parar. Desactivado: pulsa una vez para empezar y otra vez para parar (modo manos libres)."
       },
       "clipboardOnly": {
-        "label": "Copiar al portapapeles (sin pegar automáticamente)",
+        "label": "Copiar al portapapeles",
         "description": "Al terminar la transcripción, copia el texto al portapapeles y muestra un aviso en vez de pegarlo en la app activa. Recomendado al capturar audio del sistema, para que el texto no caiga encima del vídeo o la llamada."
+      },
+      "systemAudioApp": {
+        "title": "App del audio del sistema",
+        "description": "Elige qué capturar con el atajo de audio del sistema: todo el ordenador o solo una aplicación concreta (p. ej. Spotify). La app debe estar reproduciendo audio para aparecer en la lista; usa el botón de refrescar.",
+        "wholeSystem": "Todo el sistema"
       }
     },
     "sound": {
