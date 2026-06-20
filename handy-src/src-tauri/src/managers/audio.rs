@@ -612,6 +612,17 @@ impl AudioRecordingManager {
         )
     }
 
+    /// Snapshot of the audio captured so far in the current recording (16 kHz
+    /// mono), for live transcription. Empty when no stream is open.
+    pub fn current_samples(&self) -> Vec<f32> {
+        self.recorder
+            .lock()
+            .unwrap()
+            .as_ref()
+            .map(|r| r.current_samples())
+            .unwrap_or_default()
+    }
+
     /// Cancel any ongoing recording without returning audio samples
     pub fn cancel_recording(&self) {
         let mut state = self.state.lock().unwrap();

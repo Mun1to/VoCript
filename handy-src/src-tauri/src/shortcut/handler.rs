@@ -37,7 +37,11 @@ pub fn handle_shortcut_event(
     // Transcribe bindings are handled by the coordinator.
     if is_transcribe_binding(binding_id) {
         if let Some(coordinator) = app.try_state::<TranscriptionCoordinator>() {
-            coordinator.send_input(binding_id, hotkey_string, is_pressed, settings.push_to_talk);
+            // Live mode is always push-to-talk: hold to dictate, release to stop
+            // (then auto-paste, or leave the text editable). This removes the
+            // confusing "press again to stop" that toggle mode needs.
+            let push_to_talk = settings.push_to_talk || binding_id == "transcribe_live";
+            coordinator.send_input(binding_id, hotkey_string, is_pressed, push_to_talk);
         } else {
             warn!("TranscriptionCoordinator is not initialized");
         }

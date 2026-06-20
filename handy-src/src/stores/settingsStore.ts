@@ -91,6 +91,8 @@ const settingUpdaters: {
   push_to_talk: (value) => commands.changePttSetting(value as boolean),
   clipboard_only: (value) =>
     commands.changeClipboardOnlySetting(value as boolean),
+  live_auto_paste: (value) =>
+    commands.changeLiveAutoPasteSetting(value as boolean),
   system_audio_app: (value) =>
     commands.setSystemAudioApp((value as string | null) ?? null),
   selected_microphone: (value) =>

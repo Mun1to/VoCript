@@ -401,6 +401,12 @@ pub struct AppSettings {
     pub clipboard_handling: ClipboardHandling,
     #[serde(default)]
     pub clipboard_only: bool,
+    /// Live transcription: when true, the final text is pasted into the active
+    /// app automatically when the live session stops (like normal dictation).
+    /// When false, the text stays in an editable bubble and the user copies it
+    /// manually with the copy button.
+    #[serde(default = "default_live_auto_paste")]
+    pub live_auto_paste: bool,
     #[serde(default = "default_auto_submit")]
     pub auto_submit: bool,
     #[serde(default)]
@@ -503,6 +509,10 @@ fn default_paste_delay_ms() -> u64 {
 
 fn default_auto_submit() -> bool {
     false
+}
+
+fn default_live_auto_paste() -> bool {
+    true
 }
 
 fn default_history_limit() -> usize {
@@ -802,6 +812,22 @@ pub fn get_default_settings() -> AppSettings {
         },
     );
 
+    #[cfg(target_os = "macos")]
+    let default_live_shortcut = "shift+ctrl+space";
+    #[cfg(not(target_os = "macos"))]
+    let default_live_shortcut = "ctrl+shift+space";
+
+    bindings.insert(
+        "transcribe_live".to_string(),
+        ShortcutBinding {
+            id: "transcribe_live".to_string(),
+            name: "Live Transcription".to_string(),
+            description: "Shows the text live in a floating bubble as you speak. The text stays in the bubble (it is not pasted).".to_string(),
+            default_binding: default_live_shortcut.to_string(),
+            current_binding: default_live_shortcut.to_string(),
+        },
+    );
+
     AppSettings {
         bindings,
         push_to_talk: true,
@@ -830,6 +856,7 @@ pub fn get_default_settings() -> AppSettings {
         paste_method: PasteMethod::default(),
         clipboard_handling: ClipboardHandling::default(),
         clipboard_only: false,
+        live_auto_paste: default_live_auto_paste(),
         auto_submit: default_auto_submit(),
         auto_submit_key: AutoSubmitKey::default(),
         post_process_enabled: default_post_process_enabled(),

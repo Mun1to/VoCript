@@ -8,6 +8,7 @@ mod clipboard;
 mod commands;
 mod helpers;
 mod input;
+mod live;
 mod llm_client;
 mod managers;
 mod overlay;
@@ -169,6 +170,7 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     app_handle.manage(model_manager.clone());
     app_handle.manage(transcription_manager.clone());
     app_handle.manage(history_manager.clone());
+    app_handle.manage(live::LiveState::default());
 
     // Note: Shortcuts are NOT initialized here.
     // The frontend is responsible for calling the `initialize_shortcuts` command
@@ -368,6 +370,7 @@ pub fn run(cli_args: CliArgs) {
             shortcut::set_system_audio_app,
             shortcut::list_system_audio_apps,
             shortcut::change_clipboard_only_setting,
+            shortcut::change_live_auto_paste_setting,
             shortcut::change_mute_while_recording_setting,
             shortcut::change_append_trailing_space_setting,
             shortcut::change_lazy_stream_close_setting,

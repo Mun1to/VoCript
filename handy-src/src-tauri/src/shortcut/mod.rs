@@ -1083,6 +1083,15 @@ pub fn change_clipboard_only_setting(app: AppHandle, enabled: bool) -> Result<()
 
 #[tauri::command]
 #[specta::specta]
+pub fn change_live_auto_paste_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    settings.live_auto_paste = enabled;
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
 pub fn change_mute_while_recording_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
     let mut settings = settings::get_settings(&app);
     settings.mute_while_recording = enabled;

@@ -207,6 +207,10 @@
           "transcribe_system": {
             "name": "System Audio Hotkey",
             "description": "The keyboard shortcut to transcribe the audio playing on your computer (e.g. a video) instead of the microphone."
+          },
+          "transcribe_live": {
+            "name": "Live Transcription Hotkey",
+            "description": "Shows the text live in a floating bubble as you speak. The text stays in the bubble (it is not pasted)."
           }
         },
         "errors": {
@@ -230,6 +234,10 @@
       "clipboardOnly": {
         "label": "Copy to clipboard",
         "description": "When transcription finishes, copy the text to the clipboard and show a confirmation instead of pasting it into the active app. Recommended when capturing system audio, so the text doesn't land on top of the video or call."
+      },
+      "liveCopy": {
+        "label": "Auto-paste live",
+        "description": "When the live transcription stops, automatically paste the final text into the active app (like normal dictation). When off, the text stays in an editable bubble and you copy it with the copy button."
       },
       "systemAudioApp": {
         "title": "System audio app",
@@ -676,6 +684,10 @@
   "overlay": {
     "transcribing": "Transcribing...",
     "processing": "Processing...",
-    "copied": "✓ Copied"
+    "copied": "✓ Copied",
+    "listening": "Listening…",
+    "cancel": "Cancel",
+    "copyToClipboard": "Copy to clipboard",
+    "editTranscription": "Edit transcription"
   }
 }

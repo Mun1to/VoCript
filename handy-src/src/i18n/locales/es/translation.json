@@ -238,6 +238,10 @@
           "transcribe_system": {
             "name": "Atajo de Audio del Sistema",
             "description": "El atajo de teclado para transcribir el audio que suena en el ordenador (por ejemplo un vídeo) en vez del micrófono."
+          },
+          "transcribe_live": {
+            "name": "Atajo de Transcripción en Vivo",
+            "description": "Muestra el texto en directo en una burbuja flotante mientras hablas. El texto se queda en la burbuja (no se pega)."
           }
         },
         "errors": {
@@ -261,6 +265,10 @@
       "clipboardOnly": {
         "label": "Copiar al portapapeles",
         "description": "Al terminar la transcripción, copia el texto al portapapeles y muestra un aviso en vez de pegarlo en la app activa. Recomendado al capturar audio del sistema, para que el texto no caiga encima del vídeo o la llamada."
+      },
+      "liveCopy": {
+        "label": "Pegar en vivo automáticamente",
+        "description": "Cuando paras la transcripción en vivo, pega el texto final en la app activa (como el dictado normal). Si lo desactivas, el texto se queda en una cápsula editable y lo copias con el botón de copiar."
       },
       "systemAudioApp": {
         "title": "App del audio del sistema",
@@ -676,6 +684,10 @@
   "overlay": {
     "transcribing": "Transcribiendo...",
     "processing": "Procesando...",
-    "copied": "✓ Copiado"
+    "copied": "✓ Copiado",
+    "listening": "Escuchando…",
+    "cancel": "Cancelar",
+    "copyToClipboard": "Copiar al portapapeles",
+    "editTranscription": "Editar transcripción"
   }
 }

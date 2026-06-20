@@ -5,6 +5,8 @@
   "windows": ["main", "recording_overlay"],
   "permissions": [
     "core:default",
+    "core:window:allow-start-dragging",
+    "clipboard-manager:allow-write-text",
     "opener:default",
     "store:default",
     "updater:default",

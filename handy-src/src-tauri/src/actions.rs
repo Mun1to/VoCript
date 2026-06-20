@@ -48,6 +48,9 @@ pub trait ShortcutAction: Send + Sync {
 // Transcribe Action
 struct TranscribeAction {
     post_process: bool,
+    /// Live mode: show a floating bubble with the text as you speak; the final
+    /// text stays in the bubble (it is not pasted).
+    live: bool,
 }
 
 /// Field name for structured output JSON schema
@@ -407,7 +410,11 @@ impl ShortcutAction for TranscribeAction {
 
         let binding_id = binding_id.to_string();
         change_tray_icon(app, TrayIconState::Recording);
-        show_recording_overlay(app);
+        if self.live {
+            crate::overlay::show_live_overlay(app);
+        } else {
+            show_recording_overlay(app);
+        }
 
         // Get the microphone mode to determine audio feedback timing
         let settings = get_settings(app);
@@ -461,6 +468,10 @@ impl ShortcutAction for TranscribeAction {
         if recording_error.is_none() {
             // Dynamically register the cancel shortcut in a separate task to avoid deadlock
             shortcut::register_cancel_shortcut(app);
+            // In live mode, start the partial re-transcription loop.
+            if self.live {
+                crate::live::start(app);
+            }
         } else {
             // Starting failed (for example due to blocked microphone permissions).
             // Revert UI state so we don't stay stuck in the recording overlay.
@@ -493,6 +504,16 @@ impl ShortcutAction for TranscribeAction {
     fn stop(&self, app: &AppHandle, binding_id: &str, _shortcut_str: &str) {
         // Unregister the cancel shortcut when transcription stops
         shortcut::unregister_cancel_shortcut(app);
+
+        // Always stop the live partial loop (no-op when it isn't running).
+        crate::live::stop(app);
+
+        // Live mode has its own finish path: it leaves the final text in the
+        // floating bubble and does NOT paste or hide the overlay.
+        if self.live {
+            stop_live(app, binding_id);
+            return;
+        }
 
         let stop_time = Instant::now();
         debug!("TranscribeAction::stop called for binding: {}", binding_id);
@@ -686,6 +707,104 @@ impl ShortcutAction for TranscribeAction {
     }
 }
 
+/// Finish a live-mode recording. Two behaviours depending on `live_auto_paste`:
+/// - ON: show the small "Transcribing…" indicator, then paste the final text
+///   into the active app like normal dictation (the bubble closes).
+/// - OFF: leave the final text in the editable bubble; the user copies it with
+///   the copy button. The bubble stays until cancelled.
+fn stop_live(app: &AppHandle, binding_id: &str) {
+    let auto_paste = get_settings(app).live_auto_paste;
+
+    // Auto-paste mode shrinks the capsule back to the small "Transcribing…"
+    // indicator while the final transcription runs.
+    if auto_paste {
+        change_tray_icon(app, TrayIconState::Transcribing);
+        show_transcribing_overlay(app);
+    }
+
+    let ah = app.clone();
+    let rm = Arc::clone(&app.state::<Arc<AudioRecordingManager>>());
+    let tm = Arc::clone(&app.state::<Arc<TranscriptionManager>>());
+    let hm = Arc::clone(&app.state::<Arc<HistoryManager>>());
+    let binding_id = binding_id.to_string();
+
+    tauri::async_runtime::spawn(async move {
+        let _guard = FinishGuard(ah.clone());
+
+        let Some(samples) = rm.stop_recording(&binding_id) else {
+            utils::hide_recording_overlay(&ah);
+            change_tray_icon(&ah, TrayIconState::Idle);
+            return;
+        };
+
+        // Discard very short recordings (same threshold as normal dictation).
+        const MIN_TRANSCRIPTION_SAMPLES: usize = 24_000;
+        if samples.len() < MIN_TRANSCRIPTION_SAMPLES {
+            utils::hide_recording_overlay(&ah);
+            change_tray_icon(&ah, TrayIconState::Idle);
+            return;
+        }
+
+        // Save the WAV concurrently with the final transcription.
+        let sample_count = samples.len();
+        let file_name = format!("vocript-{}.wav", chrono::Utc::now().timestamp());
+        let wav_path = hm.recordings_dir().join(&file_name);
+        let wav_path_for_verify = wav_path.clone();
+        let samples_for_wav = samples.clone();
+        let wav_handle = tauri::async_runtime::spawn_blocking(move || {
+            crate::audio_toolkit::save_wav_file(&wav_path, &samples_for_wav)
+        });
+
+        let transcription_result = tm.transcribe(samples);
+
+        let wav_saved = matches!(wav_handle.await, Ok(Ok(())))
+            && crate::audio_toolkit::verify_wav_file(&wav_path_for_verify, sample_count).is_ok();
+
+        match transcription_result {
+            Ok(text) => {
+                if wav_saved {
+                    if let Err(err) = hm.save_entry(file_name, text.clone(), false, None, None) {
+                        error!("Failed to save live history entry: {}", err);
+                    }
+                }
+
+                if text.trim().is_empty() {
+                    // Nothing recognised — just close the bubble.
+                    utils::hide_recording_overlay(&ah);
+                    change_tray_icon(&ah, TrayIconState::Idle);
+                } else if auto_paste {
+                    // Paste into the active app, exactly like normal dictation.
+                    let ah_clone = ah.clone();
+                    let final_text = text;
+                    ah.run_on_main_thread(move || {
+                        if let Err(e) = utils::paste(final_text, ah_clone.clone()) {
+                            error!("Failed to paste live transcription: {}", e);
+                            let _ = ah_clone.emit("paste-error", ());
+                        }
+                        utils::hide_recording_overlay(&ah_clone);
+                        change_tray_icon(&ah_clone, TrayIconState::Idle);
+                    })
+                    .unwrap_or_else(|e| {
+                        error!("Failed to run paste on main thread: {:?}", e);
+                        utils::hide_recording_overlay(&ah);
+                        change_tray_icon(&ah, TrayIconState::Idle);
+                    });
+                } else {
+                    // Leave the final text in the editable bubble; the user
+                    // copies it manually with the copy button.
+                    crate::overlay::emit_live_finished(&ah, &text, false);
+                    change_tray_icon(&ah, TrayIconState::Idle);
+                }
+            }
+            Err(err) => {
+                error!("Live transcription error: {}", err);
+                utils::hide_recording_overlay(&ah);
+                change_tray_icon(&ah, TrayIconState::Idle);
+            }
+        }
+    });
+}
+
 // Cancel Action
 struct CancelAction;
 
@@ -729,16 +848,28 @@ pub static ACTION_MAP: Lazy<HashMap<String, Arc<dyn ShortcutAction>>> = Lazy::ne
         "transcribe".to_string(),
         Arc::new(TranscribeAction {
             post_process: false,
+            live: false,
         }) as Arc<dyn ShortcutAction>,
     );
     map.insert(
         "transcribe_with_post_process".to_string(),
-        Arc::new(TranscribeAction { post_process: true }) as Arc<dyn ShortcutAction>,
+        Arc::new(TranscribeAction {
+            post_process: true,
+            live: false,
+        }) as Arc<dyn ShortcutAction>,
     );
     map.insert(
         "transcribe_system".to_string(),
         Arc::new(TranscribeAction {
             post_process: false,
+            live: false,
+        }) as Arc<dyn ShortcutAction>,
+    );
+    map.insert(
+        "transcribe_live".to_string(),
+        Arc::new(TranscribeAction {
+            post_process: false,
+            live: true,
         }) as Arc<dyn ShortcutAction>,
     );
     map.insert(

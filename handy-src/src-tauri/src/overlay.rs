@@ -34,6 +34,10 @@ tauri_panel! {
 const OVERLAY_WIDTH: f64 = 172.0;
 const OVERLAY_HEIGHT: f64 = 36.0;
 
+// Live-transcription mode uses a wider, taller capsule (logo + text bubble).
+const LIVE_OVERLAY_WIDTH: f64 = 560.0;
+const LIVE_OVERLAY_HEIGHT: f64 = 100.0;
+
 #[cfg(target_os = "macos")]
 const OVERLAY_TOP_OFFSET: f64 = 46.0;
 #[cfg(any(target_os = "windows", target_os = "linux"))]
@@ -190,6 +194,58 @@ fn is_mouse_within_monitor(
         && mouse_y < (monitor_y + monitor_height as i32)
 }
 
+/// On Windows, find the monitor that contains the foreground (focused) window.
+/// This is where the user is actually typing, which is far more reliable than
+/// the mouse cursor for placing the overlay on multi-monitor setups: the mouse
+/// may sit on a different screen than the text field being dictated into.
+#[cfg(target_os = "windows")]
+fn get_monitor_with_foreground_window(app_handle: &AppHandle) -> Option<tauri::Monitor> {
+    use windows::Win32::Foundation::RECT;
+    use windows::Win32::UI::WindowsAndMessaging::{GetForegroundWindow, GetWindowRect};
+
+    let (center_x, center_y) = unsafe {
+        let hwnd = GetForegroundWindow();
+        if hwnd.0.is_null() {
+            return None;
+        }
+        let mut rect = RECT::default();
+        if GetWindowRect(hwnd, &mut rect).is_err() {
+            return None;
+        }
+        ((rect.left + rect.right) / 2, (rect.top + rect.bottom) / 2)
+    };
+
+    // GetWindowRect returns physical pixels in the virtual desktop, which match
+    // Tauri's physical monitor position/size. Pick the monitor that contains the
+    // focused window's center point.
+    let monitors = app_handle.available_monitors().ok()?;
+    for monitor in monitors {
+        let pos = monitor.position();
+        let size = monitor.size();
+        if center_x >= pos.x
+            && center_x < pos.x + size.width as i32
+            && center_y >= pos.y
+            && center_y < pos.y + size.height as i32
+        {
+            return Some(monitor);
+        }
+    }
+    None
+}
+
+/// Returns the monitor where the overlay should appear. On Windows we prefer the
+/// monitor holding the focused window (where the user is typing); otherwise we
+/// fall back to the monitor under the mouse cursor.
+fn get_target_monitor(app_handle: &AppHandle) -> Option<tauri::Monitor> {
+    #[cfg(target_os = "windows")]
+    {
+        if let Some(monitor) = get_monitor_with_foreground_window(app_handle) {
+            return Some(monitor);
+        }
+    }
+    get_monitor_with_cursor(app_handle)
+}
+
 /// Returns overlay position in logical coordinates (points on macOS).
 ///
 /// Uses monitor position/size directly rather than work_area(), which can
@@ -200,8 +256,12 @@ fn is_mouse_within_monitor(
 /// We must use LogicalPosition (not PhysicalPosition) because Tauri/tao
 /// converts PhysicalPosition using the scale factor of the monitor the window
 /// is *currently* on, which is wrong when moving cross-monitor.
-fn calculate_overlay_position(app_handle: &AppHandle) -> Option<(f64, f64)> {
-    let monitor = get_monitor_with_cursor(app_handle)?;
+fn calculate_overlay_position_sized(
+    app_handle: &AppHandle,
+    width: f64,
+    height: f64,
+) -> Option<(f64, f64)> {
+    let monitor = get_target_monitor(app_handle)?;
     let scale = monitor.scale_factor();
     let monitor_x = monitor.position().x as f64 / scale;
     let monitor_y = monitor.position().y as f64 / scale;
@@ -210,15 +270,19 @@ fn calculate_overlay_position(app_handle: &AppHandle) -> Option<(f64, f64)> {
 
     let settings = settings::get_settings(app_handle);
 
-    let x = monitor_x + (monitor_width - OVERLAY_WIDTH) / 2.0;
+    let x = monitor_x + (monitor_width - width) / 2.0;
     let y = match settings.overlay_position {
         OverlayPosition::Top => monitor_y + OVERLAY_TOP_OFFSET,
         OverlayPosition::Bottom | OverlayPosition::None => {
-            monitor_y + monitor_height - OVERLAY_HEIGHT - OVERLAY_BOTTOM_OFFSET
+            monitor_y + monitor_height - height - OVERLAY_BOTTOM_OFFSET
         }
     };
 
     Some((x, y))
+}
+
+fn calculate_overlay_position(app_handle: &AppHandle) -> Option<(f64, f64)> {
+    calculate_overlay_position_sized(app_handle, OVERLAY_WIDTH, OVERLAY_HEIGHT)
 }
 
 /// Creates the recording overlay window and keeps it hidden by default
@@ -326,6 +390,15 @@ fn show_overlay_state(app_handle: &AppHandle, state: &str) {
         return;
     }
 
+    // Reset to the default compact size in case a previous live session left
+    // the window enlarged.
+    if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
+        let _ = overlay_window.set_size(tauri::Size::Logical(tauri::LogicalSize {
+            width: OVERLAY_WIDTH,
+            height: OVERLAY_HEIGHT,
+        }));
+    }
+
     update_overlay_position(app_handle);
 
     if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
@@ -359,6 +432,39 @@ pub fn show_copied_overlay(app_handle: &AppHandle) {
     show_overlay_state(app_handle, "copied");
 }
 
+/// Shows the live-transcription capsule: a wider/taller overlay that displays
+/// the text as it is recognised. Resizes the overlay window accordingly.
+pub fn show_live_overlay(app_handle: &AppHandle) {
+    let settings = settings::get_settings(app_handle);
+    if settings.overlay_position == OverlayPosition::None {
+        return;
+    }
+
+    if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
+        let _ = overlay_window.set_size(tauri::Size::Logical(tauri::LogicalSize {
+            width: LIVE_OVERLAY_WIDTH,
+            height: LIVE_OVERLAY_HEIGHT,
+        }));
+
+        #[cfg(target_os = "linux")]
+        update_gtk_layer_shell_anchors(&overlay_window);
+
+        if let Some((x, y)) =
+            calculate_overlay_position_sized(app_handle, LIVE_OVERLAY_WIDTH, LIVE_OVERLAY_HEIGHT)
+        {
+            let _ = overlay_window
+                .set_position(tauri::Position::Logical(tauri::LogicalPosition { x, y }));
+        }
+
+        let _ = overlay_window.show();
+
+        #[cfg(target_os = "windows")]
+        force_overlay_topmost(&overlay_window);
+
+        let _ = overlay_window.emit("show-overlay", "live");
+    }
+}
+
 /// Updates the overlay window position based on current settings
 pub fn update_overlay_position(app_handle: &AppHandle) {
     if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
@@ -387,6 +493,34 @@ pub fn hide_recording_overlay(app_handle: &AppHandle) {
             std::thread::sleep(std::time::Duration::from_millis(300));
             let _ = window_clone.hide();
         });
+    }
+}
+
+/// Emit live-transcription text to the recording overlay window.
+pub fn emit_live_text(app_handle: &AppHandle, text: &str) {
+    if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
+        let _ = overlay_window.emit("live-text", text);
+    }
+}
+
+#[derive(Clone, serde::Serialize)]
+struct LiveFinishedEvent {
+    text: String,
+    copied: bool,
+}
+
+/// Signal that the live session has finished: deliver the final text and whether
+/// it was already copied to the clipboard. The bubble switches to an editable
+/// state and shows the copy button.
+pub fn emit_live_finished(app_handle: &AppHandle, text: &str, copied: bool) {
+    if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
+        let _ = overlay_window.emit(
+            "live-finished",
+            LiveFinishedEvent {
+                text: text.to_string(),
+                copied,
+            },
+        );
     }
 }
 

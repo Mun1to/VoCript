@@ -7,6 +7,7 @@ import { SettingsGroup } from "../../ui/SettingsGroup";
 import { OutputDeviceSelector } from "../OutputDeviceSelector";
 import { PushToTalk } from "../PushToTalk";
 import { ClipboardOnlyToggle } from "../ClipboardOnlyToggle";
+import { LiveCopyToggle } from "../LiveCopyToggle";
 import { SystemAudioAppSelector } from "../SystemAudioAppSelector";
 import { AudioFeedback } from "../AudioFeedback";
 import { useSettings } from "../../../hooks/useSettings";
@@ -25,11 +26,13 @@ export const GeneralSettings: React.FC = () => {
       <SettingsGroup title={t("settings.general.title")}>
         <ShortcutInput shortcutId="transcribe" grouped={true} />
         <ShortcutInput shortcutId="transcribe_system" grouped={true} />
+        <ShortcutInput shortcutId="transcribe_live" grouped={true} />
         {isWindows && (
           <SystemAudioAppSelector descriptionMode="tooltip" grouped={true} />
         )}
         <PushToTalk descriptionMode="tooltip" grouped={true} />
         <ClipboardOnlyToggle descriptionMode="tooltip" grouped={true} />
+        <LiveCopyToggle descriptionMode="tooltip" grouped={true} />
         {/* Cancel shortcut is hidden with push-to-talk (release key cancels) and on Linux (dynamic shortcut instability) */}
         {!isLinux && !pushToTalk && (
           <ShortcutInput shortcutId="cancel" grouped={true} />
