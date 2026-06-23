@@ -31,7 +31,9 @@ export const AdvancedSettings: React.FC = () => {
   return (
     <div className="max-w-3xl w-full mx-auto space-y-6">
       <SettingsGroup title={t("settings.advanced.groups.appearance")}>
-        <ThemeSelector descriptionMode="tooltip" grouped={true} />
+        <div data-tour="theme-selector">
+          <ThemeSelector descriptionMode="tooltip" grouped={true} />
+        </div>
       </SettingsGroup>
 
       <SettingsGroup title={t("settings.advanced.groups.app")}>
@@ -52,7 +54,9 @@ export const AdvancedSettings: React.FC = () => {
 
       <SettingsGroup title={t("settings.advanced.groups.transcription")}>
         <CustomWords descriptionMode="tooltip" grouped />
-        <WordReplacements descriptionMode="tooltip" grouped />
+        <div data-tour="dictionary">
+          <WordReplacements descriptionMode="tooltip" grouped />
+        </div>
         <AppendTrailingSpace descriptionMode="tooltip" grouped={true} />
       </SettingsGroup>
 

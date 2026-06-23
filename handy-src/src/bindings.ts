@@ -374,6 +374,22 @@ async changeThemeSetting(theme: AppTheme) : Promise<Result<null, string>> {
     else return { status: "error", error: e  as any };
 }
 },
+async changeTourCompletedSetting(completed: boolean) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_tour_completed_setting", { completed }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async changeWorkProfileSetting(profile: string | null) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_work_profile_setting", { profile }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async changeUpdateChecksSetting(enabled: boolean) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("change_update_checks_setting", { enabled }) };
@@ -981,7 +997,17 @@ live_auto_paste?: boolean; auto_submit?: boolean; auto_submit_key?: AutoSubmitKe
 /**
  * Apariencia de la interfaz: seguir el sistema, claro u oscuro.
  */
-theme?: AppTheme; experimental_enabled?: boolean; lazy_stream_close?: boolean; keyboard_implementation?: KeyboardImplementation; show_tray_icon?: boolean; paste_delay_ms?: number; typing_tool?: TypingTool; external_script_path: string | null; custom_filler_words?: string[] | null; whisper_accelerator?: WhisperAcceleratorSetting; ort_accelerator?: OrtAcceleratorSetting; whisper_gpu_device?: number; extra_recording_buffer_ms?: number }
+theme?: AppTheme; 
+/**
+ * True una vez que el usuario ha completado (o saltado) el tour guiado de
+ * bienvenida. Evita que vuelva a aparecer solo; el botón «Guía» lo relanza.
+ */
+tour_completed?: boolean; 
+/**
+ * Perfil de trabajo elegido en el onboarding (p. ej. "writing", "coding",
+ * "meetings", "multilingual"). `None` = el usuario lo configura a mano.
+ */
+work_profile?: string | null; experimental_enabled?: boolean; lazy_stream_close?: boolean; keyboard_implementation?: KeyboardImplementation; show_tray_icon?: boolean; paste_delay_ms?: number; typing_tool?: TypingTool; external_script_path: string | null; custom_filler_words?: string[] | null; whisper_accelerator?: WhisperAcceleratorSetting; ort_accelerator?: OrtAcceleratorSetting; whisper_gpu_device?: number; extra_recording_buffer_ms?: number }
 /**
  * Apariencia de la interfaz. `System` sigue la preferencia del sistema
  * operativo (claro/oscuro); `Light` y `Dark` fuerzan el tema elegido.

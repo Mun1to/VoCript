@@ -24,9 +24,15 @@ export const GeneralSettings: React.FC = () => {
   return (
     <div className="max-w-3xl w-full mx-auto space-y-6">
       <SettingsGroup title={t("settings.general.title")}>
-        <ShortcutInput shortcutId="transcribe" grouped={true} />
-        <ShortcutInput shortcutId="transcribe_system" grouped={true} />
-        <ShortcutInput shortcutId="transcribe_live" grouped={true} />
+        <div data-tour="shortcut-transcribe">
+          <ShortcutInput shortcutId="transcribe" grouped={true} />
+        </div>
+        <div data-tour="shortcut-system">
+          <ShortcutInput shortcutId="transcribe_system" grouped={true} />
+        </div>
+        <div data-tour="shortcut-live">
+          <ShortcutInput shortcutId="transcribe_live" grouped={true} />
+        </div>
         {isWindows && (
           <SystemAudioAppSelector descriptionMode="tooltip" grouped={true} />
         )}

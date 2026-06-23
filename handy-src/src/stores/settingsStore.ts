@@ -150,6 +150,10 @@ const settingUpdaters: {
   log_level: (value) => commands.setLogLevel(value as any),
   app_language: (value) => commands.changeAppLanguageSetting(value as string),
   theme: (value) => commands.changeThemeSetting(value as AppTheme),
+  tour_completed: (value) =>
+    commands.changeTourCompletedSetting(value as boolean),
+  work_profile: (value) =>
+    commands.changeWorkProfileSetting((value as string | null) ?? null),
   experimental_enabled: (value) =>
     commands.changeExperimentalEnabledSetting(value as boolean),
   lazy_stream_close: (value) =>

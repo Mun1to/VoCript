@@ -377,6 +377,8 @@ pub fn run(cli_args: CliArgs) {
             shortcut::change_lazy_stream_close_setting,
             shortcut::change_app_language_setting,
             shortcut::change_theme_setting,
+            shortcut::change_tour_completed_setting,
+            shortcut::change_work_profile_setting,
             shortcut::change_update_checks_setting,
             shortcut::change_keyboard_implementation_setting,
             shortcut::get_keyboard_implementation,

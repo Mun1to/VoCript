@@ -456,6 +456,14 @@ pub struct AppSettings {
     /// Apariencia de la interfaz: seguir el sistema, claro u oscuro.
     #[serde(default)]
     pub theme: AppTheme,
+    /// True una vez que el usuario ha completado (o saltado) el tour guiado de
+    /// bienvenida. Evita que vuelva a aparecer solo; el botón «Guía» lo relanza.
+    #[serde(default)]
+    pub tour_completed: bool,
+    /// Perfil de trabajo elegido en el onboarding (p. ej. "writing", "coding",
+    /// "meetings", "multilingual"). `None` = el usuario lo configura a mano.
+    #[serde(default)]
+    pub work_profile: Option<String>,
     #[serde(default)]
     pub experimental_enabled: bool,
     #[serde(default)]
@@ -896,6 +904,8 @@ pub fn get_default_settings() -> AppSettings {
         append_trailing_space: false,
         app_language: default_app_language(),
         theme: AppTheme::System,
+        tour_completed: false,
+        work_profile: None,
         experimental_enabled: false,
         lazy_stream_close: false,
         keyboard_implementation: KeyboardImplementation::default(),

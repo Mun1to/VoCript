@@ -1153,6 +1153,24 @@ pub fn change_theme_setting(app: AppHandle, theme: settings::AppTheme) -> Result
 
 #[tauri::command]
 #[specta::specta]
+pub fn change_tour_completed_setting(app: AppHandle, completed: bool) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    settings.tour_completed = completed;
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn change_work_profile_setting(app: AppHandle, profile: Option<String>) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    settings.work_profile = profile;
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
 pub fn change_show_tray_icon_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
     let mut settings = settings::get_settings(&app);
     settings.show_tray_icon = enabled;

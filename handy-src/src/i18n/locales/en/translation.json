@@ -19,6 +19,88 @@
     "about": "About"
   },
   "onboarding": {
+    "profiles": {
+      "title": "What will you use VoCript for?",
+      "subtitle": "Pick a profile and we'll set it up for you. You can change everything later in the settings.",
+      "writing": {
+        "label": "Writing & notes",
+        "description": "Emails, notes and documents. Dictation with an automatic space between phrases."
+      },
+      "coding": {
+        "label": "Coding",
+        "description": "Code and comments. The personal dictionary shines with technical terms."
+      },
+      "meetings": {
+        "label": "Meetings & videos",
+        "description": "Transcribe calls, meetings and videos via system audio and files."
+      },
+      "study": {
+        "label": "Study & classes",
+        "description": "Take notes by dictating and transcribe your recorded lectures to text."
+      },
+      "accessibility": {
+        "label": "Hands-free",
+        "description": "Voice control without holding keys: press once to start, once to stop."
+      },
+      "multilingual": {
+        "label": "Multi-language",
+        "description": "Dictate in several languages with automatic detection."
+      },
+      "custom": {
+        "label": "I'd rather set it up myself →"
+      }
+    },
+    "tour": {
+      "guide": "Guide",
+      "replay": "Replay the welcome tour",
+      "next": "Next",
+      "back": "Back",
+      "skip": "Skip",
+      "finish": "Done",
+      "welcome": {
+        "title": "Welcome to VoCript! 🎙️",
+        "body": "Let me show you the basics in under a minute. After each feature you'll get to try it yourself. You can skip the tour anytime."
+      },
+      "shortcut": {
+        "title": "Set up your dictation shortcut",
+        "body": "First things first: make the shortcut yours. The recommended one is Ctrl + Space.\n\nChange it right here: click the shortcut below and press the combo you want. You can change it again later in Settings → General."
+      },
+      "systemAudio": {
+        "title": "System audio",
+        "body": "Want to transcribe what's playing on your PC (a video, a call) instead of your voice? Use this shortcut to capture system audio. You can also target a specific app."
+      },
+      "live": {
+        "title": "Live transcription",
+        "body": "With this shortcut the text appears in a floating capsule as you speak. Perfect for long dictations: on release it pastes itself or you copy it."
+      },
+      "file": {
+        "title": "Transcribe files",
+        "body": "Here you turn an audio or video file into text or .srt subtitles. Just drag and drop it and pick the output format."
+      },
+      "dictionary": {
+        "title": "Personal dictionary",
+        "body": "Does VoCript mistype a name or a technical term? Add exact replacements (from → to) and it'll always apply them. You can even import and export your list as CSV."
+      },
+      "history": {
+        "title": "History",
+        "body": "All your transcriptions are saved here. You can replay the original audio and copy the text whenever you need it."
+      },
+      "dictation": {
+        "title": "Voice dictation",
+        "body": "Place your cursor where you want to type, press your dictation shortcut, speak and release — the text appears on its own.\n\nTry it right here: click the box below and dictate something with your shortcut.",
+        "placeholder": "Click here and dictate with your shortcut…",
+        "success": "✓ It works! That easy."
+      },
+      "theme": {
+        "title": "Light or dark theme",
+        "body": "Here you choose VoCript's appearance: follow the system, light, or dark. Give it a try and keep the one you like best."
+      },
+      "donate": {
+        "title": "That's it! 🎉",
+        "body": "You now know the essentials. VoCript is free and runs 100% on your device.\n\nIf you find it useful and have something to spare, I'd really appreciate a donation to keep improving it. Thanks! 🙂",
+        "button": "Buy me a coffee"
+      }
+    },
     "subtitle": "To get started, choose a transcription model",
     "chooseLanguage": "What language will you dictate in?",
     "recommended": "Recommended",

@@ -19,6 +19,88 @@
     "about": "Acerca de"
   },
   "onboarding": {
+    "profiles": {
+      "title": "¿Para qué vas a usar VoCript?",
+      "subtitle": "Elige un perfil y lo dejamos configurado para ti. Podrás cambiarlo todo más tarde en los ajustes.",
+      "writing": {
+        "label": "Escritura y notas",
+        "description": "Correos, notas y documentos. Dictado con espacio automático entre frases."
+      },
+      "coding": {
+        "label": "Programación",
+        "description": "Código y comentarios. El diccionario personal brilla con términos técnicos."
+      },
+      "meetings": {
+        "label": "Reuniones y vídeos",
+        "description": "Transcribe llamadas, reuniones y vídeos con el audio del sistema y los archivos."
+      },
+      "study": {
+        "label": "Estudio y clases",
+        "description": "Toma apuntes dictando y transcribe tus clases grabadas a texto."
+      },
+      "accessibility": {
+        "label": "Manos libres",
+        "description": "Control por voz sin mantener teclas: pulsa una vez para empezar y otra para parar."
+      },
+      "multilingual": {
+        "label": "Multiidioma",
+        "description": "Dicta en varios idiomas con detección automática."
+      },
+      "custom": {
+        "label": "Prefiero configurarlo yo mismo →"
+      }
+    },
+    "tour": {
+      "guide": "Guía",
+      "replay": "Volver a ver el tour de bienvenida",
+      "next": "Siguiente",
+      "back": "Atrás",
+      "skip": "Omitir",
+      "finish": "Hecho",
+      "welcome": {
+        "title": "¡Bienvenido a VoCript! 🎙️",
+        "body": "Te enseño lo básico en menos de un minuto. Tras explicarte cada función podrás probarla tú mismo. Puedes omitir el tour cuando quieras."
+      },
+      "shortcut": {
+        "title": "Configura tu atajo de dictado",
+        "body": "Lo primero: deja el atajo a tu gusto. El recomendado es Ctrl + Espacio.\n\nCámbialo aquí mismo: haz clic en el atajo de abajo y pulsa la combinación que quieras. Podrás volver a cambiarlo en Ajustes → General."
+      },
+      "systemAudio": {
+        "title": "Audio del sistema",
+        "body": "¿Quieres transcribir lo que suena en el PC (un vídeo, una llamada) en vez de tu voz? Usa este atajo: captura el audio del sistema. También puedes elegir una app concreta."
+      },
+      "live": {
+        "title": "Transcripción en vivo",
+        "body": "Con este atajo el texto aparece en una cápsula flotante mientras hablas. Perfecto para dictados largos: al soltar, se pega solo o lo copias tú."
+      },
+      "file": {
+        "title": "Transcribir archivos",
+        "body": "Aquí conviertes un archivo de audio o vídeo en texto o subtítulos .srt. Solo arrástralo y suéltalo, y elige el formato de salida."
+      },
+      "dictionary": {
+        "title": "Diccionario personal",
+        "body": "¿VoCript escribe mal un nombre o un término técnico? Añade reemplazos exactos (de → a) y los aplicará siempre. Incluso puedes importar y exportar tu lista en CSV."
+      },
+      "history": {
+        "title": "Historial",
+        "body": "Todas tus transcripciones quedan guardadas aquí. Puedes volver a escuchar el audio original y copiar el texto cuando lo necesites."
+      },
+      "dictation": {
+        "title": "Dictado por voz",
+        "body": "Coloca el cursor donde quieras escribir, pulsa tu atajo de dictado, habla y suéltalo: el texto aparece solo.\n\nPruébalo aquí mismo: haz clic en el cuadro de abajo y dicta algo con tu atajo.",
+        "placeholder": "Haz clic aquí y dicta con tu atajo…",
+        "success": "✓ ¡Funciona! Así de fácil."
+      },
+      "theme": {
+        "title": "Tema claro u oscuro",
+        "body": "Aquí eliges la apariencia de VoCript: seguir el sistema, claro u oscuro. Pruébalo y quédate con el que más te guste."
+      },
+      "donate": {
+        "title": "¡Eso es todo! 🎉",
+        "body": "Ya conoces lo esencial. VoCript es gratis y funciona 100 % en tu equipo.\n\nSi te resulta útil y tienes algo suelto, agradecería mucho una donación para seguir mejorándolo. ¡Gracias! 🙂",
+        "button": "Invítame a un café"
+      }
+    },
     "subtitle": "Para comenzar, elige un modelo de transcripción",
     "chooseLanguage": "¿En qué idioma vas a dictar?",
     "recommended": "Recomendado",

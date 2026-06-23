@@ -11,14 +11,19 @@ import { ModelStateEvent, RecordingErrorEvent } from "./lib/types/events";
 import "./App.css";
 import AccessibilityPermissions from "./components/AccessibilityPermissions";
 import Footer from "./components/footer";
-import Onboarding, { AccessibilityOnboarding } from "./components/onboarding";
+import Onboarding, {
+  AccessibilityOnboarding,
+  ProfileSelection,
+} from "./components/onboarding";
 import { Sidebar, SidebarSection, SECTIONS_CONFIG } from "./components/Sidebar";
+import { GuidedTour } from "./components/tour/GuidedTour";
 import { useSettings } from "./hooks/useSettings";
 import { useSettingsStore } from "./stores/settingsStore";
+import { useTourStore } from "./stores/tourStore";
 import { commands } from "@/bindings";
 import { getLanguageDirection, initializeRTL } from "@/lib/utils/rtl";
 
-type OnboardingStep = "accessibility" | "model" | "done";
+type OnboardingStep = "accessibility" | "model" | "profile" | "done";
 
 const renderSettingsContent = (section: SidebarSection) => {
   const ActiveComponent =
@@ -36,6 +41,8 @@ function App() {
   const [isReturningUser, setIsReturningUser] = useState(false);
   const [currentSection, setCurrentSection] =
     useState<SidebarSection>("general");
+  const [profileLeaving, setProfileLeaving] = useState(false);
+  const startTour = useTourStore((state) => state.start);
   const { settings, updateSetting } = useSettings();
   const direction = getLanguageDirection(i18n.language);
   const refreshAudioDevices = useSettingsStore(
@@ -242,8 +249,19 @@ function App() {
   };
 
   const handleModelSelected = () => {
-    // Transition to main app - user has started a download
-    setOnboardingStep("done");
+    // New users pick a work profile before entering the app.
+    setOnboardingStep("profile");
+  };
+
+  const handleProfileComplete = () => {
+    // Start the tour now (its welcome card renders behind the still-opaque
+    // profile overlay) and dissolve the overlay to cross-fade into the app.
+    startTour();
+    setProfileLeaving(true);
+    window.setTimeout(() => {
+      setOnboardingStep("done");
+      setProfileLeaving(false);
+    }, 360);
   };
 
   // Still checking onboarding status
@@ -259,6 +277,9 @@ function App() {
     return <Onboarding onModelSelected={handleModelSelected} />;
   }
 
+  // For "profile" and "done" the main app is mounted. During "profile" the
+  // ProfileSelection sits on top as an opaque overlay; picking a profile
+  // dissolves it to reveal the app (with the tour's welcome card already there).
   return (
     <div
       dir={direction}
@@ -294,6 +315,22 @@ function App() {
       </div>
       {/* Fixed footer at bottom */}
       <Footer />
+
+      {/* Guided feature tour overlay (auto-starts for new users; replayable
+          from the footer "Guía" button). */}
+      <GuidedTour onNavigate={setCurrentSection} />
+
+      {/* Work-profile picker: opaque overlay above the app + tour. Choosing a
+          profile dissolves it (vc-leave) to cross-fade into the tour. */}
+      {onboardingStep === "profile" && (
+        <div
+          className={`fixed inset-0 z-[10000] bg-background ${
+            profileLeaving ? "vc-leave" : "vc-fade-in"
+          }`}
+        >
+          <ProfileSelection onComplete={handleProfileComplete} />
+        </div>
+      )}
     </div>
   );
 }
