@@ -846,6 +846,12 @@
     "profile": "Profil:",
     "lightMode": "Ljust",
     "darkMode": "Mörkt",
-    "micReady": "Mikrofon redo"
+    "micReady": "Mikrofon redo",
+    "mode": {
+      "voice": "Röst",
+      "system": "System",
+      "normal": "Normal",
+      "live": "Live"
+    }
   }
 }

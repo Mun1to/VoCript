@@ -846,6 +846,12 @@
     "profile": "Profil:",
     "lightMode": "Hell",
     "darkMode": "Dunkel",
-    "micReady": "Mikrofon bereit"
+    "micReady": "Mikrofon bereit",
+    "mode": {
+      "voice": "Stimme",
+      "system": "System",
+      "normal": "Normal",
+      "live": "Live"
+    }
   }
 }

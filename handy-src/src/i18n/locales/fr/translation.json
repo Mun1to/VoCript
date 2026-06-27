@@ -846,6 +846,12 @@
     "profile": "Profil :",
     "lightMode": "Clair",
     "darkMode": "Sombre",
-    "micReady": "Micro prêt"
+    "micReady": "Micro prêt",
+    "mode": {
+      "voice": "Voix",
+      "system": "Système",
+      "normal": "Normal",
+      "live": "Direct"
+    }
   }
 }

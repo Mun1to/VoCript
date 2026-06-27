@@ -846,6 +846,12 @@
     "profile": "פרופיל:",
     "lightMode": "בהיר",
     "darkMode": "כהה",
-    "micReady": "מיקרופון מוכן"
+    "micReady": "מיקרופון מוכן",
+    "mode": {
+      "voice": "קול",
+      "system": "מערכת",
+      "normal": "רגיל",
+      "live": "חי"
+    }
   }
 }

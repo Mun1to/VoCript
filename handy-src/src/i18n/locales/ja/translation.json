@@ -846,6 +846,12 @@
     "profile": "プロファイル:",
     "lightMode": "ライト",
     "darkMode": "ダーク",
-    "micReady": "マイク準備完了"
+    "micReady": "マイク準備完了",
+    "mode": {
+      "voice": "音声",
+      "system": "システム",
+      "normal": "通常",
+      "live": "ライブ"
+    }
   }
 }

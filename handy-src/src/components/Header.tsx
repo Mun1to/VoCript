@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Sun, Moon } from "lucide-react";
 import { useSettings } from "../hooks/useSettings";
-import { WORK_PROFILES } from "../lib/constants/workProfiles";
+import { TranscriptionModeSwitch } from "./TranscriptionModeSwitch";
 import type { SidebarSection } from "./Sidebar";
 import type { AppTheme } from "@/bindings";
 
@@ -14,19 +14,8 @@ export const Header: React.FC<HeaderProps> = ({ currentSection }) => {
   const { t } = useTranslation();
   const { settings, updateSetting } = useSettings();
 
-  const activeProfileId = settings?.work_profile || "writing";
   const currentTheme: AppTheme = settings?.theme || "dark";
   const isLight = currentTheme === "light";
-
-  const handleProfileChange = (profileId: string) => {
-    const targetProfile = WORK_PROFILES.find((p) => p.id === profileId);
-    if (!targetProfile) return;
-
-    updateSetting("work_profile", profileId === "custom" ? null : profileId);
-    for (const [key, value] of Object.entries(targetProfile.settings)) {
-      updateSetting(key as any, value as any);
-    }
-  };
 
   const toggleTheme = () => {
     const nextTheme: AppTheme = isLight ? "dark" : "light";
@@ -53,35 +42,8 @@ export const Header: React.FC<HeaderProps> = ({ currentSection }) => {
 
       {/* Persistent Header Toolbar - Clean Frameless */}
       <div className="flex items-center gap-4">
-        {/* Work Profile Selector (Only Dropdown) */}
-        <div className="flex items-center text-xs">
-          <select
-            value={activeProfileId}
-            onChange={(e) => handleProfileChange(e.target.value)}
-            className={`bg-transparent font-bold focus:outline-none cursor-pointer py-1 px-1.5 rounded-lg transition-colors ${
-              isLight
-                ? "text-blue-600 hover:bg-slate-100"
-                : "text-blue-400 hover:bg-white/[0.06]"
-            }`}
-          >
-            {WORK_PROFILES.map((profile) => (
-              <option
-                key={profile.id}
-                value={profile.id}
-                className={
-                  isLight
-                    ? "bg-white text-slate-900"
-                    : "bg-[#141620] text-slate-200"
-                }
-              >
-                {profile.emoji}{" "}
-                {t(`onboarding.profiles.${profile.id}.label`, {
-                  defaultValue: profile.id,
-                })}
-              </option>
-            ))}
-          </select>
-        </div>
+        {/* Transcription mode switch (voice / system × normal / live) */}
+        <TranscriptionModeSwitch />
 
         {/* Light / Dark Mode Toggle Button */}
         <button

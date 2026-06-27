@@ -846,6 +846,12 @@
     "profile": "الملف الشخصي:",
     "lightMode": "فاتح",
     "darkMode": "داكن",
-    "micReady": "الميكروفون جاهز"
+    "micReady": "الميكروفون جاهز",
+    "mode": {
+      "voice": "صوت",
+      "system": "النظام",
+      "normal": "عادي",
+      "live": "مباشر"
+    }
   }
 }

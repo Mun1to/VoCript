@@ -846,6 +846,12 @@
     "profile": "프로필:",
     "lightMode": "라이트",
     "darkMode": "다크",
-    "micReady": "마이크 준비됨"
+    "micReady": "마이크 준비됨",
+    "mode": {
+      "voice": "음성",
+      "system": "시스템",
+      "normal": "일반",
+      "live": "실시간"
+    }
   }
 }

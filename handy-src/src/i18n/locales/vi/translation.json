@@ -846,6 +846,12 @@
     "profile": "Hồ sơ:",
     "lightMode": "Sáng",
     "darkMode": "Tối",
-    "micReady": "Mic sẵn sàng"
+    "micReady": "Mic sẵn sàng",
+    "mode": {
+      "voice": "Giọng",
+      "system": "Hệ thống",
+      "normal": "Thường",
+      "live": "Trực tiếp"
+    }
   }
 }

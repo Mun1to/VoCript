@@ -846,6 +846,12 @@
     "profile": "Profil:",
     "lightMode": "Açık",
     "darkMode": "Koyu",
-    "micReady": "Mikrofon hazır"
+    "micReady": "Mikrofon hazır",
+    "mode": {
+      "voice": "Ses",
+      "system": "Sistem",
+      "normal": "Normal",
+      "live": "Canlı"
+    }
   }
 }

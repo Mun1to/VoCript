@@ -846,6 +846,12 @@
     "profile": "設定檔:",
     "lightMode": "淺色",
     "darkMode": "深色",
-    "micReady": "麥克風就緒"
+    "micReady": "麥克風就緒",
+    "mode": {
+      "voice": "語音",
+      "system": "系統",
+      "normal": "一般",
+      "live": "即時"
+    }
   }
 }

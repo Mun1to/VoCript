@@ -846,6 +846,12 @@
     "profile": "Profil:",
     "lightMode": "Světlý",
     "darkMode": "Tmavý",
-    "micReady": "Mikrofon připraven"
+    "micReady": "Mikrofon připraven",
+    "mode": {
+      "voice": "Hlas",
+      "system": "Systém",
+      "normal": "Normální",
+      "live": "Živě"
+    }
   }
 }

@@ -850,6 +850,12 @@
     "profile": "配置文件:",
     "lightMode": "浅色",
     "darkMode": "深色",
-    "micReady": "麦克风就绪"
+    "micReady": "麦克风就绪",
+    "mode": {
+      "voice": "语音",
+      "system": "系统",
+      "normal": "普通",
+      "live": "实时"
+    }
   }
 }

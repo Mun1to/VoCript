@@ -14,7 +14,13 @@
     "profile": "Perfil:",
     "lightMode": "Claro",
     "darkMode": "Oscuro",
-    "micReady": "Mic listo"
+    "micReady": "Mic listo",
+    "mode": {
+      "voice": "Voz",
+      "system": "Sistema",
+      "normal": "Normal",
+      "live": "En vivo"
+    }
   },
   "sidebar": {
     "general": "General",
