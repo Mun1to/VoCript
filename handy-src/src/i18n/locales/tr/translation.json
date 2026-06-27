@@ -748,7 +748,20 @@
     },
     "feedback": {
       "title": "Geri Bildirim ve Gelecek Özellikler",
-      "description": "Geri bildirimleriniz gelecek sürümleri ve yeni uygulamaları geliştirmemize yardımcı olur."
+      "description": "Geri bildirimleriniz gelecek sürümleri ve yeni uygulamaları geliştirmemize yardımcı olur.",
+      "categories": {
+        "idea": "Öneri",
+        "ideaDesc": "Yeni özellikler",
+        "bug": "Sorun bildir",
+        "bugDesc": "Hatalar veya arızalar",
+        "general": "Genel geri bildirim",
+        "generalDesc": "Deneyiminiz"
+      },
+      "formLabel": "Mesajınızı veya fikrinizi açıklayın:",
+      "placeholder": "Görüşünüzü, bir özellik önerisini veya karşılaştığınız bir sorunu yazın...",
+      "note": "VoCript'i geliştirmek için her mesajı okuyoruz.",
+      "sent": "Başarıyla gönderildi!",
+      "sendBtn": "Geri bildirim gönder"
     }
   },
   "footer": {

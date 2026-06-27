@@ -748,7 +748,20 @@
     },
     "feedback": {
       "title": "피드백 및 향후 기능",
-      "description": "귀하의 피드백은 향후 버전 및 신규 애플리케이션 개발에 큰 도움이 됩니다."
+      "description": "귀하의 피드백은 향후 버전 및 신규 애플리케이션 개발에 큰 도움이 됩니다.",
+      "categories": {
+        "idea": "제안",
+        "ideaDesc": "새로운 기능",
+        "bug": "문제 신고",
+        "bugDesc": "오류 또는 결함",
+        "general": "일반 의견",
+        "generalDesc": "사용 경험"
+      },
+      "formLabel": "메시지나 아이디어를 자세히 적어 주세요:",
+      "placeholder": "의견, 기능 제안 또는 발견한 문제를 적어 주세요...",
+      "note": "모든 메시지를 검토하여 VoCript를 개선합니다.",
+      "sent": "전송되었습니다!",
+      "sendBtn": "피드백 보내기"
     }
   },
   "footer": {

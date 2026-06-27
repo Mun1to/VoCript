@@ -748,7 +748,20 @@
     },
     "feedback": {
       "title": "Phản hồi & Tính năng Tương lai",
-      "description": "Ý kiến của bạn giúp chúng tôi phát triển các phiên bản và ứng dụng tiếp theo."
+      "description": "Ý kiến của bạn giúp chúng tôi phát triển các phiên bản và ứng dụng tiếp theo.",
+      "categories": {
+        "idea": "Đề xuất",
+        "ideaDesc": "Tính năng mới",
+        "bug": "Báo cáo sự cố",
+        "bugDesc": "Lỗi hoặc trục trặc",
+        "general": "Phản hồi chung",
+        "generalDesc": "Trải nghiệm của bạn"
+      },
+      "formLabel": "Mô tả tin nhắn hoặc ý tưởng của bạn:",
+      "placeholder": "Viết ý kiến, đề xuất tính năng hoặc sự cố bạn gặp phải...",
+      "note": "Chúng tôi đọc mọi tin nhắn để cải thiện VoCript.",
+      "sent": "Đã gửi thành công!",
+      "sendBtn": "Gửi phản hồi"
     }
   },
   "footer": {

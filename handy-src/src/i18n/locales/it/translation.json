@@ -748,7 +748,20 @@
     },
     "feedback": {
       "title": "Feedback e Nuove Funzionalità",
-      "description": "I tuoi commenti ci aiutano a sviluppare le prossime versioni e future applicazioni."
+      "description": "I tuoi commenti ci aiutano a sviluppare le prossime versioni e future applicazioni.",
+      "categories": {
+        "idea": "Suggerimento",
+        "ideaDesc": "Nuove funzioni",
+        "bug": "Segnala un problema",
+        "bugDesc": "Errori o malfunzionamenti",
+        "general": "Opinione generale",
+        "generalDesc": "La tua esperienza"
+      },
+      "formLabel": "Descrivi il tuo messaggio o la tua idea:",
+      "placeholder": "Scrivi la tua opinione, un suggerimento di funzione o un problema riscontrato...",
+      "note": "Leggiamo ogni messaggio per migliorare VoCript.",
+      "sent": "Inviato con successo!",
+      "sendBtn": "Invia feedback"
     }
   },
   "footer": {

@@ -748,7 +748,20 @@
     },
     "feedback": {
       "title": "Zpětná vazba a budoucí funkce",
-      "description": "Vaše názory pomáhají utvářet budoucí verze VoCript a další aplikace."
+      "description": "Vaše názory pomáhají utvářet budoucí verze VoCript a další aplikace.",
+      "categories": {
+        "idea": "Návrh",
+        "ideaDesc": "Nové funkce",
+        "bug": "Nahlásit problém",
+        "bugDesc": "Chyby nebo závady",
+        "general": "Obecná zpětná vazba",
+        "generalDesc": "Vaše zkušenost"
+      },
+      "formLabel": "Popište svou zprávu nebo nápad:",
+      "placeholder": "Napište svůj názor, návrh funkce nebo nalezený problém...",
+      "note": "Čteme každou zprávu, abychom vylepšili VoCript.",
+      "sent": "Úspěšně odesláno!",
+      "sendBtn": "Odeslat zpětnou vazbu"
     }
   },
   "footer": {

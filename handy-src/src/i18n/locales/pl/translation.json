@@ -748,7 +748,20 @@
     },
     "feedback": {
       "title": "Opinie i Przyszłe Funkcje",
-      "description": "Twoje opinie pomagają kształtować nadchodzące wersje i nowe aplikacje."
+      "description": "Twoje opinie pomagają kształtować nadchodzące wersje i nowe aplikacje.",
+      "categories": {
+        "idea": "Sugestia",
+        "ideaDesc": "Nowe funkcje",
+        "bug": "Zgłoś problem",
+        "bugDesc": "Błędy lub usterki",
+        "general": "Ogólna opinia",
+        "generalDesc": "Twoje doświadczenie"
+      },
+      "formLabel": "Opisz swoją wiadomość lub pomysł:",
+      "placeholder": "Napisz swoją opinię, propozycję funkcji lub napotkany problem...",
+      "note": "Czytamy każdą wiadomość, aby ulepszać VoCript.",
+      "sent": "Wysłano pomyślnie!",
+      "sendBtn": "Wyślij opinię"
     }
   },
   "footer": {

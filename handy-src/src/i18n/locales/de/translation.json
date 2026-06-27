@@ -748,7 +748,20 @@
     },
     "feedback": {
       "title": "Feedback & Zukünftige Funktionen",
-      "description": "Ihre Rückmeldungen helfen uns, zukünftige Versionen und neue Apps zu gestalten."
+      "description": "Ihre Rückmeldungen helfen uns, zukünftige Versionen und neue Apps zu gestalten.",
+      "categories": {
+        "idea": "Vorschlag",
+        "ideaDesc": "Neue Funktionen",
+        "bug": "Problem melden",
+        "bugDesc": "Fehler oder Störungen",
+        "general": "Allgemeines Feedback",
+        "generalDesc": "Deine Erfahrung"
+      },
+      "formLabel": "Beschreibe deine Nachricht oder Idee:",
+      "placeholder": "Schreibe deine Meinung, einen Funktionsvorschlag oder ein gefundenes Problem...",
+      "note": "Wir lesen jede Nachricht, um VoCript zu verbessern.",
+      "sent": "Erfolgreich gesendet!",
+      "sendBtn": "Feedback senden"
     }
   },
   "footer": {

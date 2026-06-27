@@ -748,7 +748,20 @@
     },
     "feedback": {
       "title": "Feedback & Framtida Funktioner",
-      "description": "Dina synpunkter hjälper oss att forma kommande versioner och nya appar."
+      "description": "Dina synpunkter hjälper oss att forma kommande versioner och nya appar.",
+      "categories": {
+        "idea": "Förslag",
+        "ideaDesc": "Nya funktioner",
+        "bug": "Rapportera ett problem",
+        "bugDesc": "Fel eller buggar",
+        "general": "Allmän feedback",
+        "generalDesc": "Din upplevelse"
+      },
+      "formLabel": "Beskriv ditt meddelande eller din idé:",
+      "placeholder": "Skriv din åsikt, ett funktionsförslag eller ett problem du hittat...",
+      "note": "Vi läser varje meddelande för att förbättra VoCript.",
+      "sent": "Skickat!",
+      "sendBtn": "Skicka feedback"
     }
   },
   "footer": {

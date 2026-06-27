@@ -748,7 +748,20 @@
     },
     "feedback": {
       "title": "回饋與未來功能規劃",
-      "description": "您的回饋將直接幫助我們改進 VoCript 的後續版本及未來推出的新應用。"
+      "description": "您的回饋將直接幫助我們改進 VoCript 的後續版本及未來推出的新應用。",
+      "categories": {
+        "idea": "建議",
+        "ideaDesc": "新功能",
+        "bug": "回報問題",
+        "bugDesc": "錯誤或故障",
+        "general": "整體意見",
+        "generalDesc": "你的使用體驗"
+      },
+      "formLabel": "請描述你的訊息或想法：",
+      "placeholder": "寫下你的意見、功能建議或遇到的問題……",
+      "note": "我們會檢視每一則訊息，以改善 VoCript。",
+      "sent": "傳送成功！",
+      "sendBtn": "傳送意見回饋"
     }
   },
   "footer": {

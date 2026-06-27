@@ -9,6 +9,7 @@ import {
   Cpu,
   AudioLines,
   FileAudio,
+  MessageSquare,
 } from "lucide-react";
 import HandyTextLogo from "./icons/HandyTextLogo";
 import { useSettings } from "../hooks/useSettings";
@@ -21,6 +22,7 @@ import {
   PostProcessingSettings,
   ModelsSettings,
   FileTranscription,
+  FeedbackSettings,
 } from "./settings";
 
 export type SidebarSection = keyof typeof SECTIONS_CONFIG;
@@ -81,6 +83,12 @@ export const SECTIONS_CONFIG = {
     labelKey: "sidebar.about",
     icon: Info,
     component: AboutSettings,
+    enabled: () => true,
+  },
+  feedback: {
+    labelKey: "sidebar.feedback",
+    icon: MessageSquare,
+    component: FeedbackSettings,
     enabled: () => true,
   },
   advanced: {

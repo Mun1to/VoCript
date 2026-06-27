@@ -752,7 +752,20 @@
     },
     "feedback": {
       "title": "反馈与未来功能规划",
-      "description": "您的反馈将直接帮助我们改进 VoCript 的后续版本及未来推出的新应用。"
+      "description": "您的反馈将直接帮助我们改进 VoCript 的后续版本及未来推出的新应用。",
+      "categories": {
+        "idea": "建议",
+        "ideaDesc": "新功能",
+        "bug": "报告问题",
+        "bugDesc": "错误或故障",
+        "general": "总体反馈",
+        "generalDesc": "你的使用体验"
+      },
+      "formLabel": "请描述你的留言或想法：",
+      "placeholder": "写下你的意见、功能建议或遇到的问题……",
+      "note": "我们会查看每一条留言，以改进 VoCript。",
+      "sent": "发送成功！",
+      "sendBtn": "发送反馈"
     }
   },
   "footer": {
