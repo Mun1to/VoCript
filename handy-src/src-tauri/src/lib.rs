@@ -547,8 +547,8 @@ pub fn run(cli_args: CliArgs) {
             let mut win_builder =
                 tauri::WebviewWindowBuilder::new(app, "main", tauri::WebviewUrl::App("/".into()))
                     .title("VoCript")
-                    .inner_size(680.0, 570.0)
-                    .min_inner_size(680.0, 570.0)
+                    .inner_size(900.0, 640.0)
+                    .min_inner_size(820.0, 600.0)
                     .resizable(true)
                     .maximizable(false)
                     .visible(false);
