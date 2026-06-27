@@ -6,7 +6,9 @@
     "unloadModel": "卸载模型",
     "model": "模型",
     "quit": "退出",
-    "cancel": "取消"
+    "cancel": "取消",
+    "liveTranscriptionVoice": "Live: Voice",
+    "liveTranscriptionSystem": "Live: System Audio"
   },
   "sidebar": {
     "general": "通用",
@@ -15,7 +17,9 @@
     "postProcessing": "后处理",
     "history": "历史记录",
     "debug": "调试",
-    "about": "关于"
+    "about": "关于",
+    "fileTranscription": "文件转录",
+    "feedback": "反馈与建议"
   },
   "onboarding": {
     "subtitle": "请选择一个转录模型以开始使用",
@@ -117,7 +121,90 @@
         "checkFailed": "检查权限失败。请重试。",
         "requestFailed": "请求权限失败。请重试。"
       }
-    }
+    },
+    "profiles": {
+      "writing": {
+        "label": "写作与笔记",
+        "description": "Emails, notes and documents. Dictation with an automatic space between phrases."
+      },
+      "coding": {
+        "label": "编程开发",
+        "description": "Code and comments. The personal dictionary shines with technical terms."
+      },
+      "meetings": {
+        "label": "会议与视频",
+        "description": "Transcribe calls, meetings and videos via system audio and files."
+      },
+      "study": {
+        "label": "学习与课程",
+        "description": "Take notes by dictating and transcribe your recorded lectures to text."
+      },
+      "accessibility": {
+        "label": "免提操作",
+        "description": "Voice control without holding keys: press once to start, once to stop."
+      },
+      "multilingual": {
+        "label": "多语言",
+        "description": "Dictate in several languages with automatic detection."
+      },
+      "custom": {
+        "label": "自定义"
+      },
+      "title": "What will you use VoCript for?",
+      "subtitle": "Pick a profile and we'll set it up for you. You can change everything later in the settings."
+    },
+    "tour": {
+      "guide": "Guide",
+      "replay": "Replay the welcome tour",
+      "next": "Next",
+      "back": "Back",
+      "skip": "Skip",
+      "finish": "Done",
+      "welcome": {
+        "title": "Welcome to VoCript! 🎙️",
+        "body": "Let me show you the basics in under a minute. After each feature you'll get to try it yourself. You can skip the tour anytime."
+      },
+      "shortcut": {
+        "title": "Set up your dictation shortcut",
+        "body": "First things first: make the shortcut yours. The recommended one is Ctrl + Space.\n\nChange it right here: click the shortcut below and press the combo you want. You can change it again later in Settings → General."
+      },
+      "systemAudio": {
+        "title": "System audio",
+        "body": "Want to transcribe what's playing on your PC (a video, a call) instead of your voice? Use this shortcut to capture system audio. You can also target a specific app."
+      },
+      "live": {
+        "title": "Live transcription",
+        "body": "Turn on \"Live mode\" and the text appears in a floating capsule as you speak (or as system audio plays). There's a switch for voice and another for system audio — no separate shortcut needed."
+      },
+      "file": {
+        "title": "Transcribe files",
+        "body": "Here you turn an audio or video file into text or .srt subtitles. Just drag and drop it and pick the output format."
+      },
+      "dictionary": {
+        "title": "Personal dictionary",
+        "body": "Does VoCript mistype a name or a technical term? Add exact replacements (from → to) and it'll always apply them. You can even import and export your list as CSV."
+      },
+      "history": {
+        "title": "History",
+        "body": "All your transcriptions are saved here. You can replay the original audio and copy the text whenever you need it."
+      },
+      "dictation": {
+        "title": "Voice dictation",
+        "body": "Place your cursor where you want to type, press your dictation shortcut, speak and release — the text appears on its own.\n\nTry it right here: click the box below and dictate something with your shortcut.",
+        "placeholder": "Click here and dictate with your shortcut…",
+        "success": "✓ It works! That easy."
+      },
+      "theme": {
+        "title": "Light or dark theme",
+        "body": "Here you choose VoCript's appearance: follow the system, light, or dark. Give it a try and keep the one you like best."
+      },
+      "donate": {
+        "title": "That's it! 🎉",
+        "body": "You now know the essentials. VoCript is free and runs 100% on your device.\n\nIf you find it useful and have something to spare, I'd really appreciate a donation to keep improving it. Thanks! 🙂",
+        "button": "请我喝杯咖啡"
+      }
+    },
+    "chooseLanguage": "What language will you dictate in?"
   },
   "modelSelector": {
     "custom": "自定义",
@@ -171,7 +258,20 @@
       },
       "noModelsMatch": "没有符合此筛选条件的模型。",
       "yourModels": "已下载的模型",
-      "availableModels": "可供下载"
+      "availableModels": "可供下载",
+      "import": {
+        "title": "Reuse existing models",
+        "description": "Already have a model on this computer (e.g. from a previous install)? Reuse it instead of downloading again.",
+        "scan": "Scan computer",
+        "file": "Import file (.bin)",
+        "folder": "Import folder",
+        "use": "Use",
+        "already": "Already added",
+        "imported": "Model imported",
+        "failed": "Could not import the model",
+        "noneFound": "No reusable models found on this computer."
+      },
+      "recommendedForLanguage": "Recommended for {{language}}"
     },
     "general": {
       "title": "通用",
@@ -194,6 +294,14 @@
           "transcribe_with_post_process": {
             "name": "后处理快捷键",
             "description": "可选：一个专用快捷键，始终对您的转录应用 AI 后处理。"
+          },
+          "transcribe_system": {
+            "name": "System Audio Hotkey",
+            "description": "The keyboard shortcut to transcribe the audio playing on your computer (e.g. a video) instead of the microphone."
+          },
+          "transcribe_live": {
+            "name": "Live Transcription Hotkey",
+            "description": "Shows the text live in a floating bubble as you speak. The text stays in the bubble (it is not pasted)."
           }
         },
         "errors": {
@@ -213,6 +321,37 @@
       "pushToTalk": {
         "label": "按住说话",
         "description": "按住录制，松开停止"
+      },
+      "systemAudioHotkey": {
+        "label": "系统音频快捷键",
+        "description": "按下快捷键以记录和转录计算机内部播放的音频（如会议或视频）。"
+      },
+      "clipboardOnly": {
+        "label": "仅复制到剪贴板",
+        "description": "转录完成后将文本复制到剪贴板，而不是直接粘贴到当前应用中。"
+      },
+      "sourceAttribution": {
+        "label": "添加音频来源",
+        "description": "转录系统音频时，自动附加播放来源信息（标题、软件等）。仅限 Windows。"
+      },
+      "liveMode": {
+        "voice": {
+          "label": "实时语音模式",
+          "description": "开启后，听写快捷键将显示实时悬浮字幕，边说边显示文字。"
+        },
+        "system": {
+          "label": "实时系统音频模式",
+          "description": "开启后，系统音频快捷键将在悬浮字幕中实时转录播放的内容。"
+        }
+      },
+      "liveCopy": {
+        "label": "实时自动粘贴",
+        "description": "实时转录停止后，自动将最终文本粘贴到当前活动应用中。"
+      },
+      "systemAudioApp": {
+        "title": "系统音频应用",
+        "description": "选择系统音频快捷键捕获的目标应用（如整个系统或单一软件）。",
+        "wholeSystem": "整个系统"
       }
     },
     "sound": {
@@ -245,7 +384,8 @@
         "output": "输出",
         "transcription": "转录",
         "history": "历史",
-        "experimental": "实验性"
+        "experimental": "实验性",
+        "appearance": "Appearance"
       },
       "experimentalToggle": {
         "label": "实验性功能",
@@ -356,6 +496,33 @@
         "add": "添加",
         "remove": "删除 {{word}}",
         "duplicate": "\"{{word}}\" 已存在"
+      },
+      "wordReplacements": {
+        "title": "Personal dictionary",
+        "description": "Replaces exact words or phrases when transcribing. Ideal for proper names, jargon or abbreviations. Case-insensitive.",
+        "fromPlaceholder": "When you hear…",
+        "toPlaceholder": "Replace with…",
+        "add": "Add",
+        "remove": "Remove {{word}}",
+        "duplicate": "There's already a replacement for \"{{word}}\"",
+        "hint": "Only the exact, whole word is changed. Add each variant (singular, plural, etc.) separately.",
+        "import": "Import CSV",
+        "export": "Export CSV",
+        "csvHelp": {
+          "title": "What should the CSV look like?",
+          "cols": "Two comma-separated columns: the original word and what to replace it with. One row per replacement.",
+          "header": "The header row (de,a) is optional — include it or not.",
+          "exampleLabel": "Example:",
+          "quotes": "If a value contains commas, wrap it in double quotes: \"hello, there\",greeting",
+          "encoding": "Save it as UTF-8. From Excel or Google Sheets: two columns and \"Save as → CSV\".",
+          "tip": "Tip: click \"Export CSV\" to get a file with the exact format ready to edit."
+        },
+        "imported": "{{count}} replacements imported",
+        "importError": "Couldn't import the file",
+        "importEmpty": "The file has no valid replacements",
+        "exportEmpty": "No replacements to export",
+        "exportError": "Couldn't export the file",
+        "exported": "Dictionary exported"
       }
     },
     "postProcessing": {
@@ -431,7 +598,8 @@
       "retranscribe": "重新转录",
       "retranscribeError": "重新转录失败。请重试。",
       "transcribing": "转录中...",
-      "transcriptionFailed": "转录失败。您可以使用重试图标重新转录。"
+      "transcriptionFailed": "转录失败。您可以使用重试图标重新转录。",
+      "audioLoadError": "Could not load the recording audio"
     },
     "debug": {
       "title": "调试",
@@ -527,7 +695,9 @@
       "supportDevelopment": {
         "title": "支持开发",
         "description": "帮助我们继续开发 VoCript",
-        "button": "捐赠"
+        "button": "捐赠",
+        "coffee": "请我喝杯咖啡",
+        "handy": "支持 VoCript"
       },
       "acknowledgments": {
         "title": "致谢",
@@ -535,8 +705,54 @@
           "title": "Whisper.cpp",
           "description": "OpenAI Whisper 自动语音识别模型的高性能推理",
           "details": "VoCript 使用 Whisper.cpp 进行快速的本地语音转文字处理。感谢 Georgi Gerganov 和贡献者们的出色工作。"
+        },
+        "handy": {
+          "title": "Handy",
+          "description": "VoCript is a fork of the open-source project Handy, created by cjpais.",
+          "button": "View Handy"
         }
+      },
+      "contact": {
+        "title": "Contact",
+        "description": "About me and my other projects",
+        "button": "View portfolio"
       }
+    },
+    "theme": {
+      "title": "Theme",
+      "description": "Choose VoCript's appearance: follow the system, light, or dark.",
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "fileTranscription": {
+      "title": "Transcribe file",
+      "description": "Transcribe an audio or video file to text or subtitles (.srt). Everything is processed on your device, offline.",
+      "dropzone": "Drag an audio or video file here",
+      "selectFile": "or click to choose one",
+      "changeFile": "Click to change the file",
+      "supportedFormats": "Supported formats: MP3, WAV, FLAC, OGG, M4A, MP4, AAC, MKV… (Opus not supported).",
+      "fileFilter": "Audio or video",
+      "format": "Format:",
+      "formatText": "Text",
+      "formatSrt": "Subtitles (SRT)",
+      "transcribe": "Transcribe",
+      "transcribing": "Transcribing… (this may take a while)",
+      "duration": "Duration: {{duration}}",
+      "copy": "Copy",
+      "copied": "Copied",
+      "save": "Save…",
+      "saved": "File saved",
+      "errors": {
+        "failed": "Could not transcribe the file",
+        "unsupported": "Unsupported file format",
+        "copy": "Could not copy to clipboard",
+        "save": "Could not save the file"
+      }
+    },
+    "feedback": {
+      "title": "反馈与未来功能规划",
+      "description": "您的反馈将直接帮助我们改进 VoCript 的后续版本及未来推出的新应用。"
     }
   },
   "footer": {
@@ -554,7 +770,10 @@
     "checkForUpdates": "检查更新",
     "portableUpdateTitle": "Manual update required",
     "portableUpdateMessage": "Portable installs cannot be updated automatically. To update: download the latest NSIS installer from GitHub Releases, install it to the same folder, then copy your Data/ folder (settings, models, recordings) from the old version to the new one.",
-    "portableUpdateButton": "Open GitHub Releases"
+    "portableUpdateButton": "Open GitHub Releases",
+    "updateNow": "Update",
+    "later": "Later",
+    "updateAvailableDescription": "It will install and the app will restart itself."
   },
   "common": {
     "loading": "加载中...",
@@ -607,6 +826,17 @@
   },
   "overlay": {
     "transcribing": "正在转录...",
-    "processing": "处理中..."
+    "processing": "处理中...",
+    "copied": "✓ Copied",
+    "listening": "Listening…",
+    "cancel": "Cancel",
+    "copyToClipboard": "Copy to clipboard",
+    "editTranscription": "Edit transcription"
+  },
+  "header": {
+    "profile": "配置文件:",
+    "lightMode": "浅色",
+    "darkMode": "深色",
+    "micReady": "麦克风就绪"
   }
 }

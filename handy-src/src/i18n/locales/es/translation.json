@@ -10,6 +10,12 @@
     "quit": "Salir",
     "cancel": "Cancelar"
   },
+  "header": {
+    "profile": "Perfil:",
+    "lightMode": "Claro",
+    "darkMode": "Oscuro",
+    "micReady": "Mic listo"
+  },
   "sidebar": {
     "general": "General",
     "models": "Modelos",
@@ -18,7 +24,8 @@
     "postProcessing": "Post Proceso",
     "history": "Historial",
     "debug": "Depuración",
-    "about": "Acerca de"
+    "about": "Acerca de",
+    "feedback": "Feedback y Sugerencias"
   },
   "onboarding": {
     "profiles": {
@@ -45,11 +52,11 @@
         "description": "Control por voz sin mantener teclas: pulsa una vez para empezar y otra para parar."
       },
       "multilingual": {
-        "label": "Multiidioma",
+        "label": "Multilingüe",
         "description": "Dicta en varios idiomas con detección automática."
       },
       "custom": {
-        "label": "Prefiero configurarlo yo mismo →"
+        "label": "Personalizado"
       }
     },
     "tour": {
@@ -379,6 +386,10 @@
         "title": "App del audio del sistema",
         "description": "Elige qué capturar con el atajo de audio del sistema: todo el ordenador o solo una aplicación concreta (p. ej. Spotify). La app debe estar reproduciendo audio para aparecer en la lista; usa el botón de refrescar.",
         "wholeSystem": "Todo el sistema"
+      },
+      "systemAudioHotkey": {
+        "label": "Atajo de Audio del Sistema",
+        "description": "Presiona este atajo para grabar y transcribir el audio interno de tu ordenador."
       }
     },
     "sound": {
@@ -743,6 +754,10 @@
           "button": "Ver Handy"
         }
       }
+    },
+    "feedback": {
+      "title": "Feedback y Futuras Funciones",
+      "description": "Tus comentarios nos ayudan a dar forma a las próximas versiones de VoCript y futuras aplicaciones."
     }
   },
   "footer": {

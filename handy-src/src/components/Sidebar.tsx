@@ -102,14 +102,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const { t } = useTranslation();
   const { settings } = useSettings();
+  const isLight = settings?.theme === "light";
 
   const availableSections = Object.entries(SECTIONS_CONFIG)
     .filter(([_, config]) => config.enabled(settings))
     .map(([id, config]) => ({ id: id as SidebarSection, ...config }));
 
-  const renderSectionButton = (
-    section: (typeof availableSections)[number],
-  ) => {
+  const renderSectionButton = (section: (typeof availableSections)[number]) => {
     const Icon = section.icon;
     const isActive = activeSection === section.id;
 
@@ -119,45 +118,56 @@ export const Sidebar: React.FC<SidebarProps> = ({
         type="button"
         onClick={() => onSectionChange(section.id)}
         title={t(section.labelKey)}
-        className={`group relative flex items-center gap-2.5 w-full rounded-lg ps-3 pe-2 py-2 text-start transition-all ${
+        className={`group relative flex items-center gap-3 w-full rounded-xl ps-3.5 pe-3 py-2.5 text-start transition-all duration-200 font-semibold text-xs ${
           isActive
-            ? "bg-background-ui text-white shadow-sm shadow-background-ui/30"
-            : "text-text/70 hover:bg-mid-gray/15 hover:text-text"
+            ? "bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]"
+            : isLight
+              ? "text-slate-600 hover:bg-slate-200/60 hover:text-slate-900"
+              : "text-slate-400 hover:bg-white/[0.05] hover:text-slate-200"
         }`}
       >
-        {isActive && (
-          <span className="absolute start-0 top-1.5 bottom-1.5 w-1 rounded-full bg-white/80" />
-        )}
         <Icon
-          width={20}
-          height={20}
-          className={`shrink-0 ${
-            isActive ? "" : "text-logo-primary group-hover:text-text"
+          width={18}
+          height={18}
+          className={`shrink-0 transition-colors ${
+            isActive
+              ? "text-white"
+              : isLight
+                ? "text-blue-600 group-hover:text-blue-700"
+                : "text-blue-400 group-hover:text-blue-300"
           }`}
         />
-        <span className="text-sm font-medium truncate">
-          {t(section.labelKey)}
-        </span>
+        <span className="truncate">{t(section.labelKey)}</span>
       </button>
     );
   };
 
-  // "Ajustes avanzados" is pinned to the very bottom of the sidebar,
-  // separated from the rest of the navigation.
   const topSections = availableSections.filter((s) => s.id !== "advanced");
   const advancedSection = availableSections.find((s) => s.id === "advanced");
 
   return (
-    <div className="flex flex-col w-48 h-full shrink-0 border-e border-mid-gray/15 bg-mid-gray/5">
-      <div className="flex flex-col items-center px-4 pt-5 pb-4">
-        <HandyTextLogo width={128} />
+    <div
+      className={`flex flex-col w-52 h-full shrink-0 border-e select-none transition-colors duration-200 ${
+        isLight
+          ? "bg-slate-100 border-slate-200"
+          : "bg-[#0c0d12] border-white/10"
+      }`}
+    >
+      <div className="flex flex-col items-center px-4 pt-5 pb-3">
+        <HandyTextLogo width={136} />
       </div>
-      <div className="mx-3 mb-2 h-px bg-gradient-to-r from-transparent via-mid-gray/30 to-transparent" />
-      <nav className="flex flex-col gap-1 px-2.5 py-1 overflow-y-auto flex-1 min-h-0">
+      <div className="mx-4 mb-3 h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
+      <nav className="flex flex-col gap-1.5 px-3 py-1 overflow-y-auto flex-1 min-h-0">
         {topSections.map((section) => renderSectionButton(section))}
       </nav>
       {advancedSection && (
-        <nav className="flex flex-col gap-1 px-2.5 pt-2 pb-2 border-t border-mid-gray/15">
+        <nav
+          className={`flex flex-col gap-1 px-3 pt-2.5 pb-3 border-t transition-colors ${
+            isLight
+              ? "border-slate-200 bg-slate-200/40"
+              : "border-white/10 bg-[#0a0b0f]"
+          }`}
+        >
           {renderSectionButton(advancedSection)}
         </nav>
       )}

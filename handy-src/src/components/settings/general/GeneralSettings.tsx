@@ -21,8 +21,14 @@ export const GeneralSettings: React.FC = () => {
   const { t } = useTranslation();
   const { audioFeedbackEnabled, getSetting } = useSettings();
   const pushToTalk = getSetting("push_to_talk");
-  const isLinux = type() === "linux";
-  const isWindows = type() === "windows";
+  let isLinux = false;
+  let isWindows = true;
+  try {
+    isLinux = type() === "linux";
+    isWindows = type() === "windows";
+  } catch {
+    // browser fallback
+  }
   return (
     <div className="max-w-3xl w-full mx-auto space-y-6">
       <SettingsGroup title={t("settings.general.title")}>

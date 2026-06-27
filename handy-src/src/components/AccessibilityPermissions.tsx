@@ -21,8 +21,12 @@ const AccessibilityPermissions: React.FC = () => {
   const [permissionState, setPermissionState] =
     useState<PermissionState>("request");
 
-  // Accessibility permissions are only required on macOS
-  const isMacOS = type() === "macos";
+  let isMacOS = false;
+  try {
+    isMacOS = type() === "macos";
+  } catch {
+    isMacOS = false;
+  }
 
   // Check permissions without requesting
   const checkPermissions = async (): Promise<boolean> => {

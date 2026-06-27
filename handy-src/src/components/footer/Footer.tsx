@@ -6,9 +6,12 @@ import { HelpCircle } from "lucide-react";
 import ModelSelector from "../model-selector";
 import UpdateChecker from "../update-checker";
 import { useTourStore } from "../../stores/tourStore";
+import { useSettings } from "../../hooks/useSettings";
 
 const Footer: React.FC = () => {
   const { t } = useTranslation();
+  const { settings } = useSettings();
+  const isLight = settings?.theme === "light";
   const startTour = useTourStore((state) => state.start);
   const [version, setVersion] = useState("");
 
@@ -18,8 +21,7 @@ const Footer: React.FC = () => {
         const appVersion = await getVersion();
         setVersion(appVersion);
       } catch (error) {
-        console.error("Failed to get app version:", error);
-        setVersion("0.1.2");
+        setVersion("3.1.0");
       }
     };
 
@@ -27,28 +29,45 @@ const Footer: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full border-t border-mid-gray/20 pt-3">
-      <div className="flex justify-between items-center text-xs px-4 pb-3 text-text/60">
+    <div
+      className={`w-full border-t py-2.5 px-4 select-none shrink-0 transition-colors duration-200 ${
+        isLight
+          ? "bg-slate-100 border-slate-200 text-slate-700"
+          : "bg-[#0a0b0f] border-white/10 text-slate-400"
+      }`}
+    >
+      <div className="flex justify-between items-center text-xs">
         <div className="flex items-center gap-4">
           <ModelSelector />
         </div>
 
-        {/* Update Status */}
-        <div className="flex items-center gap-2">
+        {/* Update Status & Guide Links */}
+        <div className="flex items-center gap-3 font-semibold">
           <button
             type="button"
             onClick={startTour}
             title={t("onboarding.tour.replay")}
-            className="flex items-center gap-1 hover:text-text transition-colors"
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border transition-colors ${
+              isLight
+                ? "bg-white hover:bg-slate-200/60 border-slate-300 text-slate-800"
+                : "bg-white/[0.05] hover:text-white border-white/5 text-slate-300"
+            }`}
           >
-            <HelpCircle className="w-3.5 h-3.5" />
-            {t("onboarding.tour.guide")}
+            <HelpCircle className="w-3.5 h-3.5 text-blue-500" />
+            <span>{t("onboarding.tour.guide")}</span>
           </button>
-          <span>•</span>
+          <span className="opacity-40">•</span>
           <UpdateChecker />
-          <span>•</span>
-          {/* eslint-disable-next-line i18next/no-literal-string */}
-          <span>v{version}</span>
+          <span className="opacity-40">•</span>
+          <span
+            className={`font-mono text-[11px] px-2 py-0.5 rounded-md border ${
+              isLight
+                ? "bg-slate-200/60 border-slate-300 text-slate-700"
+                : "bg-black/40 border-white/5 text-slate-400"
+            }`}
+          >
+            v{version || "3.1.0"}
+          </span>
         </div>
       </div>
     </div>

@@ -76,17 +76,26 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
 
   // Check platform and permission status on mount
   useEffect(() => {
-    const currentPlatform = platform();
-    const nextPlatform: PermissionPlatform =
-      currentPlatform === "macos"
-        ? "macos"
-        : currentPlatform === "windows"
-          ? "windows"
-          : "other";
+    let nextPlatform: PermissionPlatform = "other";
+    try {
+      const currentPlatform = platform();
+      nextPlatform =
+        currentPlatform === "macos"
+          ? "macos"
+          : currentPlatform === "windows"
+            ? "windows"
+            : "other";
+    } catch (e) {
+      console.warn(
+        "Failed to detect platform in AccessibilityOnboarding (browser preview mode):",
+        e,
+      );
+      nextPlatform = "other";
+    }
 
     setPermissionPlatform(nextPlatform);
 
-    // Skip immediately on unsupported platforms
+    // Skip immediately on unsupported platforms or browser preview
     if (nextPlatform === "other") {
       onComplete();
       return;

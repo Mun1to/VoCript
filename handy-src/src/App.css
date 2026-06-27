@@ -1,144 +1,126 @@
 @import "tailwindcss";
 
+@layer base {
+  body,
+  html {
+    font-family:
+      "Inter",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      Helvetica,
+      Arial,
+      sans-serif;
+    letter-spacing: -0.011em;
+  }
+}
+
 @theme {
-  /* Design tokens */
-  --color-text: #0f0f0f;
-  --color-background: #fbfbfb;
+  /* Design tokens - Strict Black & VoCript Blue */
+  --color-text: #f8fafc;
+  --color-background: #090a0f;
   --color-background-ui: #2563eb;
-  --color-logo-primary: #93c5fd;
-  --color-logo-stroke: #1e3a5f;
-  --color-text-stroke: #f6f6f6;
-  --color-mid-gray: #808080;
+  --color-logo-primary: #3b82f6;
+  --color-logo-stroke: #1d4ed8;
+  --color-text-stroke: #f8fafc;
+  --color-mid-gray: #64748b;
 }
 
 :root {
-  /* Typography */
-  font-size: 15px;
-  line-height: 24px;
+  font-size: 14px;
+  line-height: 1.5;
   font-weight: 400;
 
-  /* Colors - Light Theme */
-  /* --color-text: #0f0f0f;
-  --color-background: #fbfbfb;
-  --color-logo-primary: #FAA2CA;
-  --color-logo-stroke: #382731;
-  --color-text-stroke: #f6f6f6; */
-
-  /* Typography settings */
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
 
-  --scrollbar-thumb: color-mix(in srgb, var(--color-text), transparent 85%);
-  --scrollbar-thumb-hover: color-mix(
-    in srgb,
-    var(--color-text),
-    transparent 70%
-  );
+  --scrollbar-thumb: rgba(255, 255, 255, 0.15);
+  --scrollbar-thumb-hover: rgba(59, 130, 246, 0.5);
 
-  /* Apply colors */
-  color: var(--color-text);
-  background-color: var(--color-background);
+  color: #f8fafc;
+  background-color: #090a0f;
 }
 
-.container {
-  margin: 0;
-  padding-top: 10vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
+/* Theme variables */
+:root[data-theme="dark"],
+:root {
+  --color-text: #f8fafc;
+  --color-background: #090a0f;
+  --color-logo-primary: #3b82f6;
+  --color-logo-stroke: #1d4ed8;
+
+  --vc-header-bg: #0c0d12;
+  --vc-sidebar-bg: #0c0d12;
+  --vc-card-bg: #12131a;
+  --vc-border: rgba(255, 255, 255, 0.08);
+  --vc-text-main: #f8fafc;
+  --vc-text-muted: #94a3b8;
+  --vc-pill-bg: #181924;
 }
 
-/*
- * Theme resolution:
- * - No `data-theme` (or "system") → follow the OS preference below.
- * - `data-theme="light"` → keep the light tokens from :root (OS dark is ignored).
- * - `data-theme="dark"` → force the dark tokens regardless of OS.
- * The attribute is set on <html> from the `theme` setting (see App.tsx).
- */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]):not([data-theme="dark"]) {
-    /* Colors - Dark Theme (system) */
-    --color-text: #fbfbfb;
-    --color-background: #2c2b29;
-    --color-logo-primary: #60a5fa;
-    --color-logo-stroke: #bfdbfe;
-  }
+:root[data-theme="light"] {
+  --color-text: #0f172a;
+  --color-background: #f8fafc;
+  --color-logo-primary: #2563eb;
+  --color-logo-stroke: #1d4ed8;
+
+  --vc-header-bg: #ffffff;
+  --vc-sidebar-bg: #f1f5f9;
+  --vc-card-bg: #ffffff;
+  --vc-border: #e2e8f0;
+  --vc-text-main: #0f172a;
+  --vc-text-muted: #64748b;
+  --vc-pill-bg: #e2e8f0;
+
+  color: #0f172a;
+  background-color: #f8fafc;
 }
 
-:root[data-theme="dark"] {
-  /* Colors - Dark Theme (forced) */
-  --color-text: #fbfbfb;
-  --color-background: #2c2b29;
-  --color-logo-primary: #60a5fa;
-  --color-logo-stroke: #bfdbfe;
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
-
-/* macOS - tint native overlay scrollbar thumb */
-:root[data-platform="macos"] {
-  scrollbar-color: var(--scrollbar-thumb) transparent;
-}
-
-/* Custom Scrollbar - only on Windows/Linux; macOS uses native overlay scrollbars */
-:root:not([data-platform="macos"]) ::-webkit-scrollbar {
-  width: 14px;
-  height: 14px;
-}
-
-:root:not([data-platform="macos"]) ::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: transparent;
 }
-
-:root:not([data-platform="macos"]) ::-webkit-scrollbar-thumb {
-  background-color: var(--scrollbar-thumb);
-  border-radius: 20px;
-  border: 3px solid transparent;
-  border-right-width: 4px;
-  border-left-width: 3px;
-  background-clip: content-box;
-  min-height: 32px;
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3b82f6;
 }
 
-:root:not([data-platform="macos"]) ::-webkit-scrollbar-thumb:hover {
-  background-color: var(--scrollbar-thumb-hover);
+/* Premium Visual Utility Classes */
+.vc-card-glow {
+  background: var(--vc-card-bg);
+  border: 1px solid var(--vc-border);
+  border-radius: 16px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@layer utilities {
-  .text-stroke {
-    -webkit-text-stroke: 2px var(--color-text-stroke);
-  }
+:root[data-theme="dark"] .vc-card-glow:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.12);
 }
 
-.logo-primary {
-  fill: var(--color-logo-primary);
+:root[data-theme="light"] .vc-card-glow {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.logo-stroke {
-  fill: var(--color-logo-stroke);
-  stroke: var(--color-logo-stroke);
-  stroke-width: 1;
+.vc-blue-glow {
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.35);
 }
 
-/* ---- Onboarding & guided tour animations ---------------------------------
-   Smooth, "professional" transitions: content fades/slides in per step, the
-   spotlight glides between targets, and onboarding cards rise in with a slight
-   stagger. */
-@keyframes vc-fade-in {
+/* Smooth Fade Animations */
+@keyframes vcFadeIn {
   from {
     opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes vc-step-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(4px);
   }
   to {
     opacity: 1;
@@ -146,86 +128,6 @@
   }
 }
 
-@keyframes vc-rise-in {
-  from {
-    opacity: 0;
-    transform: translateY(12px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes vc-pop-in {
-  from {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Exit animation for the onboarding screen as it hands off to the app. */
-@keyframes vc-leave {
-  from {
-    opacity: 1;
-    transform: scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: scale(0.985);
-  }
-}
-
-.vc-leave {
-  animation: vc-leave 300ms ease-in forwards;
-}
-
 .vc-fade-in {
-  animation: vc-fade-in 220ms ease-out both;
-}
-
-/* Card content re-animates on every step (keyed by step index). */
-.vc-step-in {
-  animation: vc-step-in 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.vc-pop-in {
-  animation: vc-pop-in 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.vc-rise-in {
-  animation: vc-rise-in 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-/* The spotlight box and tour card glide to their new position/size. */
-.vc-spotlight {
-  transition:
-    top 380ms cubic-bezier(0.4, 0, 0.2, 1),
-    left 380ms cubic-bezier(0.4, 0, 0.2, 1),
-    width 380ms cubic-bezier(0.4, 0, 0.2, 1),
-    height 380ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.vc-tour-card {
-  transition:
-    top 380ms cubic-bezier(0.4, 0, 0.2, 1),
-    left 380ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .vc-fade-in,
-  .vc-step-in,
-  .vc-pop-in,
-  .vc-rise-in,
-  .vc-leave {
-    animation-duration: 1ms;
-  }
-  .vc-spotlight,
-  .vc-tour-card {
-    transition-duration: 1ms;
-  }
+  animation: vcFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

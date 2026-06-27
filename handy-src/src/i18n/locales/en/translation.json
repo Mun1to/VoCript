@@ -10,6 +10,12 @@
     "quit": "Quit",
     "cancel": "Cancel"
   },
+  "header": {
+    "profile": "Profile:",
+    "lightMode": "Light",
+    "darkMode": "Dark",
+    "micReady": "Mic ready"
+  },
   "sidebar": {
     "general": "General",
     "models": "Models",
@@ -18,7 +24,8 @@
     "postProcessing": "Post Process",
     "history": "History",
     "debug": "Debug",
-    "about": "About"
+    "about": "About",
+    "feedback": "Feedback"
   },
   "onboarding": {
     "profiles": {
@@ -49,7 +56,7 @@
         "description": "Dictate in several languages with automatic detection."
       },
       "custom": {
-        "label": "I'd rather set it up myself →"
+        "label": "Custom"
       }
     },
     "tour": {
@@ -723,7 +730,7 @@
         "title": "Support the project",
         "description": "If VoCript is useful to you, buy me a coffee. Thanks for the support!",
         "coffee": "Buy me a coffee",
-        "handy": "Support Handy"
+        "handy": "Support VoCript"
       },
       "contact": {
         "title": "Contact",
@@ -743,6 +750,10 @@
           "button": "View Handy"
         }
       }
+    },
+    "feedback": {
+      "title": "Feedback & Future Features",
+      "description": "Your feedback helps shape upcoming versions of VoCript and future applications."
     }
   },
   "footer": {

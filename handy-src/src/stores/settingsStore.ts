@@ -75,6 +75,57 @@ const DEFAULT_AUDIO_DEVICE: AudioDevice = {
   is_default: true,
 };
 
+const MOCK_FALLBACK_SETTINGS: Settings = {
+  bindings: {
+    transcribe: {
+      id: "transcribe",
+      name: "Transcribe",
+      description: "Converts your speech into text.",
+      current_binding: "Left Ctrl + Space",
+      default_binding: "Left Ctrl + Space",
+    },
+    transcribe_system: {
+      id: "transcribe_system",
+      name: "Transcribe System Audio",
+      description:
+        "Transcribes the audio playing on your computer (e.g. a video) instead of the microphone.",
+      current_binding: "Ctrl + Alt + Space",
+      default_binding: "Ctrl + Alt + Space",
+    },
+    cancel: {
+      id: "cancel",
+      name: "Cancel",
+      description: "Cancels the current recording.",
+      current_binding: "Escape",
+      default_binding: "Escape",
+    },
+  },
+  push_to_talk: false,
+  audio_feedback: true,
+  audio_feedback_volume: 80,
+  start_hidden: false,
+  autostart_enabled: false,
+  update_checks_enabled: true,
+  always_on_microphone: false,
+  selected_microphone: "Default",
+  clamshell_microphone: "Default",
+  selected_output_device: "Default",
+  system_audio_app: "Spotify",
+  translate_to_english: false,
+  selected_language: "es",
+  debug_mode: false,
+  clipboard_only: false,
+  live_auto_paste: false,
+  append_trailing_space: true,
+  app_language: "es",
+  theme: "dark",
+  live_mode: false,
+  live_mode_system: false,
+  tour_completed: true,
+  work_profile: "writing",
+  external_script_path: null,
+};
+
 const settingUpdaters: {
   [K in keyof Settings]?: (value: Settings[K]) => Promise<unknown>;
 } = {
@@ -179,9 +230,9 @@ const settingUpdaters: {
 
 export const useSettingsStore = create<SettingsStore>()(
   subscribeWithSelector((set, get) => ({
-    settings: null,
-    defaultSettings: null,
-    isLoading: true,
+    settings: MOCK_FALLBACK_SETTINGS,
+    defaultSettings: MOCK_FALLBACK_SETTINGS,
+    isLoading: false,
     isUpdating: {},
     audioDevices: [],
     outputDevices: [],
@@ -221,11 +272,11 @@ export const useSettingsStore = create<SettingsStore>()(
           set({ settings: normalizedSettings, isLoading: false });
         } else {
           console.error("Failed to load settings:", result.error);
-          set({ isLoading: false });
+          set({ settings: MOCK_FALLBACK_SETTINGS, isLoading: false });
         }
       } catch (error) {
-        console.error("Failed to load settings:", error);
-        set({ isLoading: false });
+        console.error("Failed to load settings (browser mode):", error);
+        set({ settings: MOCK_FALLBACK_SETTINGS, isLoading: false });
       }
     },
 

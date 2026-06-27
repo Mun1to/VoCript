@@ -16,6 +16,7 @@ import Onboarding, {
   ProfileSelection,
 } from "./components/onboarding";
 import { Sidebar, SidebarSection, SECTIONS_CONFIG } from "./components/Sidebar";
+import Header from "./components/Header";
 import { GuidedTour } from "./components/tour/GuidedTour";
 import { useSettings } from "./hooks/useSettings";
 import { useSettingsStore } from "./stores/settingsStore";
@@ -34,7 +35,7 @@ const renderSettingsContent = (section: SidebarSection) => {
 function App() {
   const { t, i18n } = useTranslation();
   const [onboardingStep, setOnboardingStep] = useState<OnboardingStep | null>(
-    null,
+    "done",
   );
   // Track if this is a returning user who just needs to grant permissions
   // (vs a new user who needs full onboarding including model selection)
@@ -54,6 +55,7 @@ function App() {
   const hasCompletedPostOnboardingInit = useRef(false);
 
   useEffect(() => {
+    commands.showMainWindowCommand().catch(() => {});
     checkOnboardingStatus();
   }, []);
 
@@ -120,7 +122,12 @@ function App() {
       const { error_type, detail } = event.payload;
 
       if (error_type === "microphone_permission_denied") {
-        const currentPlatform = platform();
+        let currentPlatform = "windows";
+        try {
+          currentPlatform = platform();
+        } catch {
+          currentPlatform = "windows";
+        }
         const platformKey = `errors.micPermissionDenied.${currentPlatform}`;
         const description = t(platformKey, {
           defaultValue: t("errors.micPermissionDenied.generic"),
@@ -189,7 +196,12 @@ function App() {
       // Check if they have any models available
       const result = await commands.hasAnyModelsAvailable();
       const hasModels = result.status === "ok" && result.data;
-      const currentPlatform = platform();
+      let currentPlatform = "windows";
+      try {
+        currentPlatform = platform();
+      } catch {
+        currentPlatform = "windows";
+      }
 
       if (hasModels) {
         // Returning user - check if they need to grant permissions first
@@ -237,8 +249,11 @@ function App() {
         setOnboardingStep("accessibility");
       }
     } catch (error) {
-      console.error("Failed to check onboarding status:", error);
-      setOnboardingStep("accessibility");
+      console.error(
+        "Failed to check onboarding status, defaulting to done for browser preview:",
+        error,
+      );
+      setOnboardingStep("done");
     }
   };
 
@@ -305,6 +320,7 @@ function App() {
         />
         {/* Scrollable content area */}
         <div className="flex-1 flex flex-col overflow-hidden">
+          <Header currentSection={currentSection} />
           <div className="flex-1 overflow-y-auto">
             <div className="flex flex-col items-center p-4 gap-4">
               <AccessibilityPermissions />
