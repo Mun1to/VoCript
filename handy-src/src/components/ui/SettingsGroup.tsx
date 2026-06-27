@@ -39,14 +39,14 @@ export const SettingsGroup: React.FC<SettingsGroupProps> = ({
         </div>
       )}
       <div
-        className={`vc-card-glow overflow-hidden ${
+        className={`vc-card-glow ${
           isLight
             ? "bg-white border-slate-200 shadow-sm"
             : "bg-[#12131a] border-white/10"
         }`}
       >
         <div
-          className={`divide-y ${
+          className={`divide-y [&>*:first-child]:rounded-t-2xl [&>*:last-child]:rounded-b-2xl ${
             isLight ? "divide-slate-100" : "divide-white/5"
           }`}
         >

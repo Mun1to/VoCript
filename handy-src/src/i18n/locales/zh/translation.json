@@ -19,7 +19,7 @@
     "debug": "调试",
     "about": "关于",
     "fileTranscription": "文件转录",
-    "feedback": "反馈与建议"
+    "feedback": "反馈"
   },
   "onboarding": {
     "subtitle": "请选择一个转录模型以开始使用",
