@@ -519,6 +519,11 @@
         "exportEmpty": "No replacements to export",
         "exportError": "Couldn't export the file",
         "exported": "Dictionary exported"
+      },
+      "customCommands": {
+        "group": "Profil niestandardowy",
+        "title": "Polecenia profilu niestandardowego",
+        "description": "Twoje własne polecenia głos→symbol dla profilu Niestandardowego. Stosowane (oprócz słownika), gdy ten profil jest aktywny."
       }
     },
     "postProcessing": {
@@ -843,7 +848,12 @@
     "editTranscription": "Edit transcription"
   },
   "header": {
-    "profile": "Profil:",
+    "profile": {
+      "label": "Profil",
+      "normal": "Normalny",
+      "coding": "Programowanie",
+      "custom": "Niestandardowy"
+    },
     "lightMode": "Jasny",
     "darkMode": "Ciemny",
     "micReady": "Mikrofon gotowy",

@@ -12,6 +12,12 @@ import type { WordReplacement } from "@/bindings";
 interface WordReplacementsProps {
   descriptionMode?: "inline" | "tooltip";
   grouped?: boolean;
+  /** Which settings list to manage. Defaults to the personal dictionary;
+   *  pass "custom_profile_commands" for the custom professional profile. */
+  settingKey?: "word_replacements" | "custom_profile_commands";
+  titleKey?: string;
+  descriptionKey?: string;
+  exportFileName?: string;
 }
 
 // Words a CSV header row might use, so we can skip it on import.
@@ -104,14 +110,19 @@ function generateCsv(reps: WordReplacement[]): string {
  * CSV para traer términos de otras herramientas.
  */
 export const WordReplacements: React.FC<WordReplacementsProps> = React.memo(
-  ({ grouped = false }) => {
+  ({
+    grouped = false,
+    settingKey = "word_replacements",
+    titleKey = "settings.advanced.wordReplacements.title",
+    descriptionKey = "settings.advanced.wordReplacements.description",
+    exportFileName = "diccionario-vocript.csv",
+  }) => {
     const { t } = useTranslation();
     const { getSetting, updateSetting, isUpdating } = useSettings();
     const [newFrom, setNewFrom] = useState("");
     const [newTo, setNewTo] = useState("");
-    const replacements: WordReplacement[] =
-      getSetting("word_replacements") || [];
-    const updating = isUpdating("word_replacements");
+    const replacements: WordReplacement[] = getSetting(settingKey) || [];
+    const updating = isUpdating(settingKey);
 
     const handleAdd = () => {
       const from = newFrom.trim();
@@ -125,14 +136,14 @@ export const WordReplacements: React.FC<WordReplacementsProps> = React.memo(
         );
         return;
       }
-      updateSetting("word_replacements", [...replacements, { from, to }]);
+      updateSetting(settingKey, [...replacements, { from, to }]);
       setNewFrom("");
       setNewTo("");
     };
 
     const handleRemove = (index: number) => {
       updateSetting(
-        "word_replacements",
+        settingKey,
         replacements.filter((_, i) => i !== index),
       );
     };
@@ -167,7 +178,7 @@ export const WordReplacements: React.FC<WordReplacementsProps> = React.memo(
         for (const r of replacements) map.set(r.from.toLowerCase(), r);
         for (const r of parsed)
           map.set(r.from.toLowerCase(), { from: r.from, to: r.to });
-        await updateSetting("word_replacements", Array.from(map.values()));
+        await updateSetting(settingKey, Array.from(map.values()));
         toast.success(
           t("settings.advanced.wordReplacements.imported", {
             count: parsed.length,
@@ -186,7 +197,7 @@ export const WordReplacements: React.FC<WordReplacementsProps> = React.memo(
       }
       try {
         const path = await save({
-          defaultPath: "diccionario-vocript.csv",
+          defaultPath: exportFileName,
           filters: [{ name: "CSV", extensions: ["csv"] }],
         });
         if (!path) return;
@@ -208,8 +219,8 @@ export const WordReplacements: React.FC<WordReplacementsProps> = React.memo(
     return (
       <>
         <SettingContainer
-          title={t("settings.advanced.wordReplacements.title")}
-          description={t("settings.advanced.wordReplacements.description")}
+          title={t(titleKey)}
+          description={t(descriptionKey)}
           descriptionMode="inline"
           layout="stacked"
           grouped={grouped}

@@ -519,6 +519,11 @@
         "exportEmpty": "No replacements to export",
         "exportError": "Couldn't export the file",
         "exported": "Dictionary exported"
+      },
+      "customCommands": {
+        "group": "Profilo personalizzato",
+        "title": "Comandi del profilo personalizzato",
+        "description": "I tuoi comandi voce→simbolo per il profilo Personalizzato. Applicati (oltre al dizionario) quando quel profilo è attivo."
       }
     },
     "postProcessing": {
@@ -843,7 +848,12 @@
     "editTranscription": "Edit transcription"
   },
   "header": {
-    "profile": "Profilo:",
+    "profile": {
+      "label": "Profilo",
+      "normal": "Normale",
+      "coding": "Programmazione",
+      "custom": "Personalizzato"
+    },
     "lightMode": "Chiaro",
     "darkMode": "Scuro",
     "micReady": "Microfono pronto",

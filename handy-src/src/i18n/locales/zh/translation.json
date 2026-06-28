@@ -523,6 +523,11 @@
         "exportEmpty": "No replacements to export",
         "exportError": "Couldn't export the file",
         "exported": "Dictionary exported"
+      },
+      "customCommands": {
+        "group": "自定义配置",
+        "title": "自定义配置命令",
+        "description": "用于「自定义」配置的语音→符号命令。该配置启用时（在词典之外）应用。"
       }
     },
     "postProcessing": {
@@ -847,7 +852,12 @@
     "editTranscription": "Edit transcription"
   },
   "header": {
-    "profile": "配置文件:",
+    "profile": {
+      "label": "配置",
+      "normal": "普通",
+      "coding": "编程",
+      "custom": "自定义"
+    },
     "lightMode": "浅色",
     "darkMode": "深色",
     "micReady": "麦克风就绪",

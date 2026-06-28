@@ -1,5 +1,5 @@
 use crate::audio_toolkit::{
-    apply_custom_words, apply_word_replacements, filter_transcription_output,
+    apply_custom_words, apply_word_replacements, coding_commands, filter_transcription_output,
 };
 use crate::managers::audio::AudioRecordingManager;
 use crate::managers::model::{EngineType, ModelManager};
@@ -492,10 +492,16 @@ impl TranscriptionManager {
             &settings.custom_filler_words,
         );
 
-        // Personal dictionary: deterministic exact replacements. Applied to every
-        // engine (including Whisper) as the last touch on the raw transcription.
-        let replaced_result =
-            apply_word_replacements(&filtered_result, &settings.word_replacements);
+        // Personal dictionary (always) + the active professional profile's command
+        // layer (coding symbols / custom commands). Deterministic exact replacements,
+        // the last touch on every engine's output (including Whisper).
+        let mut replacements = settings.word_replacements.clone();
+        match settings.work_profile.as_deref() {
+            Some("coding") => replacements.extend(coding_commands()),
+            Some("custom") => replacements.extend(settings.custom_profile_commands.clone()),
+            _ => {}
+        }
+        let replaced_result = apply_word_replacements(&filtered_result, &replacements);
 
         let et = std::time::Instant::now();
         let translation_note = if settings.translate_to_english {

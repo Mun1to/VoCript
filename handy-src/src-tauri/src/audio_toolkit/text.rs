@@ -197,6 +197,69 @@ pub fn apply_word_replacements(text: &str, replacements: &[WordReplacement]) -> 
     result
 }
 
+/// Built-in voice→symbol commands for the "coding" professional profile.
+///
+/// Spanish dictation: saying "arroba" types `@`, "punto y coma" types `;`, and
+/// so on. These are applied through `apply_word_replacements` (so longer phrases
+/// like "punto y coma" win over "punto", and the symbol is inserted verbatim).
+/// Accent-less variants are included because Whisper often drops diacritics.
+///
+/// MVP note: spacing around symbols isn't tidied (e.g. "hola ;"), and number
+/// words aren't converted — that's intentional for this first version.
+pub fn coding_commands() -> Vec<WordReplacement> {
+    const PAIRS: &[(&str, &str)] = &[
+        ("punto y coma", ";"),
+        ("dos puntos", ":"),
+        ("doble igual", "=="),
+        ("igual a", "="),
+        ("abre paréntesis", "("),
+        ("cierra paréntesis", ")"),
+        ("abre parentesis", "("),
+        ("cierra parentesis", ")"),
+        ("abre llave", "{"),
+        ("cierra llave", "}"),
+        ("abre corchete", "["),
+        ("cierra corchete", "]"),
+        ("barra invertida", "\\"),
+        ("guion bajo", "_"),
+        ("guión bajo", "_"),
+        ("comilla simple", "'"),
+        ("menor que", "<"),
+        ("mayor que", ">"),
+        ("y lógico", "&&"),
+        ("y logico", "&&"),
+        ("o lógico", "||"),
+        ("o logico", "||"),
+        ("arroba", "@"),
+        ("almohadilla", "#"),
+        ("hashtag", "#"),
+        ("igual", "="),
+        ("barra", "/"),
+        ("guion", "-"),
+        ("guión", "-"),
+        ("asterisco", "*"),
+        ("comillas", "\""),
+        ("ampersand", "&"),
+        ("más", "+"),
+        ("interrogación", "?"),
+        ("interrogacion", "?"),
+        ("exclamación", "!"),
+        ("exclamacion", "!"),
+        ("porcentaje", "%"),
+        ("dólar", "$"),
+        ("dolar", "$"),
+        ("flecha", "=>"),
+        ("distinto", "!="),
+    ];
+    PAIRS
+        .iter()
+        .map(|(from, to)| WordReplacement {
+            from: from.to_string(),
+            to: to.to_string(),
+        })
+        .collect()
+}
+
 /// Preserves the case pattern of the original word when applying a replacement
 fn preserve_case_pattern(original: &str, replacement: &str) -> String {
     if original.chars().all(|c| c.is_uppercase()) {
@@ -452,6 +515,25 @@ mod tests {
     fn test_word_replacements_empty() {
         let reps: Vec<WordReplacement> = vec![];
         assert_eq!(apply_word_replacements("hello world", &reps), "hello world");
+    }
+
+    #[test]
+    fn test_coding_commands_symbols() {
+        let cmds = coding_commands();
+        let out = apply_word_replacements("variable igual a cinco punto y coma", &cmds);
+        assert!(out.contains('='), "got: {}", out);
+        assert!(out.contains(';'), "got: {}", out);
+        // "punto y coma" (3 words) must win over a single "punto"/"coma".
+        assert!(!out.contains("punto y coma"), "got: {}", out);
+    }
+
+    #[test]
+    fn test_coding_commands_arroba() {
+        let cmds = coding_commands();
+        assert_eq!(
+            apply_word_replacements("usuario arroba dominio", &cmds),
+            "usuario @ dominio"
+        );
     }
 
     #[test]

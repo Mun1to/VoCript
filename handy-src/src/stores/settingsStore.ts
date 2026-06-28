@@ -122,7 +122,7 @@ const MOCK_FALLBACK_SETTINGS: Settings = {
   live_mode: false,
   live_mode_system: false,
   tour_completed: true,
-  work_profile: "writing",
+  work_profile: null,
   external_script_path: null,
 };
 
@@ -176,6 +176,8 @@ const settingUpdaters: {
   custom_words: (value) => commands.updateCustomWords(value as string[]),
   word_replacements: (value) =>
     commands.updateWordReplacements(value as WordReplacement[]),
+  custom_profile_commands: (value) =>
+    commands.updateCustomProfileCommands(value as WordReplacement[]),
   word_correction_threshold: (value) =>
     commands.changeWordCorrectionThresholdSetting(value as number),
   paste_delay_ms: (value) =>

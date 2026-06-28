@@ -519,6 +519,11 @@
         "exportEmpty": "No replacements to export",
         "exportError": "Couldn't export the file",
         "exported": "Dictionary exported"
+      },
+      "customCommands": {
+        "group": "Anpassad profil",
+        "title": "Kommandon för anpassad profil",
+        "description": "Dina egna röst→symbol-kommandon för den anpassade profilen. Tillämpas (utöver ordlistan) när profilen är aktiv."
       }
     },
     "postProcessing": {
@@ -843,7 +848,12 @@
     "editTranscription": "Edit transcription"
   },
   "header": {
-    "profile": "Profil:",
+    "profile": {
+      "label": "Profil",
+      "normal": "Normal",
+      "coding": "Programmering",
+      "custom": "Anpassad"
+    },
     "lightMode": "Ljust",
     "darkMode": "Mörkt",
     "micReady": "Mikrofon redo",

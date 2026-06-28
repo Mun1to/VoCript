@@ -409,6 +409,11 @@ pub struct AppSettings {
     /// Personal dictionary: deterministic exact replacements (from -> to).
     #[serde(default)]
     pub word_replacements: Vec<WordReplacement>,
+    /// Voice→symbol commands of the "custom" professional profile. Only applied
+    /// when `work_profile == "custom"`. Separate from `word_replacements`, which
+    /// always applies regardless of profile.
+    #[serde(default)]
+    pub custom_profile_commands: Vec<WordReplacement>,
     #[serde(default)]
     pub model_unload_timeout: ModelUnloadTimeout,
     #[serde(default = "default_word_correction_threshold")]
@@ -884,6 +889,7 @@ pub fn get_default_settings() -> AppSettings {
         log_level: default_log_level(),
         custom_words: Vec::new(),
         word_replacements: Vec::new(),
+        custom_profile_commands: Vec::new(),
         model_unload_timeout: ModelUnloadTimeout::default(),
         word_correction_threshold: default_word_correction_threshold(),
         history_limit: default_history_limit(),

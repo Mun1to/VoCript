@@ -662,6 +662,18 @@ pub fn update_word_replacements(
 
 #[tauri::command]
 #[specta::specta]
+pub fn update_custom_profile_commands(
+    app: AppHandle,
+    commands: Vec<settings::WordReplacement>,
+) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    settings.custom_profile_commands = commands;
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
 pub fn change_word_correction_threshold_setting(
     app: AppHandle,
     threshold: f64,

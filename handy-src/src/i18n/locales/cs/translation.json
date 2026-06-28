@@ -519,6 +519,11 @@
         "exportEmpty": "No replacements to export",
         "exportError": "Couldn't export the file",
         "exported": "Dictionary exported"
+      },
+      "customCommands": {
+        "group": "Vlastní profil",
+        "title": "Příkazy vlastního profilu",
+        "description": "Vaše vlastní příkazy hlas→symbol pro Vlastní profil. Použijí se (navíc ke slovníku), když je tento profil aktivní."
       }
     },
     "postProcessing": {
@@ -843,7 +848,12 @@
     "editTranscription": "Edit transcription"
   },
   "header": {
-    "profile": "Profil:",
+    "profile": {
+      "label": "Profil",
+      "normal": "Normální",
+      "coding": "Programování",
+      "custom": "Vlastní"
+    },
     "lightMode": "Světlý",
     "darkMode": "Tmavý",
     "micReady": "Mikrofon připraven",

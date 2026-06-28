@@ -519,6 +519,11 @@
         "exportEmpty": "No replacements to export",
         "exportError": "Couldn't export the file",
         "exported": "Dictionary exported"
+      },
+      "customCommands": {
+        "group": "פרופיל מותאם",
+        "title": "פקודות הפרופיל המותאם",
+        "description": "פקודות קול→סמל משלך לפרופיל המותאם. מוחלות (בנוסף למילון) כשהפרופיל פעיל."
       }
     },
     "postProcessing": {
@@ -843,7 +848,12 @@
     "editTranscription": "Edit transcription"
   },
   "header": {
-    "profile": "פרופיל:",
+    "profile": {
+      "label": "פרופיל",
+      "normal": "רגיל",
+      "coding": "תכנות",
+      "custom": "מותאם אישית"
+    },
     "lightMode": "בהיר",
     "darkMode": "כהה",
     "micReady": "מיקרופון מוכן",

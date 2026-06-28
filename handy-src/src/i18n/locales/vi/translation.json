@@ -519,6 +519,11 @@
         "exportEmpty": "No replacements to export",
         "exportError": "Couldn't export the file",
         "exported": "Dictionary exported"
+      },
+      "customCommands": {
+        "group": "Hồ sơ tùy chỉnh",
+        "title": "Lệnh của hồ sơ tùy chỉnh",
+        "description": "Các lệnh giọng nói→ký hiệu của riêng bạn cho hồ sơ Tùy chỉnh. Áp dụng (cùng với từ điển) khi hồ sơ đó đang bật."
       }
     },
     "postProcessing": {
@@ -843,7 +848,12 @@
     "editTranscription": "Edit transcription"
   },
   "header": {
-    "profile": "Hồ sơ:",
+    "profile": {
+      "label": "Hồ sơ",
+      "normal": "Thường",
+      "coding": "Lập trình",
+      "custom": "Tùy chỉnh"
+    },
     "lightMode": "Sáng",
     "darkMode": "Tối",
     "micReady": "Mic sẵn sàng",

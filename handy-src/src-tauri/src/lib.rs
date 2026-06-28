@@ -376,6 +376,7 @@ pub fn run(cli_args: CliArgs) {
             shortcut::set_post_process_selected_prompt,
             shortcut::update_custom_words,
             shortcut::update_word_replacements,
+            shortcut::update_custom_profile_commands,
             shortcut::suspend_binding,
             shortcut::resume_binding,
             shortcut::set_system_audio_app,

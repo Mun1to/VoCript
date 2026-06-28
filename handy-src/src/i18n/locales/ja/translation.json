@@ -519,6 +519,11 @@
         "exportEmpty": "No replacements to export",
         "exportError": "Couldn't export the file",
         "exported": "Dictionary exported"
+      },
+      "customCommands": {
+        "group": "カスタムプロファイル",
+        "title": "カスタムプロファイルのコマンド",
+        "description": "カスタムプロファイル用の独自の音声→記号コマンド。そのプロファイルが有効なとき、辞書に加えて適用されます。"
       }
     },
     "postProcessing": {
@@ -843,7 +848,12 @@
     "editTranscription": "Edit transcription"
   },
   "header": {
-    "profile": "プロファイル:",
+    "profile": {
+      "label": "プロファイル",
+      "normal": "通常",
+      "coding": "プログラミング",
+      "custom": "カスタム"
+    },
     "lightMode": "ライト",
     "darkMode": "ダーク",
     "micReady": "マイク準備完了",

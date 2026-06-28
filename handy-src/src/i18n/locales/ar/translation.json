@@ -484,6 +484,11 @@
         "exportEmpty": "No replacements to export",
         "exportError": "Couldn't export the file",
         "exported": "Dictionary exported"
+      },
+      "customCommands": {
+        "group": "ملف مخصص",
+        "title": "أوامر الملف المخصص",
+        "description": "أوامرك الخاصة صوت→رمز لملف «مخصص». تُطبَّق (إضافةً إلى قاموسك) عندما يكون هذا الملف نشطًا."
       }
     },
     "postProcessing": {
@@ -843,7 +848,12 @@
     "editTranscription": "Edit transcription"
   },
   "header": {
-    "profile": "الملف الشخصي:",
+    "profile": {
+      "label": "الملف الشخصي",
+      "normal": "عادي",
+      "coding": "برمجة",
+      "custom": "مخصص"
+    },
     "lightMode": "فاتح",
     "darkMode": "داكن",
     "micReady": "الميكروفون جاهز",

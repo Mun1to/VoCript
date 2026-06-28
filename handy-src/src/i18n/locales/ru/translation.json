@@ -519,6 +519,11 @@
         "exportEmpty": "No replacements to export",
         "exportError": "Couldn't export the file",
         "exported": "Dictionary exported"
+      },
+      "customCommands": {
+        "group": "Свой профиль",
+        "title": "Команды своего профиля",
+        "description": "Ваши собственные команды голос→символ для профиля «Свой». Применяются (вдобавок к словарю), когда этот профиль активен."
       }
     },
     "postProcessing": {
@@ -843,7 +848,12 @@
     "editTranscription": "Edit transcription"
   },
   "header": {
-    "profile": "Профиль:",
+    "profile": {
+      "label": "Профиль",
+      "normal": "Обычный",
+      "coding": "Программирование",
+      "custom": "Свой"
+    },
     "lightMode": "Светлая",
     "darkMode": "Тёмная",
     "micReady": "Микрофон готов",

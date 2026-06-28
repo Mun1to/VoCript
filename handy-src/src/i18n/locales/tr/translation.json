@@ -519,6 +519,11 @@
         "exportEmpty": "No replacements to export",
         "exportError": "Couldn't export the file",
         "exported": "Dictionary exported"
+      },
+      "customCommands": {
+        "group": "Özel profil",
+        "title": "Özel profil komutları",
+        "description": "Özel profil için kendi ses→sembol komutların. O profil etkinken (sözlüğüne ek olarak) uygulanır."
       }
     },
     "postProcessing": {
@@ -843,7 +848,12 @@
     "editTranscription": "Edit transcription"
   },
   "header": {
-    "profile": "Profil:",
+    "profile": {
+      "label": "Profil",
+      "normal": "Normal",
+      "coding": "Programlama",
+      "custom": "Özel"
+    },
     "lightMode": "Açık",
     "darkMode": "Koyu",
     "micReady": "Mikrofon hazır",

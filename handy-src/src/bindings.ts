@@ -280,6 +280,14 @@ async updateWordReplacements(replacements: WordReplacement[]) : Promise<Result<n
     else return { status: "error", error: e  as any };
 }
 },
+async updateCustomProfileCommands(commands: WordReplacement[]) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("update_custom_profile_commands", { commands }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 /**
  * Temporarily unregister a binding while the user is editing it in the UI.
  * This avoids firing the action while keys are being recorded.
@@ -1010,7 +1018,13 @@ system_audio_app?: string | null; translate_to_english?: boolean; selected_langu
 /**
  * Personal dictionary: deterministic exact replacements (from -> to).
  */
-word_replacements?: WordReplacement[]; model_unload_timeout?: ModelUnloadTimeout; word_correction_threshold?: number; history_limit?: number; recording_retention_period?: RecordingRetentionPeriod; paste_method?: PasteMethod; clipboard_handling?: ClipboardHandling; clipboard_only?: boolean; 
+word_replacements?: WordReplacement[]; 
+/**
+ * Voice→symbol commands of the "custom" professional profile. Only applied
+ * when `work_profile == "custom"`. Separate from `word_replacements`, which
+ * always applies regardless of profile.
+ */
+custom_profile_commands?: WordReplacement[]; model_unload_timeout?: ModelUnloadTimeout; word_correction_threshold?: number; history_limit?: number; recording_retention_period?: RecordingRetentionPeriod; paste_method?: PasteMethod; clipboard_handling?: ClipboardHandling; clipboard_only?: boolean; 
 /**
  * Live transcription: when true, the final text is pasted into the active
  * app automatically when the live session stops (like normal dictation).

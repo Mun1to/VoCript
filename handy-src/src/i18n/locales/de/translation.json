@@ -519,6 +519,11 @@
         "exportEmpty": "No replacements to export",
         "exportError": "Couldn't export the file",
         "exported": "Dictionary exported"
+      },
+      "customCommands": {
+        "group": "Eigenes Profil",
+        "title": "Befehle des eigenen Profils",
+        "description": "Deine eigenen Sprache→Symbol-Befehle für das eigene Profil. Werden (zusätzlich zum Wörterbuch) angewendet, wenn dieses Profil aktiv ist."
       }
     },
     "postProcessing": {
@@ -843,7 +848,12 @@
     "editTranscription": "Edit transcription"
   },
   "header": {
-    "profile": "Profil:",
+    "profile": {
+      "label": "Profil",
+      "normal": "Normal",
+      "coding": "Programmierung",
+      "custom": "Benutzerdefiniert"
+    },
     "lightMode": "Hell",
     "darkMode": "Dunkel",
     "micReady": "Mikrofon bereit",

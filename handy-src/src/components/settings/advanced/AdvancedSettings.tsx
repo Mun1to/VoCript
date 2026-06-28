@@ -27,6 +27,7 @@ export const AdvancedSettings: React.FC = () => {
   const { t } = useTranslation();
   const { getSetting } = useSettings();
   const experimentalEnabled = getSetting("experimental_enabled") || false;
+  const isCustomProfile = getSetting("work_profile") === "custom";
 
   return (
     <div className="max-w-3xl w-full mx-auto space-y-6">
@@ -59,6 +60,18 @@ export const AdvancedSettings: React.FC = () => {
         </div>
         <AppendTrailingSpace descriptionMode="tooltip" grouped={true} />
       </SettingsGroup>
+
+      {isCustomProfile && (
+        <SettingsGroup title={t("settings.advanced.customCommands.group")}>
+          <WordReplacements
+            grouped
+            settingKey="custom_profile_commands"
+            titleKey="settings.advanced.customCommands.title"
+            descriptionKey="settings.advanced.customCommands.description"
+            exportFileName="comandos-vocript.csv"
+          />
+        </SettingsGroup>
+      )}
 
       <SettingsGroup title={t("settings.advanced.groups.history")}>
         <HistoryLimit descriptionMode="tooltip" grouped={true} />

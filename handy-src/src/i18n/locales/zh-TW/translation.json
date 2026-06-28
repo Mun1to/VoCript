@@ -519,6 +519,11 @@
         "exportEmpty": "No replacements to export",
         "exportError": "Couldn't export the file",
         "exported": "Dictionary exported"
+      },
+      "customCommands": {
+        "group": "自訂設定檔",
+        "title": "自訂設定檔指令",
+        "description": "用於「自訂」設定檔的語音→符號指令。啟用該設定檔時（在字典之外）套用。"
       }
     },
     "postProcessing": {
@@ -843,7 +848,12 @@
     "editTranscription": "Edit transcription"
   },
   "header": {
-    "profile": "設定檔:",
+    "profile": {
+      "label": "設定檔",
+      "normal": "一般",
+      "coding": "程式設計",
+      "custom": "自訂"
+    },
     "lightMode": "淺色",
     "darkMode": "深色",
     "micReady": "麥克風就緒",

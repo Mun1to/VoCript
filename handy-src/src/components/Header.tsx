@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Sun, Moon } from "lucide-react";
 import { useSettings } from "../hooks/useSettings";
 import { TranscriptionModeSwitch } from "./TranscriptionModeSwitch";
+import { ProfileSelect } from "./ProfileSelect";
 import type { SidebarSection } from "./Sidebar";
 import type { AppTheme } from "@/bindings";
 
@@ -28,16 +29,22 @@ export const Header: React.FC<HeaderProps> = ({ currentSection }) => {
         isLight ? "bg-white border-slate-200" : "bg-[#0c0d12] border-white/10"
       }`}
     >
-      {/* Active Section Title */}
-      <div className="flex items-center gap-2.5">
-        <span className="w-1.5 h-4 bg-blue-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
+      {/* Active section title + professional profile selector */}
+      <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
+          <span className="w-1.5 h-4 bg-blue-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
+          <span
+            className={`text-xs font-bold uppercase tracking-wider ${
+              isLight ? "text-slate-900" : "text-slate-200"
+            }`}
+          >
+            {t(`sidebar.${currentSection}`)}
+          </span>
+        </div>
         <span
-          className={`text-xs font-bold uppercase tracking-wider ${
-            isLight ? "text-slate-900" : "text-slate-200"
-          }`}
-        >
-          {t(`sidebar.${currentSection}`)}
-        </span>
+          className={`h-5 w-px ${isLight ? "bg-slate-200" : "bg-white/10"}`}
+        />
+        <ProfileSelect />
       </div>
 
       {/* Persistent Header Toolbar - Clean Frameless */}

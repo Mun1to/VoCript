@@ -11,7 +11,12 @@
     "cancel": "Cancel"
   },
   "header": {
-    "profile": "Profile:",
+    "profile": {
+      "label": "Profile",
+      "normal": "Normal",
+      "coding": "Coding",
+      "custom": "Custom"
+    },
     "lightMode": "Light",
     "darkMode": "Dark",
     "micReady": "Mic ready",
@@ -573,6 +578,11 @@
         "exportEmpty": "No replacements to export",
         "exportError": "Couldn't export the file",
         "exported": "Dictionary exported"
+      },
+      "customCommands": {
+        "group": "Custom profile",
+        "title": "Custom profile commands",
+        "description": "Your own voice→symbol commands for the Custom profile. Applied (on top of your dictionary) when that profile is active."
       }
     },
     "postProcessing": {
