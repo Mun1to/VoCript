@@ -52,3 +52,19 @@ blob-report/
 releases/*.msi
 releases/*.exe
 releases/*.zip
+
+# ===== Internos de desarrollo / IA — en GitHub SOLO va la app =====
+# Memorias, registros de sesiones, reglas para asistentes de IA y notas internas.
+**/AGENTS.md
+**/CLAUDE.md
+.agents/
+FEEDBACK.md
+sesiones/
+HANDOFF.md
+MARKETING.md
+REGLAS.md
+VoCript-Guia.pdf
+*.py
+launch_dev_window.ps1
+prototipo-ui/
+prototipo-vocript.html

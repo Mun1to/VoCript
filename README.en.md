@@ -85,6 +85,11 @@ VoCript runs **100% locally**. No accounts, no cloud, no telemetry: your voice
 and transcriptions **never leave your computer**. Optional cloud AI
 post-processing is off by default.
 
+> 🛡️ **Security-reviewed.** VoCript has passed a security review with _no
+> critical vulnerabilities_: 100% local recognition, no command injection,
+> signed updates (minisign) and a restricted webview (CSP). Read the
+> [full security model](SECURITY.md).
+
 ---
 
 ## 🛠️ For developers

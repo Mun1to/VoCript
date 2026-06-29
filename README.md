@@ -87,6 +87,11 @@ VoCript funciona **100 % en local**. No hay cuentas, ni nube, ni telemetría: tu
 voz y tus transcripciones **no salen de tu ordenador**. El post-procesado con IA
 en la nube es opcional y está desactivado por defecto.
 
+> 🛡️ **Revisado en seguridad.** VoCript ha pasado una revisión de seguridad
+> _sin vulnerabilidades críticas_: reconocimiento 100 % local, sin inyección de
+> comandos, actualizaciones firmadas (minisign) y webview restringido (CSP).
+> Lee el [modelo de seguridad completo](SECURITY.md).
+
 ---
 
 ## 🛠️ Para desarrolladores
