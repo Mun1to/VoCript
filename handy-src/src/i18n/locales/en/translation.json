@@ -102,10 +102,6 @@
         "title": "System audio",
         "body": "Want to transcribe what's playing on your PC (a video, a call) instead of your voice? Use this shortcut to capture system audio. You can also target a specific app."
       },
-      "live": {
-        "title": "Live transcription",
-        "body": "Turn on \"Live mode\" and the text appears in a floating capsule as you speak (or as system audio plays). There's a switch for voice and another for system audio — no separate shortcut needed."
-      },
       "file": {
         "title": "Transcribe files",
         "body": "Here you turn an audio or video file into text or .srt subtitles. Just drag and drop it and pick the output format."
@@ -124,14 +120,50 @@
         "placeholder": "Click here and dictate with your shortcut…",
         "success": "✓ It works! That easy."
       },
-      "theme": {
-        "title": "Light or dark theme",
-        "body": "Here you choose VoCript's appearance: follow the system, light, or dark. Give it a try and keep the one you like best."
-      },
       "donate": {
         "title": "That's it! 🎉",
         "body": "You now know the essentials. VoCript is free and runs 100% on your device.\n\nIf you find it useful and have something to spare, I'd really appreciate a donation to keep improving it. Thanks! 🙂",
         "button": "Buy me a coffee"
+      },
+      "customWords": {
+        "title": "Custom words",
+        "body": "Are there names or terms VoCript keeps getting wrong? Add them here and similar-sounding words are nudged to match your list automatically — great for proper names and jargon."
+      },
+      "feedback": {
+        "title": "Your feedback",
+        "body": "Got an idea, a bug or a comment? Send it in seconds from here — it opens a prefilled issue on GitHub. We read every message to keep improving VoCript."
+      },
+      "audioSource": {
+        "title": "Tag the audio source",
+        "body": "When you transcribe system audio, VoCript can add where it came from — the song, app or video title (and a YouTube link when it detects one). Turn it on to add that note automatically."
+      },
+      "headerProfile": {
+        "title": "Profile",
+        "body": "Pick your work profile: Normal, Programming (dictate symbols like @ or ;) or Custom with your own commands."
+      },
+      "headerVoice": {
+        "title": "Voice",
+        "body": "Your microphone. Normal pastes the text when you finish; Live reveals it word by word in a floating capsule."
+      },
+      "headerSystem": {
+        "title": "System audio",
+        "body": "The same toggle, but for your PC's audio — a video or a call — instead of your voice."
+      },
+      "headerOutput": {
+        "title": "Output",
+        "body": "Where the text goes: Paste it straight into the app, or Copy to the clipboard only."
+      },
+      "headerActivation": {
+        "title": "Activation",
+        "body": "How recording triggers: Toggle (tap once to start and stop) or Hold (push-to-talk while you hold the key)."
+      },
+      "headerLanguage": {
+        "title": "Language",
+        "body": "A quick switch that changes the app's interface and the transcription language at the same time."
+      },
+      "headerTheme": {
+        "title": "Light or dark",
+        "body": "And the final touch: flip between light and dark theme. That's the whole header! 🎨"
       }
     },
     "subtitle": "To get started, choose a transcription model",

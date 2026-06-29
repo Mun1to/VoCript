@@ -172,10 +172,6 @@
         "title": "System audio",
         "body": "Want to transcribe what's playing on your PC (a video, a call) instead of your voice? Use this shortcut to capture system audio. You can also target a specific app."
       },
-      "live": {
-        "title": "Live transcription",
-        "body": "Turn on \"Live mode\" and the text appears in a floating capsule as you speak (or as system audio plays). There's a switch for voice and another for system audio — no separate shortcut needed."
-      },
       "file": {
         "title": "Transcribe files",
         "body": "Here you turn an audio or video file into text or .srt subtitles. Just drag and drop it and pick the output format."
@@ -194,14 +190,50 @@
         "placeholder": "Click here and dictate with your shortcut…",
         "success": "✓ It works! That easy."
       },
-      "theme": {
-        "title": "Light or dark theme",
-        "body": "Here you choose VoCript's appearance: follow the system, light, or dark. Give it a try and keep the one you like best."
-      },
       "donate": {
         "title": "That's it! 🎉",
         "body": "You now know the essentials. VoCript is free and runs 100% on your device.\n\nIf you find it useful and have something to spare, I'd really appreciate a donation to keep improving it. Thanks! 🙂",
         "button": "커피 한 잔 사주기"
+      },
+      "customWords": {
+        "title": "사용자 단어",
+        "body": "VoCript가 자주 틀리는 이름이나 전문 용어가 있나요? 여기에 추가하면 비슷하게 들리는 단어가 목록에 맞게 자동으로 보정됩니다. 고유명사와 전문 용어에 안성맞춤입니다."
+      },
+      "feedback": {
+        "title": "의견 보내기",
+        "body": "아이디어, 버그, 의견이 있으신가요? 여기서 몇 초 만에 보내면 GitHub에 미리 작성된 이슈가 열립니다. 모든 메시지를 읽고 VoCript를 개선하는 데 반영합니다."
+      },
+      "audioSource": {
+        "title": "오디오 출처 표시",
+        "body": "시스템 오디오를 받아쓸 때 VoCript가 출처를 덧붙일 수 있어요 — 노래·앱·영상 제목(감지되면 YouTube 링크까지). 이 메모를 자동으로 추가하려면 켜세요."
+      },
+      "headerProfile": {
+        "title": "프로필",
+        "body": "작업 프로필 선택: 일반, 프로그래밍(@나 ; 같은 기호 받아쓰기) 또는 나만의 명령을 쓰는 사용자 지정."
+      },
+      "headerVoice": {
+        "title": "음성",
+        "body": "당신의 마이크예요. 일반은 끝나면 붙여넣고, 실시간은 말하는 동안 한 단어씩 떠 있는 캡슐에 보여줘요."
+      },
+      "headerSystem": {
+        "title": "시스템 오디오",
+        "body": "같은 토글이지만, 목소리 대신 PC의 소리(영상이나 통화)를 대상으로 해요."
+      },
+      "headerOutput": {
+        "title": "출력",
+        "body": "텍스트가 가는 곳: 앱에 바로 붙여넣기 또는 클립보드에 복사만."
+      },
+      "headerActivation": {
+        "title": "활성화",
+        "body": "녹음 시작 방식: 전환(한 번 눌러 시작·정지) 또는 누르기(키를 누르는 동안 말하기)."
+      },
+      "headerLanguage": {
+        "title": "언어",
+        "body": "앱 인터페이스와 받아쓰기 언어를 한 번에 바꾸는 빠른 전환이에요."
+      },
+      "headerTheme": {
+        "title": "밝게 또는 어둡게",
+        "body": "그리고 마지막 손길: 밝은 테마와 어두운 테마 전환. 이게 헤더의 전부예요! 🎨"
       }
     },
     "chooseLanguage": "What language will you dictate in?"
@@ -696,7 +728,6 @@
       "supportDevelopment": {
         "title": "개발 지원",
         "description": "VoCript 개발을 계속할 수 있도록 도와주세요",
-        "button": "후원하기",
         "coffee": "커피 한 잔 사주기",
         "handy": "VoCript 후원하기"
       },

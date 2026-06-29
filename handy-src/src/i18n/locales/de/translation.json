@@ -172,10 +172,6 @@
         "title": "System audio",
         "body": "Want to transcribe what's playing on your PC (a video, a call) instead of your voice? Use this shortcut to capture system audio. You can also target a specific app."
       },
-      "live": {
-        "title": "Live transcription",
-        "body": "Turn on \"Live mode\" and the text appears in a floating capsule as you speak (or as system audio plays). There's a switch for voice and another for system audio — no separate shortcut needed."
-      },
       "file": {
         "title": "Transcribe files",
         "body": "Here you turn an audio or video file into text or .srt subtitles. Just drag and drop it and pick the output format."
@@ -194,14 +190,50 @@
         "placeholder": "Click here and dictate with your shortcut…",
         "success": "✓ It works! That easy."
       },
-      "theme": {
-        "title": "Light or dark theme",
-        "body": "Here you choose VoCript's appearance: follow the system, light, or dark. Give it a try and keep the one you like best."
-      },
       "donate": {
         "title": "That's it! 🎉",
         "body": "You now know the essentials. VoCript is free and runs 100% on your device.\n\nIf you find it useful and have something to spare, I'd really appreciate a donation to keep improving it. Thanks! 🙂",
         "button": "Kaffee spendieren"
+      },
+      "customWords": {
+        "title": "Eigene Wörter",
+        "body": "Gibt es Namen oder Begriffe, die VoCript ständig falsch schreibt? Füge sie hier hinzu, und ähnlich klingende Wörter werden automatisch an deine Liste angepasst – ideal für Eigennamen und Fachbegriffe."
+      },
+      "feedback": {
+        "title": "Dein Feedback",
+        "body": "Eine Idee, ein Fehler oder ein Kommentar? Sende es in Sekunden von hier – es öffnet ein vorausgefülltes Issue auf GitHub. Wir lesen jede Nachricht, um VoCript weiter zu verbessern."
+      },
+      "audioSource": {
+        "title": "Audioquelle angeben",
+        "body": "Wenn du Systemaudio transkribierst, kann VoCript die Quelle ergänzen – den Titel des Songs, der App oder des Videos (und einen YouTube-Link, falls erkannt). Aktiviere es, um diese Notiz automatisch hinzuzufügen."
+      },
+      "headerProfile": {
+        "title": "Profil",
+        "body": "Wähle dein Arbeitsprofil: Normal, Programmierung (Symbole wie @ oder ; diktieren) oder Benutzerdefiniert mit eigenen Befehlen."
+      },
+      "headerVoice": {
+        "title": "Stimme",
+        "body": "Dein Mikrofon. Normal fügt den Text am Ende ein; Live zeigt ihn Wort für Wort in einer schwebenden Kapsel."
+      },
+      "headerSystem": {
+        "title": "Systemaudio",
+        "body": "Derselbe Schalter, aber für das Audio deines PCs – ein Video oder ein Anruf – statt deiner Stimme."
+      },
+      "headerOutput": {
+        "title": "Ausgabe",
+        "body": "Wohin der Text geht: Einfügen direkt in die App oder nur Kopieren in die Zwischenablage."
+      },
+      "headerActivation": {
+        "title": "Aktivierung",
+        "body": "Wie die Aufnahme startet: Umschalten (einmal tippen startet und stoppt) oder Halten (Push-to-Talk, solange du die Taste hältst)."
+      },
+      "headerLanguage": {
+        "title": "Sprache",
+        "body": "Ein schneller Wechsel, der zugleich die App-Oberfläche und die Transkriptionssprache umstellt."
+      },
+      "headerTheme": {
+        "title": "Hell oder dunkel",
+        "body": "Und der letzte Schliff: zwischen hellem und dunklem Design wechseln. Das war die ganze Kopfleiste! 🎨"
       }
     },
     "chooseLanguage": "What language will you dictate in?"
@@ -696,7 +728,6 @@
       "supportDevelopment": {
         "title": "Entwicklung unterstützen",
         "description": "Hilf uns, VoCript weiterzuentwickeln",
-        "button": "Spenden",
         "coffee": "Kaffee spendieren",
         "handy": "VoCript unterstützen"
       },

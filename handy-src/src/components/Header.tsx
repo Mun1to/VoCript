@@ -30,7 +30,7 @@ export const Header: React.FC<HeaderProps> = ({ currentSection }) => {
         isLight ? "bg-white border-slate-200" : "bg-[#0c0d12] border-white/10"
       }`}
     >
-      {/* Left: active section title (flex-1 so the center pills stay centered) */}
+      {/* Left: active section title (flex-1 so the center group stays centered) */}
       <div className="flex-1 min-w-0 flex items-center gap-2.5">
         <span className="w-1.5 h-4 bg-blue-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
         <span
@@ -42,18 +42,18 @@ export const Header: React.FC<HeaderProps> = ({ currentSection }) => {
         </span>
       </div>
 
-      {/* Center: quick-control pills (modes, output, activation) */}
-      <TranscriptionModeSwitch />
-
-      {/* Right: profile + language + theme (flex-1, pushed to the end) */}
-      <div className="flex-1 min-w-0 flex items-center justify-end gap-3">
+      {/* Center: profile + control pills + language, grouped together */}
+      <div className="flex items-center gap-3">
         <ProfileSelect />
+        <TranscriptionModeSwitch />
         <LanguageQuickSwitch />
-        <span
-          className={`h-5 w-px ${isLight ? "bg-slate-200" : "bg-white/10"}`}
-        />
+      </div>
+
+      {/* Right: theme (flex-1, pushed to the end) */}
+      <div className="flex-1 min-w-0 flex items-center justify-end gap-3">
         <button
           type="button"
+          data-tour="header-theme"
           onClick={toggleTheme}
           title={isLight ? t("header.darkMode") : t("header.lightMode")}
           className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors active:scale-95 ${

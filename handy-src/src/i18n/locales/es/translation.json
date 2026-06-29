@@ -102,10 +102,6 @@
         "title": "Audio del sistema",
         "body": "¿Quieres transcribir lo que suena en el PC (un vídeo, una llamada) en vez de tu voz? Usa este atajo: captura el audio del sistema. También puedes elegir una app concreta."
       },
-      "live": {
-        "title": "Transcripción en vivo",
-        "body": "Activa el «Modo en vivo» y el texto aparece en una cápsula flotante mientras hablas (o mientras suena el audio del sistema). Hay un interruptor para la voz y otro para el audio del sistema; no necesitas un atajo aparte."
-      },
       "file": {
         "title": "Transcribir archivos",
         "body": "Aquí conviertes un archivo de audio o vídeo en texto o subtítulos .srt. Solo arrástralo y suéltalo, y elige el formato de salida."
@@ -124,14 +120,50 @@
         "placeholder": "Haz clic aquí y dicta con tu atajo…",
         "success": "✓ ¡Funciona! Así de fácil."
       },
-      "theme": {
-        "title": "Tema claro u oscuro",
-        "body": "Aquí eliges la apariencia de VoCript: seguir el sistema, claro u oscuro. Pruébalo y quédate con el que más te guste."
-      },
       "donate": {
         "title": "¡Eso es todo! 🎉",
         "body": "Ya conoces lo esencial. VoCript es gratis y funciona 100 % en tu equipo.\n\nSi te resulta útil y tienes algo suelto, agradecería mucho una donación para seguir mejorándolo. ¡Gracias! 🙂",
         "button": "Invítame a un café"
+      },
+      "customWords": {
+        "title": "Palabras Personalizadas",
+        "body": "¿Hay nombres o términos que VoCript no acierta? Añádelos aquí y corregirá automáticamente las palabras de sonido parecido para que coincidan con tu lista. Ideal para nombres propios y tecnicismos."
+      },
+      "feedback": {
+        "title": "Tu opinión cuenta",
+        "body": "¿Una idea, un fallo o un comentario? Envíalo en segundos desde aquí: se abre una incidencia ya preparada en GitHub. Leemos cada mensaje para seguir mejorando VoCript."
+      },
+      "audioSource": {
+        "title": "Fuente del audio",
+        "body": "Cuando transcribes el audio del sistema, VoCript puede añadir de dónde viene: el título de la canción, app o vídeo (y un enlace de YouTube si lo detecta). Actívalo para que añada esa nota automáticamente."
+      },
+      "headerProfile": {
+        "title": "Perfil",
+        "body": "Elige tu perfil de trabajo: Normal, Programación (dicta símbolos como @ o ;) o Personalizado con tus propios comandos."
+      },
+      "headerVoice": {
+        "title": "Voz",
+        "body": "Tu micrófono. Normal pega el texto al terminar; En vivo lo revela palabra a palabra en una cápsula flotante."
+      },
+      "headerSystem": {
+        "title": "Audio del sistema",
+        "body": "El mismo interruptor, pero para el audio del PC —un vídeo o una llamada— en vez de tu voz."
+      },
+      "headerOutput": {
+        "title": "Salida",
+        "body": "A dónde va el texto: Pegar directo en la app o Copiar solo al portapapeles."
+      },
+      "headerActivation": {
+        "title": "Activación",
+        "body": "Cómo se activa la grabación: Alternar (un toque inicia y para) o Mantener (pulsa y habla mientras sujetas la tecla)."
+      },
+      "headerLanguage": {
+        "title": "Idioma",
+        "body": "Un cambio rápido que ajusta a la vez el idioma de la app y el de la transcripción."
+      },
+      "headerTheme": {
+        "title": "Claro u oscuro",
+        "body": "Y el toque final: cambia entre tema claro y oscuro. ¡Y ese es todo el header! 🎨"
       }
     },
     "subtitle": "Para comenzar, elige un modelo de transcripción",
@@ -410,10 +442,6 @@
         "title": "App del audio del sistema",
         "description": "Elige qué capturar con el atajo de audio del sistema: todo el ordenador o solo una aplicación concreta (p. ej. Spotify). La app debe estar reproduciendo audio para aparecer en la lista; usa el botón de refrescar.",
         "wholeSystem": "Todo el sistema"
-      },
-      "systemAudioHotkey": {
-        "label": "Atajo de Audio del Sistema",
-        "description": "Presiona este atajo para grabar y transcribir el audio interno de tu ordenador."
       }
     },
     "sound": {

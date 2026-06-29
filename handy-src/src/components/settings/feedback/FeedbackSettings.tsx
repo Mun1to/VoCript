@@ -57,7 +57,10 @@ export const FeedbackSettings: React.FC = () => {
   };
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-6 vc-fade-in">
+    <div
+      data-tour="feedback"
+      className="max-w-3xl w-full mx-auto space-y-6 vc-fade-in"
+    >
       <SettingsGroup
         title={t("settings.feedback.title", { defaultValue: "Feedback" })}
         description={t("settings.feedback.description", {

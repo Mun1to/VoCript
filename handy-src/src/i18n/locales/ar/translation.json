@@ -172,10 +172,6 @@
         "title": "System audio",
         "body": "Want to transcribe what's playing on your PC (a video, a call) instead of your voice? Use this shortcut to capture system audio. You can also target a specific app."
       },
-      "live": {
-        "title": "Live transcription",
-        "body": "Turn on \"Live mode\" and the text appears in a floating capsule as you speak (or as system audio plays). There's a switch for voice and another for system audio — no separate shortcut needed."
-      },
       "file": {
         "title": "Transcribe files",
         "body": "Here you turn an audio or video file into text or .srt subtitles. Just drag and drop it and pick the output format."
@@ -194,14 +190,50 @@
         "placeholder": "Click here and dictate with your shortcut…",
         "success": "✓ It works! That easy."
       },
-      "theme": {
-        "title": "Light or dark theme",
-        "body": "Here you choose VoCript's appearance: follow the system, light, or dark. Give it a try and keep the one you like best."
-      },
       "donate": {
         "title": "That's it! 🎉",
         "body": "You now know the essentials. VoCript is free and runs 100% on your device.\n\nIf you find it useful and have something to spare, I'd really appreciate a donation to keep improving it. Thanks! 🙂",
         "button": "اشترِ لي قهوة"
+      },
+      "customWords": {
+        "title": "كلمات مخصّصة",
+        "body": "هل هناك أسماء أو مصطلحات يخطئ VoCript في كتابتها كثيرًا؟ أضِفها هنا وسيتم تصحيح الكلمات المتشابهة في النطق تلقائيًا لتطابق قائمتك — مثالي لأسماء الأعلام والمصطلحات التقنية."
+      },
+      "feedback": {
+        "title": "رأيك يهمّنا",
+        "body": "لديك فكرة أو خطأ أو ملاحظة؟ أرسِلها من هنا خلال ثوانٍ — سيُفتح طلب (issue) مُعبّأ مسبقًا على GitHub. نقرأ كل رسالة لتحسين VoCript."
+      },
+      "audioSource": {
+        "title": "مصدر الصوت",
+        "body": "عند تفريغ صوت النظام، يمكن لـ VoCript إضافة مصدره — عنوان الأغنية أو التطبيق أو الفيديو (ورابط يوتيوب إذا اكتشفه). فعِّله لإضافة هذه الملاحظة تلقائيًا."
+      },
+      "headerProfile": {
+        "title": "الملف الشخصي",
+        "body": "اختر ملف العمل: عادي، البرمجة (إملاء رموز مثل @ أو ;) أو مخصّص بأوامرك الخاصة."
+      },
+      "headerVoice": {
+        "title": "الصوت",
+        "body": "ميكروفونك. «عادي» يلصق النص عند الانتهاء، و«مباشر» يكشفه كلمة بكلمة في كبسولة عائمة."
+      },
+      "headerSystem": {
+        "title": "صوت النظام",
+        "body": "المفتاح نفسه، لكن لصوت الحاسوب — فيديو أو مكالمة — بدلاً من صوتك."
+      },
+      "headerOutput": {
+        "title": "الإخراج",
+        "body": "إلى أين يذهب النص: «لصق» مباشرةً في التطبيق أو «نسخ» إلى الحافظة فقط."
+      },
+      "headerActivation": {
+        "title": "التفعيل",
+        "body": "كيف يبدأ التسجيل: «تبديل» (نقرة تبدأ وتوقف) أو «استمرار» (تحدّث ما دمت ضاغطًا على المفتاح)."
+      },
+      "headerLanguage": {
+        "title": "اللغة",
+        "body": "تبديل سريع يغيّر واجهة التطبيق ولغة التفريغ في آنٍ واحد."
+      },
+      "headerTheme": {
+        "title": "فاتح أو داكن",
+        "body": "واللمسة الأخيرة: بدّل بين السمة الفاتحة والداكنة. وهذا كل الشريط العلوي! 🎨"
       }
     },
     "chooseLanguage": "What language will you dictate in?"
@@ -661,7 +693,6 @@
       "supportDevelopment": {
         "title": "دعم التطوير",
         "description": "ساعدنا في مواصلة بناء VoCript",
-        "button": "تبرع",
         "coffee": "اشترِ لي قهوة",
         "handy": "دعم VoCript"
       },

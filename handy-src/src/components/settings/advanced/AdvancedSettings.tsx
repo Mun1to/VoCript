@@ -54,7 +54,9 @@ export const AdvancedSettings: React.FC = () => {
       </SettingsGroup>
 
       <SettingsGroup title={t("settings.advanced.groups.transcription")}>
-        <CustomWords descriptionMode="tooltip" grouped />
+        <div data-tour="custom-words">
+          <CustomWords descriptionMode="tooltip" grouped />
+        </div>
         <div data-tour="dictionary">
           <WordReplacements descriptionMode="tooltip" grouped />
         </div>

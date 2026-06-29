@@ -50,7 +50,12 @@ export const ProfileSelect: React.FC = () => {
   );
 
   return (
-    <div className="relative" ref={ref} title={t("header.profile.label")}>
+    <div
+      className="relative"
+      ref={ref}
+      data-tour="header-profile"
+      title={t("header.profile.label")}
+    >
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}

@@ -172,10 +172,6 @@
         "title": "System audio",
         "body": "Want to transcribe what's playing on your PC (a video, a call) instead of your voice? Use this shortcut to capture system audio. You can also target a specific app."
       },
-      "live": {
-        "title": "Live transcription",
-        "body": "Turn on \"Live mode\" and the text appears in a floating capsule as you speak (or as system audio plays). There's a switch for voice and another for system audio — no separate shortcut needed."
-      },
       "file": {
         "title": "Transcribe files",
         "body": "Here you turn an audio or video file into text or .srt subtitles. Just drag and drop it and pick the output format."
@@ -194,14 +190,50 @@
         "placeholder": "Click here and dictate with your shortcut…",
         "success": "✓ It works! That easy."
       },
-      "theme": {
-        "title": "Light or dark theme",
-        "body": "Here you choose VoCript's appearance: follow the system, light, or dark. Give it a try and keep the one you like best."
-      },
       "donate": {
         "title": "That's it! 🎉",
         "body": "You now know the essentials. VoCript is free and runs 100% on your device.\n\nIf you find it useful and have something to spare, I'd really appreciate a donation to keep improving it. Thanks! 🙂",
         "button": "Mua cho tôi ly cà phê"
+      },
+      "customWords": {
+        "title": "Từ tùy chỉnh",
+        "body": "Có tên riêng hay thuật ngữ mà VoCript hay nhận sai? Thêm chúng vào đây và những từ phát âm gần giống sẽ tự động được chỉnh theo danh sách của bạn — lý tưởng cho tên riêng và thuật ngữ chuyên ngành."
+      },
+      "feedback": {
+        "title": "Ý kiến của bạn",
+        "body": "Một ý tưởng, một lỗi hay một góp ý? Gửi ngay từ đây trong vài giây — một issue điền sẵn sẽ mở trên GitHub. Chúng tôi đọc mọi tin nhắn để cải thiện VoCript."
+      },
+      "audioSource": {
+        "title": "Ghi nguồn âm thanh",
+        "body": "Khi bạn chép lời âm thanh hệ thống, VoCript có thể thêm nguồn của nó — tên bài hát, ứng dụng hoặc video (và một liên kết YouTube nếu phát hiện). Bật lên để tự động thêm ghi chú đó."
+      },
+      "headerProfile": {
+        "title": "Hồ sơ",
+        "body": "Chọn hồ sơ làm việc: Thường, Lập trình (đọc các ký hiệu như @ hay ;) hoặc Tùy chỉnh với lệnh của riêng bạn."
+      },
+      "headerVoice": {
+        "title": "Giọng",
+        "body": "Micro của bạn. Thường dán văn bản khi kết thúc; Trực tiếp hiện từng chữ trong một bong bóng nổi."
+      },
+      "headerSystem": {
+        "title": "Âm thanh hệ thống",
+        "body": "Cùng một nút, nhưng dành cho âm thanh của máy tính — một video hay cuộc gọi — thay vì giọng bạn."
+      },
+      "headerOutput": {
+        "title": "Đầu ra",
+        "body": "Văn bản đi đâu: Dán thẳng vào ứng dụng hoặc chỉ Sao chép vào bộ nhớ tạm."
+      },
+      "headerActivation": {
+        "title": "Kích hoạt",
+        "body": "Cách bắt đầu ghi: Chuyển (một chạm để bắt đầu và dừng) hoặc Giữ (nói khi giữ phím)."
+      },
+      "headerLanguage": {
+        "title": "Ngôn ngữ",
+        "body": "Một nút đổi nhanh, thay đổi cùng lúc giao diện ứng dụng và ngôn ngữ chép lời."
+      },
+      "headerTheme": {
+        "title": "Sáng hoặc tối",
+        "body": "Và nét cuối: chuyển giữa giao diện sáng và tối. Vậy là hết thanh tiêu đề! 🎨"
       }
     },
     "chooseLanguage": "What language will you dictate in?"
@@ -696,7 +728,6 @@
       "supportDevelopment": {
         "title": "Hỗ trợ phát triển",
         "description": "Giúp chúng tôi tiếp tục xây dựng VoCript",
-        "button": "Quyên góp",
         "coffee": "Mua cho tôi ly cà phê",
         "handy": "Ủng hộ VoCript"
       },

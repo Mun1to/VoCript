@@ -48,7 +48,12 @@ export const LanguageQuickSwitch: React.FC = () => {
     SUPPORTED_LANGUAGES.find((l) => l.code === current)?.nativeName ?? current;
 
   return (
-    <div className="relative" ref={ref} title={t("header.language.label")}>
+    <div
+      className="relative"
+      ref={ref}
+      data-tour="header-language"
+      title={t("header.language.label")}
+    >
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}

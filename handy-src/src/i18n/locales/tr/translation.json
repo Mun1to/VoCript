@@ -172,10 +172,6 @@
         "title": "System audio",
         "body": "Want to transcribe what's playing on your PC (a video, a call) instead of your voice? Use this shortcut to capture system audio. You can also target a specific app."
       },
-      "live": {
-        "title": "Live transcription",
-        "body": "Turn on \"Live mode\" and the text appears in a floating capsule as you speak (or as system audio plays). There's a switch for voice and another for system audio — no separate shortcut needed."
-      },
       "file": {
         "title": "Transcribe files",
         "body": "Here you turn an audio or video file into text or .srt subtitles. Just drag and drop it and pick the output format."
@@ -194,14 +190,50 @@
         "placeholder": "Click here and dictate with your shortcut…",
         "success": "✓ It works! That easy."
       },
-      "theme": {
-        "title": "Light or dark theme",
-        "body": "Here you choose VoCript's appearance: follow the system, light, or dark. Give it a try and keep the one you like best."
-      },
       "donate": {
         "title": "That's it! 🎉",
         "body": "You now know the essentials. VoCript is free and runs 100% on your device.\n\nIf you find it useful and have something to spare, I'd really appreciate a donation to keep improving it. Thanks! 🙂",
         "button": "Kahve ısmarla"
+      },
+      "customWords": {
+        "title": "Özel kelimeler",
+        "body": "VoCript'in sürekli yanlış yazdığı isimler veya terimler mi var? Bunları buraya ekleyin; benzer sesli kelimeler otomatik olarak listenize göre düzeltilir — özel adlar ve teknik terimler için idealdir."
+      },
+      "feedback": {
+        "title": "Geri bildiriminiz",
+        "body": "Bir fikir, bir hata ya da bir yorum mu? Buradan saniyeler içinde gönderin — GitHub'da önceden doldurulmuş bir konu (issue) açılır. VoCript'i geliştirmek için her mesajı okuyoruz."
+      },
+      "audioSource": {
+        "title": "Ses kaynağını ekle",
+        "body": "Sistem sesini yazıya dökerken VoCript kaynağını ekleyebilir — şarkı, uygulama ya da video başlığı (ve algılarsa bir YouTube bağlantısı). Bu notun otomatik eklenmesi için aç."
+      },
+      "headerProfile": {
+        "title": "Profil",
+        "body": "Çalışma profilini seç: Normal, Programlama (@ veya ; gibi simgeleri dikte et) ya da kendi komutlarınla Özel."
+      },
+      "headerVoice": {
+        "title": "Ses",
+        "body": "Mikrofonun. Normal metni bitince yapıştırır; Canlı onu kelime kelime yüzen bir kapsülde gösterir."
+      },
+      "headerSystem": {
+        "title": "Sistem sesi",
+        "body": "Aynı düğme, ama sesin yerine bilgisayarın sesi için — bir video ya da bir görüşme."
+      },
+      "headerOutput": {
+        "title": "Çıktı",
+        "body": "Metin nereye gider: Doğrudan uygulamaya Yapıştır ya da yalnızca panoya Kopyala."
+      },
+      "headerActivation": {
+        "title": "Etkinleştirme",
+        "body": "Kayıt nasıl başlar: Değiştir (bir dokunuş başlatır ve durdurur) ya da Basılı tut (tuşu basılı tuttukça konuş)."
+      },
+      "headerLanguage": {
+        "title": "Dil",
+        "body": "Hem uygulamanın arayüzünü hem de yazıya dökme dilini aynı anda değiştiren hızlı bir geçiş."
+      },
+      "headerTheme": {
+        "title": "Açık veya koyu",
+        "body": "Ve son dokunuş: açık ve koyu tema arasında geçiş yap. İşte tüm başlık bu kadar! 🎨"
       }
     },
     "chooseLanguage": "What language will you dictate in?"
@@ -696,7 +728,6 @@
       "supportDevelopment": {
         "title": "Geliştirmeyi Destekle",
         "description": "VoCript'yi geliştirmeye devam etmemize yardımcı olun",
-        "button": "Bağış Yap",
         "coffee": "Kahve ısmarla",
         "handy": "VoCript'i Destekle"
       },

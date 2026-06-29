@@ -172,10 +172,6 @@
         "title": "System audio",
         "body": "Want to transcribe what's playing on your PC (a video, a call) instead of your voice? Use this shortcut to capture system audio. You can also target a specific app."
       },
-      "live": {
-        "title": "Live transcription",
-        "body": "Turn on \"Live mode\" and the text appears in a floating capsule as you speak (or as system audio plays). There's a switch for voice and another for system audio — no separate shortcut needed."
-      },
       "file": {
         "title": "Transcribe files",
         "body": "Here you turn an audio or video file into text or .srt subtitles. Just drag and drop it and pick the output format."
@@ -194,14 +190,50 @@
         "placeholder": "Click here and dictate with your shortcut…",
         "success": "✓ It works! That easy."
       },
-      "theme": {
-        "title": "Light or dark theme",
-        "body": "Here you choose VoCript's appearance: follow the system, light, or dark. Give it a try and keep the one you like best."
-      },
       "donate": {
         "title": "That's it! 🎉",
         "body": "You now know the essentials. VoCript is free and runs 100% on your device.\n\nIf you find it useful and have something to spare, I'd really appreciate a donation to keep improving it. Thanks! 🙂",
         "button": "コーヒーを奢る"
+      },
+      "customWords": {
+        "title": "カスタム単語",
+        "body": "VoCript がよく間違える名前や専門用語はありますか？ここに追加すると、似た音の単語が自動的にリストに合わせて補正されます。固有名詞や専門用語に最適です。"
+      },
+      "feedback": {
+        "title": "フィードバック",
+        "body": "アイデア、不具合、ご意見はありませんか？ここから数秒で送信でき、GitHub に入力済みの Issue が開きます。いただいたメッセージはすべて読み、VoCript の改善に活かします。"
+      },
+      "audioSource": {
+        "title": "音源を記録",
+        "body": "システム音声を文字起こしするとき、VoCript は出どころ（曲・アプリ・動画のタイトル、検出できれば YouTube リンク）を追加できます。自動でこのメモを付けたい場合はオンにしてください。"
+      },
+      "headerProfile": {
+        "title": "プロフィール",
+        "body": "作業プロフィールを選択：通常、プログラミング（@ や ; などの記号を口述）、または独自コマンドのカスタム。"
+      },
+      "headerVoice": {
+        "title": "音声",
+        "body": "あなたのマイクです。通常は終了時に貼り付け、ライブは話しながら一語ずつフローティングカプセルに表示します。"
+      },
+      "headerSystem": {
+        "title": "システム音声",
+        "body": "同じ切り替えですが、あなたの声ではなくPCの音声（動画や通話）が対象です。"
+      },
+      "headerOutput": {
+        "title": "出力",
+        "body": "テキストの行き先：アプリに直接「貼り付け」、またはクリップボードに「コピー」のみ。"
+      },
+      "headerActivation": {
+        "title": "起動",
+        "body": "録音の始め方：切り替え（1回タップで開始と停止）または長押し（キーを押している間だけ録音）。"
+      },
+      "headerLanguage": {
+        "title": "言語",
+        "body": "アプリの表示言語と文字起こしの言語を同時に切り替えるクイック切り替えです。"
+      },
+      "headerTheme": {
+        "title": "ライト or ダーク",
+        "body": "最後の仕上げ：ライトとダークのテーマを切り替え。これでヘッダーは全部です！🎨"
       }
     },
     "chooseLanguage": "What language will you dictate in?"
@@ -696,7 +728,6 @@
       "supportDevelopment": {
         "title": "開発を支援",
         "description": "VoCriptの開発を支援してください",
-        "button": "寄付する",
         "coffee": "コーヒーを奢る",
         "handy": "VoCriptを応援する"
       },

@@ -10,9 +10,10 @@ import type { SidebarSection } from "../../components/Sidebar";
  * - `practice`: render a small hands-on widget so the user can try the feature.
  * - `donate`: the closing step — shows the support/donation call to action.
  *
- * Phase 1 ships a representative subset (welcome → dictation → theme → donate);
- * later phases add the remaining features (system audio, files, live,
- * dictionary, history, shortcuts…).
+ * The tour walks the main features end to end: welcome → shortcut → dictation
+ * → system audio → source, then each header control one by one (profile →
+ * voice → system → output → activation → language → theme) → files → custom
+ * words → dictionary → history → feedback → donate.
  */
 export interface TourStep {
   id: string;
@@ -32,16 +33,26 @@ export const TOUR_STEPS: TourStep[] = [
   { id: "dictation", section: "general", practice: "dictation" },
   // 4. System audio (transcribe what's playing on the PC).
   { id: "systemAudio", section: "general", target: "shortcut-system" },
-  // 5. Live transcription (floating capsule), controlled by a toggle.
-  { id: "live", section: "general", target: "live-mode" },
-  // 6. Transcribe audio/video files.
+  // 5. Source attribution (tag song/app/video + YouTube link).
+  { id: "audioSource", section: "general", target: "audio-source" },
+  // 6–12. Header walk-through, one control at a time (left → right).
+  { id: "headerProfile", section: "general", target: "header-profile" },
+  { id: "headerVoice", section: "general", target: "header-voice" },
+  { id: "headerSystem", section: "general", target: "header-system" },
+  { id: "headerOutput", section: "general", target: "header-output" },
+  { id: "headerActivation", section: "general", target: "header-activation" },
+  { id: "headerLanguage", section: "general", target: "header-language" },
+  { id: "headerTheme", section: "general", target: "header-theme" },
+  // 13. Transcribe audio/video files.
   { id: "file", section: "file" },
-  // 7. Personal dictionary (exact replacements).
+  // 14. Custom words (phonetic auto-correction toward your list).
+  { id: "customWords", section: "advanced", target: "custom-words" },
+  // 15. Personal dictionary (exact replacements).
   { id: "dictionary", section: "advanced", target: "dictionary" },
-  // 8. History (re-listen and copy past transcriptions).
+  // 16. History (re-listen and copy past transcriptions).
   { id: "history", section: "history" },
-  // 9. Theme (light / dark / system).
-  { id: "theme", section: "advanced", target: "theme-selector" },
-  // 10. Closing + support.
+  // 17. Feedback (send ideas / bugs straight to a GitHub issue).
+  { id: "feedback", section: "feedback", target: "feedback" },
+  // 18. Closing + support.
   { id: "donate", section: "about", donate: true },
 ];

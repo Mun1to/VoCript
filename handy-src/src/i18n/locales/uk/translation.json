@@ -172,10 +172,6 @@
         "title": "System audio",
         "body": "Want to transcribe what's playing on your PC (a video, a call) instead of your voice? Use this shortcut to capture system audio. You can also target a specific app."
       },
-      "live": {
-        "title": "Live transcription",
-        "body": "Turn on \"Live mode\" and the text appears in a floating capsule as you speak (or as system audio plays). There's a switch for voice and another for system audio — no separate shortcut needed."
-      },
       "file": {
         "title": "Transcribe files",
         "body": "Here you turn an audio or video file into text or .srt subtitles. Just drag and drop it and pick the output format."
@@ -194,14 +190,50 @@
         "placeholder": "Click here and dictate with your shortcut…",
         "success": "✓ It works! That easy."
       },
-      "theme": {
-        "title": "Light or dark theme",
-        "body": "Here you choose VoCript's appearance: follow the system, light, or dark. Give it a try and keep the one you like best."
-      },
       "donate": {
         "title": "That's it! 🎉",
         "body": "You now know the essentials. VoCript is free and runs 100% on your device.\n\nIf you find it useful and have something to spare, I'd really appreciate a donation to keep improving it. Thanks! 🙂",
         "button": "Купити мені каву"
+      },
+      "customWords": {
+        "title": "Власні слова",
+        "body": "VoCript часто помиляється в іменах чи термінах? Додайте їх сюди, і схожі за звучанням слова автоматично приводитимуться до вашого списку — чудово для власних назв і фахової лексики."
+      },
+      "feedback": {
+        "title": "Ваш відгук",
+        "body": "Ідея, помилка чи коментар? Надішліть за секунди звідси — відкриється готовий запис (issue) на GitHub. Ми читаємо кожне повідомлення, щоб покращувати VoCript."
+      },
+      "audioSource": {
+        "title": "Джерело звуку",
+        "body": "Під час розшифровки системного звуку VoCript може додати його джерело — назву пісні, застосунку чи відео (і посилання на YouTube, якщо знайде). Увімкніть, щоб ця примітка додавалася автоматично."
+      },
+      "headerProfile": {
+        "title": "Профіль",
+        "body": "Оберіть робочий профіль: Звичайний, Програмування (диктування символів на кшталт @ чи ;) або Власний із вашими командами."
+      },
+      "headerVoice": {
+        "title": "Голос",
+        "body": "Ваш мікрофон. Звичайний вставляє текст у кінці; Наживо показує його слово за словом у плаваючій капсулі."
+      },
+      "headerSystem": {
+        "title": "Звук системи",
+        "body": "Той самий перемикач, але для звуку комп'ютера — відео чи дзвінка — замість вашого голосу."
+      },
+      "headerOutput": {
+        "title": "Вивід",
+        "body": "Куди йде текст: Вставити прямо в застосунок або лише Копіювати в буфер обміну."
+      },
+      "headerActivation": {
+        "title": "Активація",
+        "body": "Як запускається запис: Перемкнути (один дотик запускає і зупиняє) або Утримувати (говоріть, утримуючи клавішу)."
+      },
+      "headerLanguage": {
+        "title": "Мова",
+        "body": "Швидке перемикання, що одразу змінює і інтерфейс застосунку, і мову розпізнавання."
+      },
+      "headerTheme": {
+        "title": "Світла чи темна",
+        "body": "І останній штрих: перемикання світлої та темної теми. Ось і вся шапка! 🎨"
       }
     },
     "chooseLanguage": "What language will you dictate in?"
@@ -696,7 +728,6 @@
       "supportDevelopment": {
         "title": "Підтримати розробку",
         "description": "Допоможіть нам продовжувати розвивати VoCript",
-        "button": "Підтримати",
         "coffee": "Купити мені каву",
         "handy": "Підтримати VoCript"
       },

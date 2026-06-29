@@ -172,10 +172,6 @@
         "title": "System audio",
         "body": "Want to transcribe what's playing on your PC (a video, a call) instead of your voice? Use this shortcut to capture system audio. You can also target a specific app."
       },
-      "live": {
-        "title": "Live transcription",
-        "body": "Turn on \"Live mode\" and the text appears in a floating capsule as you speak (or as system audio plays). There's a switch for voice and another for system audio — no separate shortcut needed."
-      },
       "file": {
         "title": "Transcribe files",
         "body": "Here you turn an audio or video file into text or .srt subtitles. Just drag and drop it and pick the output format."
@@ -194,14 +190,50 @@
         "placeholder": "Click here and dictate with your shortcut…",
         "success": "✓ It works! That easy."
       },
-      "theme": {
-        "title": "Light or dark theme",
-        "body": "Here you choose VoCript's appearance: follow the system, light, or dark. Give it a try and keep the one you like best."
-      },
       "donate": {
         "title": "That's it! 🎉",
         "body": "You now know the essentials. VoCript is free and runs 100% on your device.\n\nIf you find it useful and have something to spare, I'd really appreciate a donation to keep improving it. Thanks! 🙂",
         "button": "请我喝杯咖啡"
+      },
+      "customWords": {
+        "title": "自定义词汇",
+        "body": "有没有 VoCript 经常写错的名字或术语？在这里添加它们，发音相近的词会自动按你的列表进行校正——非常适合专有名词和专业术语。"
+      },
+      "feedback": {
+        "title": "你的反馈",
+        "body": "有想法、有问题或有建议？在这里几秒钟即可发送——会在 GitHub 上打开一个预填好的 issue。我们会阅读每一条留言，持续改进 VoCript。"
+      },
+      "audioSource": {
+        "title": "标注音频来源",
+        "body": "转写系统音频时，VoCript 可以加上它的来源——歌曲、应用或视频的标题（若检测到还会附上 YouTube 链接）。打开它即可自动加上这条备注。"
+      },
+      "headerProfile": {
+        "title": "配置",
+        "body": "选择你的工作配置：普通、编程（口述 @ 或 ; 等符号）或带有你自己命令的自定义。"
+      },
+      "headerVoice": {
+        "title": "语音",
+        "body": "你的麦克风。普通在结束时粘贴；实时会一边说一边在悬浮胶囊中逐字显示。"
+      },
+      "headerSystem": {
+        "title": "系统音频",
+        "body": "同一个开关，但针对电脑的声音（视频或通话），而不是你的语音。"
+      },
+      "headerOutput": {
+        "title": "输出",
+        "body": "文字去向：直接粘贴到应用，或仅复制到剪贴板。"
+      },
+      "headerActivation": {
+        "title": "激活",
+        "body": "录音如何触发：切换（点一下开始和停止）或按住（按住按键时说话）。"
+      },
+      "headerLanguage": {
+        "title": "语言",
+        "body": "一个快捷切换，同时更改应用界面和转写语言。"
+      },
+      "headerTheme": {
+        "title": "浅色或深色",
+        "body": "最后的点缀：在浅色和深色主题间切换。顶栏就这些啦！🎨"
       }
     },
     "chooseLanguage": "What language will you dictate in?"
@@ -321,10 +353,6 @@
       "pushToTalk": {
         "label": "按住说话",
         "description": "按住录制，松开停止"
-      },
-      "systemAudioHotkey": {
-        "label": "系统音频快捷键",
-        "description": "按下快捷键以记录和转录计算机内部播放的音频（如会议或视频）。"
       },
       "clipboardOnly": {
         "label": "仅复制到剪贴板",
@@ -700,7 +728,6 @@
       "supportDevelopment": {
         "title": "支持开发",
         "description": "帮助我们继续开发 VoCript",
-        "button": "捐赠",
         "coffee": "请我喝杯咖啡",
         "handy": "支持 VoCript"
       },

@@ -172,10 +172,6 @@
         "title": "System audio",
         "body": "Want to transcribe what's playing on your PC (a video, a call) instead of your voice? Use this shortcut to capture system audio. You can also target a specific app."
       },
-      "live": {
-        "title": "Live transcription",
-        "body": "Turn on \"Live mode\" and the text appears in a floating capsule as you speak (or as system audio plays). There's a switch for voice and another for system audio — no separate shortcut needed."
-      },
       "file": {
         "title": "Transcribe files",
         "body": "Here you turn an audio or video file into text or .srt subtitles. Just drag and drop it and pick the output format."
@@ -194,14 +190,50 @@
         "placeholder": "Click here and dictate with your shortcut…",
         "success": "✓ It works! That easy."
       },
-      "theme": {
-        "title": "Light or dark theme",
-        "body": "Here you choose VoCript's appearance: follow the system, light, or dark. Give it a try and keep the one you like best."
-      },
       "donate": {
         "title": "That's it! 🎉",
         "body": "You now know the essentials. VoCript is free and runs 100% on your device.\n\nIf you find it useful and have something to spare, I'd really appreciate a donation to keep improving it. Thanks! 🙂",
         "button": "Kup mi kávu"
+      },
+      "customWords": {
+        "title": "Vlastní slova",
+        "body": "Plete si VoCript jména nebo odborné termíny? Přidejte je sem a podobně znějící slova se automaticky upraví podle vašeho seznamu — ideální pro vlastní jména a žargon."
+      },
+      "feedback": {
+        "title": "Vaše zpětná vazba",
+        "body": "Máte nápad, chybu nebo připomínku? Pošlete je odsud během pár vteřin — otevře se předvyplněné hlášení (issue) na GitHubu. Čteme každou zprávu, abychom VoCript vylepšovali."
+      },
+      "audioSource": {
+        "title": "Zdroj zvuku",
+        "body": "Při přepisu systémového zvuku může VoCript doplnit jeho zdroj — název skladby, aplikace nebo videa (a odkaz na YouTube, pokud ho rozpozná). Zapni to, ať se tato poznámka přidává automaticky."
+      },
+      "headerProfile": {
+        "title": "Profil",
+        "body": "Vyber si pracovní profil: Normální, Programování (diktování symbolů jako @ nebo ;) nebo Vlastní s vlastními příkazy."
+      },
+      "headerVoice": {
+        "title": "Hlas",
+        "body": "Tvůj mikrofon. Normální vloží text na konci; Živě ho odhaluje slovo po slovu v plovoucí kapsli."
+      },
+      "headerSystem": {
+        "title": "Zvuk systému",
+        "body": "Stejný přepínač, ale pro zvuk počítače — video nebo hovor — místo tvého hlasu."
+      },
+      "headerOutput": {
+        "title": "Výstup",
+        "body": "Kam text míří: Vložit přímo do aplikace nebo jen Kopírovat do schránky."
+      },
+      "headerActivation": {
+        "title": "Aktivace",
+        "body": "Jak se spustí nahrávání: Přepnout (jedno klepnutí spustí a zastaví) nebo Držet (mluv, dokud držíš klávesu)."
+      },
+      "headerLanguage": {
+        "title": "Jazyk",
+        "body": "Rychlé přepnutí, které naráz změní rozhraní aplikace i jazyk přepisu."
+      },
+      "headerTheme": {
+        "title": "Světlý nebo tmavý",
+        "body": "A poslední detail: přepni mezi světlým a tmavým motivem. A to je celé záhlaví! 🎨"
       }
     },
     "chooseLanguage": "What language will you dictate in?"
@@ -696,7 +728,6 @@
       "supportDevelopment": {
         "title": "Podpořte vývoj",
         "description": "Pomozte nám pokračovat ve vývoji VoCript",
-        "button": "Přispět",
         "coffee": "Kup mi kávu",
         "handy": "Podpořit VoCript"
       },

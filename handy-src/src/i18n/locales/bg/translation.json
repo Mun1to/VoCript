@@ -172,10 +172,6 @@
         "title": "System audio",
         "body": "Want to transcribe what's playing on your PC (a video, a call) instead of your voice? Use this shortcut to capture system audio. You can also target a specific app."
       },
-      "live": {
-        "title": "Live transcription",
-        "body": "Turn on \"Live mode\" and the text appears in a floating capsule as you speak (or as system audio plays). There's a switch for voice and another for system audio — no separate shortcut needed."
-      },
       "file": {
         "title": "Transcribe files",
         "body": "Here you turn an audio or video file into text or .srt subtitles. Just drag and drop it and pick the output format."
@@ -194,14 +190,50 @@
         "placeholder": "Click here and dictate with your shortcut…",
         "success": "✓ It works! That easy."
       },
-      "theme": {
-        "title": "Light or dark theme",
-        "body": "Here you choose VoCript's appearance: follow the system, light, or dark. Give it a try and keep the one you like best."
-      },
       "donate": {
         "title": "That's it! 🎉",
         "body": "You now know the essentials. VoCript is free and runs 100% on your device.\n\nIf you find it useful and have something to spare, I'd really appreciate a donation to keep improving it. Thanks! 🙂",
         "button": "Купи ми кафе"
+      },
+      "customWords": {
+        "title": "Персонализирани думи",
+        "body": "Има ли имена или термини, които VoCript често бърка? Добавете ги тук и подобно звучащите думи ще се коригират автоматично според вашия списък — идеално за собствени имена и професионален жаргон."
+      },
+      "feedback": {
+        "title": "Вашето мнение",
+        "body": "Идея, проблем или коментар? Изпратете го за секунди оттук — отваря се предварително попълнен сигнал (issue) в GitHub. Четем всяко съобщение, за да подобряваме VoCript."
+      },
+      "audioSource": {
+        "title": "Източник на звука",
+        "body": "Когато транскрибираш системния звук, VoCript може да добави откъде идва — заглавието на песента, приложението или видеото (и връзка към YouTube, ако я открие). Включи го, за да се добавя тази бележка автоматично."
+      },
+      "headerProfile": {
+        "title": "Профил",
+        "body": "Изберете работен профил: Нормален, Програмиране (диктувай символи като @ или ;) или Персонализиран със собствени команди."
+      },
+      "headerVoice": {
+        "title": "Глас",
+        "body": "Вашият микрофон. Нормален поставя текста накрая; На живо го показва дума по дума в плаваща капсула."
+      },
+      "headerSystem": {
+        "title": "Звук на системата",
+        "body": "Същият превключвател, но за звука на компютъра — видео или разговор — вместо вашия глас."
+      },
+      "headerOutput": {
+        "title": "Изход",
+        "body": "Къде отива текстът: Постави директно в приложението или само Копирай в клипборда."
+      },
+      "headerActivation": {
+        "title": "Активиране",
+        "body": "Как се задейства записът: Превключи (едно докосване стартира и спира) или Задръж (говори, докато държиш клавиша)."
+      },
+      "headerLanguage": {
+        "title": "Език",
+        "body": "Бърза смяна, която наведнъж променя интерфейса на приложението и езика на транскрипцията."
+      },
+      "headerTheme": {
+        "title": "Светла или тъмна",
+        "body": "И последният детайл: превключи между светла и тъмна тема. Това е цялата заглавка! 🎨"
       }
     },
     "chooseLanguage": "What language will you dictate in?"
@@ -696,7 +728,6 @@
       "supportDevelopment": {
         "title": "Подкрепете разработката",
         "description": "Помогнете ни да продължим да развиваме VoCript",
-        "button": "Дарение",
         "coffee": "Купи ми кафе",
         "handy": "Подкрепи VoCript"
       },

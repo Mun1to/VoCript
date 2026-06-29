@@ -41,7 +41,9 @@ export const GeneralSettings: React.FC = () => {
           <SystemAudioAppSelector descriptionMode="tooltip" grouped={true} />
         )}
         {isWindows && (
-          <SourceAttribution descriptionMode="tooltip" grouped={true} />
+          <div data-tour="audio-source">
+            <SourceAttribution descriptionMode="tooltip" grouped={true} />
+          </div>
         )}
         <PushToTalk descriptionMode="tooltip" grouped={true} />
         <ClipboardOnlyToggle descriptionMode="tooltip" grouped={true} />

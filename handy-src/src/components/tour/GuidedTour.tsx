@@ -28,7 +28,7 @@ interface Rect {
   height: number;
 }
 
-const CARD_WIDTH = 380;
+const CARD_WIDTH = 400;
 const GAP = 12;
 
 const CARD_CLASS =
@@ -153,7 +153,7 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ onNavigate }) => {
   const cardBody = (
     <div key={stepIndex} className="vc-step-in flex flex-col gap-3">
       <div className="flex items-start justify-between gap-2">
-        <h3 className="font-semibold text-base">
+        <h3 className="font-semibold text-lg">
           {t(`onboarding.tour.${step.id}.title`)}
         </h3>
         <button
@@ -166,7 +166,7 @@ export const GuidedTour: React.FC<GuidedTourProps> = ({ onNavigate }) => {
         </button>
       </div>
 
-      <p className="text-sm text-text/80 whitespace-pre-line">
+      <p className="text-[15px] leading-relaxed text-text/85 whitespace-pre-line">
         {t(`onboarding.tour.${step.id}.body`)}
       </p>
 
