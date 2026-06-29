@@ -2,16 +2,19 @@
 
 # 🎙️ VoCript
 
-**Dicta y se escribe. Transcripción de voz y audio a texto para Windows, 100 % offline.**
+**Dicta y se escribe.** Convierte tu **voz** y el **audio de tu PC** en texto, al instante y 100 % offline.
 
 🌍 Español · [English](README.en.md)
 
 <p>
-  <a href="https://github.com/Mun1to/Vocript/releases/latest">
-    <img src="https://img.shields.io/github/v/release/Mun1to/Vocript?label=descargar&style=for-the-badge&color=3b82f6" alt="Última versión" />
+  <a href="https://github.com/Mun1to/VoCript/releases/latest">
+    <img src="https://img.shields.io/github/v/release/Mun1to/VoCript?label=versión&style=for-the-badge&color=3b82f6" alt="Última versión" />
   </a>
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/licencia-MIT-3b82f6?style=for-the-badge" alt="Licencia MIT" />
+  </a>
+  <a href="SECURITY.md">
+    <img src="https://img.shields.io/badge/100%25-local%20y%20privado-22c55e?style=for-the-badge" alt="100% local y privado" />
   </a>
 </p>
 
@@ -27,16 +30,18 @@
 
 ## ✨ Qué hace
 
-VoCript convierte tu voz en texto al instante, **donde tengas el cursor**. Todo
-el reconocimiento ocurre **en tu equipo**: tu audio nunca sale de tu ordenador.
+VoCript escucha tu **voz** —o el **audio que suena en tu PC**— y lo convierte en texto **justo donde tienes el cursor**, en cualquier aplicación. Todo el reconocimiento ocurre **en tu equipo**: ni cuentas, ni nube, ni esperas.
 
-- 🎤 **Dictado por voz** — pulsa un atajo, habla y el texto se escribe en cualquier app.
-- 🖥️ **Audio del sistema** — transcribe lo que suena en el PC (un vídeo, una llamada) o una app concreta.
-- 📁 **Transcribir archivos** — convierte audio o vídeo a texto o subtítulos `.srt`.
-- ⚡ **Transcripción en vivo** — ve el texto en una cápsula flotante mientras hablas (push-to-talk).
-- 📒 **Diccionario personal** — reemplazos exactos para nombres, jerga o abreviaturas, con importar/exportar CSV.
-- 🕑 **Historial** — guarda tus transcripciones y reproduce el audio original.
-- 🇪🇸 **Optimizado para español** (acentos y puntuación), con el soporte multi-idioma de Whisper.
+- 🎤 **Dictado por voz** — pulsa un atajo, habla, y el texto se escribe solo en la app que estés usando.
+- 🔊 **Audio del sistema** — transcribe lo que suena en el PC (un vídeo, una llamada, una reunión) o una app concreta, y opcionalmente añade de dónde viene.
+- ⚡ **Transcripción en vivo** — el texto aparece palabra a palabra en una cápsula flotante mientras hablas o reproduces audio.
+- 📁 **Archivos a texto o subtítulos** — arrastra un audio o vídeo y obtén texto plano o subtítulos `.srt`.
+- 🎯 **Precisión a tu medida** — un **diccionario personal** de reemplazos exactos y **palabras personalizadas** que corrigen nombres o jerga por su sonido (con importar/exportar CSV).
+- 💼 **Perfiles profesionales** — *Normal*, *Programación* (dicta símbolos: «arroba» → `@`, «punto y coma» → `;`) o *Personalizado* con tus propios comandos.
+- 🌍 **Multi-idioma** — interfaz en 20 idiomas y transcripción en decenas, con **cambio rápido de idioma** (app y modelo a la vez). Optimizado para español (acentos y puntuación).
+- 🕑 **Historial** — guarda tus transcripciones y vuelve a escuchar el audio original cuando quieras.
+- 🎨 **A tu gusto** — tema claro u oscuro y un tour guiado la primera vez.
+- 🔒 **100 % local** — sin telemetría, con actualizaciones automáticas y firmadas.
 
 ---
 
@@ -46,7 +51,7 @@ el reconocimiento ocurre **en tu equipo**: tu audio nunca sale de tu ordenador.
   <img src="brand/screenshots/01-general.png" alt="VoCript — pantalla principal" width="820" />
 </div>
 
-<p align="center"><em>Pantalla principal: barra de controles rápidos en el header — modo voz/sistema, salida (pegar/copiar), activación, perfil e idioma. Todo el reconocimiento ocurre en tu equipo.</em></p>
+<p align="center"><em>Pantalla principal: la barra de controles rápidos del header — voz/sistema, en vivo, salida (pegar/copiar), activación, perfil e idioma. Todo el reconocimiento ocurre en tu equipo.</em></p>
 
 | Transcribir archivos | Modelos de transcripción | Ajustes avanzados |
 | :--: | :--: | :--: |
@@ -77,11 +82,11 @@ mano.
 ## ⌨️ Cómo se usa
 
 1. Abre VoCript (se queda en la bandeja del sistema, junto al reloj).
-2. La primera vez, descarga un modelo de transcripción (Whisper).
-3. Coloca el cursor donde quieras escribir, pulsa el **atajo de dictado**, habla y suéltalo.
-4. El texto aparece donde tenías el cursor.
+2. La primera vez, elige y descarga un modelo de transcripción. Un tour te enseña lo básico.
+3. **Para dictar:** coloca el cursor donde quieras escribir, pulsa el **atajo de dictado**, habla y suéltalo.
+4. **Para el audio del PC:** pulsa el **atajo de audio del sistema** y VoCript transcribe lo que esté sonando.
 
-Todos los atajos se configuran en **Ajustes → General**.
+El texto aparece donde tenías el cursor. Cambia modos y atajos desde el **header** o en **Ajustes → General**.
 
 ## 🔒 Privacidad
 

@@ -2,16 +2,19 @@
 
 # 🎙️ VoCript
 
-**Speak and it types. Voice & audio to text for Windows, 100% offline.**
+**Speak and it types.** Turn your **voice** and your **PC's audio** into text, instantly and 100% offline.
 
 🌍 [Español](README.md) · English
 
 <p>
-  <a href="https://github.com/Mun1to/Vocript/releases/latest">
-    <img src="https://img.shields.io/github/v/release/Mun1to/Vocript?label=download&style=for-the-badge&color=3b82f6" alt="Latest release" />
+  <a href="https://github.com/Mun1to/VoCript/releases/latest">
+    <img src="https://img.shields.io/github/v/release/Mun1to/VoCript?label=version&style=for-the-badge&color=3b82f6" alt="Latest release" />
   </a>
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-3b82f6?style=for-the-badge" alt="MIT license" />
+  </a>
+  <a href="SECURITY.md">
+    <img src="https://img.shields.io/badge/100%25-local%20%26%20private-22c55e?style=for-the-badge" alt="100% local and private" />
   </a>
 </p>
 
@@ -27,16 +30,18 @@
 
 ## ✨ What it does
 
-VoCript turns your voice into text instantly, **right where your cursor is**.
-All recognition happens **on your device** — your audio never leaves your computer.
+VoCript listens to your **voice** —or the **audio playing on your PC**— and turns it into text **right where your cursor is**, in any app. All recognition happens **on your device**: no accounts, no cloud, no waiting.
 
-- 🎤 **Voice dictation** — press a shortcut, speak, and the text is typed into any app.
-- 🖥️ **System audio** — transcribe what's playing on your PC (a video, a call) or a specific app.
-- 📁 **File transcription** — turn audio or video into text or `.srt` subtitles.
-- ⚡ **Live transcription** — watch the text in a floating bubble as you speak (push-to-talk).
-- 📒 **Personal dictionary** — exact replacements for names, jargon or abbreviations, with CSV import/export.
-- 🕑 **History** — keeps your transcriptions and lets you replay the original audio.
-- 🌐 **Multi-language** via Whisper (tuned for Spanish accents and punctuation out of the box).
+- 🎤 **Voice dictation** — press a shortcut, speak, and the text types itself into whatever app you're using.
+- 🔊 **System audio** — transcribe what's playing on your PC (a video, a call, a meeting) or a specific app, and optionally tag where it came from.
+- ⚡ **Live transcription** — watch the text appear word by word in a floating bubble as you speak or play audio.
+- 📁 **Files to text or subtitles** — drop in an audio or video file and get plain text or `.srt` subtitles.
+- 🎯 **Accuracy your way** — a **personal dictionary** of exact replacements plus **custom words** that fix names or jargon by how they sound (with CSV import/export).
+- 💼 **Work profiles** — *Normal*, *Coding* (dictate symbols: "at sign" → `@`, "semicolon" → `;`) or *Custom* with your own commands.
+- 🌍 **Multi-language** — interface in 20 languages and transcription in dozens, with a **quick language switch** (app and model at once). Tuned for Spanish accents and punctuation.
+- 🕑 **History** — keeps your transcriptions and lets you replay the original audio anytime.
+- 🎨 **Make it yours** — light or dark theme and a guided tour on first run.
+- 🔒 **100% local** — no telemetry, with automatic, signed updates.
 
 ---
 
@@ -46,7 +51,7 @@ All recognition happens **on your device** — your audio never leaves your comp
   <img src="brand/screenshots/01-general.png" alt="VoCript — main screen" width="820" />
 </div>
 
-<p align="center"><em>Main screen: the header's quick-control bar — voice/system mode, output (paste/copy), activation, profile and language. All recognition runs on your device.</em></p>
+<p align="center"><em>Main screen: the header's quick-control bar — voice/system, live, output (paste/copy), activation, profile and language. All recognition runs on your device.</em></p>
 
 | Transcribe files | Transcription models | Advanced settings |
 | :--: | :--: | :--: |
@@ -75,11 +80,11 @@ is one, installs it with a single click. No manual re-downloading.
 ## ⌨️ How to use it
 
 1. Open VoCript (it lives in the system tray, next to the clock).
-2. On first run, download a transcription model (Whisper).
-3. Place your cursor where you want to type, press the **dictation shortcut**, speak and release.
-4. The text appears where your cursor was.
+2. On first run, pick and download a transcription model. A short tour shows you the basics.
+3. **To dictate:** place your cursor where you want to type, press the **dictation shortcut**, speak and release.
+4. **For your PC's audio:** press the **system-audio shortcut** and VoCript transcribes whatever is playing.
 
-All shortcuts are configurable in **Settings → General**.
+The text appears where your cursor was. Switch modes and shortcuts from the **header** or in **Settings → General**.
 
 ## 🔒 Privacy
 
