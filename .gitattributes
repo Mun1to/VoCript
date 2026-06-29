@@ -6,7 +6,7 @@
 
 # Entorno de desarrollo Nix (heredado de Handy; el desarrollo real es en Windows)
 *.nix linguist-vendored
-handy-src/.nix/** linguist-vendored
+vocript-src/.nix/** linguist-vendored
 
 # Andamiaje específico de Apple / macOS (Swift)
 *.swift linguist-vendored

@@ -12,7 +12,7 @@ import { LogDirectory } from "../debug";
 
 const BMC_URL = "https://buymeacoffee.com/munito";
 const HANDY_DONATE_URL = "https://handy.computer/donate";
-const VOCRIPT_REPO_URL = "https://github.com/Mun1to/Vocript";
+const VOCRIPT_REPO_URL = "https://github.com/Mun1to/VoCript";
 
 export const AboutSettings: React.FC = () => {
   const { t } = useTranslation();

@@ -11,7 +11,7 @@ import {
   FileAudio,
   MessageSquare,
 } from "lucide-react";
-import HandyTextLogo from "./icons/HandyTextLogo";
+import VoCriptTextLogo from "./icons/VoCriptTextLogo";
 import { useSettings } from "../hooks/useSettings";
 import {
   GeneralSettings,
@@ -162,7 +162,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       }`}
     >
       <div className="flex flex-col items-center px-4 pt-5 pb-3">
-        <HandyTextLogo width={136} />
+        <VoCriptTextLogo width={136} />
       </div>
       <div className="mx-4 mb-3 h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
       <nav className="flex flex-col gap-1.5 px-3 py-1 overflow-y-auto flex-1 min-h-0">

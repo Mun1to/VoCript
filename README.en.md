@@ -102,10 +102,10 @@ post-processing is off by default.
 ## 🛠️ For developers
 
 VoCript is built with **Tauri 2** (Rust + React/TypeScript) and **Whisper.cpp**
-with GPU acceleration (Vulkan). Source code lives in [`handy-src/`](handy-src/).
+with GPU acceleration (Vulkan). Source code lives in [`vocript-src/`](vocript-src/).
 
 ```bash
-cd handy-src
+cd vocript-src
 bun install
 bun run tauri dev      # development (hot-reload)
 bun run tauri build    # production installer

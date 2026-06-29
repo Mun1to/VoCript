@@ -37,7 +37,7 @@ CMAKE_GENERATOR  = Ninja
 
 ⚠️ **`CARGO_TARGET_DIR=C:\ct` es imprescindible.** whisper.cpp genera rutas de
 compilación muy profundas; si el target está en la ruta normal
-(`...\handy-src\src-tauri\target`) se supera el límite de 260 caracteres de
+(`...\vocript-src\src-tauri\target`) se supera el límite de 260 caracteres de
 Windows (MAX_PATH) y la compilación de C++ falla. Redirigir el target a `C:\ct`
 acorta las rutas lo suficiente.
 
@@ -66,7 +66,7 @@ $env:CARGO_TARGET_DIR = "C:\ct"
 
 ## Comandos
 
-Desde `C:\proyectos\VoCript\handy-src`:
+Desde `C:\proyectos\VoCript\vocript-src`:
 
 | Acción | Comando | Notas |
 |--------|---------|-------|

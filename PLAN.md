@@ -29,7 +29,7 @@ Variables de entorno permanentes en el usuario:
 - `CMAKE_GENERATOR = Ninja`
 - PATH incluye: `C:\Program Files\CMake\bin`, Ninja (en AppData\Local\Microsoft\WinGet\Packages\Ninja-build...)
 
-Comando para compilar (desde `C:\proyectos\VoCript\handy-src`):
+Comando para compilar (desde `C:\proyectos\VoCript\vocript-src`):
 ```powershell
 $env:PATH = "$env:USERPROFILE\.cargo\bin;$env:USERPROFILE\.bun\bin;C:\Program Files\LLVM\bin;C:\Program Files\CMake\bin;" + (Get-ChildItem "$env:LOCALAPPDATA\Microsoft\WinGet\Packages\Ninja-build*" | Select-Object -First 1).FullName + ";$env:PATH"
 $env:LIBCLANG_PATH = "C:\Program Files\LLVM\bin"
@@ -63,7 +63,7 @@ Archivos modificados:
 - `src-tauri/Cargo.toml` → name: "vocript", default-run: "vocript", lib name: "vocript_app_lib"
 - `src-tauri/src/main.rs`, `cli.rs`, `lib.rs`, `tray.rs`, `actions.rs`, `portable.rs`, `managers/history.rs` → todos los strings "Handy"/"handy" → "VoCript"/"vocript"
 - `src-tauri/nsis/installer.nsi` → "VoCript Portable Mode"
-- `src/components/icons/HandyTextLogo.tsx` → SVG de texto "VoCript" (reemplaza paths SVG del logo "handy")
+- `src/components/icons/VoCriptTextLogo.tsx` → SVG de texto "VoCript" (reemplaza paths SVG del logo "handy")
 
 **Pendiente:** reemplazar los PNGs de bandeja del sistema (`src-tauri/resources/handy.png`, etc.) con versiones azules de VoCript. Requiere editor gráfico.
 

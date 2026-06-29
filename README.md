@@ -105,10 +105,10 @@ en la nube es opcional y está desactivado por defecto.
 
 VoCript está hecho con **Tauri 2** (Rust + React/TypeScript) y **Whisper.cpp**
 con aceleración por GPU (Vulkan). El código fuente está en
-[`handy-src/`](handy-src/).
+[`vocript-src/`](vocript-src/).
 
 ```bash
-cd handy-src
+cd vocript-src
 bun install
 bun run tauri dev      # desarrollo (hot-reload)
 bun run tauri build    # instalador de producción

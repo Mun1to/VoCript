@@ -10,7 +10,7 @@ import React from "react";
  * feel. The gradient is self-contained so it renders correctly inside the
  * separate overlay window too.
  */
-const HandyTextLogo = ({
+const VoCriptTextLogo = ({
   width,
   height,
   className,
@@ -32,7 +32,6 @@ const HandyTextLogo = ({
       xmlns="http://www.w3.org/2000/svg"
       role="img"
       aria-label="VoCript"
-      dir="ltr"
       style={{ direction: "ltr" }}
     >
       <defs>
@@ -74,4 +73,4 @@ const HandyTextLogo = ({
   );
 };
 
-export default HandyTextLogo;
+export default VoCriptTextLogo;

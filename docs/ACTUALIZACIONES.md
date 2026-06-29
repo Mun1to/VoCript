@@ -31,7 +31,7 @@ y siempre **manual y selectiva**.
    https://github.com/cjpais/handy/commits/main
 2. Identificar un cambio concreto que interese (ej. mejora del VAD).
 3. Mirar el diff de ese cambio en GitHub.
-4. Aplicar **solo ese cambio** a mano en `handy-src`, respetando nuestras
+4. Aplicar **solo ese cambio** a mano en `vocript-src`, respetando nuestras
    personalizaciones.
 
 > **NO hacer `git pull` ni merge ciego.** Traería de vuelta el nombre "Handy",
@@ -50,7 +50,7 @@ porque contienen cambios propios de VoCript:
 | `Cargo.toml` | name = "vocript" |
 | `package.json`, `index.html` | nombre y título VoCript |
 | `src/App.css`, `src/overlay/RecordingOverlay.css` | paleta azul |
-| `src/components/icons/HandyTextLogo.tsx` | logo de texto "VoCript" |
+| `src/components/icons/VoCriptTextLogo.tsx` | logo de texto "VoCript" |
 | `src-tauri/src/managers/audio.rs` | parámetros del VAD ajustados |
 | `src-tauri/src/settings.rs` | idioma por defecto "es" |
 | `src-tauri/src/` (varios) | strings "Handy" → "VoCript" |

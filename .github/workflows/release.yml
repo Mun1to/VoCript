@@ -30,7 +30,7 @@ jobs:
       - name: Cache de Rust
         uses: swatinem/rust-cache@v2
         with:
-          workspaces: "handy-src/src-tauri -> target"
+          workspaces: "vocript-src/src-tauri -> target"
 
       - name: Instalar LLVM (libclang para bindgen)
         uses: KyleMayes/install-llvm-action@v2
@@ -54,11 +54,11 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: Instalar dependencias del frontend
-        working-directory: handy-src
+        working-directory: vocript-src
         run: bun install
 
       - name: Descargar modelo Silero VAD (recurso requerido)
-        working-directory: handy-src
+        working-directory: vocript-src
         shell: bash
         run: |
           mkdir -p src-tauri/resources/models
@@ -97,7 +97,7 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
-          projectPath: handy-src
+          projectPath: vocript-src
           tagName: ${{ github.ref_name }}
           releaseName: "VoCript ${{ github.ref_name }}"
           releaseBody: "Descarga el instalador (`.exe`) más abajo. Si ya tienes VoCript instalado, se actualizará solo."
