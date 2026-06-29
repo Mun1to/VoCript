@@ -22,7 +22,7 @@ pub struct CustomSounds {
 
 fn custom_sound_exists(app: &AppHandle, sound_type: &str) -> bool {
     crate::portable::resolve_app_data(app, &format!("custom_{}.wav", sound_type))
-        .map_or(false, |path| path.exists())
+        .is_ok_and(|path| path.exists())
 }
 
 #[tauri::command]
@@ -140,7 +140,7 @@ pub fn open_microphone_privacy_settings() -> Result<(), String> {
             .args(["/C", "start", "", "ms-settings:privacy-microphone"])
             .spawn()
             .map_err(|e| format!("Failed to open Windows microphone privacy settings: {}", e))?;
-        return Ok(());
+        Ok(())
     }
 
     #[cfg(not(target_os = "windows"))]

@@ -672,7 +672,7 @@ impl ModelManager {
 
         for filename in &bundled_models {
             let bundled_path = self.app_handle.path().resolve(
-                &format!("resources/models/{}", filename),
+                format!("resources/models/{}", filename),
                 tauri::path::BaseDirectory::Resource,
             );
 

@@ -120,7 +120,7 @@ impl TranscriptionManager {
                     // model is never unloaded mid-session.
                     let is_recording = app_handle_cloned
                         .try_state::<Arc<AudioRecordingManager>>()
-                        .map_or(false, |a| a.is_recording());
+                        .is_some_and(|a| a.is_recording());
                     if is_recording {
                         manager_cloned.touch_activity();
                         continue;

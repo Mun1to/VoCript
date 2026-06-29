@@ -145,12 +145,13 @@ pub enum AudioSource {
     System,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
+#[derive(Serialize, Deserialize, Debug, Default, Clone, Copy, PartialEq, Eq, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum ModelUnloadTimeout {
     Never,
     Immediately,
     Min2,
+    #[default]
     Min5,
     Min10,
     Min15,
@@ -169,16 +170,18 @@ pub enum PasteMethod {
     ExternalScript,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
+#[derive(Serialize, Deserialize, Debug, Default, Clone, Copy, PartialEq, Eq, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum ClipboardHandling {
+    #[default]
     DontModify,
     CopyToClipboard,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
+#[derive(Serialize, Deserialize, Debug, Default, Clone, Copy, PartialEq, Eq, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum AutoSubmitKey {
+    #[default]
     Enter,
     CtrlEnter,
     CmdEnter,
@@ -210,12 +213,6 @@ impl Default for KeyboardImplementation {
     }
 }
 
-impl Default for ModelUnloadTimeout {
-    fn default() -> Self {
-        ModelUnloadTimeout::Min5
-    }
-}
-
 impl Default for PasteMethod {
     fn default() -> Self {
         // Default to CtrlV for macOS and Windows, Direct for Linux
@@ -223,18 +220,6 @@ impl Default for PasteMethod {
         return PasteMethod::Direct;
         #[cfg(not(target_os = "linux"))]
         return PasteMethod::CtrlV;
-    }
-}
-
-impl Default for ClipboardHandling {
-    fn default() -> Self {
-        ClipboardHandling::DontModify
-    }
-}
-
-impl Default for AutoSubmitKey {
-    fn default() -> Self {
-        AutoSubmitKey::Enter
     }
 }
 
@@ -279,18 +264,19 @@ impl SoundTheme {
         }
     }
 
-    pub fn to_start_path(&self) -> String {
+    pub fn to_start_path(self) -> String {
         format!("resources/{}_start.wav", self.as_str())
     }
 
-    pub fn to_stop_path(&self) -> String {
+    pub fn to_stop_path(self) -> String {
         format!("resources/{}_stop.wav", self.as_str())
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
+#[derive(Serialize, Deserialize, Debug, Default, Clone, Copy, PartialEq, Eq, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum TypingTool {
+    #[default]
     Auto,
     Wtype,
     Kwtype,
@@ -299,41 +285,25 @@ pub enum TypingTool {
     Xdotool,
 }
 
-impl Default for TypingTool {
-    fn default() -> Self {
-        TypingTool::Auto
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
+#[derive(Serialize, Deserialize, Debug, Default, Clone, Copy, PartialEq, Eq, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum WhisperAcceleratorSetting {
+    #[default]
     Auto,
     Cpu,
     Gpu,
 }
 
-impl Default for WhisperAcceleratorSetting {
-    fn default() -> Self {
-        WhisperAcceleratorSetting::Auto
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
+#[derive(Serialize, Deserialize, Debug, Default, Clone, Copy, PartialEq, Eq, Type)]
 #[serde(rename_all = "snake_case")]
 pub enum OrtAcceleratorSetting {
+    #[default]
     Auto,
     Cpu,
     Cuda,
     #[serde(rename = "directml")]
     DirectMl,
     Rocm,
-}
-
-impl Default for OrtAcceleratorSetting {
-    fn default() -> Self {
-        OrtAcceleratorSetting::Auto
-    }
 }
 
 #[derive(Clone, Serialize, Deserialize, Type)]
@@ -970,6 +940,7 @@ pub fn load_or_create_app_settings(app: &AppHandle) -> AppSettings {
 
                 // Merge default bindings into existing settings
                 for (key, value) in default_settings.bindings {
+                    #[allow(clippy::map_entry)]
                     if !settings.bindings.contains_key(&key) {
                         debug!("Adding missing binding: {}", key);
                         settings.bindings.insert(key, value);

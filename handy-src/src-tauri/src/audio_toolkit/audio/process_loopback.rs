@@ -105,7 +105,7 @@ pub fn list_audio_apps() -> Result<Vec<AudioApp>, String> {
             apps.push(AudioApp { pid, name });
         }
     }
-    apps.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
+    apps.sort_by_key(|a| a.name.to_lowercase());
     Ok(apps)
 }
 

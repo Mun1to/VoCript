@@ -218,10 +218,9 @@ impl AudioRecorder {
             }
             Err(recv_error) => {
                 let _ = worker.join();
-                Err(Box::new(Error::new(
-                    std::io::ErrorKind::Other,
-                    format!("Failed to initialize microphone worker: {recv_error}"),
-                )))
+                Err(Box::new(Error::other(format!(
+                    "Failed to initialize microphone worker: {recv_error}"
+                ))))
             }
         }
     }
@@ -273,15 +272,14 @@ impl AudioRecorder {
             Ok(Err(msg)) => {
                 shutdown_flag.store(true, Ordering::Relaxed);
                 let _ = capture.join();
-                return Err(Box::new(Error::new(std::io::ErrorKind::Other, msg)));
+                return Err(Box::new(Error::other(msg)));
             }
             Err(e) => {
                 shutdown_flag.store(true, Ordering::Relaxed);
                 let _ = capture.join();
-                return Err(Box::new(Error::new(
-                    std::io::ErrorKind::Other,
-                    format!("Process loopback init failed: {e}"),
-                )));
+                return Err(Box::new(Error::other(format!(
+                    "Process loopback init failed: {e}"
+                ))));
             }
         }
 
@@ -492,6 +490,7 @@ pub fn is_no_input_device_error(error_message: &str) -> bool {
 }
 
 #[cfg(test)]
+#[allow(clippy::items_after_test_module)]
 mod tests {
     use super::{is_microphone_access_denied, is_no_input_device_error};
 
