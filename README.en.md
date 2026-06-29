@@ -2,7 +2,7 @@
 
 # 🎙️ VoCript
 
-**Speak and it types. Voice-to-text for Windows, 100% offline.**
+**Speak and it types. Voice & audio to text for Windows, 100% offline.**
 
 🌍 [Español](README.md) · English
 

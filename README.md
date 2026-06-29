@@ -2,7 +2,7 @@
 
 # 🎙️ VoCript
 
-**Dicta y se escribe. Transcripción de voz a texto para Windows, 100 % offline.**
+**Dicta y se escribe. Transcripción de voz y audio a texto para Windows, 100 % offline.**
 
 🌍 Español · [English](README.en.md)
 
