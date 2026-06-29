@@ -16,7 +16,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Mun1to/Vocript/releases/latest">
+  <a href="https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-Setup.exe">
     <img src="brand/download-button.svg" alt="Descargar VoCript" width="320" height="72" />
   </a>
 </p>
@@ -56,9 +56,11 @@ el reconocimiento ocurre **en tu equipo**: tu audio nunca sale de tu ordenador.
 
 ## ⬇️ Descargar
 
-1. Entra en **[la última versión (Releases)](https://github.com/Mun1to/Vocript/releases/latest)**.
-2. Descarga el instalador `VoCript_x.y.z_x64-setup.exe`.
-3. Ejecútalo y sigue los pasos. ¡Listo!
+1. Pulsa el botón **Descargar** de arriba — o este enlace directo: **[descargar VoCript](https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-Setup.exe)**. Se baja el instalador al instante.
+2. Abre el archivo descargado (`VoCript-Setup.exe`).
+3. Sigue los pasos. ¡Listo!
+
+> 💡 ¿Prefieres ver todas las versiones y archivos? Están en la [página de Releases](https://github.com/Mun1to/VoCript/releases/latest).
 
 > Windows puede mostrar un aviso de "editor desconocido" (la app aún no está
 > firmada con un certificado de pago). Pulsa **Más información → Ejecutar de

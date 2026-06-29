@@ -16,7 +16,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Mun1to/Vocript/releases/latest">
+  <a href="https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-Setup.exe">
     <img src="brand/download-button.svg" alt="Download VoCript" width="320" height="72" />
   </a>
 </p>
@@ -56,9 +56,11 @@ All recognition happens **on your device** — your audio never leaves your comp
 
 ## ⬇️ Download
 
-1. Go to **[the latest release (Releases)](https://github.com/Mun1to/Vocript/releases/latest)**.
-2. Download the installer `VoCript_x.y.z_x64-setup.exe`.
-3. Run it and follow the steps. Done!
+1. Click the **Download** button above — or this direct link: **[download VoCript](https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-Setup.exe)**. The installer downloads instantly.
+2. Open the downloaded file (`VoCript-Setup.exe`).
+3. Follow the steps. Done!
+
+> 💡 Prefer to see all versions and files? They're on the [Releases page](https://github.com/Mun1to/VoCript/releases/latest).
 
 > Windows may show an "unknown publisher" warning (the app isn't signed with a
 > paid certificate yet). Click **More info → Run anyway**.
