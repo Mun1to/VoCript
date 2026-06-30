@@ -48,12 +48,10 @@ pub fn handle_shortcut_event(
             } else {
                 binding_id
             };
-            // Live mode is always push-to-talk: hold to dictate, release to stop
-            // (then auto-paste, or leave the text editable). This removes the
-            // confusing "press again to stop" that toggle mode needs.
-            let push_to_talk = settings.push_to_talk
-                || effective_binding == "transcribe_live"
-                || effective_binding == "transcribe_system_live";
+            // El modo en vivo respeta el ajuste de activación del usuario:
+            // "Mantener" (push-to-talk) graba mientras se mantiene la tecla;
+            // "Alternar" (toggle) inicia con una pulsación y para con otra.
+            let push_to_talk = settings.push_to_talk;
             coordinator.send_input(effective_binding, hotkey_string, is_pressed, push_to_talk);
         } else {
             warn!("TranscriptionCoordinator is not initialized");
