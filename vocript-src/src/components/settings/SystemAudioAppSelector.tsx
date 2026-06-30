@@ -41,17 +41,28 @@ export const SystemAudioAppSelector: React.FC<SystemAudioAppSelectorProps> =
 
     const stripExe = (name: string) => name.replace(/\.exe$/i, "");
 
-    const options = [
+    // Construye las opciones y deduplica por nombre visible (sin .exe y sin
+    // distinguir mayúsculas) para que una misma app que abre varios procesos
+    // (p. ej. Spotify) no aparezca repetida. Las apps enumeradas van antes que
+    // la seleccionada para conservar su valor "real" cuando coinciden.
+    const rawOptions = [
       {
         value: WHOLE_SYSTEM,
         label: t("settings.general.systemAudioApp.wholeSystem"),
       },
-      // Keep the currently-selected app visible even if it isn't playing now.
-      ...(selected !== WHOLE_SYSTEM && !apps.includes(selected)
+      ...apps.map((name) => ({ value: name, label: stripExe(name) })),
+      // Mantén visible la app seleccionada aunque no esté sonando ahora.
+      ...(selected !== WHOLE_SYSTEM
         ? [{ value: selected, label: stripExe(selected) }]
         : []),
-      ...apps.map((name) => ({ value: name, label: stripExe(name) })),
     ];
+    const seenLabels = new Set<string>();
+    const options = rawOptions.filter((o) => {
+      const key = o.label.toLowerCase();
+      if (seenLabels.has(key)) return false;
+      seenLabels.add(key);
+      return true;
+    });
 
     const handleSelect = async (value: string) => {
       await updateSetting(

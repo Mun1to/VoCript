@@ -112,10 +112,17 @@ pub fn list_audio_apps() -> Result<Vec<AudioApp>, String> {
 /// Find a currently-running PID for the given executable name (e.g. the app the
 /// user previously selected), if it has an audio session right now.
 pub fn find_pid_by_name(exe_name: &str) -> Option<u32> {
+    // Compara sin distinguir mayúsculas y tolerando el sufijo ".exe", para que
+    // un valor guardado como "Spotify" encuentre el proceso "Spotify.exe".
+    fn norm(s: &str) -> String {
+        let lower = s.to_lowercase();
+        lower.strip_suffix(".exe").unwrap_or(&lower).to_string()
+    }
+    let target = norm(exe_name);
     list_audio_apps()
         .ok()?
         .into_iter()
-        .find(|a| a.name.eq_ignore_ascii_case(exe_name))
+        .find(|a| norm(&a.name) == target)
         .map(|a| a.pid)
 }
 
