@@ -48,19 +48,19 @@ VoCript listens to your **voice** —or the **audio playing on your PC**— and 
 ## 📸 Screenshots
 
 <div align="center">
-  <img src="brand/screenshots/01-general.png" alt="VoCript — main screen" width="820" />
+  <img src="brand/screenshots/en/01-general.png" alt="VoCript — main screen" width="820" />
 </div>
 
 <p align="center"><em>Main screen: the header's quick-control bar — voice/system, live, output (paste/copy), activation, profile, language and theme (light/dark/system). All recognition runs on your device.</em></p>
 
 | Transcribe files | Transcription models | Advanced settings |
 | :--: | :--: | :--: |
-| <img src="brand/screenshots/03-transcribe.png" alt="Transcribe files to text or SRT" /> | <img src="brand/screenshots/02-models.png" alt="Transcription models" /> | <img src="brand/screenshots/04-advanced.png" alt="Advanced settings" /> |
+| <img src="brand/screenshots/en/03-transcribe.png" alt="Transcribe files to text or SRT" /> | <img src="brand/screenshots/en/02-models.png" alt="Transcription models" /> | <img src="brand/screenshots/en/04-advanced.png" alt="Advanced settings" /> |
 
 <br />
 
 <div align="center">
-  <img src="brand/screenshots/05-personalizar.png" alt="VoCript in light mode — easy to customize" width="820" />
+  <img src="brand/screenshots/en/05-personalizar.png" alt="VoCript in light mode — easy to customize" width="820" />
 </div>
 
 <p align="center"><em>Easy to make yours: light, dark or automatic (follows your system) theme. Switch profile, mode, output, activation and language right from the header, with a click.</em></p>
