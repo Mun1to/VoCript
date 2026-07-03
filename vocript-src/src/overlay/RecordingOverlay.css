@@ -1,3 +1,14 @@
+/* The overlay runs in its own window that does NOT load App.css — where the
+   accent CSS variables are defined. Declare sane blue defaults here so the logo
+   mark and the cancel/copy icons (which reference these vars) never fall back to
+   their initial black. RecordingOverlay.tsx overrides them at runtime with the
+   user's chosen accent color. */
+:root {
+  --color-logo-primary: #3b82f6;
+  --color-logo-stroke: #1d4ed8;
+  --color-logo-glow: rgba(59, 130, 246, 0.5);
+}
+
 .recording-overlay {
   height: 36px;
   width: 172px;

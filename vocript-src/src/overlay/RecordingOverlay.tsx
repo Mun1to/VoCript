@@ -12,6 +12,11 @@ import {
 import "./RecordingOverlay.css";
 import { commands } from "@/bindings";
 import i18n, { syncLanguageFromSettings } from "@/i18n";
+import {
+  DEFAULT_ACCENT,
+  darkenHex,
+  hexToRgba,
+} from "@/lib/constants/accentColors";
 import { getLanguageDirection } from "@/lib/utils/rtl";
 
 type OverlayState =
@@ -28,6 +33,31 @@ interface LiveFinishedPayload {
 
 const BAR_COUNT = 9;
 const ZERO_LEVELS = Array(BAR_COUNT).fill(0);
+
+/**
+ * Mirror the app's accent color onto this overlay window. App.tsx's accent
+ * effect only runs in the main window and the overlay does not load App.css, so
+ * without this the logo mark and the cancel/copy icons — which read
+ * `--color-logo-primary`/`--color-logo-stroke` — would render in the CSS
+ * defaults instead of the user's chosen accent (and used to render black before
+ * the defaults existed). Module-level so the mount effect and the show-overlay
+ * listener can both call it without re-creating the function on every render.
+ */
+async function applyOverlayAccent() {
+  try {
+    const result = await commands.getAppSettings();
+    const accent =
+      result.status === "ok" && result.data.accent_color
+        ? result.data.accent_color
+        : DEFAULT_ACCENT;
+    const root = document.documentElement;
+    root.style.setProperty("--color-logo-primary", accent);
+    root.style.setProperty("--color-logo-stroke", darkenHex(accent));
+    root.style.setProperty("--color-logo-glow", hexToRgba(accent, 0.5));
+  } catch (e) {
+    console.warn("Failed to apply accent color in overlay:", e);
+  }
+}
 
 const RecordingOverlay: React.FC = () => {
   const { t } = useTranslation();
@@ -56,10 +86,15 @@ const RecordingOverlay: React.FC = () => {
 
   useEffect(() => {
     const setupEventListeners = async () => {
+      // Apply the accent color as soon as the overlay window mounts.
+      void applyOverlayAccent();
+
       // Listen for show-overlay event from Rust
       const unlistenShow = await listen("show-overlay", async (event) => {
-        // Sync language from settings each time overlay is shown
+        // Sync language + accent from settings each time the overlay is shown,
+        // so a change made in the main window is reflected on the next capsule.
         await syncLanguageFromSettings();
+        void applyOverlayAccent();
         const overlayState = event.payload as OverlayState;
         // Starting a fresh live session: clear any previous text/state.
         if (overlayState === "live") {
