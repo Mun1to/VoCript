@@ -200,37 +200,53 @@ fn is_mouse_within_monitor(
 /// may sit on a different screen than the text field being dictated into.
 #[cfg(target_os = "windows")]
 fn get_monitor_with_foreground_window(app_handle: &AppHandle) -> Option<tauri::Monitor> {
-    use windows::Win32::Foundation::RECT;
-    use windows::Win32::UI::WindowsAndMessaging::{GetForegroundWindow, GetWindowRect};
+    use windows::Win32::Graphics::Gdi::{
+        GetMonitorInfoW, MonitorFromWindow, MONITORINFO, MONITOR_DEFAULTTONEAREST,
+    };
+    use windows::Win32::UI::WindowsAndMessaging::GetForegroundWindow;
 
-    let (center_x, center_y) = unsafe {
+    let rect = unsafe {
         let hwnd = GetForegroundWindow();
         if hwnd.0.is_null() {
             return None;
         }
-        let mut rect = RECT::default();
-        if GetWindowRect(hwnd, &mut rect).is_err() {
+        // Let Windows resolve the monitor instead of testing the window's centre
+        // ourselves: MONITOR_DEFAULTTONEAREST always yields a monitor, so a window
+        // straddling two screens — or sitting in a gap of the virtual desktop left
+        // by screens of different heights — no longer falls through to the cursor
+        // path and, from there, to the primary monitor.
+        let hmonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+        let mut info = MONITORINFO {
+            cbSize: std::mem::size_of::<MONITORINFO>() as u32,
+            ..Default::default()
+        };
+        if !GetMonitorInfoW(hmonitor, &mut info).as_bool() {
             return None;
         }
-        ((rect.left + rect.right) / 2, (rect.top + rect.bottom) / 2)
+        info.rcMonitor
     };
 
-    // GetWindowRect returns physical pixels in the virtual desktop, which match
-    // Tauri's physical monitor position/size. Pick the monitor that contains the
-    // focused window's center point.
+    // GetMonitorInfoW and Tauri report monitors in the same physical
+    // virtual-desktop coordinates, so the top-left corner identifies the screen.
     let monitors = app_handle.available_monitors().ok()?;
-    for monitor in monitors {
-        let pos = monitor.position();
-        let size = monitor.size();
-        if center_x >= pos.x
-            && center_x < pos.x + size.width as i32
-            && center_y >= pos.y
-            && center_y < pos.y + size.height as i32
-        {
-            return Some(monitor);
-        }
-    }
-    None
+    monitors
+        .iter()
+        .find(|m| m.position().x == rect.left && m.position().y == rect.top)
+        .or_else(|| {
+            // Defensive: if no origin matches exactly, fall back to whichever
+            // Tauri monitor contains the centre of the resolved screen.
+            let center_x = (rect.left + rect.right) / 2;
+            let center_y = (rect.top + rect.bottom) / 2;
+            monitors.iter().find(|m| {
+                let pos = m.position();
+                let size = m.size();
+                center_x >= pos.x
+                    && center_x < pos.x + size.width as i32
+                    && center_y >= pos.y
+                    && center_y < pos.y + size.height as i32
+            })
+        })
+        .cloned()
 }
 
 /// Returns the monitor where the overlay should appear. On Windows we prefer the
@@ -246,42 +262,66 @@ fn get_target_monitor(app_handle: &AppHandle) -> Option<tauri::Monitor> {
     get_monitor_with_cursor(app_handle)
 }
 
-/// Returns overlay position in logical coordinates (points on macOS).
+/// Returns the position where the overlay window should be placed, ready to
+/// hand to Tauri.
 ///
 /// Uses monitor position/size directly rather than work_area(), which can
 /// return incorrect coordinates on macOS for monitors with negative positions.
 /// The per-platform OVERLAY_TOP_OFFSET / OVERLAY_BOTTOM_OFFSET constants
 /// already account for system chrome (menu bar, taskbar).
 ///
-/// We must use LogicalPosition (not PhysicalPosition) because Tauri/tao
-/// converts PhysicalPosition using the scale factor of the monitor the window
-/// is *currently* on, which is wrong when moving cross-monitor.
+/// The geometry is computed in the target monitor's *physical* pixels, then:
+///
+/// - On Windows it is returned as a PhysicalPosition and applied as-is. A
+///   LogicalPosition would be converted by tao using the scale factor of the
+///   monitor the window is *currently* on rather than the one it is moving to,
+///   so on a mixed-DPI multi-monitor setup (a 150% laptop screen next to 100%
+///   externals) the coordinates were scaled by the wrong factor and the overlay
+///   landed on the wrong screen.
+/// - Elsewhere it is converted back to logical units (points on macOS), which
+///   is what those platforms expect.
 fn calculate_overlay_position_sized(
     app_handle: &AppHandle,
     width: f64,
     height: f64,
-) -> Option<(f64, f64)> {
+) -> Option<tauri::Position> {
     let monitor = get_target_monitor(app_handle)?;
     let scale = monitor.scale_factor();
-    let monitor_x = monitor.position().x as f64 / scale;
-    let monitor_y = monitor.position().y as f64 / scale;
-    let monitor_width = monitor.size().width as f64 / scale;
-    let monitor_height = monitor.size().height as f64 / scale;
+    let monitor_x = monitor.position().x as f64;
+    let monitor_y = monitor.position().y as f64;
+    let monitor_width = monitor.size().width as f64;
+    let monitor_height = monitor.size().height as f64;
+
+    // The overlay's size and offsets are logical, so scale them to the target
+    // monitor's DPI to centre it correctly there.
+    let overlay_width = width * scale;
+    let overlay_height = height * scale;
 
     let settings = settings::get_settings(app_handle);
 
-    let x = monitor_x + (monitor_width - width) / 2.0;
+    let x = monitor_x + (monitor_width - overlay_width) / 2.0;
     let y = match settings.overlay_position {
-        OverlayPosition::Top => monitor_y + OVERLAY_TOP_OFFSET,
+        OverlayPosition::Top => monitor_y + OVERLAY_TOP_OFFSET * scale,
         OverlayPosition::Bottom | OverlayPosition::None => {
-            monitor_y + monitor_height - height - OVERLAY_BOTTOM_OFFSET
+            monitor_y + monitor_height - overlay_height - OVERLAY_BOTTOM_OFFSET * scale
         }
     };
 
-    Some((x, y))
+    #[cfg(target_os = "windows")]
+    let position = tauri::Position::Physical(PhysicalPosition {
+        x: x.round() as i32,
+        y: y.round() as i32,
+    });
+    #[cfg(not(target_os = "windows"))]
+    let position = tauri::Position::Logical(tauri::LogicalPosition {
+        x: x / scale,
+        y: y / scale,
+    });
+
+    Some(position)
 }
 
-fn calculate_overlay_position(app_handle: &AppHandle) -> Option<(f64, f64)> {
+fn calculate_overlay_position(app_handle: &AppHandle) -> Option<tauri::Position> {
     calculate_overlay_position_sized(app_handle, OVERLAY_WIDTH, OVERLAY_HEIGHT)
 }
 
@@ -349,13 +389,13 @@ pub fn create_recording_overlay(app_handle: &AppHandle) {
 /// Creates the recording overlay panel and keeps it hidden by default (macOS)
 #[cfg(target_os = "macos")]
 pub fn create_recording_overlay(app_handle: &AppHandle) {
-    if let Some((x, y)) = calculate_overlay_position(app_handle) {
+    if let Some(position) = calculate_overlay_position(app_handle) {
         // PanelBuilder creates a Tauri window then converts it to NSPanel.
         // The window remains registered, so get_webview_window() still works.
         match PanelBuilder::<_, RecordingOverlayPanel>::new(app_handle, "recording_overlay")
             .url(WebviewUrl::App("src/overlay/index.html".into()))
             .title("Recording")
-            .position(tauri::Position::Logical(tauri::LogicalPosition { x, y }))
+            .position(position)
             .level(PanelLevel::Status)
             .size(tauri::Size::Logical(tauri::LogicalSize {
                 width: OVERLAY_WIDTH,
@@ -449,11 +489,10 @@ pub fn show_live_overlay(app_handle: &AppHandle) {
         #[cfg(target_os = "linux")]
         update_gtk_layer_shell_anchors(&overlay_window);
 
-        if let Some((x, y)) =
+        if let Some(position) =
             calculate_overlay_position_sized(app_handle, LIVE_OVERLAY_WIDTH, LIVE_OVERLAY_HEIGHT)
         {
-            let _ = overlay_window
-                .set_position(tauri::Position::Logical(tauri::LogicalPosition { x, y }));
+            let _ = overlay_window.set_position(position);
         }
 
         let _ = overlay_window.show();
@@ -473,9 +512,8 @@ pub fn update_overlay_position(app_handle: &AppHandle) {
             update_gtk_layer_shell_anchors(&overlay_window);
         }
 
-        if let Some((x, y)) = calculate_overlay_position(app_handle) {
-            let _ = overlay_window
-                .set_position(tauri::Position::Logical(tauri::LogicalPosition { x, y }));
+        if let Some(position) = calculate_overlay_position(app_handle) {
+            let _ = overlay_window.set_position(position);
         }
     }
 }
