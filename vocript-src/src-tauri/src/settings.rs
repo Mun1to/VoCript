@@ -561,8 +561,8 @@ fn default_post_process_enabled() -> bool {
 /// UI languages VoCript ships translations for (the `src/i18n/locales/*`
 /// folders). Keep in sync with the frontend locale list.
 const SUPPORTED_APP_LANGUAGES: &[&str] = &[
-    "ar", "bg", "cs", "de", "en", "es", "fr", "he", "it", "ja", "ko", "pl",
-    "pt", "ru", "sv", "tr", "uk", "vi", "zh", "zh-TW",
+    "ar", "bg", "cs", "de", "en", "es", "fr", "he", "it", "ja", "ko", "pl", "pt", "ru", "sv", "tr",
+    "uk", "vi", "zh", "zh-TW",
 ];
 
 /// Default UI language on a fresh install: the OS language when VoCript is
