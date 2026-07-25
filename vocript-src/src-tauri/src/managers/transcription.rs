@@ -26,9 +26,18 @@ use transcribe_rs::{
         sense_voice::{SenseVoiceModel, SenseVoiceParams},
         Quantization,
     },
+    transcriber::{Transcriber, VadChunked, VadChunkedConfig},
+    vad::{EnergyVad, SmoothedVad},
     whisper_cpp::{WhisperEngine, WhisperInferenceParams},
     SpeechModel, TranscribeOptions,
 };
+
+/// Audio longer than this (seconds) is split into VAD chunks before GigaAM
+/// transcription. GigaAM's ONNX encoder has a fixed-length positional embedding,
+/// so a single long clip overflows it and inference fails with an ONNX Runtime
+/// broadcast error (e.g. "5000 by 8668"). Chunks stay well under that limit
+/// (VadChunkedConfig caps them at 30 s); shorter clips keep the direct path.
+const GIGAAM_CHUNK_THRESHOLD_SECS: f32 = 30.0;
 
 #[derive(Clone, Debug, Serialize)]
 pub struct ModelStateEvent {
@@ -666,9 +675,28 @@ impl TranscriptionManager {
                             .transcribe_with(audio, &params)
                             .map_err(|e| anyhow::anyhow!("SenseVoice transcription failed: {}", e))
                     }
-                    LoadedEngine::GigaAM(gigaam_engine) => gigaam_engine
-                        .transcribe(audio, &TranscribeOptions::default())
-                        .map_err(|e| anyhow::anyhow!("GigaAM transcription failed: {}", e)),
+                    LoadedEngine::GigaAM(gigaam_engine) => {
+                        let duration_secs = audio.len() as f32 / 16_000.0;
+                        if duration_secs > GIGAAM_CHUNK_THRESHOLD_SECS {
+                            // Long clip: split on silence (energy VAD) into chunks
+                            // that fit GigaAM's positional-embedding limit, then
+                            // merge. Avoids the ONNX broadcast crash on long audio.
+                            let vad =
+                                SmoothedVad::new(Box::new(EnergyVad::new(480, 0.01)), 15, 15, 2);
+                            let mut chunker = VadChunked::new(
+                                Box::new(vad),
+                                VadChunkedConfig::default(),
+                                TranscribeOptions::default(),
+                            );
+                            chunker
+                                .transcribe(gigaam_engine, audio)
+                                .map_err(|e| anyhow::anyhow!("GigaAM transcription failed: {}", e))
+                        } else {
+                            gigaam_engine
+                                .transcribe(audio, &TranscribeOptions::default())
+                                .map_err(|e| anyhow::anyhow!("GigaAM transcription failed: {}", e))
+                        }
+                    }
                     LoadedEngine::Canary(canary_engine) => {
                         let lang = if validated_language == "auto" {
                             None
