@@ -5,6 +5,7 @@
     "copyLastTranscript": "Copia l'ultima trascrizione",
     "unloadModel": "Rilascia modello",
     "model": "Modello",
+    "language": "Lingua",
     "quit": "Esci",
     "cancel": "Annulla",
     "liveTranscriptionVoice": "Dal vivo: voce",

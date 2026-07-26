@@ -1,0 +1,19 @@
+/* App.css sets an opaque page background (`:root { background-color: #090a0f }`),
+   which would paint a black rectangle behind the rounded card and defeat the
+   window's transparency. This file is imported after it to keep the window
+   itself see-through — only the card should be visible. */
+:root,
+html,
+body,
+#root {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Thin, unobtrusive scrollbar for the language list. */
+#root ::-webkit-scrollbar {
+  width: 4px;
+}
+#root ::-webkit-scrollbar-track {
+  background: transparent;
+}

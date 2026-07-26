@@ -7,6 +7,7 @@
     "liveTranscriptionSystem": "Live: System Audio",
     "unloadModel": "Unload Model",
     "model": "Model",
+    "language": "Language",
     "quit": "Quit",
     "cancel": "Cancel"
   },

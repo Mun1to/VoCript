@@ -5,6 +5,7 @@
     "copyLastTranscript": "最新の文字起こしをコピー",
     "unloadModel": "モデルをアンロード",
     "model": "モデル",
+    "language": "言語",
     "quit": "終了",
     "cancel": "キャンセル",
     "liveTranscriptionVoice": "ライブ：音声",

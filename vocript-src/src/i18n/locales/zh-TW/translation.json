@@ -5,6 +5,7 @@
     "copyLastTranscript": "複製最新轉錄",
     "unloadModel": "卸載模型",
     "model": "模型",
+    "language": "語言",
     "quit": "結束",
     "cancel": "取消",
     "liveTranscriptionVoice": "即時：語音",

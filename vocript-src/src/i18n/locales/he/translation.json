@@ -5,6 +5,7 @@
     "copyLastTranscript": "העתק את התמלול האחרון",
     "unloadModel": "פרוק מודל",
     "model": "מודל",
+    "language": "שפה",
     "quit": "יציאה",
     "cancel": "ביטול",
     "liveTranscriptionVoice": "חי: קול",

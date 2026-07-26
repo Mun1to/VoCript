@@ -5,8 +5,9 @@
     "copyLastTranscript": "Copiar la última transcripción",
     "liveTranscriptionVoice": "En vivo: voz",
     "liveTranscriptionSystem": "En vivo: audio del sistema",
-    "unloadModel": "Descargar modelo",
+    "unloadModel": "Liberar modelo",
     "model": "Modelo",
+    "language": "Idioma",
     "quit": "Salir",
     "cancel": "Cancelar"
   },

@@ -5,6 +5,7 @@
     "copyLastTranscript": "Sao chép bản chép lời mới nhất",
     "unloadModel": "Dỡ mô hình",
     "model": "Mô hình",
+    "language": "Ngôn ngữ",
     "quit": "Thoát",
     "cancel": "Hủy",
     "liveTranscriptionVoice": "Trực tiếp: giọng nói",

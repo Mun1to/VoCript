@@ -5,6 +5,7 @@
     "copyLastTranscript": "Zkopírovat poslední přepis",
     "unloadModel": "Uvolnit model",
     "model": "Model",
+    "language": "Jazyk",
     "quit": "Ukončit",
     "cancel": "Zrušit",
     "liveTranscriptionVoice": "Naživo: hlas",

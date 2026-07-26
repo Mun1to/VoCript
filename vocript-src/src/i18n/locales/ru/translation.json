@@ -5,6 +5,7 @@
     "copyLastTranscript": "Скопировать последнюю транскрипцию",
     "unloadModel": "Выгрузить модель",
     "model": "Модель",
+    "language": "Язык",
     "quit": "Выход",
     "cancel": "Отмена",
     "liveTranscriptionVoice": "В реальном времени: голос",

@@ -5,6 +5,7 @@
     "copyLastTranscript": "Kopiera senaste transkriptionen",
     "unloadModel": "Avlasta modell",
     "model": "Modell",
+    "language": "Språk",
     "quit": "Avsluta",
     "cancel": "Avbryt",
     "liveTranscriptionVoice": "Live: röst",

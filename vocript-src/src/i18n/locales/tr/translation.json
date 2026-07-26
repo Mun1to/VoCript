@@ -5,6 +5,7 @@
     "copyLastTranscript": "Son transkripti kopyala",
     "unloadModel": "Modeli boşalt",
     "model": "Model",
+    "language": "Dil",
     "quit": "Çıkış",
     "cancel": "İptal",
     "liveTranscriptionVoice": "Canlı: ses",

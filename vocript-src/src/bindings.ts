@@ -742,6 +742,38 @@ async importModelFromPath(path: string) : Promise<Result<string, string>> {
     else return { status: "error", error: e  as any };
 }
 },
+async getTrayMenuState() : Promise<Result<TrayMenuState, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_tray_menu_state") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Runs an action picked in the custom menu window. Same ids as the native
+ * menu items, so both menus share one code path.
+ */
+async trayMenuAction(action: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("tray_menu_action", { action }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Called by the menu UI once it knows how tall its content is, so the window
+ * hugs the content instead of leaving empty space below it.
+ */
+async resizeTrayMenu(height: number) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("resize_tray_menu", { height }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 /**
  * Scan common locations on the computer for speech models that already exist,
  * so the user can reuse them without downloading again.
@@ -1154,6 +1186,9 @@ export type RecordingRetentionPeriod = "never" | "preserve_limit" | "days_3" | "
 export type SecretMap = Partial<{ [key in string]: string }>
 export type ShortcutBinding = { id: string; name: string; description: string; default_binding: string; current_binding: string }
 export type SoundTheme = "marimba" | "pop" | "custom"
+export type TrayMenuLanguage = { code: string; native_name: string; is_active: boolean }
+export type TrayMenuModel = { id: string; name: string; is_active: boolean }
+export type TrayMenuState = { version_label: string; live_voice: boolean; live_system: boolean; model_loaded: boolean; is_busy: boolean; update_checks_enabled: boolean; models: TrayMenuModel[]; active_model_name: string | null; languages: TrayMenuLanguage[]; active_language_native: string }
 export type TypingTool = "auto" | "wtype" | "kwtype" | "dotool" | "ydotool" | "xdotool"
 export type WhisperAcceleratorSetting = "auto" | "cpu" | "gpu"
 export type WindowsMicrophonePermissionStatus = { supported: boolean; overall_access: PermissionAccess; device_access: PermissionAccess; app_access: PermissionAccess; desktop_app_access: PermissionAccess }

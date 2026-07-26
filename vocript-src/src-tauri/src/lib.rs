@@ -20,6 +20,7 @@ mod signal_handle;
 mod transcription_coordinator;
 mod tray;
 mod tray_i18n;
+mod tray_menu;
 mod utils;
 
 pub use cli::CliArgs;
@@ -41,7 +42,7 @@ use std::sync::Arc;
 use tauri::image::Image;
 pub use transcription_coordinator::TranscriptionCoordinator;
 
-use tauri::tray::TrayIconBuilder;
+use tauri::tray::{MouseButtonState, TrayIconBuilder, TrayIconEvent};
 use tauri::{AppHandle, Emitter, Listener, Manager};
 use tauri_plugin_autostart::{MacosLauncher, ManagerExt};
 use tauri_plugin_log::{Builder as LogBuilder, RotationStrategy, Target, TargetKind};
@@ -86,7 +87,7 @@ fn build_console_filter() -> env_filter::Filter {
     builder.build()
 }
 
-fn show_main_window(app: &AppHandle) {
+pub(crate) fn show_main_window(app: &AppHandle) {
     if let Some(main_window) = app.get_webview_window("main") {
         let _ = main_window.unminimize();
         let _ = main_window.show();
@@ -206,79 +207,29 @@ fn initialize_core_logic(app_handle: &AppHandle) {
             .unwrap(),
         )
         .tooltip(tray::tray_tooltip())
-        .show_menu_on_left_click(true)
         .icon_as_template(true)
-        .on_menu_event(|app, event| match event.id.as_ref() {
-            "settings" => {
-                show_main_window(app);
+        .show_menu_on_left_click(false)
+        // Both clicks open the custom menu window (see tray_menu.rs). The native
+        // menu is only assigned as a fallback if that window fails to be created.
+        .on_tray_icon_event(|tray, event| {
+            if let TrayIconEvent::Click {
+                button_state: MouseButtonState::Up,
+                position,
+                ..
+            } = event
+            {
+                tray_menu::toggle_tray_menu(tray.app_handle(), position);
             }
-            "check_updates" => {
-                let settings = settings::get_settings(app);
-                if settings.update_checks_enabled {
-                    show_main_window(app);
-                    let _ = app.emit("check-for-updates", ());
-                }
-            }
-            "copy_last_transcript" => {
-                tray::copy_last_transcript(app);
-            }
-            "live_transcription_voice" => {
-                // Toggle a voice (mic) live session from the tray: click to
-                // start, click again to finish (the coordinator handles both).
-                if let Some(coordinator) = app.try_state::<TranscriptionCoordinator>() {
-                    coordinator.send_input("transcribe_live", "", true, false);
-                }
-            }
-            "live_transcription_system" => {
-                // Toggle a live session of the system audio from the tray.
-                if let Some(coordinator) = app.try_state::<TranscriptionCoordinator>() {
-                    coordinator.send_input("transcribe_system_live", "", true, false);
-                }
-            }
-            "unload_model" => {
-                let transcription_manager = app.state::<Arc<TranscriptionManager>>();
-                if !transcription_manager.is_model_loaded() {
-                    log::warn!("No model is currently loaded.");
-                    return;
-                }
-                match transcription_manager.unload_model() {
-                    Ok(()) => log::info!("Model unloaded via tray."),
-                    Err(e) => log::error!("Failed to unload model via tray: {}", e),
-                }
-            }
-            "cancel" => {
-                use crate::utils::cancel_current_operation;
-
-                // Use centralized cancellation that handles all operations
-                cancel_current_operation(app);
-            }
-            "quit" => {
-                app.exit(0);
-            }
-            id if id.starts_with("model_select:") => {
-                let model_id = id.strip_prefix("model_select:").unwrap().to_string();
-                let current_model = settings::get_settings(app).selected_model;
-                if model_id == current_model {
-                    return;
-                }
-                let app_clone = app.clone();
-                std::thread::spawn(move || {
-                    match commands::models::switch_active_model(&app_clone, &model_id) {
-                        Ok(()) => {
-                            log::info!("Model switched to {} via tray.", model_id);
-                        }
-                        Err(e) => {
-                            log::error!("Failed to switch model via tray: {}", e);
-                        }
-                    }
-                    tray::update_tray_menu(&app_clone, &tray::TrayIconState::Idle, None);
-                });
-            }
-            _ => {}
         })
+        .on_menu_event(|app, event| tray::handle_tray_action(app, event.id.as_ref()))
         .build(app_handle)
         .unwrap();
     app_handle.manage(tray);
+
+    // Build the custom menu window before the first update_tray_menu call: that
+    // call decides whether to assign the native fallback menu based on whether
+    // this window exists.
+    tray_menu::create_tray_menu_window(app_handle);
 
     // Initialize tray menu with idle state
     utils::update_tray_menu(app_handle, &utils::TrayIconState::Idle, None);
@@ -472,6 +423,9 @@ pub fn run(cli_args: CliArgs) {
             commands::models::has_any_models_available,
             commands::models::has_any_models_or_downloads,
             commands::models::import_model_from_path,
+            tray::get_tray_menu_state,
+            tray::tray_menu_action,
+            tray_menu::resize_tray_menu,
             commands::models::scan_for_external_models,
             commands::audio::update_microphone_mode,
             commands::audio::get_microphone_mode,

@@ -5,6 +5,7 @@
     "copyLastTranscript": "Скопіювати останню транскрипцію",
     "unloadModel": "Вивантажити модель",
     "model": "Модель",
+    "language": "Мова",
     "quit": "Вийти",
     "cancel": "Скасувати",
     "liveTranscriptionVoice": "У реальному часі: голос",

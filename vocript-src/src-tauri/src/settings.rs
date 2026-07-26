@@ -559,11 +559,42 @@ fn default_post_process_enabled() -> bool {
 }
 
 /// UI languages VoCript ships translations for (the `src/i18n/locales/*`
-/// folders). Keep in sync with the frontend locale list.
-const SUPPORTED_APP_LANGUAGES: &[&str] = &[
-    "ar", "bg", "cs", "de", "en", "es", "fr", "he", "it", "ja", "ko", "pl", "pt", "ru", "sv", "tr",
-    "uk", "vi", "zh", "zh-TW",
+/// folders), as `(code, native name)`. Keep in sync with `LANGUAGE_METADATA`
+/// in `src/i18n/languages.ts` — same entries, same order (its `priority`).
+///
+/// Native names on purpose: a user stuck in a language they cannot read can
+/// only find their way back by recognizing their own language written in it.
+pub const SUPPORTED_APP_LANGUAGES: &[(&str, &str)] = &[
+    ("en", "English"),
+    ("zh", "简体中文"),
+    ("zh-TW", "繁體中文"),
+    ("es", "Español"),
+    ("fr", "Français"),
+    ("de", "Deutsch"),
+    ("ja", "日本語"),
+    ("ko", "한국어"),
+    ("vi", "Tiếng Việt"),
+    ("pl", "Polski"),
+    ("it", "Italiano"),
+    ("ru", "Русский"),
+    ("uk", "Українська"),
+    ("pt", "Português"),
+    ("cs", "Čeština"),
+    ("tr", "Türkçe"),
+    ("ar", "العربية"),
+    ("he", "עברית"),
+    ("sv", "Svenska"),
+    ("bg", "Български"),
 ];
+
+/// Native name for a language code, falling back to the code itself.
+pub fn language_native_name(code: &str) -> &str {
+    SUPPORTED_APP_LANGUAGES
+        .iter()
+        .find(|(c, _)| *c == code)
+        .map(|(_, name)| *name)
+        .unwrap_or(code)
+}
 
 /// Default UI language on a fresh install: the OS language when VoCript is
 /// translated into it, otherwise English (the global fallback). Mirrors the
@@ -578,13 +609,13 @@ fn default_app_language() -> String {
     let prefix = locale.split('-').next().unwrap_or("");
     SUPPORTED_APP_LANGUAGES
         .iter()
-        .find(|c| c.to_lowercase() == locale)
+        .find(|(c, _)| c.to_lowercase() == locale)
         .or_else(|| {
             SUPPORTED_APP_LANGUAGES
                 .iter()
-                .find(|c| c.to_lowercase() == prefix)
+                .find(|(c, _)| c.to_lowercase() == prefix)
         })
-        .map(|c| c.to_string())
+        .map(|(c, _)| c.to_string())
         .unwrap_or_else(|| "en".to_string())
 }
 

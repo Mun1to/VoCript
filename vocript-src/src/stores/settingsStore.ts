@@ -670,6 +670,16 @@ export const useSettingsStore = create<SettingsStore>()(
       listen("model-state-changed", () => {
         get().refreshSettings();
       });
+
+      // The tray language picker changes the language behind the window's back;
+      // switch the open UI live instead of waiting for a restart.
+      listen<string>("app-language-changed", async (event) => {
+        const i18n = (await import("../i18n")).default;
+        if (event.payload && event.payload !== i18n.language) {
+          await i18n.changeLanguage(event.payload);
+        }
+        get().refreshSettings();
+      });
     },
   })),
 );

@@ -5,6 +5,7 @@
     "copyLastTranscript": "نسخ آخر نص تم تفريغه",
     "unloadModel": "تفريغ النموذج",
     "model": "النموذج",
+    "language": "اللغة",
     "quit": "إنهاء",
     "cancel": "إلغاء",
     "liveTranscriptionVoice": "مباشر: الصوت",
