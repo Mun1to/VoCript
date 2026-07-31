@@ -106,6 +106,12 @@ const MOCK_FALLBACK_SETTINGS: Settings = {
   start_hidden: false,
   autostart_enabled: false,
   update_checks_enabled: true,
+  track_dictation_stats: true,
+  mute_in_calls: false,
+  wake_word_enabled: false,
+  wake_word_samples: [],
+  ui_font: "default",
+  ui_font_size: 14,
   always_on_microphone: false,
   selected_microphone: "Default",
   clamshell_microphone: "Default",
@@ -142,6 +148,15 @@ const settingUpdaters: {
     commands.changeAutostartSetting(value as boolean),
   update_checks_enabled: (value) =>
     commands.changeUpdateChecksSetting(value as boolean),
+  track_dictation_stats: (value) =>
+    commands.changeDictationStatsSetting(value as boolean),
+  mute_in_calls: (value) => commands.changeMuteInCallsSetting(value as boolean),
+  wake_word_enabled: (value) =>
+    commands.changeWakeWordSetting(value as boolean),
+  wake_word_samples: (value) =>
+    commands.changeWakeWordSamplesSetting(value as string[]),
+  ui_font: (value) => commands.changeUiFontSetting(value as string),
+  ui_font_size: (value) => commands.changeUiFontSizeSetting(value as number),
   push_to_talk: (value) => commands.changePttSetting(value as boolean),
   clipboard_only: (value) =>
     commands.changeClipboardOnlySetting(value as boolean),

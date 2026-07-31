@@ -21,7 +21,9 @@
     "debug": "Felsökning",
     "about": "Om",
     "fileTranscription": "Transkribera",
-    "feedback": "Feedback"
+    "feedback": "Feedback",
+    "activity": "Aktivitet",
+    "translation": "Översättning"
   },
   "onboarding": {
     "subtitle": "För att komma igång, välj en transkriptionsmodell",
@@ -363,6 +365,31 @@
         "title": "App för systemljud",
         "description": "Välj vad genvägen för systemljud fångar: hela datorn eller bara en specifik app (t.ex. Spotify). Appen måste spela ljud för att visas i listan; använd uppdateringsknappen.",
         "wholeSystem": "Hela systemet"
+      },
+      "muteInCalls": {
+        "label": "Tysta mig i samtal medan jag dikterar",
+        "description": "Håller ned F13 medan du dikterar så att du inte hörs i Discord. Bind F13 till \"Push to Mute\" i Discords tangentbindningar.",
+        "setupHint": "I Discord: Inställningar → Tangentbindningar → lägg till \"Push to Mute\", klicka i fältet och tryck på den här knappen.",
+        "sendKey": "Skicka F13",
+        "sent": "F13 skickad"
+      },
+      "wakeWord": {
+        "label": "Börja genom att säga \"VoCript\"",
+        "description": "Lyssnar efter ordet 'VoCript' och börjar diktera när det hörs. Lär den genom att säga ordet en gång, i tre separata inspelningar.",
+        "hint": "Mikrofonen är öppen så länge det här är på. Allt bearbetas på din dator och bara korta talstunder når modellen, men det drar mer CPU än snabbkommandot: en snabb modell som Parakeet eller Moonshine passar bättre här.",
+        "teach": "Lär den",
+        "listening": "Säg det en gång, nu",
+        "teachPrompt": "Tryck och säg 'VoCript' EN gång. Gör om det tre gånger, säg det inte tre gånger i rad.",
+        "taught": "Inlärt från {{count}} inspelning(ar). Lägg till fler om den inte alltid uppfattar dig.",
+        "captured": "Inlärt",
+        "forgotten": "Inspelningar rensade",
+        "needMore": "En till, för att bli pålitligt",
+        "errors": {
+          "noSpeech": "Jag hörde dig inte. Tryck igen och säg det lite högre.",
+          "tooShort": "Det var för kort. Säg hela ordet, utan att stressa.",
+          "deadDevice": "Mikrofonen gav ingenting. Kontrollera att den inte är avstängd eller används av en annan app."
+        },
+        "beta": "Beta"
       }
     },
     "models": {
@@ -926,6 +953,92 @@
   "themes": {
     "title": "Egna teman",
     "subtitle": "Välj gränssnittets accentfärg.",
-    "comingSoon": "Typografi och mer kommer snart."
+    "custom": {
+      "pick": "Välj vilken färg som helst",
+      "label": "Hex-färg"
+    },
+    "typography": {
+      "title": "Typografi",
+      "subtitle": "Välj hur gränssnittet läses. Bara typsnitt som redan finns i systemet, så inget laddas ner.",
+      "family": "Typsnitt",
+      "size": "Storlek",
+      "sizeHint": "Skalar hela gränssnittet, inte bara texten.",
+      "sample": "Exempeltext",
+      "fonts": {
+        "default": "VoCript",
+        "system": "System",
+        "readable": "Lättläst",
+        "serif": "Serif",
+        "mono": "Monospace"
+      },
+      "sizes": {
+        "compact": "Kompakt",
+        "normal": "Normal",
+        "large": "Stor",
+        "larger": "Större"
+      },
+      "systemFont": "Vilket typsnitt som helst på datorn",
+      "chooseSystemFont": "Välj ett typsnitt…",
+      "searchFonts": "Sök typsnitt",
+      "noFonts": "Inget typsnitt matchar."
+    }
+  },
+  "activity": {
+    "title": "Din dikteringsaktivitet",
+    "subtitle": "Hur mycket du dikterar, dag för dag. Räknas bara på den här datorn: ingen text sparas och inget laddas upp.",
+    "cards": {
+      "words": "Dikterade ord",
+      "timeSaved": "Sparad tid",
+      "timeSavedHint": "jämfört med att skriva {{wpm}} ord/min",
+      "speed": "Din hastighet",
+      "speedHint": "ord per minut",
+      "streak": "Aktuell svit",
+      "streakHint": "Bäst: {{count}}"
+    },
+    "dayCount_one": "{{count}} dag",
+    "dayCount_other": "{{count}} dagar",
+    "hoursShort": "{{count}} tim",
+    "minutesShort": "{{count}} min",
+    "wordsOnDay_one": "{{count}} ord",
+    "wordsOnDay_other": "{{count}} ord",
+    "weekdayInitials": "M,T,O,T,F,L,S",
+    "less": "Mindre",
+    "more": "Mer",
+    "empty": "Inget här än. Diktera något så fylls det på.",
+    "emptyDisabled": "Räkningen är av, så inget registreras.",
+    "privacy": {
+      "title": "Integritet",
+      "label": "Räkna mina dikteringar",
+      "description": "För en daglig ordräkning på den här datorn. Stänger du av slutar den räkna; siffrorna du redan har finns kvar tills du rensar dem."
+    },
+    "reset": {
+      "label": "Rensa statistik",
+      "description": "Raderar alla räknare. Går inte att ångra.",
+      "action": "Rensa",
+      "done": "Statistiken rensad"
+    }
+  },
+  "contextMenu": {
+    "cut": "Klipp ut",
+    "copy": "Kopiera",
+    "paste": "Klistra in",
+    "selectAll": "Markera allt"
+  },
+  "translation": {
+    "title": "Översättning",
+    "subtitle": "Diktera på ditt språk och få texten på engelska.",
+    "english": "Engelska",
+    "autoLanguage": "Upptäckt språk",
+    "unsupported": "{{model}} kan inte översätta, så det här förblir av.",
+    "capableModels": "Modeller som klarar det: {{models}}.",
+    "toggle": {
+      "label": "Översätt det jag dikterar till engelska",
+      "description": "Texten skrivs direkt på engelska i stället för på språket du talade."
+    },
+    "limits": {
+      "title": "Vad det kan och inte kan",
+      "englishOnly": "Översättning sker bara till engelska. Talmodellerna får en \"översätt\"-flagga, inte ett målspråk, så andra par går inte i dag.",
+      "future": "Att översätta till vilket språk som helst kräver en språkmodell. Den kommer med den lokala AI-städningen och fungerar därför fortfarande utan internet."
+    }
   }
 }

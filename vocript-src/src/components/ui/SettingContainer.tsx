@@ -3,7 +3,7 @@ import { Tooltip } from "./Tooltip";
 import { useResolvedTheme } from "../../hooks/useResolvedTheme";
 
 interface SettingContainerProps {
-  title: string;
+  title: React.ReactNode;
   description: string;
   children: React.ReactNode;
   descriptionMode?: "inline" | "tooltip";

@@ -438,6 +438,95 @@ async changeUpdateChecksSetting(enabled: boolean) : Promise<Result<null, string>
     else return { status: "error", error: e  as any };
 }
 },
+async changeDictationStatsSetting(enabled: boolean) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_dictation_stats_setting", { enabled }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async changeMuteInCallsSetting(enabled: boolean) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_mute_in_calls_setting", { enabled }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async changeWakeWordSetting(enabled: boolean) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_wake_word_setting", { enabled }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async changeWakeWordSamplesSetting(samples: string[]) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_wake_word_samples_setting", { samples }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Records the user saying the wake word once and stores its acoustic
+ * fingerprint. Returns how many recordings are now stored.
+ */
+async captureWakeWordSample() : Promise<Result<string, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("capture_wake_word_sample") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Deletes every recording, so the user can start teaching from scratch.
+ */
+async clearWakeWordRecordings() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("clear_wake_word_recordings") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * How many recordings are stored, for the settings screen.
+ */
+async countWakeWordRecordings() : Promise<number> {
+    return await TAURI_INVOKE("count_wake_word_recordings");
+},
+/**
+ * Sends the mute key once so the user can bind it in Discord: no physical
+ * keyboard has an F13 to press while Discord waits for a keybind.
+ */
+async sendCallMuteKey() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("send_call_mute_key") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async changeUiFontSetting(font: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_ui_font_setting", { font }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async changeUiFontSizeSetting(size: number) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_ui_font_size_setting", { size }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 /**
  * Change the keyboard implementation with runtime switching.
  * This will unregister all shortcuts from the old implementation,
@@ -1020,6 +1109,27 @@ async updateRecordingRetentionPeriod(period: string) : Promise<Result<null, stri
     else return { status: "error", error: e  as any };
 }
 },
+async getDictationStats() : Promise<DictationStats> {
+    return await TAURI_INVOKE("get_dictation_stats");
+},
+async resetDictationStats() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("reset_dictation_stats") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Typing speed the "time saved" figure is measured against, so the UI states
+ * the assumption instead of presenting the number as an absolute truth.
+ */
+async getTypingWpmBaseline() : Promise<number> {
+    return await TAURI_INVOKE("get_typing_wpm_baseline");
+},
+async getSystemFonts() : Promise<string[]> {
+    return await TAURI_INVOKE("get_system_fonts");
+},
 /**
  * Stub implementation for non-macOS platforms
  * Always returns false since laptop detection is macOS-specific
@@ -1057,7 +1167,39 @@ historyUpdatePayload: "history-update-payload"
 
 /** user-defined types **/
 
-export type AppSettings = { bindings: Partial<{ [key in string]: ShortcutBinding }>; push_to_talk: boolean; audio_feedback: boolean; audio_feedback_volume?: number; sound_theme?: SoundTheme; start_hidden?: boolean; autostart_enabled?: boolean; update_checks_enabled?: boolean; selected_model?: string; always_on_microphone?: boolean; selected_microphone?: string | null; clamshell_microphone?: string | null; selected_output_device?: string | null; 
+export type AppSettings = { bindings: Partial<{ [key in string]: ShortcutBinding }>; push_to_talk: boolean; audio_feedback: boolean; audio_feedback_volume?: number; sound_theme?: SoundTheme; start_hidden?: boolean; autostart_enabled?: boolean; update_checks_enabled?: boolean; track_dictation_stats?: boolean; 
+/**
+ * What this user's own model writes when they say the wake word.
+ * 
+ * Speech models have never seen "VoCript" and spell it differently every
+ * time — real captures include "Ball Crypto" and "All crypt". Rather than
+ * guessing every spelling, the user says the word a few times and whatever
+ * their model produces is stored here as the thing to listen for. It adapts
+ * to their voice, accent, microphone and model at once.
+ */
+wake_word_samples?: string[]; 
+/**
+ * Listen continuously for the word "VoCript" and start dictating on it.
+ * Off by default: it keeps the microphone open, which is not something to
+ * switch on for someone without asking.
+ */
+wake_word_enabled?: boolean; 
+/**
+ * Hold F13 down while dictating so voice-chat apps bound to it (Discord's
+ * "push to mute") stop transmitting. The microphone itself is never muted:
+ * VoCript would stop hearing the user too.
+ */
+mute_in_calls?: boolean; 
+/**
+ * Id of the UI font stack (see src/lib/constants/fonts.ts). Only fonts the
+ * OS already has: a restrictive CSP means nothing can be downloaded.
+ */
+ui_font?: string; 
+/**
+ * Root font size in px. Everything else is sized in rem, so this scales
+ * the whole interface.
+ */
+ui_font_size?: number; selected_model?: string; always_on_microphone?: boolean; selected_microphone?: string | null; clamshell_microphone?: string | null; selected_output_device?: string | null; 
 /**
  * Executable name of the app to capture for system-audio transcription
  * (e.g. "Spotify.exe"). `None` = capture the whole system mix.
@@ -1124,6 +1266,21 @@ export type AvailableAccelerators = { whisper: string[]; ort: string[]; gpu_devi
 export type BindingResponse = { success: boolean; binding: ShortcutBinding | null; error: string | null }
 export type ClipboardHandling = "dont_modify" | "copy_to_clipboard"
 export type CustomSounds = { start: boolean; stop: boolean }
+export type DayStat = { 
+/**
+ * Local calendar day, `YYYY-MM-DD`.
+ */
+day: string; words: number; seconds: number; sessions: number }
+export type DictationStats = { 
+/**
+ * One entry per day that has any dictation, oldest first.
+ */
+days: DayStat[]; total_words: number; total_seconds: number; total_sessions: number; 
+/**
+ * Consecutive days up to today (yesterday still counts: the streak only
+ * breaks once a full day goes by with nothing dictated).
+ */
+current_streak: number; longest_streak: number; best_day: DayStat | null }
 export type EngineType = "Whisper" | "Parakeet" | "Moonshine" | "MoonshineStreaming" | "SenseVoice" | "GigaAM" | "Canary" | "Cohere"
 /**
  * Result of transcribing an imported audio/video file. Both the plain text

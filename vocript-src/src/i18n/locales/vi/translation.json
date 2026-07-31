@@ -21,7 +21,9 @@
     "debug": "Gỡ lỗi",
     "about": "Giới thiệu",
     "fileTranscription": "Chép lời",
-    "feedback": "Phản hồi"
+    "feedback": "Phản hồi",
+    "activity": "Hoạt động",
+    "translation": "Dịch"
   },
   "onboarding": {
     "subtitle": "Để bắt đầu, hãy chọn một mô hình chuyển đổi giọng nói",
@@ -394,6 +396,31 @@
         "title": "Ứng dụng âm thanh hệ thống",
         "description": "Chọn những gì phím tắt âm thanh hệ thống thu: toàn bộ máy tính, hoặc chỉ một ứng dụng cụ thể (ví dụ Spotify). Ứng dụng phải đang phát âm thanh mới xuất hiện trong danh sách; hãy dùng nút làm mới.",
         "wholeSystem": "Toàn bộ hệ thống"
+      },
+      "muteInCalls": {
+        "label": "Tắt tiếng tôi trong cuộc gọi khi đang đọc",
+        "description": "Giữ phím F13 trong lúc bạn đọc để không ai nghe thấy bạn trên Discord. Hãy gán F13 cho \"Push to Mute\" trong phím tắt của Discord.",
+        "setupHint": "Trong Discord: Cài đặt → Phím tắt → thêm \"Push to Mute\", bấm vào ô rồi nhấn nút này.",
+        "sendKey": "Gửi F13",
+        "sent": "Đã gửi F13"
+      },
+      "wakeWord": {
+        "label": "Bắt đầu bằng cách nói \"VoCript\"",
+        "description": "Lắng nghe từ 'VoCript' và bắt đầu đọc chính tả khi nghe thấy. Dạy nó bằng cách nói từ đó một lần, trong ba lần ghi riêng biệt.",
+        "hint": "Micrô vẫn mở khi bật tính năng này. Mọi thứ được xử lý trên máy của bạn và chỉ những đoạn nói ngắn mới đi tới mô hình, nhưng tốn CPU hơn phím tắt: ở đây một mô hình nhanh như Parakeet hay Moonshine sẽ hợp hơn.",
+        "teach": "Dạy nó",
+        "listening": "Nói một lần, ngay bây giờ",
+        "teachPrompt": "Nhấn và nói 'VoCript' MỘT lần. Lặp lại quá trình ba lần, không nói ba lần liên tiếp.",
+        "taught": "Đã học từ {{count}} bản ghi. Thêm nữa nếu không phải lúc nào cũng nhận ra.",
+        "captured": "Đã học",
+        "forgotten": "Đã xóa các bản ghi",
+        "needMore": "Thêm một lần nữa cho chắc",
+        "errors": {
+          "noSpeech": "Tôi không nghe thấy bạn. Nhấn lại và nói to hơn một chút.",
+          "tooShort": "Quá ngắn. Hãy nói trọn từ, đừng vội.",
+          "deadDevice": "Micrô không trả về gì cả. Hãy kiểm tra xem nó có bị tắt tiếng hoặc đang bị ứng dụng khác dùng không."
+        },
+        "beta": "Beta"
       }
     },
     "sound": {
@@ -926,6 +953,92 @@
   "themes": {
     "title": "Chủ đề tùy chỉnh",
     "subtitle": "Chọn màu nhấn của giao diện.",
-    "comingSoon": "Kiểu chữ và nhiều tùy chọn khác sắp có."
+    "custom": {
+      "pick": "Chọn màu bất kỳ",
+      "label": "Màu hex"
+    },
+    "typography": {
+      "title": "Kiểu chữ",
+      "subtitle": "Chọn cách đọc giao diện. Chỉ dùng phông chữ đã có sẵn trong máy nên không tải gì về.",
+      "family": "Phông chữ",
+      "size": "Cỡ chữ",
+      "sizeHint": "Thay đổi cỡ toàn bộ giao diện, không chỉ chữ.",
+      "sample": "Văn bản mẫu",
+      "fonts": {
+        "default": "VoCript",
+        "system": "Hệ thống",
+        "readable": "Dễ đọc",
+        "serif": "Có chân",
+        "mono": "Đều nét"
+      },
+      "sizes": {
+        "compact": "Gọn",
+        "normal": "Bình thường",
+        "large": "Lớn",
+        "larger": "Lớn hơn"
+      },
+      "systemFont": "Bất kỳ phông chữ nào trên máy này",
+      "chooseSystemFont": "Chọn phông chữ…",
+      "searchFonts": "Tìm phông chữ",
+      "noFonts": "Không có phông chữ phù hợp."
+    }
+  },
+  "activity": {
+    "title": "Hoạt động đọc chính tả của bạn",
+    "subtitle": "Bạn đọc chính tả bao nhiêu mỗi ngày. Chỉ tính trên máy này: không lưu văn bản và không tải gì lên mạng.",
+    "cards": {
+      "words": "Số từ đã đọc",
+      "timeSaved": "Thời gian tiết kiệm",
+      "timeSavedHint": "so với gõ {{wpm}} từ/phút",
+      "speed": "Tốc độ của bạn",
+      "speedHint": "từ mỗi phút",
+      "streak": "Chuỗi hiện tại",
+      "streakHint": "Kỷ lục: {{count}}"
+    },
+    "dayCount_one": "{{count}} ngày",
+    "dayCount_other": "{{count}} ngày",
+    "hoursShort": "{{count}} giờ",
+    "minutesShort": "{{count}} phút",
+    "wordsOnDay_one": "{{count}} từ",
+    "wordsOnDay_other": "{{count}} từ",
+    "weekdayInitials": "T2,T3,T4,T5,T6,T7,CN",
+    "less": "Ít",
+    "more": "Nhiều",
+    "empty": "Chưa có gì ở đây. Hãy đọc chính tả và chỗ này sẽ đầy dần.",
+    "emptyDisabled": "Việc đếm đang tắt nên không có gì được ghi lại.",
+    "privacy": {
+      "title": "Quyền riêng tư",
+      "label": "Đếm các lần đọc chính tả",
+      "description": "Ghi số từ theo ngày trên máy này. Tắt đi sẽ dừng đếm; những số liệu đã có vẫn giữ nguyên cho đến khi bạn xóa."
+    },
+    "reset": {
+      "label": "Xóa thống kê",
+      "description": "Xóa toàn bộ số liệu. Không thể hoàn tác.",
+      "action": "Xóa",
+      "done": "Đã xóa thống kê"
+    }
+  },
+  "contextMenu": {
+    "cut": "Cắt",
+    "copy": "Sao chép",
+    "paste": "Dán",
+    "selectAll": "Chọn tất cả"
+  },
+  "translation": {
+    "title": "Dịch",
+    "subtitle": "Đọc bằng ngôn ngữ của bạn và nhận văn bản tiếng Anh.",
+    "english": "Tiếng Anh",
+    "autoLanguage": "Ngôn ngữ tự nhận",
+    "unsupported": "{{model}} không dịch được nên mục này vẫn tắt.",
+    "capableModels": "Các mô hình làm được: {{models}}.",
+    "toggle": {
+      "label": "Dịch sang tiếng Anh những gì tôi đọc",
+      "description": "Văn bản được viết thẳng bằng tiếng Anh thay vì ngôn ngữ bạn nói."
+    },
+    "limits": {
+      "title": "Làm được gì và không làm được gì",
+      "englishOnly": "Chỉ dịch sang tiếng Anh. Các mô hình giọng nói nhận một công tắc \"dịch\", không phải ngôn ngữ đích, nên hiện chưa có cặp nào khác.",
+      "future": "Dịch sang ngôn ngữ bất kỳ cần một mô hình ngôn ngữ. Nó sẽ đến cùng phần dọn dẹp bằng AI cục bộ, nên vẫn chạy được khi không có mạng."
+    }
   }
 }

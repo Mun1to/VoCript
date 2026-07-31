@@ -23,6 +23,9 @@ pub fn cancel_current_operation(app: &AppHandle) {
     // Stop the live transcription loop if one is running.
     crate::live::stop(app);
 
+    // Cancelling must unmute too, or the user stays muted in their call.
+    crate::input::release_call_mute(app);
+
     // Cancel any ongoing recording
     let audio_manager = app.state::<Arc<AudioRecordingManager>>();
     let recording_was_active = audio_manager.is_recording();

@@ -350,6 +350,35 @@ pub struct AppSettings {
     pub autostart_enabled: bool,
     #[serde(default = "default_update_checks_enabled")]
     pub update_checks_enabled: bool,
+    #[serde(default = "default_track_dictation_stats")]
+    pub track_dictation_stats: bool,
+    /// What this user's own model writes when they say the wake word.
+    ///
+    /// Speech models have never seen "VoCript" and spell it differently every
+    /// time — real captures include "Ball Crypto" and "All crypt". Rather than
+    /// guessing every spelling, the user says the word a few times and whatever
+    /// their model produces is stored here as the thing to listen for. It adapts
+    /// to their voice, accent, microphone and model at once.
+    #[serde(default)]
+    pub wake_word_samples: Vec<String>,
+    /// Listen continuously for the word "VoCript" and start dictating on it.
+    /// Off by default: it keeps the microphone open, which is not something to
+    /// switch on for someone without asking.
+    #[serde(default)]
+    pub wake_word_enabled: bool,
+    /// Hold F13 down while dictating so voice-chat apps bound to it (Discord's
+    /// "push to mute") stop transmitting. The microphone itself is never muted:
+    /// VoCript would stop hearing the user too.
+    #[serde(default)]
+    pub mute_in_calls: bool,
+    /// Id of the UI font stack (see src/lib/constants/fonts.ts). Only fonts the
+    /// OS already has: a restrictive CSP means nothing can be downloaded.
+    #[serde(default = "default_ui_font")]
+    pub ui_font: String,
+    /// Root font size in px. Everything else is sized in rem, so this scales
+    /// the whole interface.
+    #[serde(default = "default_ui_font_size")]
+    pub ui_font_size: u32,
     #[serde(default = "default_model")]
     pub selected_model: String,
     #[serde(default = "default_always_on_microphone")]
@@ -501,6 +530,20 @@ fn default_autostart_enabled() -> bool {
 
 fn default_update_checks_enabled() -> bool {
     true
+}
+
+/// On by default: the counters never leave the machine and hold no text, and a
+/// heatmap that starts empty because it was silently off is worthless.
+fn default_track_dictation_stats() -> bool {
+    true
+}
+
+fn default_ui_font() -> String {
+    "default".to_string()
+}
+
+fn default_ui_font_size() -> u32 {
+    14
 }
 
 fn default_selected_language() -> String {
@@ -910,6 +953,12 @@ pub fn get_default_settings() -> AppSettings {
         start_hidden: default_start_hidden(),
         autostart_enabled: default_autostart_enabled(),
         update_checks_enabled: default_update_checks_enabled(),
+        track_dictation_stats: default_track_dictation_stats(),
+        wake_word_enabled: false,
+        wake_word_samples: Vec::new(),
+        mute_in_calls: false,
+        ui_font: default_ui_font(),
+        ui_font_size: default_ui_font_size(),
         selected_model: "".to_string(),
         always_on_microphone: false,
         selected_microphone: None,

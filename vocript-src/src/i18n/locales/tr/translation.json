@@ -21,7 +21,9 @@
     "debug": "Hata Ayıklama",
     "about": "Hakkında",
     "fileTranscription": "Yazıya dök",
-    "feedback": "Geri bildirim"
+    "feedback": "Geri bildirim",
+    "activity": "Etkinlik",
+    "translation": "Çeviri"
   },
   "onboarding": {
     "subtitle": "Başlamak için bir transkripsiyon modeli seçin",
@@ -394,6 +396,31 @@
         "title": "Sistem sesi uygulaması",
         "description": "Sistem sesi kısayolunun neyi yakalayacağını seçin: bilgisayarın tamamı veya yalnızca belirli bir uygulama (örn. Spotify). Uygulamanın listede görünmesi için ses çalıyor olması gerekir; yenile düğmesini kullanın.",
         "wholeSystem": "Tüm sistem"
+      },
+      "muteInCalls": {
+        "label": "Dikte ederken beni aramalarda sustur",
+        "description": "Dikte ederken F13'ü basılı tutar, böylece Discord'da duyulmazsın. Çalışması için Discord kısayollarında F13'ü \"Bas-Konuş Kapat\" işlevine ata.",
+        "setupHint": "Discord'da: Ayarlar → Kısayollar → \"Bas-Konuş Kapat\" ekle, alana tıkla ve bu düğmeye bas.",
+        "sendKey": "F13 gönder",
+        "sent": "F13 gönderildi"
+      },
+      "wakeWord": {
+        "label": "\"VoCript\" diyerek başlat",
+        "description": "'VoCript' kelimesini dinler ve duyduğunda dikteye başlar. Kelimeyi bir kez söyleyerek, üç ayrı kayıtta öğret.",
+        "hint": "Bu açıkken mikrofon açık kalır. Her şey senin bilgisayarında işlenir ve modele yalnızca kısa konuşma parçaları ulaşır, ama kısayoldan daha çok işlemci harcar: burada Parakeet veya Moonshine gibi hızlı bir model daha uygun.",
+        "teach": "Öğret",
+        "listening": "Şimdi bir kez söyle",
+        "teachPrompt": "Bas ve 'VoCript' de BİR kez. Bunu üç kez tekrarla, arka arkaya üç kez söyleme.",
+        "taught": "{{count}} kayıttan öğrenildi. Her seferinde yakalamıyorsa daha fazla ekle.",
+        "captured": "Öğrenildi",
+        "forgotten": "Kayıtlar silindi",
+        "needMore": "Bir tane daha, güvenilir olsun",
+        "errors": {
+          "noSpeech": "Seni duyamadım. Tekrar bas ve biraz daha yüksek sesle söyle.",
+          "tooShort": "Çok kısaydı. Kelimenin tamamını, acele etmeden söyle.",
+          "deadDevice": "Mikrofon hiçbir şey döndürmedi. Sessize alınmadığından veya başka bir uygulamanın kullanmadığından emin ol."
+        },
+        "beta": "Beta"
       }
     },
     "sound": {
@@ -926,6 +953,92 @@
   "themes": {
     "title": "Özel temalar",
     "subtitle": "Arayüzün vurgu rengini seç.",
-    "comingSoon": "Tipografi ve daha fazlası yakında."
+    "custom": {
+      "pick": "İstediğin rengi seç",
+      "label": "Hex renk"
+    },
+    "typography": {
+      "title": "Tipografi",
+      "subtitle": "Arayüzün nasıl okunacağını seç. Yalnızca sistemde zaten olan yazı tipleri, hiçbir şey indirilmez.",
+      "family": "Yazı tipi",
+      "size": "Boyut",
+      "sizeHint": "Sadece metni değil, tüm arayüzü ölçekler.",
+      "sample": "Örnek metin",
+      "fonts": {
+        "default": "VoCript",
+        "system": "Sistem",
+        "readable": "Okunaklı",
+        "serif": "Serif",
+        "mono": "Eş aralıklı"
+      },
+      "sizes": {
+        "compact": "Sıkışık",
+        "normal": "Normal",
+        "large": "Büyük",
+        "larger": "Daha büyük"
+      },
+      "systemFont": "Bu bilgisayardaki herhangi bir yazı tipi",
+      "chooseSystemFont": "Bir yazı tipi seç…",
+      "searchFonts": "Yazı tipi ara",
+      "noFonts": "Eşleşen yazı tipi yok."
+    }
+  },
+  "activity": {
+    "title": "Dikte etkinliğin",
+    "subtitle": "Günden güne ne kadar dikte ettiğin. Yalnızca bu bilgisayarda sayılır: hiçbir metin saklanmaz ve hiçbir şey yüklenmez.",
+    "cards": {
+      "words": "Dikte edilen kelime",
+      "timeSaved": "Kazanılan süre",
+      "timeSavedHint": "{{wpm}} kelime/dk yazmaya kıyasla",
+      "speed": "Hızın",
+      "speedHint": "dakikada kelime",
+      "streak": "Güncel seri",
+      "streakHint": "En iyi: {{count}}"
+    },
+    "dayCount_one": "{{count}} gün",
+    "dayCount_other": "{{count}} gün",
+    "hoursShort": "{{count}} sa",
+    "minutesShort": "{{count}} dk",
+    "wordsOnDay_one": "{{count}} kelime",
+    "wordsOnDay_other": "{{count}} kelime",
+    "weekdayInitials": "P,S,Ç,P,C,C,P",
+    "less": "Az",
+    "more": "Çok",
+    "empty": "Henüz bir şey yok. Bir şeyler dikte et, burası dolsun.",
+    "emptyDisabled": "Sayım kapalı, bu yüzden hiçbir şey kaydedilmiyor.",
+    "privacy": {
+      "title": "Gizlilik",
+      "label": "Diktelerimi say",
+      "description": "Bu bilgisayarda günlük kelime sayısı tutar. Kapatırsan sayım durur; mevcut sayıların sen silene kadar kalır."
+    },
+    "reset": {
+      "label": "İstatistikleri temizle",
+      "description": "Tüm sayaçları siler. Geri alınamaz.",
+      "action": "Temizle",
+      "done": "İstatistikler temizlendi"
+    }
+  },
+  "contextMenu": {
+    "cut": "Kes",
+    "copy": "Kopyala",
+    "paste": "Yapıştır",
+    "selectAll": "Tümünü seç"
+  },
+  "translation": {
+    "title": "Çeviri",
+    "subtitle": "Kendi dilinde dikte et, metni İngilizce al.",
+    "english": "İngilizce",
+    "autoLanguage": "Algılanan dil",
+    "unsupported": "{{model}} çeviri yapamıyor, bu yüzden bu kapalı kalıyor.",
+    "capableModels": "Yapabilen modeller: {{models}}.",
+    "toggle": {
+      "label": "Dikte ettiğimi İngilizceye çevir",
+      "description": "Metin, konuştuğun dil yerine doğrudan İngilizce yazılır."
+    },
+    "limits": {
+      "title": "Neler yapabilir, neler yapamaz",
+      "englishOnly": "Çeviri yalnızca İngilizceye yapılır. Ses modelleri hedef dil değil, bir \"çevir\" anahtarı alır; bu yüzden bugün başka eşleşme mümkün değil.",
+      "future": "Herhangi bir dile çeviri için bir dil modeli gerekir. Yerel yapay zekâ temizliğiyle birlikte gelecek, yani internetsiz de çalışacak."
+    }
   }
 }

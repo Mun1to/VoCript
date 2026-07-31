@@ -4,6 +4,7 @@ import { Globe, ChevronDown } from "lucide-react";
 import { useSettings } from "../hooks/useSettings";
 import { useResolvedTheme } from "../hooks/useResolvedTheme";
 import { SUPPORTED_LANGUAGES, type SupportedLanguageCode } from "../i18n";
+import { HoverTooltip } from "./ui/HoverTooltip";
 
 /**
  * Quick language switch in the header. Picking a language changes BOTH the app
@@ -49,33 +50,30 @@ export const LanguageQuickSwitch: React.FC = () => {
     SUPPORTED_LANGUAGES.find((l) => l.code === current)?.nativeName ?? current;
 
   return (
-    <div
-      className="relative"
-      ref={ref}
-      data-tour="header-language"
-      title={t("header.language.label")}
-    >
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        className={`flex items-center gap-1.5 py-1 px-1.5 rounded-lg text-xs font-bold transition-colors ${
-          isLight
-            ? "text-logo-primary hover:bg-slate-100"
-            : "text-logo-primary hover:bg-white/[0.06]"
-        }`}
-      >
-        <Globe
-          className={`w-3.5 h-3.5 shrink-0 ${
-            isLight ? "text-slate-500" : "text-slate-400"
+    <div className="relative" ref={ref} data-tour="header-language">
+      <HoverTooltip label={t("header.language.label")}>
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          className={`flex items-center gap-1.5 py-1 px-1.5 rounded-lg text-xs font-bold transition-colors ${
+            isLight
+              ? "text-logo-primary hover:bg-slate-100"
+              : "text-logo-primary hover:bg-white/[0.06]"
           }`}
-        />
-        <span>{currentLabel}</span>
-        <ChevronDown
-          className={`w-3.5 h-3.5 shrink-0 transition-transform ${
-            open ? "rotate-180" : ""
-          }`}
-        />
-      </button>
+        >
+          <Globe
+            className={`w-3.5 h-3.5 shrink-0 ${
+              isLight ? "text-slate-500" : "text-slate-400"
+            }`}
+          />
+          <span>{currentLabel}</span>
+          <ChevronDown
+            className={`w-3.5 h-3.5 shrink-0 transition-transform ${
+              open ? "rotate-180" : ""
+            }`}
+          />
+        </button>
+      </HoverTooltip>
       {open && (
         <div
           className={`absolute top-full end-0 mt-1 max-h-72 overflow-y-auto rounded-lg border shadow-lg z-50 py-1 ${

@@ -24,6 +24,29 @@ export const ACCENT_PRESETS: AccentPreset[] = [
   { id: "teal", color: "#14b8a6" },
 ];
 
+/**
+ * Whether a string is a hex color the accent pipeline can handle. Guards the
+ * free-color field: `darkenHex` and `hexToRgba` would produce `NaN` colors from
+ * anything else, painting the whole UI black.
+ */
+export function isValidHex(value: string): boolean {
+  return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(value.trim());
+}
+
+/** Accepts "3b82f6", "#3B82F6" or "#3bf" and returns the canonical "#3b82f6". */
+export function normalizeHex(value: string): string | null {
+  const raw = value.trim().replace(/^#/, "");
+  if (!isValidHex(`#${raw}`)) return null;
+  const full =
+    raw.length === 3
+      ? raw
+          .split("")
+          .map((c) => c + c)
+          .join("")
+      : raw;
+  return `#${full.toLowerCase()}`;
+}
+
 /** hex → "rgba(r, g, b, a)" (for the accent glow shadow). */
 export function hexToRgba(hex: string, alpha = 0.5): string {
   const h = hex.replace("#", "");

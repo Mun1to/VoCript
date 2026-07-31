@@ -3,7 +3,9 @@
 @layer base {
   body,
   html {
-    font-family:
+    /* Overridden at runtime from the `ui_font` setting; see App.tsx. */
+    font-family: var(
+      --vc-font-family,
       "Inter",
       -apple-system,
       BlinkMacSystemFont,
@@ -11,7 +13,8 @@
       Roboto,
       Helvetica,
       Arial,
-      sans-serif;
+      sans-serif
+    );
     letter-spacing: -0.011em;
   }
 }
@@ -31,7 +34,8 @@
 }
 
 :root {
-  font-size: 14px;
+  /* Everything is sized in rem, so this one value scales the whole UI. */
+  font-size: var(--vc-font-size, 14px);
   line-height: 1.5;
   font-weight: 400;
 

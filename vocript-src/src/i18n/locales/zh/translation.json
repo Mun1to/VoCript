@@ -21,7 +21,9 @@
     "debug": "调试",
     "about": "关于",
     "fileTranscription": "文件转录",
-    "feedback": "反馈"
+    "feedback": "反馈",
+    "activity": "活动",
+    "translation": "翻译"
   },
   "onboarding": {
     "subtitle": "请选择一个转录模型以开始使用",
@@ -394,6 +396,31 @@
         "title": "系统音频应用",
         "description": "选择系统音频快捷键捕获的目标应用（如整个系统或单一软件）。",
         "wholeSystem": "整个系统"
+      },
+      "muteInCalls": {
+        "label": "听写时在通话中静音",
+        "description": "听写期间会一直按住 F13，这样在 Discord 里就听不到你。请在 Discord 的快捷键中把 F13 设为「按住静音」。",
+        "setupHint": "在 Discord 中：设置 → 快捷键 → 添加「按住静音」，点击输入框后按下这个按钮。",
+        "sendKey": "发送 F13",
+        "sent": "已发送 F13"
+      },
+      "wakeWord": {
+        "label": "说「VoCript」即可开始",
+        "description": "监听「VoCript」这个词，听到就开始听写。教它的方法是每次只说一遍，分三次录。",
+        "hint": "开启期间麦克风会保持打开。全部在你的电脑上处理，只有说话的短片段才会送进模型，但比快捷键更耗 CPU：这里更适合 Parakeet 或 Moonshine 这类快速模型。",
+        "teach": "教它",
+        "listening": "现在说一次",
+        "teachPrompt": "按下后说一次「VoCript」。整个过程重复三次，不是一口气说三遍。",
+        "taught": "已从 {{count}} 段录音学习。如果不是每次都能识别，可以再加几段。",
+        "captured": "已学会",
+        "forgotten": "录音已清除",
+        "needMore": "再录一次会更准",
+        "errors": {
+          "noSpeech": "没有听到你说话。请再按一次，声音大一点。",
+          "tooShort": "太短了。请把整个词说完，不用着急。",
+          "deadDevice": "麦克风没有返回任何声音。请检查它是否被静音或被其他应用占用。"
+        },
+        "beta": "测试版"
       }
     },
     "sound": {
@@ -926,6 +953,92 @@
   "themes": {
     "title": "自定义主题",
     "subtitle": "选择界面的强调色。",
-    "comingSoon": "字体等更多选项即将推出。"
+    "custom": {
+      "pick": "选择任意颜色",
+      "label": "十六进制颜色"
+    },
+    "typography": {
+      "title": "字体",
+      "subtitle": "选择界面的阅读方式。只使用系统已有的字体，不会下载任何内容。",
+      "family": "字体",
+      "size": "大小",
+      "sizeHint": "缩放整个界面，而不只是文字。",
+      "sample": "示例文字",
+      "fonts": {
+        "default": "VoCript",
+        "system": "系统",
+        "readable": "易读",
+        "serif": "衬线",
+        "mono": "等宽"
+      },
+      "sizes": {
+        "compact": "紧凑",
+        "normal": "标准",
+        "large": "大",
+        "larger": "更大"
+      },
+      "systemFont": "本电脑上的任意字体",
+      "chooseSystemFont": "选择字体…",
+      "searchFonts": "搜索字体",
+      "noFonts": "没有匹配的字体。"
+    }
+  },
+  "activity": {
+    "title": "你的听写活动",
+    "subtitle": "你每天听写了多少。仅在本电脑统计：不保存任何文字，也不会上传。",
+    "cards": {
+      "words": "已听写字数",
+      "timeSaved": "节省的时间",
+      "timeSavedHint": "对比每分钟 {{wpm}} 字的打字速度",
+      "speed": "你的速度",
+      "speedHint": "每分钟字数",
+      "streak": "当前连续天数",
+      "streakHint": "最佳：{{count}}"
+    },
+    "dayCount_one": "{{count}} 天",
+    "dayCount_other": "{{count}} 天",
+    "hoursShort": "{{count}} 小时",
+    "minutesShort": "{{count}} 分钟",
+    "wordsOnDay_one": "{{count}} 字",
+    "wordsOnDay_other": "{{count}} 字",
+    "weekdayInitials": "一,二,三,四,五,六,日",
+    "less": "较少",
+    "more": "较多",
+    "empty": "这里还是空的。听写点什么，就会开始填满。",
+    "emptyDisabled": "统计已关闭，因此不会记录任何内容。",
+    "privacy": {
+      "title": "隐私",
+      "label": "统计我的听写",
+      "description": "在本电脑上按天记录字数。关闭后停止统计；已有的数据会保留，直到你清除。"
+    },
+    "reset": {
+      "label": "清除统计",
+      "description": "删除所有计数。此操作无法撤销。",
+      "action": "清除",
+      "done": "统计已清除"
+    }
+  },
+  "contextMenu": {
+    "cut": "剪切",
+    "copy": "复制",
+    "paste": "粘贴",
+    "selectAll": "全选"
+  },
+  "translation": {
+    "title": "翻译",
+    "subtitle": "用你的语言口述，得到英文文本。",
+    "english": "英语",
+    "autoLanguage": "自动识别的语言",
+    "unsupported": "{{model}} 不会翻译，所以这项保持关闭。",
+    "capableModels": "支持的模型：{{models}}。",
+    "toggle": {
+      "label": "把我听写的内容翻译成英文",
+      "description": "文本会直接写成英文，而不是你说的语言。"
+    },
+    "limits": {
+      "title": "能做什么，不能做什么",
+      "englishOnly": "只能翻译成英文。语音模型接收的是一个「翻译」开关，而不是目标语言，所以目前没有别的组合。",
+      "future": "翻译成任意语言需要语言模型。它会随本地 AI 润色一起到来，因此依然不需要联网。"
+    }
   }
 }

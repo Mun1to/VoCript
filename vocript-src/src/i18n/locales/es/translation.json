@@ -52,7 +52,9 @@
     "themes": "Temas",
     "debug": "Depuración",
     "about": "Acerca de",
-    "feedback": "Feedback"
+    "feedback": "Feedback",
+    "activity": "Actividad",
+    "translation": "Traducción"
   },
   "onboarding": {
     "profiles": {
@@ -457,6 +459,31 @@
         "title": "App del audio del sistema",
         "description": "Elige qué capturar con el atajo de audio del sistema: todo el ordenador o solo una aplicación concreta (p. ej. Spotify). La app debe estar reproduciendo audio para aparecer en la lista; usa el botón de refrescar.",
         "wholeSystem": "Todo el sistema"
+      },
+      "muteInCalls": {
+        "label": "Silenciarme en llamadas mientras dicto",
+        "description": "Mantiene pulsada F13 mientras dictas para que no se te oiga en Discord. Asigna F13 a «Pulsar para silenciar» en los atajos de Discord para que funcione.",
+        "setupHint": "En Discord: Ajustes → Teclas rápidas → añade «Pulsar para silenciar», haz clic en el campo y pulsa este botón.",
+        "sendKey": "Enviar F13",
+        "sent": "F13 enviada"
+      },
+      "wakeWord": {
+        "label": "Empezar diciendo «VoCript»",
+        "description": "Escucha la palabra «VoCript» y empieza a dictar cuando la oye. Enséñasela diciendo la palabra una sola vez, en tres grabaciones distintas.",
+        "hint": "Mientras esté activo, el micrófono se queda abierto. Todo se procesa en tu ordenador y solo llegan al modelo los trocitos en los que hablas, pero consume más CPU que el atajo: aquí encaja mejor un modelo rápido como Parakeet o Moonshine.",
+        "teach": "Enséñasela",
+        "listening": "Dila una vez, ahora",
+        "teachPrompt": "Pulsa y di «VoCript» UNA vez. Repite el proceso tres veces, no la digas tres veces seguidas.",
+        "taught": "Aprendida de {{count}} grabación(es). Añade más si no siempre te pilla.",
+        "captured": "Aprendida",
+        "forgotten": "Grabaciones borradas",
+        "needMore": "Graba alguna más para que acierte",
+        "errors": {
+          "noSpeech": "No te he oído. Pulsa otra vez y dilo un poco más alto.",
+          "tooShort": "Ha sido demasiado breve. Di la palabra entera, sin prisa.",
+          "deadDevice": "El micrófono no ha devuelto nada. Comprueba que no esté silenciado ni en uso por otra app."
+        },
+        "beta": "Beta"
       }
     },
     "sound": {
@@ -926,6 +953,92 @@
   "themes": {
     "title": "Temas personalizados",
     "subtitle": "Elige el color de acento de la interfaz.",
-    "comingSoon": "Tipografía y más opciones, próximamente."
+    "custom": {
+      "pick": "Elige cualquier color",
+      "label": "Color hex"
+    },
+    "typography": {
+      "title": "Tipografía",
+      "subtitle": "Elige cómo se lee la interfaz. Solo fuentes que ya tienes en el sistema, así no se descarga nada.",
+      "family": "Fuente",
+      "size": "Tamaño",
+      "sizeHint": "Escala toda la interfaz, no solo el texto.",
+      "sample": "Texto de ejemplo",
+      "fonts": {
+        "default": "VoCript",
+        "system": "Sistema",
+        "readable": "Legible",
+        "serif": "Serif",
+        "mono": "Monoespaciada"
+      },
+      "sizes": {
+        "compact": "Compacto",
+        "normal": "Normal",
+        "large": "Grande",
+        "larger": "Mayor"
+      },
+      "systemFont": "Cualquier fuente de este ordenador",
+      "chooseSystemFont": "Elige una fuente…",
+      "searchFonts": "Buscar fuentes",
+      "noFonts": "Ninguna fuente coincide."
+    }
+  },
+  "activity": {
+    "title": "Tu actividad de dictado",
+    "subtitle": "Cuánto dictas, día a día. Se cuenta solo en este ordenador: no se guarda ningún texto ni se sube nada a internet.",
+    "cards": {
+      "words": "Palabras dictadas",
+      "timeSaved": "Tiempo ahorrado",
+      "timeSavedHint": "frente a teclear a {{wpm}} ppm",
+      "speed": "Tu velocidad",
+      "speedHint": "palabras por minuto",
+      "streak": "Racha actual",
+      "streakHint": "Mejor: {{count}}"
+    },
+    "dayCount_one": "{{count}} día",
+    "dayCount_other": "{{count}} días",
+    "hoursShort": "{{count}} h",
+    "minutesShort": "{{count}} min",
+    "wordsOnDay_one": "{{count}} palabra",
+    "wordsOnDay_other": "{{count}} palabras",
+    "weekdayInitials": "L,M,X,J,V,S,D",
+    "less": "Menos",
+    "more": "Más",
+    "empty": "Aún no hay nada. Dicta algo y esto se irá llenando.",
+    "emptyDisabled": "El recuento está desactivado, así que no se registra nada.",
+    "privacy": {
+      "title": "Privacidad",
+      "label": "Contar mis dictados",
+      "description": "Lleva la cuenta diaria de palabras en este ordenador. Si lo desactivas deja de contar; los números que ya tengas se conservan hasta que los borres."
+    },
+    "reset": {
+      "label": "Borrar estadísticas",
+      "description": "Elimina todos los contadores. No se puede deshacer.",
+      "action": "Borrar",
+      "done": "Estadísticas borradas"
+    }
+  },
+  "contextMenu": {
+    "cut": "Cortar",
+    "copy": "Copiar",
+    "paste": "Pegar",
+    "selectAll": "Seleccionar todo"
+  },
+  "translation": {
+    "title": "Traducción",
+    "subtitle": "Dicta en tu idioma y obtén el texto en inglés.",
+    "english": "Inglés",
+    "autoLanguage": "Idioma detectado",
+    "unsupported": "{{model}} no sabe traducir, así que esto se queda apagado.",
+    "capableModels": "Modelos que sí pueden: {{models}}.",
+    "toggle": {
+      "label": "Traducir al inglés lo que dicto",
+      "description": "El texto se escribe directamente en inglés en vez de en el idioma en el que hablaste."
+    },
+    "limits": {
+      "title": "Qué puede y qué no",
+      "englishOnly": "La traducción va solo hacia el inglés. Los modelos de voz reciben un interruptor de «traducir», no un idioma de destino, así que hoy no hay otras combinaciones.",
+      "future": "Traducir a cualquier idioma necesita un modelo de lenguaje. Llegará con la limpieza con IA local, así que seguirá funcionando sin conexión."
+    }
   }
 }

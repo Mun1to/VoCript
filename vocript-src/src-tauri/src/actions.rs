@@ -1,9 +1,11 @@
 #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 use crate::apple_intelligence;
 use crate::audio_feedback::{play_feedback_sound, play_feedback_sound_blocking, SoundType};
+use crate::audio_toolkit::constants::WHISPER_SAMPLE_RATE;
 use crate::audio_toolkit::{is_microphone_access_denied, is_no_input_device_error};
 use crate::managers::audio::AudioRecordingManager;
 use crate::managers::history::HistoryManager;
+use crate::managers::stats::StatsManager;
 use crate::managers::transcription::TranscriptionManager;
 use crate::settings::{get_settings, AppSettings, APPLE_INTELLIGENCE_PROVIDER_ID};
 use crate::shortcut;
@@ -28,11 +30,34 @@ struct RecordingErrorEvent {
     detail: Option<String>,
 }
 
+/// Feeds the dictation counters behind the activity heatmap.
+///
+/// Microphone only: a system-audio capture transcribes someone else's words, so
+/// counting it would turn "words you dictated" into a meaningless number. Opting
+/// out via `track_dictation_stats` stops the recording entirely.
+fn record_dictation_stats(
+    app: &AppHandle,
+    sm: &Arc<StatsManager>,
+    binding_id: &str,
+    text: &str,
+    sample_count: usize,
+) {
+    if binding_id.contains("system") || !get_settings(app).track_dictation_stats {
+        return;
+    }
+    sm.record_dictation(text, sample_count as f64 / WHISPER_SAMPLE_RATE as f64);
+}
+
 /// Drop guard that notifies the [`TranscriptionCoordinator`] when the
 /// transcription pipeline finishes — whether it completes normally or panics.
 struct FinishGuard(AppHandle);
 impl Drop for FinishGuard {
     fn drop(&mut self) {
+        // Safety net: a mute key left held down would silence the user in every
+        // call until they restart the app. Idempotent, so the normal release in
+        // `stop()` still does the work in the common case.
+        crate::input::release_call_mute(&self.0);
+        crate::wake_word::resume(&self.0);
         if let Some(c) = self.0.try_state::<TranscriptionCoordinator>() {
             c.notify_processing_finished();
         }
@@ -416,6 +441,17 @@ impl ShortcutAction for TranscribeAction {
             show_recording_overlay(app);
         }
 
+        // The wake-word listener must let go of the microphone and the model
+        // while the real dictation runs, and not hear the user dictating.
+        crate::wake_word::pause(app);
+
+        // Mute the user in voice chat for as long as they dictate. Held down
+        // rather than toggled: a toggle would unmute someone who was already
+        // muted, and would desync the moment one keypress got lost.
+        if get_settings(app).mute_in_calls {
+            crate::input::press_call_mute(app);
+        }
+
         // Get the microphone mode to determine audio feedback timing
         let settings = get_settings(app);
         let is_always_on = settings.always_on_microphone;
@@ -505,6 +541,10 @@ impl ShortcutAction for TranscribeAction {
         // Unregister the cancel shortcut when transcription stops
         shortcut::unregister_cancel_shortcut(app);
 
+        // Unmute as soon as the user stops talking, not when the transcription
+        // finishes: they should be able to answer in the call right away.
+        crate::input::release_call_mute(app);
+
         // Always stop the live partial loop (no-op when it isn't running).
         crate::live::stop(app);
 
@@ -522,6 +562,7 @@ impl ShortcutAction for TranscribeAction {
         let rm = Arc::clone(&app.state::<Arc<AudioRecordingManager>>());
         let tm = Arc::clone(&app.state::<Arc<TranscriptionManager>>());
         let hm = Arc::clone(&app.state::<Arc<HistoryManager>>());
+        let sm = Arc::clone(&app.state::<Arc<StatsManager>>());
 
         change_tray_icon(app, TrayIconState::Transcribing);
         show_transcribing_overlay(app);
@@ -628,6 +669,23 @@ impl ShortcutAction for TranscribeAction {
                             } else {
                                 transcription
                             };
+
+                            // Hands-free dictations end by saying the wake word,
+                            // which the recording therefore contains. Drop it
+                            // before anything downstream sees the text.
+                            let transcription = if crate::wake_word::take_strip_flag(&ah) {
+                                crate::wake_word::strip_wake_word(&transcription)
+                            } else {
+                                transcription
+                            };
+
+                            record_dictation_stats(
+                                &ah,
+                                &sm,
+                                &binding_id,
+                                &transcription,
+                                sample_count,
+                            );
 
                             if post_process {
                                 show_processing_overlay(&ah);
@@ -745,6 +803,7 @@ fn stop_live(app: &AppHandle, binding_id: &str) {
     let rm = Arc::clone(&app.state::<Arc<AudioRecordingManager>>());
     let tm = Arc::clone(&app.state::<Arc<TranscriptionManager>>());
     let hm = Arc::clone(&app.state::<Arc<HistoryManager>>());
+    let sm = Arc::clone(&app.state::<Arc<StatsManager>>());
     let binding_id = binding_id.to_string();
 
     tauri::async_runtime::spawn(async move {
@@ -794,6 +853,8 @@ fn stop_live(app: &AppHandle, binding_id: &str) {
                 } else {
                     text
                 };
+
+                record_dictation_stats(&ah, &sm, &binding_id, &text, sample_count);
 
                 if wav_saved {
                     if let Err(err) = hm.save_entry(file_name, text.clone(), false, None, None) {

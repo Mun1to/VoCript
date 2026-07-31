@@ -52,7 +52,9 @@
     "themes": "Themes",
     "debug": "Debug",
     "about": "About",
-    "feedback": "Feedback"
+    "feedback": "Feedback",
+    "activity": "Activity",
+    "translation": "Translation"
   },
   "onboarding": {
     "profiles": {
@@ -426,6 +428,31 @@
         "title": "System audio app",
         "description": "Choose what the system-audio shortcut captures: the whole computer, or just one specific app (e.g. Spotify). The app must be playing audio to appear in the list; use the refresh button.",
         "wholeSystem": "Whole system"
+      },
+      "muteInCalls": {
+        "label": "Mute me in calls while I dictate",
+        "description": "Holds F13 down while you dictate so you are not heard in Discord. Bind F13 to \"Push to Mute\" in Discord's keybinds for it to work.",
+        "setupHint": "In Discord: Settings → Keybinds → add \"Push to Mute\", click the field and press this button.",
+        "sendKey": "Send F13",
+        "sent": "F13 sent"
+      },
+      "wakeWord": {
+        "label": "Start by saying \"VoCript\"",
+        "description": "Listens for the word 'VoCript' and starts dictating when it hears it. Teach it by saying the word once, three separate times.",
+        "hint": "The microphone stays open while this is on. Everything is processed on your computer and only short bursts of speech reach the model, but it uses more CPU than the shortcut: a fast model like Parakeet or Moonshine fits better here.",
+        "teach": "Teach it",
+        "listening": "Say it once, now",
+        "teachPrompt": "Press and say 'VoCript' ONCE. Do that three times over, not three times in one go.",
+        "taught": "Learned from {{count}} recording(s). Add more if it does not always catch it.",
+        "captured": "Got it",
+        "forgotten": "Recordings cleared",
+        "needMore": "One more, for a reliable match",
+        "errors": {
+          "noSpeech": "I did not hear you. Press again and say it a bit louder.",
+          "tooShort": "That was too brief. Say the whole word, without rushing.",
+          "deadDevice": "The microphone gave nothing back. Check it is not muted or in use by another app."
+        },
+        "beta": "Beta"
       }
     },
     "models": {
@@ -926,6 +953,92 @@
   "themes": {
     "title": "Custom themes",
     "subtitle": "Choose the interface accent color.",
-    "comingSoon": "Typography and more options coming soon."
+    "custom": {
+      "pick": "Pick any color",
+      "label": "Hex color"
+    },
+    "typography": {
+      "title": "Typography",
+      "subtitle": "Choose how the interface reads. Only fonts already on your system, so nothing is downloaded.",
+      "family": "Font",
+      "size": "Size",
+      "sizeHint": "Scales the whole interface, not just the text.",
+      "sample": "Sample text",
+      "fonts": {
+        "default": "VoCript",
+        "system": "System",
+        "readable": "Readable",
+        "serif": "Serif",
+        "mono": "Monospace"
+      },
+      "sizes": {
+        "compact": "Compact",
+        "normal": "Normal",
+        "large": "Large",
+        "larger": "Larger"
+      },
+      "systemFont": "Any font on this computer",
+      "chooseSystemFont": "Choose a font…",
+      "searchFonts": "Search fonts",
+      "noFonts": "No font matches that."
+    }
+  },
+  "activity": {
+    "title": "Your dictation activity",
+    "subtitle": "How much you dictate, day by day. Counted on this computer only: no text is stored and nothing is ever uploaded.",
+    "cards": {
+      "words": "Words dictated",
+      "timeSaved": "Time saved",
+      "timeSavedHint": "vs. typing at {{wpm}} wpm",
+      "speed": "Your speed",
+      "speedHint": "words per minute",
+      "streak": "Current streak",
+      "streakHint": "Best: {{count}}"
+    },
+    "dayCount_one": "{{count}} day",
+    "dayCount_other": "{{count}} days",
+    "hoursShort": "{{count}} h",
+    "minutesShort": "{{count}} min",
+    "wordsOnDay_one": "{{count}} word",
+    "wordsOnDay_other": "{{count}} words",
+    "weekdayInitials": "M,T,W,T,F,S,S",
+    "less": "Less",
+    "more": "More",
+    "empty": "Nothing here yet. Dictate something and this fills up.",
+    "emptyDisabled": "Counting is off, so nothing is being recorded.",
+    "privacy": {
+      "title": "Privacy",
+      "label": "Count my dictations",
+      "description": "Keeps a daily word count on this computer. Turning it off stops the counting; the numbers you already have stay until you clear them."
+    },
+    "reset": {
+      "label": "Clear statistics",
+      "description": "Deletes every counter. This cannot be undone.",
+      "action": "Clear",
+      "done": "Statistics cleared"
+    }
+  },
+  "contextMenu": {
+    "cut": "Cut",
+    "copy": "Copy",
+    "paste": "Paste",
+    "selectAll": "Select all"
+  },
+  "translation": {
+    "title": "Translation",
+    "subtitle": "Dictate in your language and get the text in English.",
+    "english": "English",
+    "autoLanguage": "Detected language",
+    "unsupported": "{{model}} cannot translate, so this stays off.",
+    "capableModels": "Models that can: {{models}}.",
+    "toggle": {
+      "label": "Translate what I dictate into English",
+      "description": "The text is written straight into English instead of the language you spoke."
+    },
+    "limits": {
+      "title": "What this can and cannot do",
+      "englishOnly": "Translation goes into English only. The speech models take a \"translate\" flag, not a target language, so other pairs are not possible today.",
+      "future": "Translating into any language needs a language model. It will come with the local AI cleanup, so it still works without an internet connection."
+    }
   }
 }

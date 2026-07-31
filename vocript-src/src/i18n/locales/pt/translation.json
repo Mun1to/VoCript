@@ -21,7 +21,9 @@
     "debug": "Depuração",
     "about": "Sobre",
     "fileTranscription": "Transcrever",
-    "feedback": "Feedback"
+    "feedback": "Feedback",
+    "activity": "Atividade",
+    "translation": "Tradução"
   },
   "onboarding": {
     "subtitle": "Para começar, escolha um modelo de transcrição",
@@ -363,6 +365,31 @@
         "title": "App do áudio do sistema",
         "description": "Escolha o que capturar com o atalho de áudio do sistema: o computador inteiro ou apenas um app específico (por ex. Spotify). O app precisa estar reproduzindo áudio para aparecer na lista; use o botão de atualizar.",
         "wholeSystem": "Todo o sistema"
+      },
+      "muteInCalls": {
+        "label": "Silenciar-me em chamadas enquanto dito",
+        "description": "Mantém F13 premida enquanto ditas para não seres ouvido no Discord. Atribui F13 a «Premir para silenciar» nos atalhos do Discord para funcionar.",
+        "setupHint": "No Discord: Definições → Atalhos → adiciona «Premir para silenciar», clica no campo e carrega neste botão.",
+        "sendKey": "Enviar F13",
+        "sent": "F13 enviada"
+      },
+      "wakeWord": {
+        "label": "Começar dizendo «VoCript»",
+        "description": "Fica à escuta da palavra «VoCript» e começa a ditar quando a ouve. Ensina-lhe dizendo a palavra uma só vez, em três gravações distintas.",
+        "hint": "Enquanto estiver ativo, o microfone fica aberto. Tudo é processado no teu computador e só chegam ao modelo os bocados em que falas, mas gasta mais CPU do que o atalho: aqui encaixa melhor um modelo rápido como o Parakeet ou o Moonshine.",
+        "teach": "Ensina-lhe",
+        "listening": "Di-la uma vez, agora",
+        "teachPrompt": "Carrega e diz «VoCript» UMA vez. Repete o processo três vezes, não a digas três vezes seguidas.",
+        "taught": "Aprendida a partir de {{count}} gravação(ões). Acrescenta mais se nem sempre te apanhar.",
+        "captured": "Aprendida",
+        "forgotten": "Gravações apagadas",
+        "needMore": "Grava mais alguma para acertar sempre",
+        "errors": {
+          "noSpeech": "Não te ouvi. Carrega outra vez e diz um pouco mais alto.",
+          "tooShort": "Foi demasiado breve. Diz a palavra inteira, sem pressa.",
+          "deadDevice": "O microfone não devolveu nada. Verifica que não está silenciado nem a ser usado por outra app."
+        },
+        "beta": "Beta"
       }
     },
     "models": {
@@ -926,6 +953,92 @@
   "themes": {
     "title": "Temas personalizados",
     "subtitle": "Escolha a cor de destaque da interface.",
-    "comingSoon": "Tipografia e mais opções em breve."
+    "custom": {
+      "pick": "Escolhe qualquer cor",
+      "label": "Cor hex"
+    },
+    "typography": {
+      "title": "Tipografia",
+      "subtitle": "Escolhe como se lê a interface. Apenas tipos de letra que já tens no sistema, por isso nada é transferido.",
+      "family": "Tipo de letra",
+      "size": "Tamanho",
+      "sizeHint": "Redimensiona toda a interface, não só o texto.",
+      "sample": "Texto de exemplo",
+      "fonts": {
+        "default": "VoCript",
+        "system": "Sistema",
+        "readable": "Legível",
+        "serif": "Serifada",
+        "mono": "Monoespaçada"
+      },
+      "sizes": {
+        "compact": "Compacto",
+        "normal": "Normal",
+        "large": "Grande",
+        "larger": "Maior"
+      },
+      "systemFont": "Qualquer tipo de letra deste computador",
+      "chooseSystemFont": "Escolhe um tipo de letra…",
+      "searchFonts": "Procurar tipos de letra",
+      "noFonts": "Nenhum tipo de letra corresponde."
+    }
+  },
+  "activity": {
+    "title": "A tua atividade de ditado",
+    "subtitle": "Quanto ditas, dia a dia. Contado apenas neste computador: nenhum texto é guardado e nada é enviado para a internet.",
+    "cards": {
+      "words": "Palavras ditadas",
+      "timeSaved": "Tempo poupado",
+      "timeSavedHint": "face a escrever a {{wpm}} ppm",
+      "speed": "A tua velocidade",
+      "speedHint": "palavras por minuto",
+      "streak": "Sequência atual",
+      "streakHint": "Melhor: {{count}}"
+    },
+    "dayCount_one": "{{count}} dia",
+    "dayCount_other": "{{count}} dias",
+    "hoursShort": "{{count}} h",
+    "minutesShort": "{{count}} min",
+    "wordsOnDay_one": "{{count}} palavra",
+    "wordsOnDay_other": "{{count}} palavras",
+    "weekdayInitials": "S,T,Q,Q,S,S,D",
+    "less": "Menos",
+    "more": "Mais",
+    "empty": "Ainda não há nada. Dita alguma coisa e isto vai encher-se.",
+    "emptyDisabled": "A contagem está desligada, por isso nada está a ser registado.",
+    "privacy": {
+      "title": "Privacidade",
+      "label": "Contar os meus ditados",
+      "description": "Mantém uma contagem diária de palavras neste computador. Se desligares, deixa de contar; os números que já tens ficam até os apagares."
+    },
+    "reset": {
+      "label": "Apagar estatísticas",
+      "description": "Elimina todos os contadores. Não pode ser desfeito.",
+      "action": "Apagar",
+      "done": "Estatísticas apagadas"
+    }
+  },
+  "contextMenu": {
+    "cut": "Cortar",
+    "copy": "Copiar",
+    "paste": "Colar",
+    "selectAll": "Selecionar tudo"
+  },
+  "translation": {
+    "title": "Tradução",
+    "subtitle": "Dita no teu idioma e recebe o texto em inglês.",
+    "english": "Inglês",
+    "autoLanguage": "Idioma detetado",
+    "unsupported": "O {{model}} não sabe traduzir, por isso isto fica desligado.",
+    "capableModels": "Modelos que conseguem: {{models}}.",
+    "toggle": {
+      "label": "Traduzir para inglês o que dito",
+      "description": "O texto é escrito diretamente em inglês em vez do idioma em que falaste."
+    },
+    "limits": {
+      "title": "O que pode e o que não pode",
+      "englishOnly": "A tradução vai apenas para inglês. Os modelos de voz recebem um interruptor de «traduzir», não um idioma de destino, por isso hoje não há outras combinações.",
+      "future": "Traduzir para qualquer idioma precisa de um modelo de linguagem. Virá com a limpeza por IA local, por isso continuará a funcionar sem ligação."
+    }
   }
 }

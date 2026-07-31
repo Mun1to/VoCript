@@ -21,7 +21,9 @@
     "debug": "デバッグ",
     "about": "概要",
     "fileTranscription": "文字起こし",
-    "feedback": "フィードバック"
+    "feedback": "フィードバック",
+    "activity": "アクティビティ",
+    "translation": "翻訳"
   },
   "onboarding": {
     "subtitle": "開始するには、文字起こしモデルを選択してください",
@@ -394,6 +396,31 @@
         "title": "システム音声のアプリ",
         "description": "システム音声のショートカットで何を取り込むかを選びます：コンピューター全体か、特定のアプリ 1 つ（例：Spotify）だけか。アプリは音声を再生中でないとリストに表示されません。更新ボタンを使ってください。",
         "wholeSystem": "システム全体"
+      },
+      "muteInCalls": {
+        "label": "音声入力中は通話でミュートする",
+        "description": "音声入力のあいだF13を押し続けるので、Discordで声が聞こえません。DiscordのキーバインドでF13を「押している間ミュート」に割り当ててください。",
+        "setupHint": "Discordで: 設定 → キーバインド →「押している間ミュート」を追加し、入力欄をクリックしてこのボタンを押します。",
+        "sendKey": "F13を送信",
+        "sent": "F13を送信しました"
+      },
+      "wakeWord": {
+        "label": "「VoCript」と言って開始",
+        "description": "「VoCript」という言葉を聞き取ると音声入力を始めます。1回だけ言う録音を、3回に分けて覚えさせてください。",
+        "hint": "オンのあいだマイクは開いたままです。処理はすべてこのパソコンで行い、話している短い部分だけがモデルに渡りますが、ショートカットよりCPUを使います。ParakeetやMoonshineのような速いモデルが向いています。",
+        "teach": "覚えさせる",
+        "listening": "今、1回だけ言ってください",
+        "teachPrompt": "押して「VoCript」を1回だけ言ってください。これを3回くり返します。続けて3回言うのではありません。",
+        "taught": "{{count}}件の録音から学習済み。うまく反応しないときは追加してください。",
+        "captured": "覚えました",
+        "forgotten": "録音を削除しました",
+        "needMore": "あと1回で安定します",
+        "errors": {
+          "noSpeech": "聞こえませんでした。もう一度押して、少し大きな声で言ってください。",
+          "tooShort": "短すぎました。急がずに、言葉全体を言ってください。",
+          "deadDevice": "マイクから何も返ってきませんでした。ミュートになっていないか、他のアプリが使っていないか確認してください。"
+        },
+        "beta": "ベータ"
       }
     },
     "sound": {
@@ -926,6 +953,92 @@
   "themes": {
     "title": "カスタムテーマ",
     "subtitle": "インターフェースのアクセントカラーを選びましょう。",
-    "comingSoon": "タイポグラフィなどは近日対応予定です。"
+    "custom": {
+      "pick": "好きな色を選ぶ",
+      "label": "16進カラー"
+    },
+    "typography": {
+      "title": "書体",
+      "subtitle": "画面の読みやすさを選べます。パソコンにすでにある書体だけを使うので、何もダウンロードしません。",
+      "family": "書体",
+      "size": "サイズ",
+      "sizeHint": "文字だけでなく画面全体の大きさが変わります。",
+      "sample": "サンプルテキスト",
+      "fonts": {
+        "default": "VoCript",
+        "system": "システム",
+        "readable": "読みやすい",
+        "serif": "明朝",
+        "mono": "等幅"
+      },
+      "sizes": {
+        "compact": "小さめ",
+        "normal": "標準",
+        "large": "大きめ",
+        "larger": "最大"
+      },
+      "systemFont": "このパソコンにあるすべての書体",
+      "chooseSystemFont": "書体を選ぶ…",
+      "searchFonts": "書体を検索",
+      "noFonts": "一致する書体はありません。"
+    }
+  },
+  "activity": {
+    "title": "音声入力のアクティビティ",
+    "subtitle": "日ごとの音声入力量です。このパソコン内だけで集計し、本文は保存せず、どこにも送信しません。",
+    "cards": {
+      "words": "入力した単語数",
+      "timeSaved": "短縮できた時間",
+      "timeSavedHint": "毎分{{wpm}}語のタイピングと比較",
+      "speed": "あなたの速度",
+      "speedHint": "1分あたりの単語数",
+      "streak": "現在の連続日数",
+      "streakHint": "最高: {{count}}"
+    },
+    "dayCount_one": "{{count}}日",
+    "dayCount_other": "{{count}}日",
+    "hoursShort": "{{count}}時間",
+    "minutesShort": "{{count}}分",
+    "wordsOnDay_one": "{{count}}語",
+    "wordsOnDay_other": "{{count}}語",
+    "weekdayInitials": "月,火,水,木,金,土,日",
+    "less": "少ない",
+    "more": "多い",
+    "empty": "まだ何もありません。音声入力するとここに表示されます。",
+    "emptyDisabled": "集計がオフのため、何も記録されていません。",
+    "privacy": {
+      "title": "プライバシー",
+      "label": "音声入力を集計する",
+      "description": "このパソコンに日ごとの単語数を記録します。オフにすると集計を停止します。すでにある数値は削除するまで残ります。"
+    },
+    "reset": {
+      "label": "統計を削除",
+      "description": "すべての集計を削除します。元に戻せません。",
+      "action": "削除",
+      "done": "統計を削除しました"
+    }
+  },
+  "contextMenu": {
+    "cut": "切り取り",
+    "copy": "コピー",
+    "paste": "貼り付け",
+    "selectAll": "すべて選択"
+  },
+  "translation": {
+    "title": "翻訳",
+    "subtitle": "母語で話して、英語の文章を受け取れます。",
+    "english": "英語",
+    "autoLanguage": "自動判定した言語",
+    "unsupported": "{{model}}は翻訳できないため、これはオフのままです。",
+    "capableModels": "対応しているモデル: {{models}}。",
+    "toggle": {
+      "label": "音声入力した内容を英語に翻訳する",
+      "description": "話した言語ではなく、最初から英語で書き出します。"
+    },
+    "limits": {
+      "title": "できること・できないこと",
+      "englishOnly": "翻訳は英語への一方向だけです。音声モデルは「翻訳する」というスイッチを受け取るだけで、翻訳先の言語は指定できません。",
+      "future": "任意の言語への翻訳には言語モデルが必要です。ローカルAIによる文章整形と一緒に対応予定なので、オフラインでも使えます。"
+    }
   }
 }

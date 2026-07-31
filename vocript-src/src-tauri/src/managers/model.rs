@@ -103,6 +103,26 @@ impl<'a> Drop for DownloadCleanup<'a> {
     }
 }
 
+/// Chooses which downloaded model to fall back to when no selection is stored.
+///
+/// The obvious `values().find(...)` is wrong here: `available_models` is a
+/// `HashMap`, so its iteration order is arbitrary and the app could come up with
+/// a different model on every launch. Users read that as "it reset itself".
+/// Preference goes to the catalog's recommended model, then to accuracy, and
+/// finally to the id so the outcome is always reproducible.
+fn pick_auto_model<'a>(downloaded: &[&'a ModelInfo]) -> Option<&'a ModelInfo> {
+    downloaded.iter().copied().max_by(|a, b| {
+        a.is_recommended
+            .cmp(&b.is_recommended)
+            .then(
+                a.accuracy_score
+                    .partial_cmp(&b.accuracy_score)
+                    .unwrap_or(std::cmp::Ordering::Equal),
+            )
+            .then_with(|| b.id.cmp(&a.id))
+    })
+}
+
 pub struct ModelManager {
     app_handle: AppHandle,
     models_dir: PathBuf,
@@ -811,11 +831,14 @@ impl ModelManager {
             }
         }
 
-        // If no model is selected, pick the first downloaded one
+        // If no model is selected, pick the best downloaded one
         if settings.selected_model.is_empty() {
-            // Find the first available (downloaded) model
             let models = self.available_models.lock().unwrap();
-            if let Some(available_model) = models.values().find(|model| model.is_downloaded) {
+            let downloaded: Vec<&ModelInfo> = models
+                .values()
+                .filter(|model| model.is_downloaded)
+                .collect();
+            if let Some(available_model) = pick_auto_model(&downloaded) {
                 info!(
                     "Auto-selecting model: {} ({})",
                     available_model.id, available_model.name
@@ -1798,6 +1821,64 @@ mod tests {
     use super::*;
     use std::io::Write;
     use tempfile::TempDir;
+
+    fn test_model(id: &str, accuracy: f32, is_recommended: bool) -> ModelInfo {
+        ModelInfo {
+            id: id.to_string(),
+            name: id.to_string(),
+            description: String::new(),
+            filename: format!("{}.bin", id),
+            url: None,
+            sha256: None,
+            size_mb: 1,
+            is_downloaded: true,
+            is_downloading: false,
+            partial_size: 0,
+            is_directory: false,
+            engine_type: EngineType::Whisper,
+            accuracy_score: accuracy,
+            speed_score: 0.5,
+            supports_translation: false,
+            is_recommended,
+            supported_languages: vec![],
+            supports_language_selection: true,
+            is_custom: false,
+        }
+    }
+
+    #[test]
+    fn auto_selection_prefers_the_recommended_model() {
+        let accurate = test_model("large", 0.9, false);
+        let recommended = test_model("parakeet", 0.8, true);
+        let picked = pick_auto_model(&[&accurate, &recommended]).unwrap();
+        assert_eq!(picked.id, "parakeet");
+    }
+
+    #[test]
+    fn auto_selection_falls_back_to_accuracy() {
+        let small = test_model("small", 0.6, false);
+        let large = test_model("large", 0.9, false);
+        assert_eq!(pick_auto_model(&[&small, &large]).unwrap().id, "large");
+    }
+
+    #[test]
+    fn auto_selection_does_not_depend_on_order() {
+        // The real source is a HashMap, so the same set in any order has to give
+        // the same answer — otherwise the app changes model between launches.
+        let a = test_model("alpha", 0.7, false);
+        let b = test_model("beta", 0.7, false);
+        let c = test_model("gamma", 0.7, false);
+        let forward = pick_auto_model(&[&a, &b, &c]).unwrap().id.clone();
+        let backward = pick_auto_model(&[&c, &b, &a]).unwrap().id.clone();
+        let shuffled = pick_auto_model(&[&b, &c, &a]).unwrap().id.clone();
+        assert_eq!(forward, backward);
+        assert_eq!(forward, shuffled);
+    }
+
+    #[test]
+    fn auto_selection_handles_nothing_downloaded() {
+        assert!(pick_auto_model(&[]).is_none());
+    }
 
     #[test]
     fn test_discover_custom_whisper_models() {

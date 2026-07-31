@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Briefcase, ChevronDown } from "lucide-react";
 import { useSettings } from "../hooks/useSettings";
 import { useResolvedTheme } from "../hooks/useResolvedTheme";
+import { HoverTooltip } from "./ui/HoverTooltip";
 
 /**
  * Professional-profile selector shown in the header. Picking a profile writes
@@ -51,33 +52,30 @@ export const ProfileSelect: React.FC = () => {
   );
 
   return (
-    <div
-      className="relative"
-      ref={ref}
-      data-tour="header-profile"
-      title={t("header.profile.label")}
-    >
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        className={`flex items-center gap-1.5 py-1 px-1.5 rounded-lg text-xs font-bold transition-colors ${
-          isLight
-            ? "text-logo-primary hover:bg-slate-100"
-            : "text-logo-primary hover:bg-white/[0.06]"
-        }`}
-      >
-        <Briefcase
-          className={`w-3.5 h-3.5 shrink-0 ${
-            isLight ? "text-slate-500" : "text-slate-400"
+    <div className="relative" ref={ref} data-tour="header-profile">
+      <HoverTooltip label={t("header.profile.label")}>
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          className={`flex items-center gap-1.5 py-1 px-1.5 rounded-lg text-xs font-bold transition-colors ${
+            isLight
+              ? "text-logo-primary hover:bg-slate-100"
+              : "text-logo-primary hover:bg-white/[0.06]"
           }`}
-        />
-        <span>{currentLabel}</span>
-        <ChevronDown
-          className={`w-3.5 h-3.5 shrink-0 transition-transform ${
-            open ? "rotate-180" : ""
-          }`}
-        />
-      </button>
+        >
+          <Briefcase
+            className={`w-3.5 h-3.5 shrink-0 ${
+              isLight ? "text-slate-500" : "text-slate-400"
+            }`}
+          />
+          <span>{currentLabel}</span>
+          <ChevronDown
+            className={`w-3.5 h-3.5 shrink-0 transition-transform ${
+              open ? "rotate-180" : ""
+            }`}
+          />
+        </button>
+      </HoverTooltip>
       {open && (
         <div
           className={`absolute top-full start-0 mt-1 min-w-full rounded-lg border shadow-lg z-50 py-1 ${

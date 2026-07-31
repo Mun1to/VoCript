@@ -21,7 +21,9 @@
     "debug": "Ladění",
     "about": "O aplikaci",
     "fileTranscription": "Přepsat",
-    "feedback": "Zpětná vazba"
+    "feedback": "Zpětná vazba",
+    "activity": "Aktivita",
+    "translation": "Překlad"
   },
   "onboarding": {
     "subtitle": "Pro začátek vyberte model pro přepis",
@@ -394,6 +396,31 @@
         "title": "Aplikace zvuku systému",
         "description": "Vyberte, co zkratka pro zvuk systému zachytí: celý počítač, nebo jen jednu konkrétní aplikaci (např. Spotify). Aplikace musí přehrávat zvuk, aby se objevila v seznamu; použijte tlačítko obnovení.",
         "wholeSystem": "Celý systém"
+      },
+      "muteInCalls": {
+        "label": "Ztlumit mě v hovorech, když diktuji",
+        "description": "Drží stisknuté F13, když diktuješ, aby tě na Discordu nebylo slyšet. Přiřaď F13 k „Podržením ztlumit“ v klávesových zkratkách Discordu.",
+        "setupHint": "V Discordu: Nastavení → Klávesové zkratky → přidej „Podržením ztlumit“, klikni do pole a stiskni toto tlačítko.",
+        "sendKey": "Odeslat F13",
+        "sent": "F13 odeslána"
+      },
+      "wakeWord": {
+        "label": "Začít slovem „VoCript“",
+        "description": "Poslouchá slovo „VoCript“ a jakmile ho uslyší, začne diktovat. Nauč ho tak, že slovo řekneš jednou, ve třech samostatných nahrávkách.",
+        "hint": "Dokud je to zapnuté, mikrofon zůstává otevřený. Vše se zpracovává v tvém počítači a k modelu se dostanou jen krátké úseky řeči, ale spotřebuje to víc CPU než zkratka: hodí se sem rychlý model jako Parakeet nebo Moonshine.",
+        "teach": "Nauč ji",
+        "listening": "Řekni to jednou, teď",
+        "teachPrompt": "Stiskni a řekni „VoCript“ JEDNOU. Zopakuj to třikrát, neříkej to třikrát za sebou.",
+        "taught": "Naučeno z {{count}} nahrávky/nahrávek. Přidej další, pokud tě nechytá pokaždé.",
+        "captured": "Naučeno",
+        "forgotten": "Nahrávky smazány",
+        "needMore": "Ještě jedno, ať je to spolehlivé",
+        "errors": {
+          "noSpeech": "Neslyšel jsem tě. Stiskni znovu a řekni to trochu hlasitěji.",
+          "tooShort": "Bylo to moc krátké. Řekni celé slovo, bez spěchu.",
+          "deadDevice": "Mikrofon nic nevrátil. Zkontroluj, že není ztlumený nebo používaný jinou aplikací."
+        },
+        "beta": "Beta"
       }
     },
     "sound": {
@@ -926,6 +953,92 @@
   "themes": {
     "title": "Vlastní motivy",
     "subtitle": "Vyberte zvýrazňovací barvu rozhraní.",
-    "comingSoon": "Typografie a další možnosti brzy."
+    "custom": {
+      "pick": "Vyber libovolnou barvu",
+      "label": "Barva hex"
+    },
+    "typography": {
+      "title": "Typografie",
+      "subtitle": "Vyber, jak se rozhraní čte. Jen písma, která už v systému máš, takže se nic nestahuje.",
+      "family": "Písmo",
+      "size": "Velikost",
+      "sizeHint": "Zvětší celé rozhraní, nejen text.",
+      "sample": "Ukázkový text",
+      "fonts": {
+        "default": "VoCript",
+        "system": "Systémové",
+        "readable": "Čitelné",
+        "serif": "Patkové",
+        "mono": "Neproporcionální"
+      },
+      "sizes": {
+        "compact": "Kompaktní",
+        "normal": "Normální",
+        "large": "Velké",
+        "larger": "Větší"
+      },
+      "systemFont": "Jakékoli písmo v tomto počítači",
+      "chooseSystemFont": "Vyber písmo…",
+      "searchFonts": "Hledat písma",
+      "noFonts": "Žádné písmo neodpovídá."
+    }
+  },
+  "activity": {
+    "title": "Tvoje aktivita diktování",
+    "subtitle": "Kolik diktuješ, den po dni. Počítá se jen v tomto počítači: neukládá se žádný text a nic se nikam neodesílá.",
+    "cards": {
+      "words": "Nadiktovaná slova",
+      "timeSaved": "Ušetřený čas",
+      "timeSavedHint": "oproti psaní rychlostí {{wpm}} sl./min",
+      "speed": "Tvoje rychlost",
+      "speedHint": "slov za minutu",
+      "streak": "Aktuální série",
+      "streakHint": "Rekord: {{count}}"
+    },
+    "dayCount_one": "{{count}} den",
+    "dayCount_other": "{{count}} dní",
+    "hoursShort": "{{count}} h",
+    "minutesShort": "{{count}} min",
+    "wordsOnDay_one": "{{count}} slovo",
+    "wordsOnDay_other": "{{count}} slov",
+    "weekdayInitials": "P,Ú,S,Č,P,S,N",
+    "less": "Méně",
+    "more": "Více",
+    "empty": "Zatím tu nic není. Něco nadiktuj a začne se to plnit.",
+    "emptyDisabled": "Počítání je vypnuté, takže se nic nezaznamenává.",
+    "privacy": {
+      "title": "Soukromí",
+      "label": "Počítat moje diktování",
+      "description": "Vede denní počet slov v tomto počítači. Vypnutím se počítání zastaví; dosavadní čísla zůstanou, dokud je nesmažeš."
+    },
+    "reset": {
+      "label": "Smazat statistiky",
+      "description": "Smaže všechny počty. Nelze vzít zpět.",
+      "action": "Smazat",
+      "done": "Statistiky smazány"
+    }
+  },
+  "contextMenu": {
+    "cut": "Vyjmout",
+    "copy": "Kopírovat",
+    "paste": "Vložit",
+    "selectAll": "Vybrat vše"
+  },
+  "translation": {
+    "title": "Překlad",
+    "subtitle": "Diktuj ve svém jazyce a dostaneš text anglicky.",
+    "english": "Angličtina",
+    "autoLanguage": "Rozpoznaný jazyk",
+    "unsupported": "{{model}} neumí překládat, takže tohle zůstane vypnuté.",
+    "capableModels": "Modely, které to umí: {{models}}.",
+    "toggle": {
+      "label": "Překládat diktované do angličtiny",
+      "description": "Text se rovnou zapíše anglicky místo v jazyce, kterým jsi mluvil."
+    },
+    "limits": {
+      "title": "Co to umí a co ne",
+      "englishOnly": "Překládá se pouze do angličtiny. Hlasové modely dostávají přepínač „přeložit“, ne cílový jazyk, takže jiné dvojice dnes nejsou možné.",
+      "future": "Překlad do libovolného jazyka potřebuje jazykový model. Přijde s místním čištěním pomocí AI, takže bude fungovat i bez internetu."
+    }
   }
 }

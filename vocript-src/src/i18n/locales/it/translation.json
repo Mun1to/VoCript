@@ -21,7 +21,9 @@
     "debug": "Debug",
     "about": "Informazioni",
     "fileTranscription": "Trascrivi",
-    "feedback": "Feedback"
+    "feedback": "Feedback",
+    "activity": "Attività",
+    "translation": "Traduzione"
   },
   "onboarding": {
     "subtitle": "Per cominciare, scegli un modello di riconoscimento vocale",
@@ -394,6 +396,31 @@
         "title": "App dell'audio di sistema",
         "description": "Scegli cosa cattura la scorciatoia dell'audio di sistema: tutto il computer o solo un'app specifica (es. Spotify). L'app deve riprodurre audio per comparire nell'elenco; usa il pulsante di aggiornamento.",
         "wholeSystem": "Tutto il sistema"
+      },
+      "muteInCalls": {
+        "label": "Silenziami nelle chiamate mentre detto",
+        "description": "Tiene premuto F13 mentre detti così non ti sentono su Discord. Assegna F13 a «Premi per silenziare» nelle scorciatoie di Discord perché funzioni.",
+        "setupHint": "In Discord: Impostazioni → Scorciatoie → aggiungi «Premi per silenziare», clicca nel campo e premi questo pulsante.",
+        "sendKey": "Invia F13",
+        "sent": "F13 inviata"
+      },
+      "wakeWord": {
+        "label": "Iniziare dicendo «VoCript»",
+        "description": "Resta in ascolto della parola «VoCript» e inizia a dettare quando la sente. Insegnagliela dicendo la parola una sola volta, in tre registrazioni distinte.",
+        "hint": "Finché è attivo, il microfono resta aperto. Tutto viene elaborato sul tuo computer e al modello arrivano solo i brevi tratti parlati, ma consuma più CPU della scorciatoia: qui è meglio un modello veloce come Parakeet o Moonshine.",
+        "teach": "Insegnagliela",
+        "listening": "Dilla una volta, ora",
+        "teachPrompt": "Premi e di' «VoCript» UNA volta. Ripeti il procedimento tre volte, non dirla tre volte di fila.",
+        "taught": "Imparata da {{count}} registrazione/i. Aggiungine altre se non ti prende sempre.",
+        "captured": "Imparata",
+        "forgotten": "Registrazioni cancellate",
+        "needMore": "Ancora una, per essere affidabile",
+        "errors": {
+          "noSpeech": "Non ti ho sentito. Premi di nuovo e parla un po' più forte.",
+          "tooShort": "Troppo breve. Di' la parola intera, senza fretta.",
+          "deadDevice": "Il microfono non ha restituito nulla. Controlla che non sia silenziato o in uso da un altra app."
+        },
+        "beta": "Beta"
       }
     },
     "sound": {
@@ -926,6 +953,92 @@
   "themes": {
     "title": "Temi personalizzati",
     "subtitle": "Scegli il colore d'accento dell'interfaccia.",
-    "comingSoon": "Tipografia e altre opzioni in arrivo."
+    "custom": {
+      "pick": "Scegli un colore qualsiasi",
+      "label": "Colore hex"
+    },
+    "typography": {
+      "title": "Tipografia",
+      "subtitle": "Scegli come si legge l'interfaccia. Solo caratteri già presenti nel sistema, così non si scarica nulla.",
+      "family": "Carattere",
+      "size": "Dimensione",
+      "sizeHint": "Ridimensiona tutta l'interfaccia, non solo il testo.",
+      "sample": "Testo di esempio",
+      "fonts": {
+        "default": "VoCript",
+        "system": "Sistema",
+        "readable": "Leggibile",
+        "serif": "Serif",
+        "mono": "Monospazio"
+      },
+      "sizes": {
+        "compact": "Compatto",
+        "normal": "Normale",
+        "large": "Grande",
+        "larger": "Più grande"
+      },
+      "systemFont": "Qualsiasi carattere di questo computer",
+      "chooseSystemFont": "Scegli un carattere…",
+      "searchFonts": "Cerca caratteri",
+      "noFonts": "Nessun carattere corrisponde."
+    }
+  },
+  "activity": {
+    "title": "La tua attività di dettatura",
+    "subtitle": "Quanto detti, giorno per giorno. Conteggiato solo su questo computer: nessun testo viene salvato e niente viene caricato online.",
+    "cards": {
+      "words": "Parole dettate",
+      "timeSaved": "Tempo risparmiato",
+      "timeSavedHint": "rispetto a digitare a {{wpm}} ppm",
+      "speed": "La tua velocità",
+      "speedHint": "parole al minuto",
+      "streak": "Serie attuale",
+      "streakHint": "Record: {{count}}"
+    },
+    "dayCount_one": "{{count}} giorno",
+    "dayCount_other": "{{count}} giorni",
+    "hoursShort": "{{count}} h",
+    "minutesShort": "{{count}} min",
+    "wordsOnDay_one": "{{count}} parola",
+    "wordsOnDay_other": "{{count}} parole",
+    "weekdayInitials": "L,M,M,G,V,S,D",
+    "less": "Meno",
+    "more": "Più",
+    "empty": "Ancora niente. Detta qualcosa e questo spazio si riempirà.",
+    "emptyDisabled": "Il conteggio è disattivato, quindi non viene registrato nulla.",
+    "privacy": {
+      "title": "Privacy",
+      "label": "Conta le mie dettature",
+      "description": "Tiene un conteggio giornaliero delle parole su questo computer. Disattivandolo il conteggio si ferma; i numeri già presenti restano finché non li cancelli."
+    },
+    "reset": {
+      "label": "Cancella statistiche",
+      "description": "Elimina tutti i contatori. Non è reversibile.",
+      "action": "Cancella",
+      "done": "Statistiche cancellate"
+    }
+  },
+  "contextMenu": {
+    "cut": "Taglia",
+    "copy": "Copia",
+    "paste": "Incolla",
+    "selectAll": "Seleziona tutto"
+  },
+  "translation": {
+    "title": "Traduzione",
+    "subtitle": "Detta nella tua lingua e ottieni il testo in inglese.",
+    "english": "Inglese",
+    "autoLanguage": "Lingua rilevata",
+    "unsupported": "{{model}} non sa tradurre, quindi questo resta spento.",
+    "capableModels": "Modelli che ci riescono: {{models}}.",
+    "toggle": {
+      "label": "Tradurre in inglese ciò che detto",
+      "description": "Il testo viene scritto direttamente in inglese invece che nella lingua parlata."
+    },
+    "limits": {
+      "title": "Cosa può e cosa non può fare",
+      "englishOnly": "La traduzione va solo verso l'inglese. I modelli vocali ricevono un interruttore «traduci», non una lingua di destinazione, quindi oggi non ci sono altre combinazioni.",
+      "future": "Tradurre in qualsiasi lingua richiede un modello linguistico. Arriverà con la pulizia con IA locale, quindi funzionerà anche senza connessione."
+    }
   }
 }

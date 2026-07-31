@@ -8,7 +8,7 @@ interface ToggleSwitchProps {
   onChange: (checked: boolean) => void;
   disabled?: boolean;
   isUpdating?: boolean;
-  label: string;
+  label: React.ReactNode;
   description: string;
   descriptionMode?: "inline" | "tooltip";
   grouped?: boolean;
@@ -39,6 +39,12 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
       tooltipPosition={tooltipPosition}
     >
       <div className="flex items-center gap-3 select-none">
+        {/* In the row, to the left of the label. It used to be an overlay
+            covering the whole setting, which printed the spinner on top of the
+            ON/OFF text. */}
+        {isUpdating && (
+          <div className="w-3.5 h-3.5 shrink-0 border-2 border-logo-primary border-t-transparent rounded-full animate-spin" />
+        )}
         <span
           className={`text-[11px] font-bold uppercase tracking-wider transition-colors ${
             checked
@@ -71,11 +77,6 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
           ></div>
         </label>
       </div>
-      {isUpdating && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg">
-          <div className="w-4 h-4 border-2 border-logo-primary border-t-transparent rounded-full animate-spin"></div>
-        </div>
-      )}
     </SettingContainer>
   );
 };

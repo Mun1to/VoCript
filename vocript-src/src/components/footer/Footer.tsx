@@ -8,6 +8,7 @@ import ModelSelector from "../model-selector";
 import UpdateChecker from "../update-checker";
 import { useTourStore } from "../../stores/tourStore";
 import { useResolvedTheme } from "../../hooks/useResolvedTheme";
+import { HoverTooltip } from "../ui/HoverTooltip";
 
 const Footer: React.FC = () => {
   const { t } = useTranslation();
@@ -43,19 +44,20 @@ const Footer: React.FC = () => {
 
         {/* Update Status & Guide Links */}
         <div className="flex items-center gap-3 font-semibold">
-          <button
-            type="button"
-            onClick={startTour}
-            title={t("onboarding.tour.replay")}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border transition-colors ${
-              isLight
-                ? "bg-white hover:bg-slate-200/60 border-slate-300 text-slate-800"
-                : "bg-white/[0.05] hover:text-white border-white/5 text-slate-300"
-            }`}
-          >
-            <HelpCircle className="w-3.5 h-3.5 text-logo-primary" />
-            <span>{t("onboarding.tour.guide")}</span>
-          </button>
+          <HoverTooltip label={t("onboarding.tour.replay")} position="top">
+            <button
+              type="button"
+              onClick={startTour}
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border transition-colors ${
+                isLight
+                  ? "bg-white hover:bg-slate-200/60 border-slate-300 text-slate-800"
+                  : "bg-white/[0.05] hover:text-white border-white/5 text-slate-300"
+              }`}
+            >
+              <HelpCircle className="w-3.5 h-3.5 text-logo-primary" />
+              <span>{t("onboarding.tour.guide")}</span>
+            </button>
+          </HoverTooltip>
           <span className="opacity-40">•</span>
           <UpdateChecker />
           <span className="opacity-40">•</span>

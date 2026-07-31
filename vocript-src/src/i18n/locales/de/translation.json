@@ -21,7 +21,9 @@
     "debug": "Debugging",
     "about": "Info",
     "fileTranscription": "Transkribieren",
-    "feedback": "Feedback"
+    "feedback": "Feedback",
+    "activity": "Aktivität",
+    "translation": "Übersetzung"
   },
   "onboarding": {
     "subtitle": "Wähle ein Transkriptionsmodell, um loszulegen",
@@ -394,6 +396,31 @@
         "title": "Systemton-App",
         "description": "Wähle, was der Systemton-Shortcut erfasst: den gesamten Computer oder nur eine bestimmte App (z. B. Spotify). Die App muss Audio abspielen, um in der Liste zu erscheinen; nutze die Aktualisieren-Schaltfläche.",
         "wholeSystem": "Gesamtes System"
+      },
+      "muteInCalls": {
+        "label": "Mich in Anrufen stummschalten, während ich diktiere",
+        "description": "Hält F13 gedrückt, während du diktierst, damit man dich in Discord nicht hört. Belege F13 in den Discord-Tastenbelegungen mit „Push-to-Mute“, damit es wirkt.",
+        "setupHint": "In Discord: Einstellungen → Tastenbelegungen → „Push-to-Mute“ hinzufügen, ins Feld klicken und diesen Knopf drücken.",
+        "sendKey": "F13 senden",
+        "sent": "F13 gesendet"
+      },
+      "wakeWord": {
+        "label": "Mit „VoCript“ starten",
+        "description": "Hört auf das Wort „VoCript“ und beginnt dann zu diktieren. Bring es ihm bei, indem du das Wort einmal sagst, in drei getrennten Aufnahmen.",
+        "hint": "Solange das an ist, bleibt das Mikrofon offen. Alles wird auf deinem Computer verarbeitet und nur kurze Sprachstellen erreichen das Modell, aber es braucht mehr CPU als das Tastenkürzel: hier passt ein schnelles Modell wie Parakeet oder Moonshine besser.",
+        "teach": "Beibringen",
+        "listening": "Jetzt einmal sagen",
+        "teachPrompt": "Drücken und „VoCript“ EINMAL sagen. Das Ganze dreimal wiederholen, nicht dreimal hintereinander sagen.",
+        "taught": "Aus {{count}} Aufnahme(n) gelernt. Nimm mehr auf, wenn es dich nicht immer versteht.",
+        "captured": "Gelernt",
+        "forgotten": "Aufnahmen gelöscht",
+        "needMore": "Noch eine, damit es zuverlässig wird",
+        "errors": {
+          "noSpeech": "Ich habe dich nicht gehört. Nochmal drücken und etwas lauter sprechen.",
+          "tooShort": "Das war zu kurz. Sag das ganze Wort, ohne Eile.",
+          "deadDevice": "Das Mikrofon hat nichts geliefert. Prüfe, ob es stummgeschaltet ist oder von einer anderen App benutzt wird."
+        },
+        "beta": "Beta"
       }
     },
     "sound": {
@@ -926,6 +953,92 @@
   "themes": {
     "title": "Eigene Themes",
     "subtitle": "Wähle die Akzentfarbe der Oberfläche.",
-    "comingSoon": "Typografie und mehr folgen bald."
+    "custom": {
+      "pick": "Beliebige Farbe wählen",
+      "label": "Hex-Farbe"
+    },
+    "typography": {
+      "title": "Typografie",
+      "subtitle": "Bestimme, wie sich die Oberfläche liest. Nur Schriften, die dein System schon hat, es wird nichts heruntergeladen.",
+      "family": "Schrift",
+      "size": "Größe",
+      "sizeHint": "Skaliert die gesamte Oberfläche, nicht nur den Text.",
+      "sample": "Beispieltext",
+      "fonts": {
+        "default": "VoCript",
+        "system": "System",
+        "readable": "Gut lesbar",
+        "serif": "Serif",
+        "mono": "Monospace"
+      },
+      "sizes": {
+        "compact": "Kompakt",
+        "normal": "Normal",
+        "large": "Groß",
+        "larger": "Größer"
+      },
+      "systemFont": "Jede Schrift auf diesem Computer",
+      "chooseSystemFont": "Schrift wählen…",
+      "searchFonts": "Schriften suchen",
+      "noFonts": "Keine Schrift passt dazu."
+    }
+  },
+  "activity": {
+    "title": "Deine Diktier-Aktivität",
+    "subtitle": "Wie viel du diktierst, Tag für Tag. Wird nur auf diesem Computer gezählt: Es wird kein Text gespeichert und nichts hochgeladen.",
+    "cards": {
+      "words": "Diktierte Wörter",
+      "timeSaved": "Gesparte Zeit",
+      "timeSavedHint": "gegenüber Tippen mit {{wpm}} WPM",
+      "speed": "Dein Tempo",
+      "speedHint": "Wörter pro Minute",
+      "streak": "Aktuelle Serie",
+      "streakHint": "Bestwert: {{count}}"
+    },
+    "dayCount_one": "{{count}} Tag",
+    "dayCount_other": "{{count}} Tage",
+    "hoursShort": "{{count}} Std.",
+    "minutesShort": "{{count}} Min.",
+    "wordsOnDay_one": "{{count}} Wort",
+    "wordsOnDay_other": "{{count}} Wörter",
+    "weekdayInitials": "M,D,M,D,F,S,S",
+    "less": "Weniger",
+    "more": "Mehr",
+    "empty": "Noch nichts da. Diktiere etwas, dann füllt sich das hier.",
+    "emptyDisabled": "Das Zählen ist aus, es wird nichts erfasst.",
+    "privacy": {
+      "title": "Privatsphäre",
+      "label": "Meine Diktate zählen",
+      "description": "Führt auf diesem Computer eine tägliche Wortzählung. Beim Ausschalten wird nicht mehr gezählt; vorhandene Zahlen bleiben, bis du sie löschst."
+    },
+    "reset": {
+      "label": "Statistiken löschen",
+      "description": "Löscht alle Zähler. Kann nicht rückgängig gemacht werden.",
+      "action": "Löschen",
+      "done": "Statistiken gelöscht"
+    }
+  },
+  "contextMenu": {
+    "cut": "Ausschneiden",
+    "copy": "Kopieren",
+    "paste": "Einfügen",
+    "selectAll": "Alles auswählen"
+  },
+  "translation": {
+    "title": "Übersetzung",
+    "subtitle": "Diktiere in deiner Sprache und erhalte den Text auf Englisch.",
+    "english": "Englisch",
+    "autoLanguage": "Erkannte Sprache",
+    "unsupported": "{{model}} kann nicht übersetzen, deshalb bleibt das aus.",
+    "capableModels": "Modelle, die es können: {{models}}.",
+    "toggle": {
+      "label": "Diktiertes ins Englische übersetzen",
+      "description": "Der Text wird direkt auf Englisch geschrieben statt in der gesprochenen Sprache."
+    },
+    "limits": {
+      "title": "Was das kann und was nicht",
+      "englishOnly": "Übersetzt wird nur ins Englische. Die Sprachmodelle bekommen einen „Übersetzen“-Schalter, keine Zielsprache, andere Paare sind heute also nicht möglich.",
+      "future": "Für Übersetzungen in beliebige Sprachen braucht es ein Sprachmodell. Das kommt mit der lokalen KI-Bereinigung und funktioniert damit weiterhin ohne Internet."
+    }
   }
 }

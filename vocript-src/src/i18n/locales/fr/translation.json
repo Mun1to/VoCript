@@ -21,7 +21,9 @@
     "debug": "Débogage",
     "about": "À propos",
     "fileTranscription": "Transcrire",
-    "feedback": "Retours"
+    "feedback": "Retours",
+    "activity": "Activité",
+    "translation": "Traduction"
   },
   "onboarding": {
     "subtitle": "Pour commencer, choisissez un modèle de transcription",
@@ -394,6 +396,31 @@
         "title": "Application de l'audio système",
         "description": "Choisissez ce que le raccourci d'audio système capture : tout l'ordinateur, ou une seule application précise (par ex. Spotify). L'application doit jouer de l'audio pour apparaître dans la liste ; utilisez le bouton d'actualisation.",
         "wholeSystem": "Tout le système"
+      },
+      "muteInCalls": {
+        "label": "Me couper le micro en appel pendant que je dicte",
+        "description": "Maintient F13 enfoncée pendant que vous dictez pour qu'on ne vous entende pas sur Discord. Associez F13 à « Appuyer pour couper le micro » dans les raccourcis Discord.",
+        "setupHint": "Dans Discord : Paramètres → Raccourcis → ajoutez « Appuyer pour couper le micro », cliquez dans le champ et appuyez sur ce bouton.",
+        "sendKey": "Envoyer F13",
+        "sent": "F13 envoyée"
+      },
+      "wakeWord": {
+        "label": "Démarrer en disant « VoCript »",
+        "description": "Écoute le mot « VoCript » et commence à dicter dès qu il l entend. Apprenez-lui en disant le mot une seule fois, sur trois enregistrements distincts.",
+        "hint": "Le microphone reste ouvert tant que c'est activé. Tout est traité sur votre ordinateur et seuls les courts passages parlés atteignent le modèle, mais cela consomme plus de CPU que le raccourci : un modèle rapide comme Parakeet ou Moonshine convient mieux ici.",
+        "teach": "Apprenez-lui",
+        "listening": "Dites-le une fois, maintenant",
+        "teachPrompt": "Appuyez et dites « VoCript » UNE fois. Recommencez trois fois, pas trois fois d affilée.",
+        "taught": "Apprise à partir de {{count}} enregistrement(s). Ajoutez-en si elle ne vous entend pas toujours.",
+        "captured": "Apprise",
+        "forgotten": "Enregistrements effacés",
+        "needMore": "Encore une, pour être fiable",
+        "errors": {
+          "noSpeech": "Je ne vous ai pas entendu. Réappuyez et parlez un peu plus fort.",
+          "tooShort": "Trop bref. Dites le mot en entier, sans vous presser.",
+          "deadDevice": "Le microphone n a rien renvoyé. Vérifiez qu il n est pas coupé ni utilisé par une autre application."
+        },
+        "beta": "Bêta"
       }
     },
     "sound": {
@@ -926,6 +953,92 @@
   "themes": {
     "title": "Thèmes personnalisés",
     "subtitle": "Choisissez la couleur d'accent de l'interface.",
-    "comingSoon": "Typographie et plus d'options bientôt."
+    "custom": {
+      "pick": "Choisir n'importe quelle couleur",
+      "label": "Couleur hex"
+    },
+    "typography": {
+      "title": "Typographie",
+      "subtitle": "Choisissez la lisibilité de l'interface. Uniquement des polices déjà présentes sur votre système, rien n'est téléchargé.",
+      "family": "Police",
+      "size": "Taille",
+      "sizeHint": "Met à l'échelle toute l'interface, pas seulement le texte.",
+      "sample": "Texte d'exemple",
+      "fonts": {
+        "default": "VoCript",
+        "system": "Système",
+        "readable": "Lisible",
+        "serif": "Serif",
+        "mono": "Monospace"
+      },
+      "sizes": {
+        "compact": "Compact",
+        "normal": "Normal",
+        "large": "Grand",
+        "larger": "Plus grand"
+      },
+      "systemFont": "N'importe quelle police de cet ordinateur",
+      "chooseSystemFont": "Choisir une police…",
+      "searchFonts": "Rechercher des polices",
+      "noFonts": "Aucune police ne correspond."
+    }
+  },
+  "activity": {
+    "title": "Votre activité de dictée",
+    "subtitle": "Combien vous dictez, jour après jour. Compté uniquement sur cet ordinateur : aucun texte n'est conservé et rien n'est envoyé en ligne.",
+    "cards": {
+      "words": "Mots dictés",
+      "timeSaved": "Temps gagné",
+      "timeSavedHint": "par rapport à la frappe à {{wpm}} mots/min",
+      "speed": "Votre vitesse",
+      "speedHint": "mots par minute",
+      "streak": "Série en cours",
+      "streakHint": "Record : {{count}}"
+    },
+    "dayCount_one": "{{count}} jour",
+    "dayCount_other": "{{count}} jours",
+    "hoursShort": "{{count}} h",
+    "minutesShort": "{{count}} min",
+    "wordsOnDay_one": "{{count}} mot",
+    "wordsOnDay_other": "{{count}} mots",
+    "weekdayInitials": "L,M,M,J,V,S,D",
+    "less": "Moins",
+    "more": "Plus",
+    "empty": "Rien pour l'instant. Dictez quelque chose et cela se remplira.",
+    "emptyDisabled": "Le comptage est désactivé, rien n'est enregistré.",
+    "privacy": {
+      "title": "Confidentialité",
+      "label": "Compter mes dictées",
+      "description": "Tient un décompte quotidien de mots sur cet ordinateur. Le désactiver arrête le comptage ; les chiffres déjà enregistrés restent jusqu'à ce que vous les effaciez."
+    },
+    "reset": {
+      "label": "Effacer les statistiques",
+      "description": "Supprime tous les compteurs. Action irréversible.",
+      "action": "Effacer",
+      "done": "Statistiques effacées"
+    }
+  },
+  "contextMenu": {
+    "cut": "Couper",
+    "copy": "Copier",
+    "paste": "Coller",
+    "selectAll": "Tout sélectionner"
+  },
+  "translation": {
+    "title": "Traduction",
+    "subtitle": "Dictez dans votre langue et obtenez le texte en anglais.",
+    "english": "Anglais",
+    "autoLanguage": "Langue détectée",
+    "unsupported": "{{model}} ne sait pas traduire, donc ceci reste désactivé.",
+    "capableModels": "Modèles capables : {{models}}.",
+    "toggle": {
+      "label": "Traduire en anglais ce que je dicte",
+      "description": "Le texte est écrit directement en anglais au lieu de la langue parlée."
+    },
+    "limits": {
+      "title": "Ce que cela peut et ne peut pas faire",
+      "englishOnly": "La traduction ne va que vers l'anglais. Les modèles vocaux reçoivent un indicateur « traduire », pas une langue cible, donc aucune autre combinaison n'est possible aujourd'hui.",
+      "future": "Traduire vers n'importe quelle langue nécessite un modèle de langage. Cela viendra avec le nettoyage par IA locale, donc cela fonctionnera toujours sans connexion."
+    }
   }
 }

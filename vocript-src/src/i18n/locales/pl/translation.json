@@ -21,7 +21,9 @@
     "debug": "Debugowanie",
     "about": "O programie",
     "fileTranscription": "Transkrybuj",
-    "feedback": "Opinie"
+    "feedback": "Opinie",
+    "activity": "Aktywność",
+    "translation": "Tłumaczenie"
   },
   "onboarding": {
     "subtitle": "Aby rozpocząć, wybierz model transkrypcji",
@@ -394,6 +396,31 @@
         "title": "Aplikacja dźwięku systemowego",
         "description": "Wybierz, co przechwytuje skrót dźwięku systemowego: cały komputer lub tylko jedną konkretną aplikację (np. Spotify). Aplikacja musi odtwarzać dźwięk, aby pojawić się na liście; użyj przycisku odświeżania.",
         "wholeSystem": "Cały system"
+      },
+      "muteInCalls": {
+        "label": "Wyciszaj mnie w rozmowach podczas dyktowania",
+        "description": "Przytrzymuje F13 podczas dyktowania, żeby nie było cię słychać na Discordzie. Przypisz F13 do „Naciśnij, aby wyciszyć” w skrótach Discorda.",
+        "setupHint": "W Discordzie: Ustawienia → Skróty → dodaj „Naciśnij, aby wyciszyć”, kliknij pole i naciśnij ten przycisk.",
+        "sendKey": "Wyślij F13",
+        "sent": "Wysłano F13"
+      },
+      "wakeWord": {
+        "label": "Zacznij, mówiąc „VoCript”",
+        "description": "Nasłuchuje słowa „VoCript” i zaczyna dyktowanie, gdy je usłyszy. Naucz je, mówiąc słowo raz, w trzech osobnych nagraniach.",
+        "hint": "Gdy jest włączone, mikrofon pozostaje otwarty. Wszystko przetwarza twój komputer i do modelu trafiają tylko krótkie fragmenty mowy, ale zużywa więcej CPU niż skrót: lepiej pasuje tu szybki model, np. Parakeet albo Moonshine.",
+        "teach": "Naucz ją",
+        "listening": "Powiedz raz, teraz",
+        "teachPrompt": "Naciśnij i powiedz „VoCript” RAZ. Powtórz to trzy razy, nie mów trzy razy pod rząd.",
+        "taught": "Nauczone z {{count}} nagrania(ń). Dodaj więcej, jeśli nie zawsze cię łapie.",
+        "captured": "Nauczone",
+        "forgotten": "Nagrania usunięte",
+        "needMore": "Jeszcze jedno, żeby działało pewnie",
+        "errors": {
+          "noSpeech": "Nie usłyszałem. Naciśnij ponownie i powiedz trochę głośniej.",
+          "tooShort": "Za krótko. Powiedz całe słowo, bez pośpiechu.",
+          "deadDevice": "Mikrofon nic nie zwrócił. Sprawdź, czy nie jest wyciszony lub używany przez inną aplikację."
+        },
+        "beta": "Beta"
       }
     },
     "sound": {
@@ -926,6 +953,92 @@
   "themes": {
     "title": "Motywy niestandardowe",
     "subtitle": "Wybierz kolor akcentu interfejsu.",
-    "comingSoon": "Typografia i więcej opcji wkrótce."
+    "custom": {
+      "pick": "Wybierz dowolny kolor",
+      "label": "Kolor hex"
+    },
+    "typography": {
+      "title": "Typografia",
+      "subtitle": "Wybierz, jak czyta się interfejs. Tylko czcionki, które już masz w systemie, więc nic się nie pobiera.",
+      "family": "Czcionka",
+      "size": "Rozmiar",
+      "sizeHint": "Skaluje cały interfejs, nie tylko tekst.",
+      "sample": "Przykładowy tekst",
+      "fonts": {
+        "default": "VoCript",
+        "system": "Systemowa",
+        "readable": "Czytelna",
+        "serif": "Szeryfowa",
+        "mono": "Maszynowa"
+      },
+      "sizes": {
+        "compact": "Kompaktowy",
+        "normal": "Normalny",
+        "large": "Duży",
+        "larger": "Większy"
+      },
+      "systemFont": "Dowolna czcionka z tego komputera",
+      "chooseSystemFont": "Wybierz czcionkę…",
+      "searchFonts": "Szukaj czcionek",
+      "noFonts": "Żadna czcionka nie pasuje."
+    }
+  },
+  "activity": {
+    "title": "Twoja aktywność dyktowania",
+    "subtitle": "Ile dyktujesz, dzień po dniu. Liczone tylko na tym komputerze: żaden tekst nie jest zapisywany i nic nie jest wysyłane.",
+    "cards": {
+      "words": "Podyktowane słowa",
+      "timeSaved": "Zaoszczędzony czas",
+      "timeSavedHint": "w porównaniu z pisaniem {{wpm}} sł./min",
+      "speed": "Twoja szybkość",
+      "speedHint": "słów na minutę",
+      "streak": "Obecna seria",
+      "streakHint": "Rekord: {{count}}"
+    },
+    "dayCount_one": "{{count}} dzień",
+    "dayCount_other": "{{count}} dni",
+    "hoursShort": "{{count}} godz.",
+    "minutesShort": "{{count}} min",
+    "wordsOnDay_one": "{{count}} słowo",
+    "wordsOnDay_other": "{{count}} słów",
+    "weekdayInitials": "P,W,Ś,C,P,S,N",
+    "less": "Mniej",
+    "more": "Więcej",
+    "empty": "Jeszcze nic tu nie ma. Podyktuj coś, a to się zapełni.",
+    "emptyDisabled": "Liczenie jest wyłączone, więc nic nie jest zapisywane.",
+    "privacy": {
+      "title": "Prywatność",
+      "label": "Licz moje dyktowania",
+      "description": "Prowadzi dzienny licznik słów na tym komputerze. Wyłączenie zatrzymuje liczenie; dotychczasowe wyniki zostają, dopóki ich nie usuniesz."
+    },
+    "reset": {
+      "label": "Wyczyść statystyki",
+      "description": "Usuwa wszystkie liczniki. Tej operacji nie można cofnąć.",
+      "action": "Wyczyść",
+      "done": "Statystyki wyczyszczone"
+    }
+  },
+  "contextMenu": {
+    "cut": "Wytnij",
+    "copy": "Kopiuj",
+    "paste": "Wklej",
+    "selectAll": "Zaznacz wszystko"
+  },
+  "translation": {
+    "title": "Tłumaczenie",
+    "subtitle": "Dyktuj w swoim języku i otrzymaj tekst po angielsku.",
+    "english": "Angielski",
+    "autoLanguage": "Wykryty język",
+    "unsupported": "{{model}} nie potrafi tłumaczyć, więc to pozostaje wyłączone.",
+    "capableModels": "Modele, które potrafią: {{models}}.",
+    "toggle": {
+      "label": "Tłumacz na angielski to, co dyktuję",
+      "description": "Tekst jest zapisywany od razu po angielsku, a nie w języku, którym mówiłeś."
+    },
+    "limits": {
+      "title": "Co potrafi, a czego nie",
+      "englishOnly": "Tłumaczenie działa tylko na angielski. Modele mowy dostają przełącznik „tłumacz”, a nie język docelowy, więc inne pary nie są dziś możliwe.",
+      "future": "Tłumaczenie na dowolny język wymaga modelu językowego. Pojawi się razem z lokalnym czyszczeniem przez AI, więc nadal będzie działać bez internetu."
+    }
   }
 }

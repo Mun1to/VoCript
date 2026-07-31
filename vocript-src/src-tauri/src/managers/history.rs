@@ -31,6 +31,16 @@ static MIGRATIONS: &[M] = &[
     M::up("ALTER TABLE transcription_history ADD COLUMN post_processed_text TEXT;"),
     M::up("ALTER TABLE transcription_history ADD COLUMN post_process_prompt TEXT;"),
     M::up("ALTER TABLE transcription_history ADD COLUMN post_process_requested BOOLEAN NOT NULL DEFAULT 0;"),
+    // Dictation statistics (see managers/stats.rs). Counters only, no text, so
+    // they outlive the history rows that the retention period deletes.
+    M::up(
+        "CREATE TABLE IF NOT EXISTS dictation_stats (
+            day TEXT PRIMARY KEY,
+            words INTEGER NOT NULL DEFAULT 0,
+            seconds REAL NOT NULL DEFAULT 0,
+            sessions INTEGER NOT NULL DEFAULT 0
+        );",
+    ),
 ];
 
 #[derive(Clone, Debug, Serialize, Deserialize, Type)]
@@ -653,6 +663,66 @@ impl HistoryManager {
 mod tests {
     use super::*;
     use rusqlite::{params, Connection};
+
+    /// Runs the real migration list against an empty database, the way a fresh
+    /// install does. A broken statement here panics the app on startup, long
+    /// before any test that only touches hand-made tables would notice.
+    #[test]
+    fn migrations_apply_to_an_empty_database() {
+        let mut conn = Connection::open_in_memory().expect("open in-memory db");
+        Migrations::new(MIGRATIONS.to_vec())
+            .to_latest(&mut conn)
+            .expect("migrations must apply cleanly");
+
+        // Every table the app reads must exist afterwards.
+        for table in ["transcription_history", "dictation_stats"] {
+            let count: i64 = conn
+                .query_row(
+                    "SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = ?1",
+                    params![table],
+                    |row| row.get(0),
+                )
+                .expect("query sqlite_master");
+            assert_eq!(count, 1, "table `{}` is missing after migrating", table);
+        }
+
+        // And the stats table must accept the upsert the manager performs.
+        conn.execute(
+            "INSERT INTO dictation_stats (day, words, seconds, sessions)
+             VALUES ('2026-07-31', 12, 4.5, 1)
+             ON CONFLICT(day) DO UPDATE SET words = words + 12",
+            [],
+        )
+        .expect("upsert into dictation_stats");
+    }
+
+    /// Upgrading must not wipe what the user already had.
+    #[test]
+    fn migrations_preserve_existing_history() {
+        let mut conn = Connection::open_in_memory().expect("open in-memory db");
+        Migrations::new(MIGRATIONS[..1].to_vec())
+            .to_latest(&mut conn)
+            .expect("apply the original schema");
+        conn.execute(
+            "INSERT INTO transcription_history (file_name, timestamp, saved, title, transcription_text)
+             VALUES ('old.wav', 1, 0, 'old', 'kept')",
+            [],
+        )
+        .expect("insert a pre-existing row");
+
+        Migrations::new(MIGRATIONS.to_vec())
+            .to_latest(&mut conn)
+            .expect("upgrade to the latest schema");
+
+        let text: String = conn
+            .query_row(
+                "SELECT transcription_text FROM transcription_history WHERE file_name = 'old.wav'",
+                [],
+                |row| row.get(0),
+            )
+            .expect("the old row must survive the upgrade");
+        assert_eq!(text, "kept");
+    }
 
     fn setup_conn() -> Connection {
         let conn = Connection::open_in_memory().expect("open in-memory db");

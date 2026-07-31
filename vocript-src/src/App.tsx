@@ -15,6 +15,7 @@ import Onboarding, { AccessibilityOnboarding } from "./components/onboarding";
 import { Sidebar, SidebarSection, SECTIONS_CONFIG } from "./components/Sidebar";
 import Header from "./components/Header";
 import { GuidedTour } from "./components/tour/GuidedTour";
+import { AppContextMenu } from "./components/ui/AppContextMenu";
 import { useSettings } from "./hooks/useSettings";
 import { useResolvedTheme } from "./hooks/useResolvedTheme";
 import {
@@ -22,6 +23,11 @@ import {
   darkenHex,
   hexToRgba,
 } from "./lib/constants/accentColors";
+import {
+  DEFAULT_UI_FONT,
+  DEFAULT_UI_FONT_SIZE,
+  fontStackFor,
+} from "./lib/constants/fonts";
 import { useSettingsStore } from "./stores/settingsStore";
 import { useTourStore } from "./stores/tourStore";
 import { commands } from "@/bindings";
@@ -81,10 +87,25 @@ function App() {
     root.style.setProperty("--color-logo-primary", accentColor);
     root.style.setProperty("--color-logo-stroke", darkenHex(accentColor));
     root.style.setProperty("--color-logo-glow", hexToRgba(accentColor, 0.5));
-    root.style.setProperty("--color-logo-glow-soft", hexToRgba(accentColor, 0.16));
+    root.style.setProperty(
+      "--color-logo-glow-soft",
+      hexToRgba(accentColor, 0.16),
+    );
     // Primary buttons + slider fill use this slightly deeper accent token.
-    root.style.setProperty("--color-background-ui", darkenHex(accentColor, 0.12));
+    root.style.setProperty(
+      "--color-background-ui",
+      darkenHex(accentColor, 0.12),
+    );
   }, [accentColor]);
+
+  // Typography: family and root size, both driven from settings (see App.css).
+  const uiFont = settings?.ui_font ?? DEFAULT_UI_FONT;
+  const uiFontSize = settings?.ui_font_size ?? DEFAULT_UI_FONT_SIZE;
+  useEffect(() => {
+    const root = document.documentElement;
+    root.style.setProperty("--vc-font-family", fontStackFor(uiFont));
+    root.style.setProperty("--vc-font-size", `${uiFontSize}px`);
+  }, [uiFont, uiFontSize]);
 
   // Initialize Enigo, shortcuts, and refresh audio devices when main app loads
   useEffect(() => {
@@ -339,6 +360,9 @@ function App() {
       {/* Guided feature tour overlay (auto-starts for new users; replayable
           from the footer "Guía" button). */}
       <GuidedTour onNavigate={setCurrentSection} />
+
+      {/* Replaces the WebView2 browser menu on right-click. */}
+      <AppContextMenu />
     </div>
   );
 }

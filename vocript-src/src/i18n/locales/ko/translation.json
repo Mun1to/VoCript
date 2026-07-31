@@ -21,7 +21,9 @@
     "debug": "디버그",
     "about": "정보",
     "fileTranscription": "받아쓰기",
-    "feedback": "피드백"
+    "feedback": "피드백",
+    "activity": "활동",
+    "translation": "번역"
   },
   "onboarding": {
     "subtitle": "시작하려면 음성 인식 모델을 선택하세요",
@@ -363,6 +365,31 @@
         "title": "시스템 오디오 앱",
         "description": "시스템 오디오 단축키로 무엇을 캡처할지 선택합니다: 컴퓨터 전체 또는 특정 앱 하나(예: Spotify). 앱이 오디오를 재생 중이어야 목록에 나타납니다. 새로 고침 버튼을 사용하세요.",
         "wholeSystem": "시스템 전체"
+      },
+      "muteInCalls": {
+        "label": "받아쓰는 동안 통화에서 음소거",
+        "description": "받아쓰는 동안 F13을 누른 상태로 유지해 디스코드에서 소리가 들리지 않게 합니다. 디스코드 단축키에서 F13을 '눌러서 음소거'에 지정하세요.",
+        "setupHint": "디스코드에서: 설정 → 단축키 → '눌러서 음소거' 추가, 입력란을 클릭한 뒤 이 버튼을 누르세요.",
+        "sendKey": "F13 보내기",
+        "sent": "F13을 보냈습니다"
+      },
+      "wakeWord": {
+        "label": "\"VoCript\"라고 말해서 시작",
+        "description": "'VoCript'라는 말을 듣고 받아쓰기를 시작합니다. 한 번만 말하는 녹음을 세 번에 나눠서 가르치세요.",
+        "hint": "켜져 있는 동안 마이크는 계속 열려 있습니다. 모든 처리는 이 컴퓨터에서 이뤄지고 말하는 짧은 구간만 모델로 넘어가지만, 단축키보다 CPU를 더 씁니다. Parakeet이나 Moonshine 같은 빠른 모델이 잘 맞습니다.",
+        "teach": "학습시키기",
+        "listening": "지금 한 번만 말하세요",
+        "teachPrompt": "누르고 'VoCript'를 한 번만 말하세요. 이 과정을 세 번 반복합니다. 연달아 세 번 말하는 게 아닙니다.",
+        "taught": "녹음 {{count}}개로 학습했습니다. 잘 못 알아들으면 더 추가하세요.",
+        "captured": "학습했습니다",
+        "forgotten": "녹음을 지웠습니다",
+        "needMore": "한 번 더 하면 안정적입니다",
+        "errors": {
+          "noSpeech": "듣지 못했습니다. 다시 누르고 조금 크게 말해 주세요.",
+          "tooShort": "너무 짧았습니다. 서두르지 말고 단어 전체를 말해 주세요.",
+          "deadDevice": "마이크에서 아무것도 들어오지 않았습니다. 음소거 상태이거나 다른 앱이 사용 중인지 확인하세요."
+        },
+        "beta": "베타"
       }
     },
     "sound": {
@@ -926,6 +953,92 @@
   "themes": {
     "title": "사용자 지정 테마",
     "subtitle": "인터페이스 강조 색상을 선택하세요.",
-    "comingSoon": "타이포그래피 등은 곧 추가됩니다."
+    "custom": {
+      "pick": "원하는 색 선택",
+      "label": "16진수 색상"
+    },
+    "typography": {
+      "title": "글꼴",
+      "subtitle": "인터페이스가 읽히는 방식을 고르세요. 이미 시스템에 있는 글꼴만 쓰므로 아무것도 내려받지 않습니다.",
+      "family": "글꼴",
+      "size": "크기",
+      "sizeHint": "글자뿐 아니라 인터페이스 전체 크기가 바뀝니다.",
+      "sample": "예시 텍스트",
+      "fonts": {
+        "default": "VoCript",
+        "system": "시스템",
+        "readable": "읽기 쉬운",
+        "serif": "명조",
+        "mono": "고정폭"
+      },
+      "sizes": {
+        "compact": "작게",
+        "normal": "보통",
+        "large": "크게",
+        "larger": "더 크게"
+      },
+      "systemFont": "이 컴퓨터의 모든 글꼴",
+      "chooseSystemFont": "글꼴 선택…",
+      "searchFonts": "글꼴 검색",
+      "noFonts": "일치하는 글꼴이 없습니다."
+    }
+  },
+  "activity": {
+    "title": "받아쓰기 활동",
+    "subtitle": "날마다 얼마나 받아썼는지 보여줍니다. 이 컴퓨터에서만 집계하며, 본문은 저장하지 않고 어디에도 전송하지 않습니다.",
+    "cards": {
+      "words": "입력한 단어",
+      "timeSaved": "절약한 시간",
+      "timeSavedHint": "분당 {{wpm}}단어 타이핑 대비",
+      "speed": "내 속도",
+      "speedHint": "분당 단어 수",
+      "streak": "현재 연속 기록",
+      "streakHint": "최고: {{count}}"
+    },
+    "dayCount_one": "{{count}}일",
+    "dayCount_other": "{{count}}일",
+    "hoursShort": "{{count}}시간",
+    "minutesShort": "{{count}}분",
+    "wordsOnDay_one": "{{count}}단어",
+    "wordsOnDay_other": "{{count}}단어",
+    "weekdayInitials": "월,화,수,목,금,토,일",
+    "less": "적음",
+    "more": "많음",
+    "empty": "아직 아무것도 없습니다. 받아쓰기를 하면 여기에 쌓입니다.",
+    "emptyDisabled": "집계가 꺼져 있어 아무것도 기록되지 않습니다.",
+    "privacy": {
+      "title": "개인정보",
+      "label": "내 받아쓰기 집계",
+      "description": "이 컴퓨터에 하루 단위 단어 수를 기록합니다. 끄면 집계를 멈추며, 이미 쌓인 수치는 지울 때까지 남습니다."
+    },
+    "reset": {
+      "label": "통계 지우기",
+      "description": "모든 집계를 삭제합니다. 되돌릴 수 없습니다.",
+      "action": "지우기",
+      "done": "통계를 지웠습니다"
+    }
+  },
+  "contextMenu": {
+    "cut": "잘라내기",
+    "copy": "복사",
+    "paste": "붙여넣기",
+    "selectAll": "모두 선택"
+  },
+  "translation": {
+    "title": "번역",
+    "subtitle": "모국어로 말하고 영어 문장을 받으세요.",
+    "english": "영어",
+    "autoLanguage": "자동 감지된 언어",
+    "unsupported": "{{model}}은(는) 번역할 수 없어서 이 기능은 꺼진 상태로 둡니다.",
+    "capableModels": "가능한 모델: {{models}}.",
+    "toggle": {
+      "label": "받아쓴 내용을 영어로 번역",
+      "description": "말한 언어가 아니라 처음부터 영어로 적힙니다."
+    },
+    "limits": {
+      "title": "할 수 있는 것과 없는 것",
+      "englishOnly": "번역은 영어로만 됩니다. 음성 모델은 목표 언어가 아니라 '번역' 스위치만 받기 때문에 다른 조합은 아직 불가능합니다.",
+      "future": "어떤 언어로든 번역하려면 언어 모델이 필요합니다. 로컬 AI 다듬기와 함께 제공될 예정이라 인터넷 없이도 동작합니다."
+    }
   }
 }

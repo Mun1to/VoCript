@@ -639,6 +639,121 @@ pub fn change_update_checks_setting(app: AppHandle, enabled: bool) -> Result<(),
 
 #[tauri::command]
 #[specta::specta]
+pub fn change_wake_word_samples_setting(
+    app: AppHandle,
+    samples: Vec<String>,
+) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    settings.wake_word_samples = samples.clone();
+    settings::write_settings(&app, settings);
+
+    let _ = app.emit(
+        "settings-changed",
+        serde_json::json!({ "setting": "wake_word_samples", "value": samples }),
+    );
+
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn change_wake_word_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    settings.wake_word_enabled = enabled;
+    settings::write_settings(&app, settings);
+
+    crate::wake_word::sync_with_settings(&app);
+
+    let _ = app.emit(
+        "settings-changed",
+        serde_json::json!({ "setting": "wake_word_enabled", "value": enabled }),
+    );
+
+    Ok(())
+}
+
+/// Sends the mute key once so the user can bind it in Discord: no physical
+/// keyboard has an F13 to press while Discord waits for a keybind.
+#[tauri::command]
+#[specta::specta]
+pub fn send_call_mute_key(app: AppHandle) -> Result<(), String> {
+    crate::input::tap_call_mute(&app);
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn change_mute_in_calls_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    settings.mute_in_calls = enabled;
+    settings::write_settings(&app, settings);
+
+    // Turning it off mid-dictation must not leave the key stuck down.
+    if !enabled {
+        crate::input::release_call_mute(&app);
+    }
+
+    let _ = app.emit(
+        "settings-changed",
+        serde_json::json!({ "setting": "mute_in_calls", "value": enabled }),
+    );
+
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn change_ui_font_setting(app: AppHandle, font: String) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    settings.ui_font = font.clone();
+    settings::write_settings(&app, settings);
+
+    let _ = app.emit(
+        "settings-changed",
+        serde_json::json!({ "setting": "ui_font", "value": font }),
+    );
+
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn change_ui_font_size_setting(app: AppHandle, size: u32) -> Result<(), String> {
+    // Clamped rather than validated away: a bad value here would render the
+    // whole interface unusable, with no way to get back to the setting.
+    let size = size.clamp(11, 20);
+    let mut settings = settings::get_settings(&app);
+    settings.ui_font_size = size;
+    settings::write_settings(&app, settings);
+
+    let _ = app.emit(
+        "settings-changed",
+        serde_json::json!({ "setting": "ui_font_size", "value": size }),
+    );
+
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn change_dictation_stats_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    settings.track_dictation_stats = enabled;
+    settings::write_settings(&app, settings);
+
+    let _ = app.emit(
+        "settings-changed",
+        serde_json::json!({
+            "setting": "track_dictation_stats",
+            "value": enabled
+        }),
+    );
+
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
 pub fn update_custom_words(app: AppHandle, words: Vec<String>) -> Result<(), String> {
     let mut settings = settings::get_settings(&app);
     settings.custom_words = words;

@@ -17,6 +17,7 @@ import {
 import { LANGUAGES } from "../../lib/constants/languages";
 import Badge from "../ui/Badge";
 import { Button } from "../ui/Button";
+import { HoverTooltip } from "../ui/HoverTooltip";
 
 // Get display text for model's language support
 const getLanguageDisplayText = (
@@ -210,26 +211,26 @@ const ModelCard: React.FC<ModelCardProps> = ({
       {/* Bottom row: tags + action buttons (full width) */}
       <div className="flex items-center gap-3 w-full -mb-0.5 mt-0.5 h-5">
         {model.supported_languages.length > 0 && (
-          <div
-            className="flex items-center gap-1 text-xs text-text/50"
-            title={
+          <HoverTooltip
+            label={
               model.supported_languages.length === 1
                 ? t("modelSelector.capabilities.singleLanguage")
                 : t("modelSelector.capabilities.languageSelection")
             }
+            className="flex items-center gap-1 text-xs text-text/50"
           >
             <Globe className="w-3.5 h-3.5" />
             <span>{getLanguageDisplayText(model.supported_languages, t)}</span>
-          </div>
+          </HoverTooltip>
         )}
         {model.supports_translation && (
-          <div
+          <HoverTooltip
+            label={t("modelSelector.capabilities.translation")}
             className="flex items-center gap-1 text-xs text-text/50"
-            title={t("modelSelector.capabilities.translation")}
           >
             <Languages className="w-3.5 h-3.5" />
             <span>{t("modelSelector.capabilities.translate")}</span>
-          </div>
+          </HoverTooltip>
         )}
         {status === "downloadable" && (
           <span className="flex items-center gap-1.5 ms-auto text-xs text-text/50">

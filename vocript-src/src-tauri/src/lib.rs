@@ -6,6 +6,7 @@ pub mod audio_toolkit;
 pub mod cli;
 mod clipboard;
 mod commands;
+mod fonts;
 mod helpers;
 mod input;
 mod live;
@@ -22,6 +23,7 @@ mod tray;
 mod tray_i18n;
 mod tray_menu;
 mod utils;
+mod wake_word;
 
 pub use cli::CliArgs;
 #[cfg(debug_assertions)]
@@ -32,6 +34,7 @@ use env_filter::Builder as EnvFilterBuilder;
 use managers::audio::AudioRecordingManager;
 use managers::history::HistoryManager;
 use managers::model::ModelManager;
+use managers::stats::StatsManager;
 use managers::transcription::TranscriptionManager;
 #[cfg(unix)]
 use signal_hook::consts::{SIGUSR1, SIGUSR2};
@@ -159,6 +162,10 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     );
     let history_manager =
         Arc::new(HistoryManager::new(app_handle).expect("Failed to initialize history manager"));
+    // After the history manager: it owns the migrations that create the
+    // dictation_stats table in the database both of them share.
+    let stats_manager =
+        Arc::new(StatsManager::new(app_handle).expect("Failed to initialize stats manager"));
 
     // Apply accelerator preferences before any model loads
     managers::transcription::apply_accelerator_settings(app_handle);
@@ -168,7 +175,11 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     app_handle.manage(model_manager.clone());
     app_handle.manage(transcription_manager.clone());
     app_handle.manage(history_manager.clone());
+    app_handle.manage(stats_manager.clone());
     app_handle.manage(live::LiveState::default());
+    app_handle.manage(wake_word::WakeWordState::default());
+    // Resumes hands-free listening for users who had it on. No-op by default.
+    wake_word::sync_with_settings(app_handle);
 
     // Note: Shortcuts are NOT initialized here.
     // The frontend is responsible for calling the `initialize_shortcuts` command
@@ -387,6 +398,16 @@ pub fn run(cli_args: CliArgs) {
             shortcut::change_tour_completed_setting,
             shortcut::change_work_profile_setting,
             shortcut::change_update_checks_setting,
+            shortcut::change_dictation_stats_setting,
+            shortcut::change_mute_in_calls_setting,
+            shortcut::change_wake_word_setting,
+            shortcut::change_wake_word_samples_setting,
+            wake_word::capture_wake_word_sample,
+            wake_word::clear_wake_word_recordings,
+            wake_word::count_wake_word_recordings,
+            shortcut::send_call_mute_key,
+            shortcut::change_ui_font_setting,
+            shortcut::change_ui_font_size_setting,
             shortcut::change_keyboard_implementation_setting,
             shortcut::get_keyboard_implementation,
             shortcut::change_show_tray_icon_setting,
@@ -456,6 +477,10 @@ pub fn run(cli_args: CliArgs) {
             commands::history::retry_history_entry_transcription,
             commands::history::update_history_limit,
             commands::history::update_recording_retention_period,
+            commands::stats::get_dictation_stats,
+            commands::stats::reset_dictation_stats,
+            commands::stats::get_typing_wpm_baseline,
+            fonts::get_system_fonts,
             helpers::clamshell::is_laptop,
             get_system_theme,
         ])

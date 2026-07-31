@@ -1,10 +1,12 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import {
+  Activity,
   Cog,
   FlaskConical,
   History,
   Info,
+  Languages,
   Sparkles,
   Cpu,
   AudioLines,
@@ -19,6 +21,8 @@ import {
   GeneralSettings,
   AdvancedSettings,
   HistorySettings,
+  ActivitySettings,
+  TranslationSettings,
   DebugSettings,
   AboutSettings,
   PostProcessingSettings,
@@ -68,6 +72,18 @@ export const SECTIONS_CONFIG = {
     labelKey: "sidebar.history",
     icon: History,
     component: HistorySettings,
+    enabled: () => true,
+  },
+  translation: {
+    labelKey: "sidebar.translation",
+    icon: Languages,
+    component: TranslationSettings,
+    enabled: () => true,
+  },
+  activity: {
+    labelKey: "sidebar.activity",
+    icon: Activity,
+    component: ActivitySettings,
     enabled: () => true,
   },
   themes: {

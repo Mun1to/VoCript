@@ -14,6 +14,8 @@ import { AudioFeedback } from "../AudioFeedback";
 import { useSettings } from "../../../hooks/useSettings";
 import { VolumeSlider } from "../VolumeSlider";
 import { MuteWhileRecording } from "../MuteWhileRecording";
+import { MuteInCalls } from "../MuteInCalls";
+import { WakeWord } from "../WakeWord";
 import { ModelSettingsCard } from "./ModelSettingsCard";
 
 export const GeneralSettings: React.FC = () => {
@@ -46,6 +48,7 @@ export const GeneralSettings: React.FC = () => {
           </div>
         )}
         <PushToTalk descriptionMode="tooltip" grouped={true} />
+        <WakeWord descriptionMode="tooltip" grouped={true} />
         <ClipboardOnlyToggle descriptionMode="tooltip" grouped={true} />
         <LiveCopyToggle descriptionMode="tooltip" grouped={true} />
         {/* Cancel shortcut is hidden with push-to-talk (release key cancels) and on Linux (dynamic shortcut instability) */}
@@ -57,6 +60,7 @@ export const GeneralSettings: React.FC = () => {
       <SettingsGroup title={t("settings.sound.title")}>
         <MicrophoneSelector descriptionMode="tooltip" grouped={true} />
         <MuteWhileRecording descriptionMode="tooltip" grouped={true} />
+        <MuteInCalls descriptionMode="tooltip" grouped={true} />
         <AudioFeedback descriptionMode="tooltip" grouped={true} />
         <OutputDeviceSelector
           descriptionMode="tooltip"
