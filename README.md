@@ -69,14 +69,31 @@ VoCript listens to your **voice** —or the **audio playing on your PC**— and 
 
 ## ⬇️ Download
 
+### Windows
+
 1. Click the **Download** button above — or this direct link: **[download VoCript](https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-Setup.exe)**. The installer downloads instantly.
 2. Open the downloaded file (`VoCript-Setup.exe`).
 3. Follow the steps. Done!
 
-> 💡 Prefer to see all versions and files? They're on the [Releases page](https://github.com/Mun1to/VoCript/releases/latest).
-
 > Windows may show an "unknown publisher" warning (the app isn't signed with a
 > paid certificate yet). Click **More info → Run anyway**.
+
+### Linux
+
+Download **[VoCript-x86_64.AppImage](https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-x86_64.AppImage)**, make it executable and run it — no installation needed:
+
+```bash
+chmod +x VoCript-x86_64.AppImage
+./VoCript-x86_64.AppImage
+```
+
+There is also a `.deb` on the [Releases page](https://github.com/Mun1to/VoCript/releases/latest) for Debian and Ubuntu (`sudo apt install ./VoCript_*.deb`).
+
+> Two things work differently on Linux: **system-audio capture is Windows-only**
+> for now (dictating with the microphone works normally), and on **Wayland**
+> global shortcuts and auto-typing are limited — X11 is the smoother ride.
+
+> 💡 Prefer to see all versions and files? They're on the [Releases page](https://github.com/Mun1to/VoCript/releases/latest).
 
 ## 🔄 Automatic updates
 
