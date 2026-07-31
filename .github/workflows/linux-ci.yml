@@ -10,10 +10,14 @@ on:
 
 jobs:
   build-linux:
-    # 22.04 a propósito: el AppImage hereda la glibc del sistema donde se
-    # compila, así que compilar en la LTS más vieja soportada lo hace correr
-    # en más distros.
-    runs-on: ubuntu-22.04
+    # 24.04, NO 22.04. La tentación es compilar en la LTS más vieja para que el
+    # AppImage corra en más distros (hereda la glibc de donde se compila), pero
+    # NO se puede: el binario precompilado de ONNX Runtime que descarga `ort`
+    # (motores Parakeet, Moonshine, SenseVoice, GigaAM, Canary) está construido
+    # contra glibc >= 2.38 y en 22.04 (glibc 2.35) el enlazado falla con
+    # "undefined symbol: __isoc23_strtoll". Consecuencia asumida: hace falta
+    # glibc 2.39+ (Ubuntu 24.04+, Debian 13, Fedora 39+, Arch).
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Descargar el código
@@ -41,12 +45,11 @@ jobs:
             libgtk-layer-shell0 libgtk-layer-shell-dev patchelf cmake
 
       # whisper.cpp se compila con el backend Vulkan (transcribe-rs
-      # whisper-vulkan) y necesita los headers y glslc. En 22.04 glslc no está
-      # en los repos de Ubuntu, así que se usa el SDK de LunarG.
+      # whisper-vulkan) y necesita los headers y glslc.
       - name: Instalar Vulkan SDK (LunarG)
         run: |
           wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo tee /etc/apt/trusted.gpg.d/lunarg.asc
-          sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-jammy.list https://packages.lunarg.com/vulkan/lunarg-vulkan-jammy.list
+          sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-noble.list https://packages.lunarg.com/vulkan/lunarg-vulkan-noble.list
           sudo apt-get update
           sudo apt-get install -y vulkan-sdk
 

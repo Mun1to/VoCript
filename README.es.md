@@ -90,6 +90,10 @@ chmod +x VoCript-x86_64.AppImage
 
 En la [página de Releases](https://github.com/Mun1to/VoCript/releases/latest) también hay un `.deb` para Debian y Ubuntu (`sudo apt install ./VoCript_*.deb`).
 
+> **Necesita una distribución razonablemente actual**: glibc 2.39 o superior
+> (Ubuntu 24.04+, Debian 13, Fedora 39+, Arch). Los motores de reconocimiento
+> vienen como binarios precompilados que lo exigen.
+
 > Dos cosas funcionan distinto en Linux: la **captura del audio del sistema es
 > solo de Windows** por ahora (dictar con el micrófono funciona igual), y en
 > **Wayland** los atajos globales y el pegado automático están limitados; con

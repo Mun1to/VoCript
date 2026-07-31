@@ -89,6 +89,10 @@ chmod +x VoCript-x86_64.AppImage
 
 There is also a `.deb` on the [Releases page](https://github.com/Mun1to/VoCript/releases/latest) for Debian and Ubuntu (`sudo apt install ./VoCript_*.deb`).
 
+> **Needs a reasonably current distro** — glibc 2.39 or newer (Ubuntu 24.04+,
+> Debian 13, Fedora 39+, Arch). The speech engines ship as prebuilt binaries
+> that require it.
+
 > Two things work differently on Linux: **system-audio capture is Windows-only**
 > for now (dictating with the microphone works normally), and on **Wayland**
 > global shortcuts and auto-typing are limited — X11 is the smoother ride.
