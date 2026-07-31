@@ -1,0 +1,91 @@
+# Compila VoCript para Linux SIN publicar nada. Sirve para verificar que el
+# build de Linux está sano antes de añadirlo al workflow de release.
+name: Linux build check
+
+on:
+  push:
+    branches:
+      - ci/linux
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    # 22.04 a propósito: el AppImage hereda la glibc del sistema donde se
+    # compila, así que compilar en la LTS más vieja soportada lo hace correr
+    # en más distros.
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Instalar Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Instalar Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache de Rust
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "vocript-src/src-tauri -> target"
+
+      # Las dependencias de sistema de Tauri v2 + audio (ALSA) + overlay
+      # (gtk-layer-shell), la misma lista que documenta BUILD.md.
+      - name: Instalar dependencias del sistema
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libasound2-dev pkg-config \
+            libssl-dev libgtk-3-dev libwebkit2gtk-4.1-dev \
+            libayatana-appindicator3-dev librsvg2-dev \
+            libgtk-layer-shell0 libgtk-layer-shell-dev patchelf cmake
+
+      # whisper.cpp se compila con el backend Vulkan (transcribe-rs
+      # whisper-vulkan) y necesita los headers y glslc. En 22.04 glslc no está
+      # en los repos de Ubuntu, así que se usa el SDK de LunarG.
+      - name: Instalar Vulkan SDK (LunarG)
+        run: |
+          wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo tee /etc/apt/trusted.gpg.d/lunarg.asc
+          sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-jammy.list https://packages.lunarg.com/vulkan/lunarg-vulkan-jammy.list
+          sudo apt-get update
+          sudo apt-get install -y vulkan-sdk
+
+      - name: Instalar dependencias del frontend
+        working-directory: vocript-src
+        run: bun install
+
+      - name: Descargar modelo Silero VAD (recurso requerido)
+        working-directory: vocript-src
+        run: |
+          mkdir -p src-tauri/resources/models
+          curl -L -o src-tauri/resources/models/silero_vad_v4.onnx https://blob.handy.computer/silero_vad_v4.onnx
+
+      - name: Compilar y empaquetar (deb + AppImage)
+        working-directory: vocript-src
+        env:
+          # CRÍTICO para portabilidad: sin esto ggml usa -march=native con las
+          # instrucciones del runner (AVX-512) y crashea en CPUs de consumo.
+          GGML_NATIVE: "OFF"
+          GGML_AVX: "ON"
+          GGML_AVX2: "ON"
+          GGML_FMA: "ON"
+          GGML_F16C: "ON"
+          GGML_AVX512: "OFF"
+          # Sin la clave, `tauri build` falla al firmar los artefactos del
+          # updater (createUpdaterArtifacts está activo en tauri.conf.json).
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: bun run tauri build --bundles deb,appimage
+
+      - name: Ejecutar los tests de Rust
+        working-directory: vocript-src/src-tauri
+        run: cargo test --lib
+
+      - name: Guardar los bundles como artefactos
+        uses: actions/upload-artifact@v4
+        with:
+          name: vocript-linux-bundles
+          path: |
+            vocript-src/src-tauri/target/release/bundle/deb/*.deb
+            vocript-src/src-tauri/target/release/bundle/appimage/*.AppImage
+          if-no-files-found: error

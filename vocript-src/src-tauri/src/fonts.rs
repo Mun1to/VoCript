@@ -51,9 +51,36 @@ pub fn list_system_fonts() -> Vec<String> {
     families.into_iter().collect()
 }
 
-#[cfg(not(target_os = "windows"))]
+/// Linux: fontconfig is the system's own registry of fonts, and `fc-list`
+/// ships with it on every desktop distribution.
+#[cfg(target_os = "linux")]
 pub fn list_system_fonts() -> Vec<String> {
-    // Windows-only for now; the UI falls back to the bundled font list.
+    use std::collections::BTreeSet;
+
+    let output = match std::process::Command::new("fc-list")
+        .args([":", "family"])
+        .output()
+    {
+        Ok(output) if output.status.success() => output.stdout,
+        // No fontconfig, no picker: the UI falls back to the bundled fonts.
+        _ => return Vec::new(),
+    };
+
+    let mut families: BTreeSet<String> = BTreeSet::new();
+    for line in String::from_utf8_lossy(&output).lines() {
+        // A line lists a family and its aliases, comma-separated; the first
+        // entry is the canonical name. Dot-prefixed families are hidden ones.
+        let name = line.split(',').next().unwrap_or(line).trim();
+        if !name.is_empty() && !name.starts_with('.') {
+            families.insert(name.to_string());
+        }
+    }
+    families.into_iter().collect()
+}
+
+#[cfg(not(any(target_os = "windows", target_os = "linux")))]
+pub fn list_system_fonts() -> Vec<String> {
+    // Not wired up on this platform; the UI falls back to the bundled fonts.
     Vec::new()
 }
 
