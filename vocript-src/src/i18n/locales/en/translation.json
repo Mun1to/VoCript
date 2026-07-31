@@ -189,7 +189,8 @@
     "downloadFailed": "Download failed. Please try again.",
     "modelCard": {
       "accuracy": "accuracy",
-      "speed": "speed"
+      "speed": "speed",
+      "noLanguageSupport": "No {{language}} support"
     },
     "models": {
       "small": {

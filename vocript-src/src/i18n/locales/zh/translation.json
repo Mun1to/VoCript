@@ -39,7 +39,8 @@
     "downloadFailed": "下载失败。请重试。",
     "modelCard": {
       "accuracy": "准确度",
-      "speed": "速度"
+      "speed": "速度",
+      "noLanguageSupport": "不支持{{language}}"
     },
     "models": {
       "small": {

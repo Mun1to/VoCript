@@ -39,7 +39,8 @@
     "downloadFailed": "Изтеглянето не бе успешно. Опитайте отново.",
     "modelCard": {
       "accuracy": "точност",
-      "speed": "скорост"
+      "speed": "скорост",
+      "noLanguageSupport": "Не поддържа {{language}}"
     },
     "models": {
       "small": {

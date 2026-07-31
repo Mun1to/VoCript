@@ -128,8 +128,14 @@ fn place(app: &AppHandle, window: &WebviewWindow, anchor: (f64, f64), logical_he
     if y < mon_top + margin {
         y = ay + margin;
     }
-    x = x.clamp(mon_left + margin, (mon_right - width - margin).max(mon_left));
-    y = y.clamp(mon_top + margin, (mon_bottom - height - margin).max(mon_top));
+    x = x.clamp(
+        mon_left + margin,
+        (mon_right - width - margin).max(mon_left),
+    );
+    y = y.clamp(
+        mon_top + margin,
+        (mon_bottom - height - margin).max(mon_top),
+    );
 
     let _ = window.set_position(PhysicalPosition::new(x, y));
 }

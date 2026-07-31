@@ -56,6 +56,9 @@ interface TrayMenuState {
 
 type View = "main" | "models" | "languages";
 
+// Brand name: shown as-is in every language, never translated.
+const BRAND_NAME = "VoCript";
+
 const Row: React.FC<{
   icon?: React.ReactNode;
   label: string;
@@ -147,7 +150,9 @@ const Toggle: React.FC<{
   >
     <span
       className="flex h-4 w-4 shrink-0 items-center justify-center"
-      style={{ color: on ? "var(--color-logo-primary)" : "var(--vc-text-muted)" }}
+      style={{
+        color: on ? "var(--color-logo-primary)" : "var(--vc-text-muted)",
+      }}
     >
       {icon}
     </span>
@@ -160,9 +165,7 @@ const Toggle: React.FC<{
     <span
       className="relative h-[18px] w-[32px] shrink-0 rounded-full transition-colors"
       style={{
-        backgroundColor: on
-          ? "var(--color-logo-primary)"
-          : "var(--vc-pill-bg)",
+        backgroundColor: on ? "var(--color-logo-primary)" : "var(--vc-pill-bg)",
         border: on ? "none" : "1px solid var(--vc-border)",
       }}
     >
@@ -203,10 +206,10 @@ export const TrayMenu: React.FC = () => {
       const themeSetting = (s.theme as string) ?? "system";
       const resolved =
         themeSetting === "system"
-          ? ((await invoke<string>("get_system_theme").catch(() => "dark")) ===
+          ? (await invoke<string>("get_system_theme").catch(() => "dark")) ===
             "light"
-              ? "light"
-              : "dark")
+            ? "light"
+            : "dark"
           : themeSetting === "light"
             ? "light"
             : "dark";
@@ -286,8 +289,7 @@ export const TrayMenu: React.FC = () => {
         style={{
           backgroundColor: "var(--vc-card-bg)",
           borderColor: "var(--vc-border)",
-          boxShadow:
-            "0 12px 32px rgba(0,0,0,0.38), 0 2px 8px rgba(0,0,0,0.24)",
+          boxShadow: "0 12px 32px rgba(0,0,0,0.38), 0 2px 8px rgba(0,0,0,0.24)",
         }}
       >
         {/* Header: makes it unmistakably VoCript and not a generic OS menu */}
@@ -305,7 +307,7 @@ export const TrayMenu: React.FC = () => {
                 className="flex-1 truncate text-[13px] font-bold tracking-tight"
                 style={{ color: "var(--vc-text-main)" }}
               >
-                VoCript
+                {BRAND_NAME}
               </span>
               <span
                 className="shrink-0 text-[10.5px] font-semibold"

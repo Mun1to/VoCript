@@ -11,6 +11,7 @@ import { LANGUAGES } from "../../lib/constants/languages";
 import {
   POPULAR_LANGUAGES,
   getRecommendedModelId,
+  modelSupportsLanguage,
 } from "../../lib/utils/modelRecommendation";
 
 interface OnboardingProps {
@@ -115,16 +116,22 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
     return downloadStats[modelId]?.speed;
   };
 
-  // Recommended model first (if not already downloaded), then the rest by size.
+  // Recommended model first (if not already downloaded), then the ones that can
+  // handle the chosen language by size, and the ones that can't at the bottom.
   const { recommendedModel, otherModels } = useMemo(() => {
     const notDownloaded = models.filter((m: ModelInfo) => !m.is_downloaded);
     const rec =
       notDownloaded.find((m: ModelInfo) => m.id === recommendedModelId) ?? null;
     const others = notDownloaded
       .filter((m: ModelInfo) => m.id !== rec?.id)
-      .sort((a: ModelInfo, b: ModelInfo) => Number(a.size_mb) - Number(b.size_mb));
+      .sort((a: ModelInfo, b: ModelInfo) => {
+        const byLanguage =
+          Number(modelSupportsLanguage(b, language)) -
+          Number(modelSupportsLanguage(a, language));
+        return byLanguage || Number(a.size_mb) - Number(b.size_mb);
+      });
     return { recommendedModel: rec, otherModels: others };
-  }, [models, recommendedModelId]);
+  }, [models, recommendedModelId, language]);
 
   // Models already present on disk (e.g. a reinstall that kept them). If any,
   // offer to continue with them instead of forcing a fresh download.
@@ -219,6 +226,13 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
               onDownload={handleDownloadModel}
               downloadProgress={getModelDownloadProgress(model.id)}
               downloadSpeed={getModelDownloadSpeed(model.id)}
+              unsupportedLabel={
+                languageLabel && !modelSupportsLanguage(model, language)
+                  ? t("onboarding.modelCard.noLanguageSupport", {
+                      language: languageLabel,
+                    })
+                  : undefined
+              }
             />
           ))}
         </div>

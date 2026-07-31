@@ -39,7 +39,8 @@
     "downloadFailed": "Tải xuống thất bại. Vui lòng thử lại.",
     "modelCard": {
       "accuracy": "độ chính xác",
-      "speed": "tốc độ"
+      "speed": "tốc độ",
+      "noLanguageSupport": "Không hỗ trợ {{language}}"
     },
     "models": {
       "small": {

@@ -189,7 +189,8 @@
     "downloadFailed": "La descarga falló. Por favor, inténtalo de nuevo.",
     "modelCard": {
       "accuracy": "precisión",
-      "speed": "velocidad"
+      "speed": "velocidad",
+      "noLanguageSupport": "Sin soporte para {{language}}"
     },
     "models": {
       "small": {

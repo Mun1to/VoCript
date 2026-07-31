@@ -39,7 +39,8 @@
     "downloadFailed": "Download fallito. Riprova.",
     "modelCard": {
       "accuracy": "accuratezza",
-      "speed": "velocità"
+      "speed": "velocità",
+      "noLanguageSupport": "Non supporta {{language}}"
     },
     "models": {
       "small": {

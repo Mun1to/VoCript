@@ -39,7 +39,8 @@
     "downloadFailed": "ההורדה נכשלה. נסה שוב.",
     "modelCard": {
       "accuracy": "דיוק",
-      "speed": "מהירות"
+      "speed": "מהירות",
+      "noLanguageSupport": "לא תומך ב-{{language}}"
     },
     "models": {
       "small": {

@@ -39,7 +39,8 @@
     "downloadFailed": "Échec du téléchargement. Veuillez réessayer.",
     "modelCard": {
       "accuracy": "précision",
-      "speed": "vitesse"
+      "speed": "vitesse",
+      "noLanguageSupport": "{{language}} non pris en charge"
     },
     "models": {
       "small": {

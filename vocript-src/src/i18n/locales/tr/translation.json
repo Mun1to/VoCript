@@ -39,7 +39,8 @@
     "downloadFailed": "İndirme başarısız oldu. Lütfen tekrar deneyin.",
     "modelCard": {
       "accuracy": "doğruluk",
-      "speed": "hız"
+      "speed": "hız",
+      "noLanguageSupport": "{{language}} desteklenmiyor"
     },
     "models": {
       "small": {

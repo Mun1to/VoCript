@@ -39,7 +39,8 @@
     "downloadFailed": "Nedladdningen misslyckades. Försök igen.",
     "modelCard": {
       "accuracy": "noggrannhet",
-      "speed": "hastighet"
+      "speed": "hastighet",
+      "noLanguageSupport": "Stöder inte {{language}}"
     },
     "models": {
       "small": {

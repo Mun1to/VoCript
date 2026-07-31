@@ -57,6 +57,9 @@ interface ModelCardProps {
   // When set, shows a highlighted badge (e.g. "Recommended for Spanish").
   // Independent of the static `is_recommended` flag.
   recommendedLabel?: string;
+  // When set, warns that the model can't transcribe the chosen language
+  // (e.g. "No Turkish support").
+  unsupportedLabel?: string;
 }
 
 const ModelCard: React.FC<ModelCardProps> = ({
@@ -73,6 +76,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
   downloadSpeed,
   showRecommended = true,
   recommendedLabel,
+  unsupportedLabel,
 }) => {
   const { t } = useTranslation();
   const isFeatured = variant === "featured";
@@ -144,6 +148,9 @@ const ModelCard: React.FC<ModelCardProps> = ({
             </h3>
             {recommendedLabel && (
               <Badge variant="primary">{recommendedLabel}</Badge>
+            )}
+            {unsupportedLabel && (
+              <Badge variant="secondary">{unsupportedLabel}</Badge>
             )}
             {showRecommended && model.is_recommended && !recommendedLabel && (
               <Badge variant="primary">{t("onboarding.recommended")}</Badge>

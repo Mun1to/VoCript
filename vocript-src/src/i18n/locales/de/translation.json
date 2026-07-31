@@ -39,7 +39,8 @@
     "downloadFailed": "Download fehlgeschlagen. Bitte erneut versuchen.",
     "modelCard": {
       "accuracy": "Genauigkeit",
-      "speed": "Geschwindigkeit"
+      "speed": "Geschwindigkeit",
+      "noLanguageSupport": "Unterstützt kein {{language}}"
     },
     "models": {
       "small": {

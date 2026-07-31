@@ -39,7 +39,8 @@
     "downloadFailed": "Загрузка не удалась. Пожалуйста, попробуйте снова.",
     "modelCard": {
       "accuracy": "точность",
-      "speed": "скорость"
+      "speed": "скорость",
+      "noLanguageSupport": "Не поддерживает {{language}}"
     },
     "models": {
       "small": {

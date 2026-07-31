@@ -39,7 +39,8 @@
     "downloadFailed": "ダウンロードに失敗しました。もう一度お試しください。",
     "modelCard": {
       "accuracy": "精度",
-      "speed": "速度"
+      "speed": "速度",
+      "noLanguageSupport": "{{language}}に非対応"
     },
     "models": {
       "small": {

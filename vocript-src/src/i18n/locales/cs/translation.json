@@ -39,7 +39,8 @@
     "downloadFailed": "Stahování se nezdařilo. Zkuste to prosím znovu.",
     "modelCard": {
       "accuracy": "přesnost",
-      "speed": "rychlost"
+      "speed": "rychlost",
+      "noLanguageSupport": "Nepodporuje {{language}}"
     },
     "models": {
       "small": {

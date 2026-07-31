@@ -39,7 +39,8 @@
     "downloadFailed": "فشل التنزيل. يرجى المحاولة مرة أخرى.",
     "modelCard": {
       "accuracy": "الدقة",
-      "speed": "السرعة"
+      "speed": "السرعة",
+      "noLanguageSupport": "لا يدعم {{language}}"
     },
     "models": {
       "small": {

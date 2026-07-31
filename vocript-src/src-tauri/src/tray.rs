@@ -223,7 +223,11 @@ pub fn update_tray_menu(app: &AppHandle, state: &TrayIconState, locale: Option<&
     // in each language's own name so a user stuck in a script they cannot read
     // can still find their way back.
     let language_submenu = {
-        let label = format!("{}: {}", strings.language, settings::language_native_name(locale));
+        let label = format!(
+            "{}: {}",
+            strings.language,
+            settings::language_native_name(locale)
+        );
         let submenu = Submenu::with_id(app, "language_submenu", &label, true)
             .expect("failed to create language submenu");
 

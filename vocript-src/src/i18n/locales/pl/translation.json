@@ -39,7 +39,8 @@
     "downloadFailed": "Pobieranie nie powiodło się. Spróbuj ponownie.",
     "modelCard": {
       "accuracy": "dokładność",
-      "speed": "szybkość"
+      "speed": "szybkość",
+      "noLanguageSupport": "Nie obsługuje {{language}}"
     },
     "models": {
       "small": {

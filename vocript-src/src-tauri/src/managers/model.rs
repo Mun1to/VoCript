@@ -214,7 +214,9 @@ impl ModelManager {
                 is_directory: false,
                 engine_type: EngineType::Whisper,
                 accuracy_score: 0.80,
-                speed_score: 0.40,
+                // Turbo runs a 4-layer decoder where Medium runs 24, so it is
+                // not the slow model its inherited 0.40 score made it look like.
+                speed_score: 0.55,
                 supports_translation: false, // Turbo doesn't support translation
                 is_recommended: false,
                 supported_languages: whisper_languages.clone(),
