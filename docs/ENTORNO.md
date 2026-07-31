@@ -41,6 +41,18 @@ compilación muy profundas; si el target está en la ruta normal
 Windows (MAX_PATH) y la compilación de C++ falla. Redirigir el target a `C:\ct`
 acorta las rutas lo suficiente.
 
+⚠️ **Vigila su tamaño.** `C:\ct` se regenera sola en cada build, pero nadie la
+limpia por su cuenta: crece sin límite mientras compiles. Es compartida entre
+VoCript, layco-core y Adeorq, así que cuantos más proyectos la usan, más rápido
+crece. El 2026-07-28 llegó a 153 GB sin que nadie se diera cuenta, con el C:
+del portátil casi lleno. De vez en cuando, comprueba su tamaño y bórrala si
+hace falta (no hay nada que perder, se regenera en el siguiente build):
+```powershell
+(Get-ChildItem C:\ct -Recurse -File -ErrorAction SilentlyContinue | Measure-Object Length -Sum).Sum / 1GB
+Remove-Item C:\ct\debug, C:\ct\release -Recurse -Force -ErrorAction SilentlyContinue
+```
+Regla completa: `Reglas_de_los_proyectos.md` (regla S).
+
 Verificar las variables:
 ```powershell
 Get-ChildItem Env: | Where-Object Name -in 'LIBCLANG_PATH','VULKAN_SDK','CARGO_TARGET_DIR','CMAKE_GENERATOR'
