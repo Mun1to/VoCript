@@ -20,7 +20,10 @@
 
 <p align="center">
   <a href="https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-Setup.exe">
-    <img src="brand/download-button-en.svg" alt="Download VoCript" width="320" height="72" />
+    <img src="brand/download-button-en.svg" alt="Download VoCript for Windows" width="320" height="72" />
+  </a>
+  <a href="https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-x86_64.AppImage">
+    <img src="brand/download-button-linux-en.svg" alt="Download VoCript for Linux" width="320" height="72" />
   </a>
 </p>
 
