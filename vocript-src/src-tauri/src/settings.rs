@@ -122,6 +122,16 @@ pub enum OverlayPosition {
     Bottom,
 }
 
+/// Where the user last dragged the overlay to, in physical pixels. `None`
+/// means it has never been dragged, so `overlay_position` (top/bottom, and
+/// which monitor to follow) still decides where it appears. Once set, it wins
+/// over that automatic placement until the user drags it again or resets it.
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
+pub struct OverlayCustomPosition {
+    pub x: i32,
+    pub y: i32,
+}
+
 /// Apariencia de la interfaz. `System` sigue la preferencia del sistema
 /// operativo (claro/oscuro); `Light` y `Dark` fuerzan el tema elegido.
 #[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type, Default)]
@@ -399,6 +409,8 @@ pub struct AppSettings {
     pub selected_language: String,
     #[serde(default = "default_overlay_position")]
     pub overlay_position: OverlayPosition,
+    #[serde(default)]
+    pub overlay_custom_position: Option<OverlayCustomPosition>,
     #[serde(default = "default_debug_mode")]
     pub debug_mode: bool,
     #[serde(default = "default_log_level")]
@@ -968,6 +980,7 @@ pub fn get_default_settings() -> AppSettings {
         translate_to_english: false,
         selected_language: "es".to_string(),
         overlay_position: default_overlay_position(),
+        overlay_custom_position: None,
         debug_mode: false,
         log_level: default_log_level(),
         custom_words: Vec::new(),

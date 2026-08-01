@@ -493,11 +493,15 @@
       },
       "overlay": {
         "title": "Overlay-Position",
-        "description": "Visuelles Feedback-Overlay während Aufnahme und Transkription anzeigen. Unter Linux wird 'Keine' empfohlen.",
+        "description": "Visuelles Feedback-Overlay während Aufnahme und Transkription anzeigen. Unter Linux wird 'Keine' empfohlen. Ziehen Sie das Overlay selbst an eine beliebige Stelle; diese Einstellung legt nur die Startposition fest.",
         "options": {
           "none": "Keine",
           "bottom": "Unten",
           "top": "Oben"
+        },
+        "customPosition": {
+          "reset": "Position zurücksetzen",
+          "resetDone": "Overlay-Position zurückgesetzt"
         }
       },
       "pasteMethod": {

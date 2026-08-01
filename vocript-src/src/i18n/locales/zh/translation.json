@@ -493,11 +493,15 @@
       },
       "overlay": {
         "title": "悬浮窗位置",
-        "description": "在录制和转录期间显示可视反馈悬浮窗。在 Linux 上建议选择「无」。",
+        "description": "在录制和转录期间显示可视反馈悬浮窗。在 Linux 上建议选择「无」。拖动悬浮窗本身即可放到你想要的任何位置；此设置只决定它一开始出现的位置。",
         "options": {
           "none": "无",
           "bottom": "底部",
           "top": "顶部"
+        },
+        "customPosition": {
+          "reset": "重置位置",
+          "resetDone": "悬浮窗位置已重置"
         }
       },
       "pasteMethod": {

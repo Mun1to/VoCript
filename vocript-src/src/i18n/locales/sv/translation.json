@@ -493,11 +493,15 @@
       },
       "overlay": {
         "title": "Överlagringsposition",
-        "description": "Visa visuell återkoppling under inspelning och transkription. På Linux rekommenderas 'Ingen'.",
+        "description": "Visa visuell återkoppling under inspelning och transkription. På Linux rekommenderas 'Ingen'. Dra själva overlayen dit du vill; den här inställningen bestämmer bara var den visas från början.",
         "options": {
           "none": "Ingen",
           "bottom": "Nederst",
           "top": "Överst"
+        },
+        "customPosition": {
+          "reset": "Återställ position",
+          "resetDone": "Overlayens position har återställts"
         }
       },
       "pasteMethod": {

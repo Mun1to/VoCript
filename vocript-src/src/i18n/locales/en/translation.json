@@ -556,11 +556,15 @@
       },
       "overlay": {
         "title": "Overlay Position",
-        "description": "Display visual feedback overlay during recording and transcription. On Linux 'None' is recommended.",
+        "description": "Display visual feedback overlay during recording and transcription. On Linux 'None' is recommended. Drag the overlay itself to put it wherever you like; this just sets where it starts out.",
         "options": {
           "none": "None",
           "bottom": "Bottom",
           "top": "Top"
+        },
+        "customPosition": {
+          "reset": "Reset position",
+          "resetDone": "Overlay position reset"
         }
       },
       "pasteMethod": {

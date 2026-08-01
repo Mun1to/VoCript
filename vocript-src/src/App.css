@@ -99,7 +99,52 @@
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3b82f6;
+  background: var(--color-logo-primary);
+}
+
+/* Themed <input type="range">. Chromium/WebView2's default thumb ignores the
+   accent color entirely, so every seek bar and slider in the app (history
+   playback, volume, font size...) kept a fixed blue dot no matter what accent
+   color was picked. Both vendor-prefixed pseudo-elements are needed; a
+   browser that doesn't understand one simply skips that rule. */
+.vc-range {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+
+.vc-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-logo-primary);
+  box-shadow: 0 0 6px 1px var(--color-logo-glow);
+  cursor: pointer;
+  border: none;
+}
+
+.vc-range::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-logo-primary);
+  box-shadow: 0 0 6px 1px var(--color-logo-glow);
+  cursor: pointer;
+  border: none;
+}
+
+.vc-range:disabled::-webkit-slider-thumb {
+  background: var(--color-mid-gray);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.vc-range:disabled::-moz-range-thumb {
+  background: var(--color-mid-gray);
+  box-shadow: none;
+  cursor: not-allowed;
 }
 
 /* Premium Visual Utility Classes */

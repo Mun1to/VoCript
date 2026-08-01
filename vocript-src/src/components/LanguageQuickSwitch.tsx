@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { Globe, ChevronDown } from "lucide-react";
+import { Globe } from "lucide-react";
 import { useSettings } from "../hooks/useSettings";
 import { useResolvedTheme } from "../hooks/useResolvedTheme";
 import { SUPPORTED_LANGUAGES, type SupportedLanguageCode } from "../i18n";
-import { HoverTooltip } from "./ui/HoverTooltip";
+import { HeaderDropdown, HeaderDropdownOption } from "./ui/HeaderDropdown";
 
 /**
  * Quick language switch in the header. Picking a language changes BOTH the app
@@ -26,84 +26,41 @@ export const LanguageQuickSwitch: React.FC = () => {
   const isLight = useResolvedTheme() === "light";
   const current = (settings?.app_language ||
     i18n.language) as SupportedLanguageCode;
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const onDown = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", onDown);
-    return () => document.removeEventListener("mousedown", onDown);
-  }, []);
 
   const handleSelect = (code: string) => {
     i18n.changeLanguage(code);
     updateSetting("app_language", code);
     updateSetting("selected_language", APP_TO_MODEL[code] ?? code);
-    setOpen(false);
   };
 
   const currentLabel =
     SUPPORTED_LANGUAGES.find((l) => l.code === current)?.nativeName ?? current;
 
   return (
-    <div className="relative" ref={ref} data-tour="header-language">
-      <HoverTooltip label={t("header.language.label")}>
-        <button
-          type="button"
-          onClick={() => setOpen((o) => !o)}
-          className={`flex items-center gap-1.5 py-1 px-1.5 rounded-lg text-xs font-bold transition-colors ${
-            isLight
-              ? "text-logo-primary hover:bg-slate-100"
-              : "text-logo-primary hover:bg-white/[0.06]"
+    <HeaderDropdown
+      dataTour="header-language"
+      tooltip={t("header.language.label")}
+      align="end"
+      panelClassName="py-1 max-h-72 overflow-y-auto"
+      icon={
+        <Globe
+          className={`w-3.5 h-3.5 shrink-0 ${
+            isLight ? "text-slate-500" : "text-slate-400"
           }`}
+        />
+      }
+      label={currentLabel}
+    >
+      {SUPPORTED_LANGUAGES.map((lang) => (
+        <HeaderDropdownOption
+          key={lang.code}
+          active={lang.code === current}
+          onClick={() => handleSelect(lang.code)}
         >
-          <Globe
-            className={`w-3.5 h-3.5 shrink-0 ${
-              isLight ? "text-slate-500" : "text-slate-400"
-            }`}
-          />
-          <span>{currentLabel}</span>
-          <ChevronDown
-            className={`w-3.5 h-3.5 shrink-0 transition-transform ${
-              open ? "rotate-180" : ""
-            }`}
-          />
-        </button>
-      </HoverTooltip>
-      {open && (
-        <div
-          className={`absolute top-full end-0 mt-1 max-h-72 overflow-y-auto rounded-lg border shadow-lg z-50 py-1 ${
-            isLight
-              ? "bg-white border-slate-200"
-              : "bg-[#141620] border-white/10"
-          }`}
-        >
-          {SUPPORTED_LANGUAGES.map((lang) => {
-            const active = lang.code === current;
-            return (
-              <button
-                key={lang.code}
-                type="button"
-                onClick={() => handleSelect(lang.code)}
-                className={`block w-full text-start px-3 py-1.5 text-xs font-semibold whitespace-nowrap transition-colors ${
-                  active
-                    ? "text-logo-primary"
-                    : isLight
-                      ? "text-slate-700 hover:bg-slate-100"
-                      : "text-slate-300 hover:bg-white/[0.06]"
-                }`}
-              >
-                {lang.nativeName}
-              </button>
-            );
-          })}
-        </div>
-      )}
-    </div>
+          {lang.nativeName}
+        </HeaderDropdownOption>
+      ))}
+    </HeaderDropdown>
   );
 };
 

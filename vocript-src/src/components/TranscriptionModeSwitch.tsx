@@ -1,18 +1,17 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Mic, Volume2, Clipboard, Hand, ChevronDown } from "lucide-react";
+import { Mic, Volume2, Clipboard, Hand } from "lucide-react";
 import type { AppSettings } from "@/bindings";
 import { useSettings } from "../hooks/useSettings";
 import { useResolvedTheme } from "../hooks/useResolvedTheme";
 import { useOsType } from "../hooks/useOsType";
+import { HeaderDropdown, HeaderDropdownOption } from "./ui/HeaderDropdown";
 
 /**
- * Quick-control bar shown in the header. Each setting is a compact button that
- * always shows its *current* value highlighted in blue (with a glow). Hovering
- * opens a small dropdown with the two options stacked together; clicking one
- * sets it. The trigger stays narrow (icon + value) so the row keeps roughly the
- * same width across all 20 UI languages, and the dropdown carries a tiny title
- * so you know which control it is.
+ * Quick-control bar shown in the header. Each setting is a compact chip that
+ * shows its *current* value; clicking opens a small dropdown with the two
+ * options stacked together, the same interaction as every other header
+ * dropdown (profile, language, accent color) via `HeaderDropdown`.
  *
  * - Voz / Sistema: `live_mode` / `live_mode_system` (Normal ↔ En vivo).
  * - Salida: `clipboard_only` (Pegar ↔ Copiar al portapapeles).
@@ -78,7 +77,7 @@ const CONTROLS: QuickControl[] = [
 
 export const TranscriptionModeSwitch: React.FC = () => {
   const { t } = useTranslation();
-  const { settings, getSetting, updateSetting, isUpdating } = useSettings();
+  const { getSetting, updateSetting, isUpdating } = useSettings();
   const isLight = useResolvedTheme() === "light";
   const isWindows = useOsType() === "windows";
 
@@ -88,61 +87,36 @@ export const TranscriptionModeSwitch: React.FC = () => {
     const Icon = control.icon;
     const currentLabel = t(value ? control.onKey : control.offKey);
 
-    const optionClass = (active: boolean) =>
-      `block w-full text-center px-4 py-2 rounded-md text-[11px] font-semibold whitespace-nowrap transition-colors ${
-        active
-          ? "bg-logo-primary text-white shadow-[0_0_10px_1px_var(--color-logo-glow)]"
-          : isLight
-            ? "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-            : "text-slate-300 hover:bg-white/[0.06] hover:text-white"
-      } ${updating ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`;
-
     return (
-      <div key={control.key} data-tour={control.tour} className="relative group">
-        <div
-          title={t(control.labelKey)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold bg-logo-primary text-white shadow-[0_0_11px_1px_var(--color-logo-glow)] select-none"
+      <HeaderDropdown
+        key={control.key}
+        dataTour={control.tour}
+        tooltip={t(control.labelKey)}
+        title={t(control.labelKey)}
+        icon={
+          <Icon
+            className={`w-3.5 h-3.5 shrink-0 ${
+              isLight ? "text-slate-500" : "text-slate-400"
+            } ${updating ? "opacity-50" : ""}`}
+          />
+        }
+        label={currentLabel}
+      >
+        <HeaderDropdownOption
+          active={!value}
+          disabled={updating}
+          onClick={() => updateSetting(control.key, false)}
         >
-          <Icon className="w-3.5 h-3.5 shrink-0" />
-          <span>{currentLabel}</span>
-          <ChevronDown className="w-3 h-3 opacity-80 transition-transform group-hover:rotate-180" />
-        </div>
-        {/* `top-full` pega el menú al trigger (sin hueco) y el `pt-[5px]`
-            transparente actúa de puente: al bajar el ratón hacia las opciones
-            sigues sobre un descendiente del `group`, así que el hover no se
-            pierde y el desplegable no se cierra a mitad de camino. */}
-        <div className="hidden group-hover:block absolute top-full left-0 min-w-full z-30 pt-[5px]">
-          <div
-            className={`p-1 rounded-xl border ${
-              isLight ? "bg-white border-slate-200" : "bg-[#15161c] border-white/10"
-            }`}
-          >
-            <div
-              className={`text-[9px] uppercase tracking-wider text-center pt-0.5 pb-1.5 ${
-                isLight ? "text-slate-400" : "text-slate-500"
-              }`}
-            >
-              {t(control.labelKey)}
-            </div>
-            <button
-              type="button"
-              disabled={updating}
-              onClick={() => updateSetting(control.key, false)}
-              className={optionClass(!value)}
-            >
-              {t(control.offKey)}
-            </button>
-            <button
-              type="button"
-              disabled={updating}
-              onClick={() => updateSetting(control.key, true)}
-              className={`mt-0.5 ${optionClass(value)}`}
-            >
-              {t(control.onKey)}
-            </button>
-          </div>
-        </div>
-      </div>
+          {t(control.offKey)}
+        </HeaderDropdownOption>
+        <HeaderDropdownOption
+          active={value}
+          disabled={updating}
+          onClick={() => updateSetting(control.key, true)}
+        >
+          {t(control.onKey)}
+        </HeaderDropdownOption>
+      </HeaderDropdown>
     );
   };
 

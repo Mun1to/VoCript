@@ -493,11 +493,15 @@
       },
       "overlay": {
         "title": "Posizione della Sovrimpressione",
-        "description": "Mostra un feedback visivo in sovrimpressione durante la registrazione e la trascrizione. Su Linux si raccomanda 'Nessuna'.",
+        "description": "Mostra un feedback visivo in sovrimpressione durante la registrazione e la trascrizione. Su Linux si raccomanda 'Nessuna'. Trascina la sovrimpressione dove preferisci; questa impostazione definisce solo la posizione iniziale.",
         "options": {
           "none": "Nessuna",
           "bottom": "In basso",
           "top": "In alto"
+        },
+        "customPosition": {
+          "reset": "Ripristina posizione",
+          "resetDone": "Posizione della sovrimpressione ripristinata"
         }
       },
       "pasteMethod": {

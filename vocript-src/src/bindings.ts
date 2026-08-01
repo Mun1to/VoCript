@@ -1149,6 +1149,25 @@ async isLaptop() : Promise<Result<boolean, string>> {
  */
 async getSystemTheme() : Promise<string> {
     return await TAURI_INVOKE("get_system_theme");
+},
+/**
+ * Forgets the dragged position, so the overlay goes back to following
+ * `overlay_position` (top/bottom, tracking the active monitor) on its own.
+ */
+async resetOverlayPosition() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("reset_overlay_position") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Whether the overlay has ever been dragged, for the settings screen to show
+ * (or hide) the "reset position" action.
+ */
+async hasCustomOverlayPosition() : Promise<boolean> {
+    return await TAURI_INVOKE("has_custom_overlay_position");
 }
 }
 
@@ -1204,7 +1223,7 @@ ui_font_size?: number; selected_model?: string; always_on_microphone?: boolean; 
  * Executable name of the app to capture for system-audio transcription
  * (e.g. "Spotify.exe"). `None` = capture the whole system mix.
  */
-system_audio_app?: string | null; translate_to_english?: boolean; selected_language?: string; overlay_position?: OverlayPosition; debug_mode?: boolean; log_level?: LogLevel; custom_words?: string[]; 
+system_audio_app?: string | null; translate_to_english?: boolean; selected_language?: string; overlay_position?: OverlayPosition; overlay_custom_position?: OverlayCustomPosition | null; debug_mode?: boolean; log_level?: LogLevel; custom_words?: string[]; 
 /**
  * Personal dictionary: deterministic exact replacements (from -> to).
  */
@@ -1334,6 +1353,13 @@ export type ModelInfo = { id: string; name: string; description: string; filenam
 export type ModelLoadStatus = { is_loaded: boolean; current_model: string | null }
 export type ModelUnloadTimeout = "never" | "immediately" | "min_2" | "min_5" | "min_10" | "min_15" | "hour_1" | "sec_15"
 export type OrtAcceleratorSetting = "auto" | "cpu" | "cuda" | "directml" | "rocm"
+/**
+ * Where the user last dragged the overlay to, in physical pixels. `None`
+ * means it has never been dragged, so `overlay_position` (top/bottom, and
+ * which monitor to follow) still decides where it appears. Once set, it wins
+ * over that automatic placement until the user drags it again or resets it.
+ */
+export type OverlayCustomPosition = { x: number; y: number }
 export type OverlayPosition = "none" | "top" | "bottom"
 export type PaginatedHistory = { entries: HistoryEntry[]; has_more: boolean }
 export type PasteMethod = "ctrl_v" | "direct" | "none" | "shift_insert" | "ctrl_shift_v" | "external_script"

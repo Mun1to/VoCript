@@ -493,11 +493,15 @@
       },
       "overlay": {
         "title": "Pozice překryvu",
-        "description": "Zobrazovat vizuální překryv během nahrávání a přepisu. Na Linuxu je doporučeno 'Žádné'.",
+        "description": "Zobrazovat vizuální překryv během nahrávání a přepisu. Na Linuxu je doporučeno 'Žádné'. Přetáhněte překryv kamkoli chcete; toto nastavení určuje jen jeho počáteční pozici.",
         "options": {
           "none": "Žádné",
           "bottom": "Dole",
           "top": "Nahoře"
+        },
+        "customPosition": {
+          "reset": "Obnovit pozici",
+          "resetDone": "Pozice překryvu byla obnovena"
         }
       },
       "pasteMethod": {

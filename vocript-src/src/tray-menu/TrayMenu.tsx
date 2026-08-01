@@ -137,17 +137,24 @@ const Row: React.FC<{
   </button>
 );
 
+/**
+ * A real checkbox under the hood (Tailwind's `peer` trick), not a button with
+ * decorative spans standing in for one. The previous version had no form
+ * control at all — nothing for a screen reader to announce, nothing for a
+ * keyboard to focus — and it drove its ON/OFF color with inline `style`,
+ * which cannot be overridden by a `peer-checked:` class, so the two states
+ * would have collapsed into one style rule the day this needed to grow a
+ * disabled or focus state. Uses `bg-logo-primary` like every other themed
+ * control instead: whatever `applyAppearance` sets `--color-logo-primary` to
+ * for this window is what the knob turns.
+ */
 const Toggle: React.FC<{
   icon: React.ReactNode;
   label: string;
   on: boolean;
   onClick: () => void;
 }> = ({ icon, label, on, onClick }) => (
-  <button
-    type="button"
-    onClick={onClick}
-    className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-start transition-colors hover:bg-[var(--vc-pill-bg)]"
-  >
+  <label className="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-start transition-colors hover:bg-[var(--vc-pill-bg)]">
     <span
       className="flex h-4 w-4 shrink-0 items-center justify-center"
       style={{
@@ -162,19 +169,16 @@ const Toggle: React.FC<{
     >
       {label}
     </span>
-    <span
-      className="relative h-[18px] w-[32px] shrink-0 rounded-full transition-colors"
-      style={{
-        backgroundColor: on ? "var(--color-logo-primary)" : "var(--vc-pill-bg)",
-        border: on ? "none" : "1px solid var(--vc-border)",
-      }}
-    >
-      <span
-        className="absolute top-[2px] h-[14px] w-[14px] rounded-full bg-white transition-all"
-        style={{ left: on ? "16px" : "2px", opacity: on ? 1 : 0.55 }}
+    <span className="relative inline-flex h-[18px] w-[32px] shrink-0 items-center">
+      <input
+        type="checkbox"
+        className="peer sr-only"
+        checked={on}
+        onChange={onClick}
       />
+      <span className="h-[18px] w-[32px] rounded-full border border-[var(--vc-border)] bg-[var(--vc-pill-bg)] transition-colors peer-checked:border-transparent peer-checked:bg-logo-primary after:absolute after:left-[3px] after:top-1/2 after:h-[12px] after:w-[12px] after:-translate-y-1/2 after:rounded-full after:bg-white after:transition-transform after:content-[''] peer-checked:after:translate-x-[14px]" />
     </span>
-  </button>
+  </label>
 );
 
 const Divider = () => (

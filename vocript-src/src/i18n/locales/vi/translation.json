@@ -493,11 +493,15 @@
       },
       "overlay": {
         "title": "Vị trí lớp phủ",
-        "description": "Hiển thị lớp phủ phản hồi trực quan trong quá trình ghi âm và chuyển đổi. Trên Linux, 'Không có' được khuyến nghị.",
+        "description": "Hiển thị lớp phủ phản hồi trực quan trong quá trình ghi âm và chuyển đổi. Trên Linux, 'Không có' được khuyến nghị. Kéo lớp phủ đến bất kỳ đâu bạn muốn; cài đặt này chỉ đặt vị trí ban đầu.",
         "options": {
           "none": "Không có",
           "bottom": "Dưới",
           "top": "Trên"
+        },
+        "customPosition": {
+          "reset": "Đặt lại vị trí",
+          "resetDone": "Đã đặt lại vị trí lớp phủ"
         }
       },
       "pasteMethod": {

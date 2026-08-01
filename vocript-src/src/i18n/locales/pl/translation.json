@@ -493,11 +493,15 @@
       },
       "overlay": {
         "title": "Pozycja nakładki",
-        "description": "Wyświetlaj wizualną nakładkę podczas nagrywania i transkrypcji. Na Linuxie zalecane 'Brak'.",
+        "description": "Wyświetlaj wizualną nakładkę podczas nagrywania i transkrypcji. Na Linuxie zalecane 'Brak'. Przeciągnij samą nakładkę w dowolne miejsce; to ustawienie określa tylko jej pozycję początkową.",
         "options": {
           "none": "Brak",
           "bottom": "Dół",
           "top": "Góra"
+        },
+        "customPosition": {
+          "reset": "Zresetuj pozycję",
+          "resetDone": "Pozycja nakładki została zresetowana"
         }
       },
       "pasteMethod": {

@@ -1,6 +1,8 @@
 use crate::input;
 use crate::settings;
-use crate::settings::OverlayPosition;
+use crate::settings::{OverlayCustomPosition, OverlayPosition};
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
+use std::time::Duration;
 use tauri::{AppHandle, Emitter, Manager, PhysicalPosition, PhysicalSize};
 
 #[cfg(not(target_os = "macos"))]
@@ -33,6 +35,29 @@ tauri_panel! {
 
 const OVERLAY_WIDTH: f64 = 172.0;
 const OVERLAY_HEIGHT: f64 = 36.0;
+
+/// Set right before every `set_position` call this module makes, so the
+/// `Moved` event it triggers is not mistaken for the user dragging the
+/// window — which would immediately "save" our own automatic placement as a
+/// custom one, permanently overriding `overlay_position` after the very
+/// first time the overlay was ever shown.
+static IGNORE_NEXT_MOVE: AtomicBool = AtomicBool::new(false);
+
+/// Bumped on every un-ignored `Moved` event, so the debounce below can tell
+/// "the drag is still going" from "that was the last move" without polling.
+static MOVE_GENERATION: AtomicU64 = AtomicU64::new(0);
+
+/// How long the overlay must sit still before a drag is written to disk. The
+/// OS reports a `Moved` event on nearly every pixel of a native drag; writing
+/// settings that often would thrash the disk for no benefit, since only the
+/// final position matters.
+const DRAG_SETTLE: Duration = Duration::from_millis(250);
+
+/// Safety net for [`IGNORE_NEXT_MOVE`]: if the platform never fires a `Moved`
+/// event for this position change (observed for windows repositioned while
+/// still hidden), the flag would otherwise stay stuck and silently swallow
+/// the *next* genuine drag.
+const IGNORE_FLAG_TIMEOUT: Duration = Duration::from_millis(400);
 
 // Live-transcription mode uses a wider, taller capsule (logo + text bubble).
 const LIVE_OVERLAY_WIDTH: f64 = 560.0;
@@ -322,7 +347,120 @@ fn calculate_overlay_position_sized(
 }
 
 fn calculate_overlay_position(app_handle: &AppHandle) -> Option<tauri::Position> {
-    calculate_overlay_position_sized(app_handle, OVERLAY_WIDTH, OVERLAY_HEIGHT)
+    resolved_overlay_position(app_handle, OVERLAY_WIDTH, OVERLAY_HEIGHT)
+}
+
+/// The saved position from the user dragging the overlay, converted to
+/// whatever `Position` variant this platform's `set_position` expects.
+///
+/// `WindowEvent::Moved` always reports physical pixels, so that is what gets
+/// saved; only the *type* needs adjusting here, not the numbers. On Windows a
+/// `Physical` position is applied as-is. Elsewhere it is converted to logical
+/// units using whichever monitor the point now falls on — it may not be the
+/// monitor it was dragged on, if that display was unplugged since.
+fn custom_overlay_position(app_handle: &AppHandle) -> Option<tauri::Position> {
+    let saved = settings::get_settings(app_handle).overlay_custom_position?;
+
+    #[cfg(target_os = "windows")]
+    {
+        Some(tauri::Position::Physical(PhysicalPosition {
+            x: saved.x,
+            y: saved.y,
+        }))
+    }
+    #[cfg(not(target_os = "windows"))]
+    {
+        let scale = app_handle
+            .available_monitors()
+            .ok()
+            .into_iter()
+            .flatten()
+            .find(|m| is_mouse_within_monitor((saved.x, saved.y), &m.position(), &m.size()))
+            .map(|m| m.scale_factor())
+            .unwrap_or(1.0);
+        Some(tauri::Position::Logical(tauri::LogicalPosition {
+            x: saved.x as f64 / scale,
+            y: saved.y as f64 / scale,
+        }))
+    }
+}
+
+/// Where the overlay should sit right now: the user's own saved spot if they
+/// have ever dragged it, otherwise today's automatic monitor-following one.
+fn resolved_overlay_position(
+    app_handle: &AppHandle,
+    width: f64,
+    height: f64,
+) -> Option<tauri::Position> {
+    custom_overlay_position(app_handle)
+        .or_else(|| calculate_overlay_position_sized(app_handle, width, height))
+}
+
+/// Moves the overlay and marks the resulting `Moved` event as ours, not a
+/// user drag. Every programmatic reposition in this module must go through
+/// this — a raw `set_position` call would be indistinguishable from a drag
+/// and get "saved" as a custom position the user never chose.
+fn set_overlay_position_programmatic(window: &tauri::WebviewWindow, position: tauri::Position) {
+    IGNORE_NEXT_MOVE.store(true, Ordering::SeqCst);
+    let _ = window.set_position(position);
+    std::thread::spawn(|| {
+        std::thread::sleep(IGNORE_FLAG_TIMEOUT);
+        IGNORE_NEXT_MOVE.store(false, Ordering::SeqCst);
+    });
+}
+
+/// Watches the overlay window for the user dragging it, and remembers where
+/// they left it. Registered once, right after the window is created.
+fn register_drag_persistence(app_handle: &AppHandle) {
+    let Some(window) = app_handle.get_webview_window("recording_overlay") else {
+        return;
+    };
+    let app_handle = app_handle.clone();
+    window.on_window_event(move |event| {
+        let tauri::WindowEvent::Moved(position) = event else {
+            return;
+        };
+        if IGNORE_NEXT_MOVE.swap(false, Ordering::SeqCst) {
+            return;
+        }
+        let generation = MOVE_GENERATION.fetch_add(1, Ordering::SeqCst) + 1;
+        let (x, y) = (position.x, position.y);
+        let app_handle = app_handle.clone();
+        std::thread::spawn(move || {
+            std::thread::sleep(DRAG_SETTLE);
+            // A newer move landed while this one was waiting out the debounce;
+            // that thread's write will supersede this one.
+            if MOVE_GENERATION.load(Ordering::SeqCst) != generation {
+                return;
+            }
+            let mut settings = settings::get_settings(&app_handle);
+            settings.overlay_custom_position = Some(OverlayCustomPosition { x, y });
+            settings::write_settings(&app_handle, settings);
+            log::debug!("Overlay dragged by the user; remembering position ({x}, {y})");
+        });
+    });
+}
+
+/// Forgets the dragged position, so the overlay goes back to following
+/// `overlay_position` (top/bottom, tracking the active monitor) on its own.
+#[tauri::command]
+#[specta::specta]
+pub fn reset_overlay_position(app: AppHandle) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    settings.overlay_custom_position = None;
+    settings::write_settings(&app, settings);
+    update_overlay_position(&app);
+    Ok(())
+}
+
+/// Whether the overlay has ever been dragged, for the settings screen to show
+/// (or hide) the "reset position" action.
+#[tauri::command]
+#[specta::specta]
+pub fn has_custom_overlay_position(app: AppHandle) -> bool {
+    settings::get_settings(&app)
+        .overlay_custom_position
+        .is_some()
 }
 
 /// Creates the recording overlay window and keeps it hidden by default
@@ -378,6 +516,7 @@ pub fn create_recording_overlay(app_handle: &AppHandle) {
                 }
             }
 
+            register_drag_persistence(app_handle);
             debug!("Recording overlay window created successfully (hidden)");
         }
         Err(e) => {
@@ -415,6 +554,7 @@ pub fn create_recording_overlay(app_handle: &AppHandle) {
         {
             Ok(panel) => {
                 let _ = panel.hide();
+                register_drag_persistence(app_handle);
             }
             Err(e) => {
                 log::error!("Failed to create recording overlay panel: {}", e);
@@ -490,9 +630,9 @@ pub fn show_live_overlay(app_handle: &AppHandle) {
         update_gtk_layer_shell_anchors(&overlay_window);
 
         if let Some(position) =
-            calculate_overlay_position_sized(app_handle, LIVE_OVERLAY_WIDTH, LIVE_OVERLAY_HEIGHT)
+            resolved_overlay_position(app_handle, LIVE_OVERLAY_WIDTH, LIVE_OVERLAY_HEIGHT)
         {
-            let _ = overlay_window.set_position(position);
+            set_overlay_position_programmatic(&overlay_window, position);
         }
 
         let _ = overlay_window.show();
@@ -513,7 +653,7 @@ pub fn update_overlay_position(app_handle: &AppHandle) {
         }
 
         if let Some(position) = calculate_overlay_position(app_handle) {
-            let _ = overlay_window.set_position(position);
+            set_overlay_position_programmatic(&overlay_window, position);
         }
     }
 }

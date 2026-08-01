@@ -493,11 +493,15 @@
       },
       "overlay": {
         "title": "懸浮窗位置",
-        "description": "在錄製和轉錄期間顯示視覺回饋懸浮窗。在 Linux 上建議選擇「無」",
+        "description": "在錄製和轉錄期間顯示視覺回饋懸浮窗。在 Linux 上建議選擇「無」。拖曳懸浮窗本身即可放到你想要的任何位置；此設定只決定它一開始出現的位置。",
         "options": {
           "none": "無",
           "bottom": "底部",
           "top": "頂部"
+        },
+        "customPosition": {
+          "reset": "重設位置",
+          "resetDone": "懸浮窗位置已重設"
         }
       },
       "pasteMethod": {

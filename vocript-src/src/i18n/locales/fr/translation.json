@@ -493,11 +493,15 @@
       },
       "overlay": {
         "title": "Position de la fenêtre d'enregistrement",
-        "description": "Afficher un retour visuel pendant l'enregistrement et la transcription. Sur Linux, 'Aucune' est recommandé.",
+        "description": "Afficher un retour visuel pendant l'enregistrement et la transcription. Sur Linux, 'Aucune' est recommandé. Faites glisser l'incrustation elle-même où vous voulez ; ce réglage ne définit que sa position de départ.",
         "options": {
           "none": "Aucune",
           "bottom": "Bas",
           "top": "Haut"
+        },
+        "customPosition": {
+          "reset": "Réinitialiser la position",
+          "resetDone": "Position de l'incrustation réinitialisée"
         }
       },
       "pasteMethod": {

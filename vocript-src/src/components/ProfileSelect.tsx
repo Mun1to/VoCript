@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { Briefcase, ChevronDown } from "lucide-react";
+import { Briefcase } from "lucide-react";
 import { useSettings } from "../hooks/useSettings";
 import { useResolvedTheme } from "../hooks/useResolvedTheme";
-import { HoverTooltip } from "./ui/HoverTooltip";
+import { HeaderDropdown, HeaderDropdownOption } from "./ui/HeaderDropdown";
 
 /**
  * Professional-profile selector shown in the header. Picking a profile writes
@@ -12,10 +12,6 @@ import { HoverTooltip } from "./ui/HoverTooltip";
  *   - normal  → nothing extra
  *   - coding  → built-in code symbols (arroba→@, punto y coma→;, …)
  *   - custom  → the user's own commands (`custom_profile_commands`)
- *
- * Custom dropdown (not a native <select>, which would reserve the width of the
- * longest option) so the trigger hugs the current label and reads as a compact
- * pill, aligned with the quick-control pills on the right of the header.
  */
 const PROFILES = [
   { value: "normal", labelKey: "header.profile.normal" },
@@ -28,23 +24,6 @@ export const ProfileSelect: React.FC = () => {
   const { settings, updateSetting } = useSettings();
   const isLight = useResolvedTheme() === "light";
   const current = settings?.work_profile ?? "normal";
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const onDown = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", onDown);
-    return () => document.removeEventListener("mousedown", onDown);
-  }, []);
-
-  const handleSelect = (value: string) => {
-    updateSetting("work_profile", value === "normal" ? null : value);
-    setOpen(false);
-  };
 
   const currentLabel = t(
     PROFILES.find((p) => p.value === current)?.labelKey ??
@@ -52,60 +31,30 @@ export const ProfileSelect: React.FC = () => {
   );
 
   return (
-    <div className="relative" ref={ref} data-tour="header-profile">
-      <HoverTooltip label={t("header.profile.label")}>
-        <button
-          type="button"
-          onClick={() => setOpen((o) => !o)}
-          className={`flex items-center gap-1.5 py-1 px-1.5 rounded-lg text-xs font-bold transition-colors ${
-            isLight
-              ? "text-logo-primary hover:bg-slate-100"
-              : "text-logo-primary hover:bg-white/[0.06]"
+    <HeaderDropdown
+      dataTour="header-profile"
+      tooltip={t("header.profile.label")}
+      icon={
+        <Briefcase
+          className={`w-3.5 h-3.5 shrink-0 ${
+            isLight ? "text-slate-500" : "text-slate-400"
           }`}
+        />
+      }
+      label={currentLabel}
+    >
+      {PROFILES.map((p) => (
+        <HeaderDropdownOption
+          key={p.value}
+          active={p.value === current}
+          onClick={() =>
+            updateSetting("work_profile", p.value === "normal" ? null : p.value)
+          }
         >
-          <Briefcase
-            className={`w-3.5 h-3.5 shrink-0 ${
-              isLight ? "text-slate-500" : "text-slate-400"
-            }`}
-          />
-          <span>{currentLabel}</span>
-          <ChevronDown
-            className={`w-3.5 h-3.5 shrink-0 transition-transform ${
-              open ? "rotate-180" : ""
-            }`}
-          />
-        </button>
-      </HoverTooltip>
-      {open && (
-        <div
-          className={`absolute top-full start-0 mt-1 min-w-full rounded-lg border shadow-lg z-50 py-1 ${
-            isLight
-              ? "bg-white border-slate-200"
-              : "bg-[#141620] border-white/10"
-          }`}
-        >
-          {PROFILES.map((p) => {
-            const active = p.value === current;
-            return (
-              <button
-                key={p.value}
-                type="button"
-                onClick={() => handleSelect(p.value)}
-                className={`block w-full text-start px-3 py-1.5 text-xs font-semibold whitespace-nowrap transition-colors ${
-                  active
-                    ? "text-logo-primary"
-                    : isLight
-                      ? "text-slate-700 hover:bg-slate-100"
-                      : "text-slate-300 hover:bg-white/[0.06]"
-                }`}
-              >
-                {t(p.labelKey)}
-              </button>
-            );
-          })}
-        </div>
-      )}
-    </div>
+          {t(p.labelKey)}
+        </HeaderDropdownOption>
+      ))}
+    </HeaderDropdown>
   );
 };
 

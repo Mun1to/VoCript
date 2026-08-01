@@ -483,6 +483,8 @@ pub fn run(cli_args: CliArgs) {
             fonts::get_system_fonts,
             helpers::clamshell::is_laptop,
             get_system_theme,
+            overlay::reset_overlay_position,
+            overlay::has_custom_overlay_position,
         ])
         .events(collect_events![managers::history::HistoryUpdatePayload,]);
 

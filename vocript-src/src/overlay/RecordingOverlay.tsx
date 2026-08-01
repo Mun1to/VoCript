@@ -217,11 +217,12 @@ const RecordingOverlay: React.FC = () => {
     commands.cancelOperation();
   };
 
-  // Drag the live capsule like a normal window. Only in live mode, and never
-  // when the mousedown lands on an interactive control (logo, textarea, X, copy)
-  // so those keep working.
+  // Drag the overlay like a normal window, in every state — the backend
+  // remembers wherever it is dropped (see overlay.rs) and puts it back there
+  // next time instead of re-centering it. Never when the mousedown lands on
+  // an interactive control (logo, textarea, X, copy) so those keep working.
   const handleDragStart = (e: React.MouseEvent) => {
-    if (state !== "live" || e.button !== 0) return;
+    if (e.button !== 0) return;
     const target = e.target as HTMLElement;
     if (
       target.closest("textarea, .cancel-button, .copy-button, .overlay-logo")

@@ -556,11 +556,15 @@
       },
       "overlay": {
         "title": "Posición de Superposición",
-        "description": "Mostrar superposición de retroalimentación visual durante la grabación y transcripción. En Linux se recomienda 'Ninguna'.",
+        "description": "Mostrar superposición de retroalimentación visual durante la grabación y transcripción. En Linux se recomienda 'Ninguna'. Arrastra la propia superposición para ponerla donde quieras; esto solo fija dónde aparece al principio.",
         "options": {
           "none": "Ninguna",
           "bottom": "Abajo",
           "top": "Arriba"
+        },
+        "customPosition": {
+          "reset": "Restablecer posición",
+          "resetDone": "Posición de la superposición restablecida"
         }
       },
       "pasteMethod": {

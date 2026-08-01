@@ -493,11 +493,15 @@
       },
       "overlay": {
         "title": "Posição da Sobreposição",
-        "description": "Exibir sobreposição de feedback visual durante gravação e transcrição. No Linux, 'Nenhum' é recomendado.",
+        "description": "Exibir sobreposição de feedback visual durante gravação e transcrição. No Linux, 'Nenhum' é recomendado. Arraste a sobreposição para onde quiser; esta opção só define a posição inicial.",
         "options": {
           "none": "Nenhum",
           "bottom": "Inferior",
           "top": "Superior"
+        },
+        "customPosition": {
+          "reset": "Redefinir posição",
+          "resetDone": "Posição da sobreposição redefinida"
         }
       },
       "pasteMethod": {

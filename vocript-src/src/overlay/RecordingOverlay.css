@@ -21,6 +21,13 @@
   opacity: 0;
   transition: opacity 300ms ease-out;
   box-sizing: border-box;
+  /* Draggable to anywhere on screen in every state (see handleDragStart); the
+     backend remembers where it was dropped. */
+  cursor: grab;
+}
+
+.recording-overlay:active {
+  cursor: grabbing;
 }
 
 .overlay-left {
@@ -146,12 +153,6 @@
     rgba(38, 37, 35, 0.42) 100%
   );
   border: 0.5px solid rgba(255, 255, 255, 0.1);
-  /* The capsule can be dragged around like a window (see handleDragStart). */
-  cursor: grab;
-}
-
-.recording-overlay.live:active {
-  cursor: grabbing;
 }
 
 .recording-overlay.live .overlay-middle {

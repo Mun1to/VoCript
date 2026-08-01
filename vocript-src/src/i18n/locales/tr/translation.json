@@ -493,11 +493,15 @@
       },
       "overlay": {
         "title": "Overlay Konumu",
-        "description": "Kayıt ve transkripsiyon sırasında görsel geri bildirim kaplamasını gösterir. Linux'ta 'Yok' önerilir.",
+        "description": "Kayıt ve transkripsiyon sırasında görsel geri bildirim kaplamasını gösterir. Linux'ta 'Yok' önerilir. Kaplamayı istediğiniz yere sürükleyebilirsiniz; bu ayar yalnızca başlangıç konumunu belirler.",
         "options": {
           "none": "Yok",
           "bottom": "Alt",
           "top": "Üst"
+        },
+        "customPosition": {
+          "reset": "Konumu sıfırla",
+          "resetDone": "Kaplama konumu sıfırlandı"
         }
       },
       "pasteMethod": {
