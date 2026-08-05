@@ -726,7 +726,9 @@
       },
       "postProcessingToggle": {
         "label": "後處理",
-        "description": "啟用轉錄後的 AI 文字最佳化"
+        "description": "啟用轉錄後的 AI 文字最佳化",
+        "usingOllama": "已找到本機模型：將使用 Ollama 進行後處理",
+        "noLocalProvider": "未找到本機模型。請安裝並啟動 Ollama，或在下方選擇並設定提供者。"
       },
       "muteWhileRecording": {
         "label": "錄製時靜音",

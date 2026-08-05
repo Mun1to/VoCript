@@ -113,6 +113,30 @@ pub fn open_app_data_dir(app: AppHandle) -> Result<(), String> {
     Ok(())
 }
 
+/// Whether an Ollama server is reachable on its default local port.
+///
+/// Called before turning post-processing on for the first time: VoCript's
+/// whole pitch is "100% local", so the provider that setting starts on should
+/// not be a cloud one just because it happened to be first in the list.
+/// `/api/tags` (not `/v1/models`) because it is Ollama's own lightweight
+/// health-style endpoint — answers instantly without touching the model
+/// registry, so a cold Ollama start does not make this feel like a hang.
+#[specta::specta]
+#[tauri::command]
+pub async fn detect_local_post_process_provider() -> bool {
+    let Ok(client) = reqwest::Client::builder()
+        .timeout(std::time::Duration::from_millis(600))
+        .build()
+    else {
+        return false;
+    };
+    client
+        .get("http://localhost:11434/api/tags")
+        .send()
+        .await
+        .is_ok_and(|response| response.status().is_success())
+}
+
 /// Check if Apple Intelligence is available on this device.
 /// Called by the frontend when the user selects Apple Intelligence provider.
 #[specta::specta]

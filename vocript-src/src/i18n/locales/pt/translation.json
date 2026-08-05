@@ -726,7 +726,9 @@
       },
       "postProcessingToggle": {
         "label": "Pós-Processamento",
-        "description": "Habilitar refinamento de texto com IA após a transcrição"
+        "description": "Habilitar refinamento de texto com IA após a transcrição",
+        "usingOllama": "Modelo local encontrado: usando o Ollama para o pós-processamento",
+        "noLocalProvider": "Nenhum modelo local encontrado. Instale e inicie o Ollama, ou escolha e configure um provedor abaixo."
       },
       "muteWhileRecording": {
         "label": "Silenciar Durante Gravação",

@@ -789,7 +789,9 @@
       },
       "postProcessingToggle": {
         "label": "Post Processing",
-        "description": "Enable AI-powered text refinement after transcription"
+        "description": "Enable AI-powered text refinement after transcription",
+        "usingOllama": "Local model found — using Ollama for post-processing",
+        "noLocalProvider": "No local model found. Install and start Ollama, or pick and configure a provider below."
       },
       "muteWhileRecording": {
         "label": "Mute While Recording",

@@ -726,7 +726,9 @@
       },
       "postProcessingToggle": {
         "label": "Efterbearbetning",
-        "description": "Aktivera AI-driven textförfining efter transkription"
+        "description": "Aktivera AI-driven textförfining efter transkription",
+        "usingOllama": "Lokal modell hittades: använder Ollama för efterbearbetning",
+        "noLocalProvider": "Ingen lokal modell hittades. Installera och starta Ollama, eller välj och konfigurera en leverantör nedan."
       },
       "muteWhileRecording": {
         "label": "Ljudlös under inspelning",

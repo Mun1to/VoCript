@@ -726,7 +726,9 @@
       },
       "postProcessingToggle": {
         "label": "Postprocess",
-        "description": "Włącz AI do ulepszania tekstu po transkrypcji"
+        "description": "Włącz AI do ulepszania tekstu po transkrypcji",
+        "usingOllama": "Znaleziono model lokalny: używam Ollama do postprocessingu",
+        "noLocalProvider": "Nie znaleziono modelu lokalnego. Zainstaluj i uruchom Ollama albo wybierz i skonfiguruj dostawcę poniżej."
       },
       "muteWhileRecording": {
         "label": "Wycisz podczas nagrywania",

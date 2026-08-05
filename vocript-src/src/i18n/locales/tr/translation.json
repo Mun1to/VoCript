@@ -726,7 +726,9 @@
       },
       "postProcessingToggle": {
         "label": "Son İşlem",
-        "description": "Transkripsiyon sonrası yapay zekâ destekli metin iyileştirmeyi etkinleştirir"
+        "description": "Transkripsiyon sonrası yapay zekâ destekli metin iyileştirmeyi etkinleştirir",
+        "usingOllama": "Yerel model bulundu: son işlem için Ollama kullanılıyor",
+        "noLocalProvider": "Yerel model bulunamadı. Ollama'yı kurup başlatın veya aşağıdan bir sağlayıcı seçip yapılandırın."
       },
       "muteWhileRecording": {
         "label": "Kayıt Sırasında Sessize Al",

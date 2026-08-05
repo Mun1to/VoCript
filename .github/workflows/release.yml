@@ -104,6 +104,18 @@ jobs:
           releaseDraft: false
           prerelease: false
           includeUpdaterJson: true
+          # Solo NSIS. `targets: "all"` en tauri.conf.json (que también decide los
+          # bundles de Linux/macOS) construía de más aquí: también el MSI de WiX.
+          # El 2026-07-26 eso rompió la instalación de Munir de verdad: el
+          # auto-updater le sirvió el .msi sobre una instalación NSIS
+          # (currentUser), la transacción MSI desinstaló vocript.exe a medias y
+          # no completó la reinstalación, sin ningún aviso. El propio cliente
+          # updater (tauri-plugin-updater) detecta con qué instalador se montó
+          # la copia en ejecución y busca primero la clave sufijada
+          # (`windows-x86_64-nsis`); mientras esa clave exista, nunca cae a la
+          # genérica `windows-x86_64` ni al `.msi`. No construir el MSI cierra
+          # el problema de raíz en vez de solo evitarlo.
+          args: --bundles nsis
 
       # Sube una copia del instalador con nombre fijo (sin versión) para que
       # el botón de descarga del README ("...releases/latest/download/VoCript-Setup.exe")

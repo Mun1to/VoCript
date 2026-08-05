@@ -28,6 +28,10 @@ interface HeaderDropdownProps {
   /** Which side the panel hangs from. */
   align?: "start" | "end";
   showChevron?: boolean;
+  /** Off for the accent-color swatch: its trigger already reads as a color
+   *  picker, and a glow on the one chip that is literally about color read
+   *  as redundant next to the others. */
+  glow?: boolean;
   /** Option lists want a slim `py-1`; custom content brings its own padding. */
   panelClassName?: string;
   dataTour?: string;
@@ -54,6 +58,7 @@ export const HeaderDropdown: React.FC<HeaderDropdownProps> = ({
   title,
   align = "start",
   showChevron = true,
+  glow = true,
   panelClassName = "py-1",
   dataTour,
   children,
@@ -78,9 +83,11 @@ export const HeaderDropdown: React.FC<HeaderDropdownProps> = ({
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
-          className={`flex items-center gap-1.5 py-1 px-1.5 rounded-lg text-xs font-bold text-logo-primary transition-colors ${
-            isLight ? "hover:bg-slate-100" : "hover:bg-white/[0.06]"
-          }`}
+          className={`flex items-center gap-1.5 py-1 px-1.5 rounded-lg text-xs font-bold text-logo-primary transition-all ${
+            glow
+              ? "shadow-[0_0_8px_-1px_var(--color-logo-glow)] hover:shadow-[0_0_12px_0px_var(--color-logo-glow)]"
+              : ""
+          } ${isLight ? "hover:bg-slate-100" : "hover:bg-white/[0.06]"}`}
         >
           {icon}
           <span>{label}</span>

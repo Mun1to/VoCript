@@ -430,6 +430,7 @@ pub fn run(cli_args: CliArgs) {
             commands::open_log_dir,
             commands::open_app_data_dir,
             commands::check_apple_intelligence_available,
+            commands::detect_local_post_process_provider,
             commands::initialize_enigo,
             commands::initialize_shortcuts,
             commands::models::get_available_models,

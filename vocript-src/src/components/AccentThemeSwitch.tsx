@@ -19,6 +19,7 @@ export const AccentThemeSwitch: React.FC = () => {
       dataTour="header-themes"
       tooltip={t("sidebar.themes")}
       showChevron={false}
+      glow={false}
       panelClassName="p-3"
       icon={
         <Palette

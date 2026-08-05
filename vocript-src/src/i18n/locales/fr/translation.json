@@ -726,7 +726,9 @@
       },
       "postProcessingToggle": {
         "label": "Post-traitement",
-        "description": "Activer l'affinage du texte par IA après la transcription"
+        "description": "Activer l'affinage du texte par IA après la transcription",
+        "usingOllama": "Modèle local trouvé : utilisation d'Ollama pour le post-traitement",
+        "noLocalProvider": "Aucun modèle local trouvé. Installez et démarrez Ollama, ou choisissez et configurez un fournisseur ci-dessous."
       },
       "muteWhileRecording": {
         "label": "Muet pendant l'enregistrement",

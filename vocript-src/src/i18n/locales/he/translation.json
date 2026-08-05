@@ -726,7 +726,9 @@
       },
       "postProcessingToggle": {
         "label": "עיבוד משלים",
-        "description": "הפעל שיפור טקסט מבוסס AI אחרי התמלול"
+        "description": "הפעל שיפור טקסט מבוסס AI אחרי התמלול",
+        "usingOllama": "נמצא מודל מקומי: משתמשים ב-Ollama לעיבוד המשלים",
+        "noLocalProvider": "לא נמצא מודל מקומי. התקן והפעל את Ollama, או בחר והגדר ספק למטה."
       },
       "muteWhileRecording": {
         "label": "השתק בזמן הקלטה",

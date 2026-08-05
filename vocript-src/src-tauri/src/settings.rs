@@ -766,6 +766,21 @@ fn default_post_process_providers() -> Vec<PostProcessProvider> {
         supports_structured_output: true,
     });
 
+    // First-class local option: Ollama's OpenAI-compatible endpoint. Distinct
+    // from "custom" (below) so "local-first" has something concrete to detect
+    // and select automatically, rather than pointing at the generic field a
+    // user would otherwise have to fill in themselves. `supports_structured_output`
+    // is false like Anthropic/Groq above: Ollama's compat layer offers basic
+    // JSON mode, not the strict schema-constrained decoding the others provide.
+    providers.push(PostProcessProvider {
+        id: "ollama".to_string(),
+        label: "Ollama (local)".to_string(),
+        base_url: "http://localhost:11434/v1".to_string(),
+        allow_base_url_edit: false,
+        models_endpoint: Some("/models".to_string()),
+        supports_structured_output: false,
+    });
+
     // Custom provider always comes last
     providers.push(PostProcessProvider {
         id: "custom".to_string(),

@@ -726,7 +726,9 @@
       },
       "postProcessingToggle": {
         "label": "Post-Elaborazione",
-        "description": "Abilita il miglioramento della trascrizione con IA"
+        "description": "Abilita il miglioramento della trascrizione con IA",
+        "usingOllama": "Modello locale trovato: si usa Ollama per la post-elaborazione",
+        "noLocalProvider": "Nessun modello locale trovato. Installa e avvia Ollama, oppure scegli e configura un provider qui sotto."
       },
       "muteWhileRecording": {
         "label": "Silenzia durante la registrazione",

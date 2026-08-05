@@ -726,7 +726,9 @@
       },
       "postProcessingToggle": {
         "label": "Následné zpracování",
-        "description": "Povolit AI vylepšení textu po přepisu"
+        "description": "Povolit AI vylepšení textu po přepisu",
+        "usingOllama": "Nalezen lokální model: pro následné zpracování se použije Ollama",
+        "noLocalProvider": "Nebyl nalezen žádný lokální model. Nainstalujte a spusťte Ollama, nebo níže vyberte a nastavte poskytovatele."
       },
       "muteWhileRecording": {
         "label": "Ztlumit při nahrávání",

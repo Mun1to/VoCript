@@ -726,7 +726,9 @@
       },
       "postProcessingToggle": {
         "label": "后处理",
-        "description": "启用转录后的 AI 文本优化"
+        "description": "启用转录后的 AI 文本优化",
+        "usingOllama": "已找到本地模型：将使用 Ollama 进行后处理",
+        "noLocalProvider": "未找到本地模型。请安装并启动 Ollama，或在下方选择并配置一个提供商。"
       },
       "muteWhileRecording": {
         "label": "录制时静音",

@@ -706,6 +706,19 @@ async checkAppleIntelligenceAvailable() : Promise<boolean> {
     return await TAURI_INVOKE("check_apple_intelligence_available");
 },
 /**
+ * Whether an Ollama server is reachable on its default local port.
+ * 
+ * Called before turning post-processing on for the first time: VoCript's
+ * whole pitch is "100% local", so the provider that setting starts on should
+ * not be a cloud one just because it happened to be first in the list.
+ * `/api/tags` (not `/v1/models`) because it is Ollama's own lightweight
+ * health-style endpoint — answers instantly without touching the model
+ * registry, so a cold Ollama start does not make this feel like a hang.
+ */
+async detectLocalPostProcessProvider() : Promise<boolean> {
+    return await TAURI_INVOKE("detect_local_post_process_provider");
+},
+/**
  * Try to initialize Enigo (keyboard/mouse simulation).
  * On macOS, this will return an error if accessibility permissions are not granted.
  */

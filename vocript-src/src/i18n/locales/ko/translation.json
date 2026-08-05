@@ -726,7 +726,9 @@
       },
       "postProcessingToggle": {
         "label": "후처리",
-        "description": "텍스트 변환 후 AI 기반 텍스트 개선 활성화"
+        "description": "텍스트 변환 후 AI 기반 텍스트 개선 활성화",
+        "usingOllama": "로컬 모델을 찾았습니다. 후처리에 Ollama를 사용합니다",
+        "noLocalProvider": "로컬 모델을 찾을 수 없습니다. Ollama를 설치하고 실행하거나, 아래에서 공급자를 선택하고 설정하세요."
       },
       "muteWhileRecording": {
         "label": "녹음 중 음소거",

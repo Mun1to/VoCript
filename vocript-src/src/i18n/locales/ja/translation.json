@@ -726,7 +726,9 @@
       },
       "postProcessingToggle": {
         "label": "後処理",
-        "description": "文字起こし後のAIによるテキスト改善を有効化"
+        "description": "文字起こし後のAIによるテキスト改善を有効化",
+        "usingOllama": "ローカルモデルが見つかりました。後処理にOllamaを使用します",
+        "noLocalProvider": "ローカルモデルが見つかりませんでした。Ollamaをインストールして起動するか、下でプロバイダーを選択して設定してください。"
       },
       "muteWhileRecording": {
         "label": "録音中にミュート",

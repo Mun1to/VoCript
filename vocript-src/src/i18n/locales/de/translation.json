@@ -726,7 +726,9 @@
       },
       "postProcessingToggle": {
         "label": "Nachbearbeitung",
-        "description": "KI-gestützte Textverfeinerung nach der Transkription aktivieren"
+        "description": "KI-gestützte Textverfeinerung nach der Transkription aktivieren",
+        "usingOllama": "Lokales Modell gefunden: Ollama wird für die Nachbearbeitung verwendet",
+        "noLocalProvider": "Kein lokales Modell gefunden. Installieren und starten Sie Ollama, oder wählen und konfigurieren Sie unten einen Anbieter."
       },
       "muteWhileRecording": {
         "label": "Während Aufnahme stummschalten",

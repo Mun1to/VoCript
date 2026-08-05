@@ -726,7 +726,9 @@
       },
       "postProcessingToggle": {
         "label": "Xử lý sau",
-        "description": "Bật tinh chỉnh văn bản bằng AI sau khi chuyển đổi"
+        "description": "Bật tinh chỉnh văn bản bằng AI sau khi chuyển đổi",
+        "usingOllama": "Đã tìm thấy mô hình cục bộ: dùng Ollama để xử lý sau",
+        "noLocalProvider": "Không tìm thấy mô hình cục bộ nào. Cài đặt và khởi động Ollama, hoặc chọn và cấu hình nhà cung cấp bên dưới."
       },
       "muteWhileRecording": {
         "label": "Tắt tiếng khi ghi âm",
