@@ -1,5 +1,5 @@
 import { listen } from "@tauri-apps/api/event";
-import { getCurrentWindow } from "@tauri-apps/api/window";
+import { getCurrentWindow, PhysicalPosition } from "@tauri-apps/api/window";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -31,8 +31,42 @@ interface LiveFinishedPayload {
   copied: boolean;
 }
 
-const BAR_COUNT = 9;
+const BAR_COUNT = 5;
 const ZERO_LEVELS = Array(BAR_COUNT).fill(0);
+
+// How far the pointer must move (in px) before a pointerdown on the logo is
+// treated as a drag instead of a click. See handlePointerDown.
+const DRAG_THRESHOLD_PX = 4;
+
+/**
+ * Height ratios of the 5 bars in the VoCript logo mark itself (see
+ * VoCriptMark.tsx: rects of height 6, 12, 19, 11, 5 out of a 24-tall canvas).
+ * Reusing them here makes the recording bars read as "the logo waking up"
+ * instead of a generic equalizer, per Munir's ask.
+ */
+const LOGO_BAR_RATIOS = [6, 12, 19, 11, 5];
+const MAX_LOGO_RATIO = Math.max(...LOGO_BAR_RATIOS);
+
+/**
+ * The backend's mic-level spectrum has more bands than we show (see
+ * AudioVisualiser::BUCKETS in audio_toolkit). Collapse it down to BAR_COUNT by
+ * taking the peak of each slice, so a handful of thick bars still reacts to
+ * the full spectrum instead of only its lowest frequencies.
+ */
+function collapseToBars(raw: number[], count: number): number[] {
+  if (raw.length === 0) return Array(count).fill(0);
+  const result = new Array(count).fill(0);
+  for (let i = 0; i < count; i++) {
+    const start = Math.floor((i * raw.length) / count);
+    const end = Math.max(start + 1, Math.floor(((i + 1) * raw.length) / count));
+    let peak = 0;
+    for (let j = start; j < end; j++) {
+      peak = Math.max(peak, raw[j] || 0);
+    }
+    result[i] = peak;
+  }
+  return result;
+}
 
 /**
  * Mirror the app's accent color onto this overlay window. App.tsx's accent
@@ -80,6 +114,49 @@ const RecordingOverlay: React.FC = () => {
   const liveTargetRef = useRef("");
   const direction = getLanguageDirection(i18n.language);
 
+  // ---------- manual window dragging ----------
+  // Tauri's native startDragging() felt unresponsive/laggy on some machines
+  // (the same problem hit in the Layco overlay, fixed there the same way —
+  // see moveWindowFast/pumpDrag in layco-core/src/App.tsx). Moving the window
+  // ourselves via setPosition(), coalesced to one IPC call per animation
+  // frame, keeps the capsule tracking the cursor smoothly instead of queueing
+  // up position updates faster than the OS can apply them.
+  const overlayWindowRef = useRef(getCurrentWindow());
+  // Last known physical position of the window — refreshed whenever the
+  // overlay is (re)shown and after every applied drag move, so a new drag
+  // never has to await outerPosition() before it can start.
+  const windowPosRef = useRef<{ x: number; y: number } | null>(null);
+  const dragOriginRef = useRef<{
+    screenX: number;
+    screenY: number;
+    winX: number;
+    winY: number;
+  } | null>(null);
+  const dragTargetRef = useRef<{ x: number; y: number } | null>(null);
+  const dragSeqRef = useRef(0);
+  const dragSentRef = useRef(0);
+  const dragBusyRef = useRef(false);
+  const dragRafRef = useRef(0);
+
+  // Applies the latest queued drag target, with never more than one
+  // setPosition IPC call in flight at a time (queueing more was the visible
+  // stutter with the previous approach).
+  const pumpDrag = () => {
+    if (dragBusyRef.current) return;
+    if (dragSentRef.current === dragSeqRef.current) return;
+    const t = dragTargetRef.current;
+    if (!t) return;
+    dragSentRef.current = dragSeqRef.current;
+    dragBusyRef.current = true;
+    windowPosRef.current = t;
+    void overlayWindowRef.current
+      .setPosition(new PhysicalPosition(Math.round(t.x), Math.round(t.y)))
+      .finally(() => {
+        dragBusyRef.current = false;
+        if (dragSentRef.current !== dragSeqRef.current) pumpDrag();
+      });
+  };
+
   useEffect(() => {
     liveFinishedRef.current = liveFinished;
   }, [liveFinished]);
@@ -105,6 +182,15 @@ const RecordingOverlay: React.FC = () => {
         }
         setState(overlayState);
         setIsVisible(true);
+        // Rust just (re)positioned the window (see overlay.rs); refresh our
+        // cached position so the next drag starts from the real spot instead
+        // of a stale one.
+        try {
+          const pos = await overlayWindowRef.current.outerPosition();
+          windowPosRef.current = { x: pos.x, y: pos.y };
+        } catch (e) {
+          console.warn("Failed to read overlay window position:", e);
+        }
       });
 
       // Listen for hide-overlay event from Rust
@@ -122,7 +208,7 @@ const RecordingOverlay: React.FC = () => {
 
       // Listen for mic-level updates
       const unlistenLevel = await listen<number[]>("mic-level", (event) => {
-        const newLevels = event.payload as number[];
+        const newLevels = collapseToBars(event.payload as number[], BAR_COUNT);
 
         // Suavizado asimétrico: ataque rápido (sube casi al instante con la voz)
         // y caída suave (baja con elegancia). Así la animación se nota mucho más
@@ -219,17 +305,95 @@ const RecordingOverlay: React.FC = () => {
 
   // Drag the overlay like a normal window, in every state — the backend
   // remembers wherever it is dropped (see overlay.rs) and puts it back there
-  // next time instead of re-centering it. Never when the mousedown lands on
-  // an interactive control (logo, textarea, X, copy) so those keep working.
-  const handleDragStart = (e: React.MouseEvent) => {
+  // next time instead of re-centering it. Never when the pointerdown lands on
+  // textarea/X/copy, which have their own click behaviour with nothing to
+  // reconcile it with.
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (e.button !== 0) return;
-    const target = e.target as HTMLElement;
-    if (
-      target.closest("textarea, .cancel-button, .copy-button, .overlay-logo")
-    ) {
+    const targetEl = e.target as HTMLElement;
+    if (targetEl.closest("textarea, .cancel-button, .copy-button")) {
       return;
     }
-    void getCurrentWindow().startDragging();
+
+    // The logo is both clickable (opens the app) and, now that the compact
+    // capsule is small, a big chunk of the only grabbable surface. Rather
+    // than excluding it from dragging outright — which made it easy to grab
+    // the capsule right on the logo and have nothing happen — only start the
+    // drag once the pointer has actually moved past a small threshold. Below
+    // that threshold it's treated as a plain click and falls through to the
+    // logo's own onClick.
+    const onLogo = !!targetEl.closest(".overlay-logo");
+    const dpr = window.devicePixelRatio || 1;
+    const originScreenX = e.screenX * dpr;
+    const originScreenY = e.screenY * dpr;
+    let dragArmed = !onLogo;
+
+    // Pointer capture: without it, once the window (small, chasing the
+    // cursor via setPosition) falls behind and the cursor exits its bounds,
+    // this window would stop receiving pointermove entirely and the drag
+    // would freeze mid-gesture. Capturing on the element keeps events
+    // flowing to it regardless of where the cursor physically is.
+    const capsule = e.currentTarget;
+    const pointerId = e.pointerId;
+    capsule.setPointerCapture(pointerId);
+
+    const armDrag = async () => {
+      if (dragOriginRef.current) return;
+      const cached = windowPosRef.current;
+      const pos = cached ?? (await overlayWindowRef.current.outerPosition());
+      dragOriginRef.current = {
+        screenX: originScreenX,
+        screenY: originScreenY,
+        winX: pos.x,
+        winY: pos.y,
+      };
+    };
+
+    if (dragArmed) void armDrag();
+
+    const onMove = (moveEvent: PointerEvent) => {
+      const curX = moveEvent.screenX * dpr;
+      const curY = moveEvent.screenY * dpr;
+      if (!dragArmed) {
+        if (Math.hypot(curX - originScreenX, curY - originScreenY) < DRAG_THRESHOLD_PX * dpr) {
+          return;
+        }
+        dragArmed = true;
+        void armDrag();
+      }
+      const origin = dragOriginRef.current;
+      if (!origin) return; // still resolving the starting position
+      dragTargetRef.current = {
+        x: origin.winX + (curX - origin.screenX),
+        y: origin.winY + (curY - origin.screenY),
+      };
+      dragSeqRef.current++;
+      if (!dragRafRef.current) {
+        dragRafRef.current = requestAnimationFrame(() => {
+          dragRafRef.current = 0;
+          pumpDrag();
+        });
+      }
+    };
+
+    const onUp = () => {
+      capsule.removeEventListener("pointermove", onMove);
+      capsule.removeEventListener("pointerup", onUp);
+      try {
+        capsule.releasePointerCapture(pointerId);
+      } catch {
+        // pointer already released (e.g. capture lost mid-gesture)
+      }
+      if (dragRafRef.current) {
+        cancelAnimationFrame(dragRafRef.current);
+        dragRafRef.current = 0;
+      }
+      dragOriginRef.current = null;
+      pumpDrag(); // apply the final pending position, if any
+    };
+
+    capsule.addEventListener("pointermove", onMove);
+    capsule.addEventListener("pointerup", onUp);
   };
 
   const handleCopy = async () => {
@@ -249,10 +413,14 @@ const RecordingOverlay: React.FC = () => {
   return (
     <div
       dir={direction}
-      onMouseDown={handleDragStart}
+      onPointerDown={handlePointerDown}
       className={`recording-overlay ${state === "live" ? "live" : ""} ${
-        liveFinished ? "live-finished" : ""
-      } ${isVisible ? "fade-in" : ""}`}
+        state === "recording" ? "compact" : ""
+      } ${
+        state === "transcribing" || state === "processing" || state === "copied"
+          ? "status"
+          : ""
+      } ${liveFinished ? "live-finished" : ""} ${isVisible ? "fade-in" : ""}`}
     >
       <div
         className="overlay-left overlay-logo"
@@ -265,20 +433,31 @@ const RecordingOverlay: React.FC = () => {
         <VoCriptMark />
       </div>
 
+      {state === "recording" && <div className="overlay-divider" />}
+
       <div className="overlay-middle">
         {state === "recording" && (
           <div className="bars-container">
             {levels.map((v, i) => {
               // Ganancia extra para que los picos de voz lleguen bien arriba.
               const gained = Math.min(1, Math.pow(v, 0.6) * 1.4);
+              // Cada barra crece/decrece manteniendo la proporción de su
+              // homóloga en el logo (la del medio siempre la más alta), en vez
+              // de que las 5 tengan la misma altura como un ecualizador genérico.
+              const ratio = LOGO_BAR_RATIOS[i] / MAX_LOGO_RATIO;
+              const minHeight = 3 + ratio * 5;
+              const maxHeight = 8 + ratio * 14;
               return (
                 <div
                   key={i}
                   className="bar"
                   style={{
-                    height: `${4 + gained * 16}px`,
+                    height: `${minHeight + gained * (maxHeight - minHeight)}px`,
                     transition: "height 70ms ease-out, opacity 100ms ease-out",
-                    opacity: Math.max(0.35, gained),
+                    // Tenues en reposo (se leen como medidor neutro, distinto
+                    // del logo que siempre está a color pleno) y se iluminan
+                    // con la voz.
+                    opacity: Math.max(0.3, gained),
                   }}
                 />
               );
@@ -319,8 +498,8 @@ const RecordingOverlay: React.FC = () => {
           ))}
       </div>
 
-      <div className="overlay-right">
-        {(state === "recording" || state === "live") && (
+      {(state === "recording" || state === "live") && (
+        <div className="overlay-right">
           <div
             className="cancel-button"
             onClick={cancel}
@@ -328,17 +507,17 @@ const RecordingOverlay: React.FC = () => {
           >
             <CancelIcon />
           </div>
-        )}
-        {state === "live" && liveFinished && (
-          <div
-            className="copy-button"
-            onClick={handleCopy}
-            title={t("overlay.copyToClipboard")}
-          >
-            {copyFeedback ? <CheckIcon /> : <CopyIcon />}
-          </div>
-        )}
-      </div>
+          {state === "live" && liveFinished && (
+            <div
+              className="copy-button"
+              onClick={handleCopy}
+              title={t("overlay.copyToClipboard")}
+            >
+              {copyFeedback ? <CheckIcon /> : <CopyIcon />}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

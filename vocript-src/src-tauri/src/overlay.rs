@@ -1,7 +1,7 @@
 use crate::input;
 use crate::settings;
 use crate::settings::{OverlayCustomPosition, OverlayPosition};
-use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicI32, AtomicU64, Ordering};
 use std::time::Duration;
 use tauri::{AppHandle, Emitter, Manager, PhysicalPosition, PhysicalSize};
 
@@ -33,8 +33,24 @@ tauri_panel! {
     })
 }
 
+// Fallback/initial size only — every state show_overlay_state() actually
+// displays picks its own size below (RECORDING_/STATUS_OVERLAY_*).
 const OVERLAY_WIDTH: f64 = 172.0;
 const OVERLAY_HEIGHT: f64 = 36.0;
+
+// The plain "recording" capsule only shows the logo + level bars + cancel
+// button (no text label), so it can be smaller than the transcribing/
+// processing/copied states that share this same window and need room for text.
+const RECORDING_OVERLAY_WIDTH: f64 = 120.0;
+const RECORDING_OVERLAY_HEIGHT: f64 = 36.0;
+
+// "Transcribing…"/"Processing…"/"Copied" status: logo + one short label, no
+// cancel button — smaller than the old shared 172x36, though a little wider
+// than RECORDING_OVERLAY_WIDTH since the label needs more room than the
+// bars did. The longest translations of the label ellipsize (see
+// RecordingOverlay.css) rather than forcing this wider still.
+const STATUS_OVERLAY_WIDTH: f64 = 132.0;
+const STATUS_OVERLAY_HEIGHT: f64 = 32.0;
 
 /// Set right before every `set_position` call this module makes, so the
 /// `Moved` event it triggers is not mistaken for the user dragging the
@@ -46,6 +62,17 @@ static IGNORE_NEXT_MOVE: AtomicBool = AtomicBool::new(false);
 /// Bumped on every un-ignored `Moved` event, so the debounce below can tell
 /// "the drag is still going" from "that was the last move" without polling.
 static MOVE_GENERATION: AtomicU64 = AtomicU64::new(0);
+
+/// Whether a settle-watcher thread is already running for the current drag
+/// (see `register_drag_persistence`) — caps it at one thread per gesture
+/// instead of one per `Moved` event.
+static DRAG_SETTLE_PENDING: AtomicBool = AtomicBool::new(false);
+
+/// The most recent position reported by a `Moved` event, kept outside the
+/// event closure so the settle-watcher thread can read the final position
+/// once the drag stops rather than the one that happened to start it.
+static LAST_MOVE_X: AtomicI32 = AtomicI32::new(0);
+static LAST_MOVE_Y: AtomicI32 = AtomicI32::new(0);
 
 /// How long the overlay must sit still before a drag is written to disk. The
 /// OS reports a `Moved` event on nearly every pixel of a native drag; writing
@@ -346,8 +373,21 @@ fn calculate_overlay_position_sized(
     Some(position)
 }
 
+/// The overlay window's current logical size, read straight from the OS
+/// rather than assumed, since the window is resized in place between the
+/// compact "recording" capsule, the normal text states and the live capsule.
+/// `None` before the window exists yet (first call, during creation).
+fn current_overlay_logical_size(app_handle: &AppHandle) -> Option<(f64, f64)> {
+    let window = app_handle.get_webview_window("recording_overlay")?;
+    let scale = window.scale_factor().ok()?;
+    let size = window.inner_size().ok()?;
+    Some((size.width as f64 / scale, size.height as f64 / scale))
+}
+
 fn calculate_overlay_position(app_handle: &AppHandle) -> Option<tauri::Position> {
-    resolved_overlay_position(app_handle, OVERLAY_WIDTH, OVERLAY_HEIGHT)
+    let (width, height) =
+        current_overlay_logical_size(app_handle).unwrap_or((OVERLAY_WIDTH, OVERLAY_HEIGHT));
+    resolved_overlay_position(app_handle, width, height)
 }
 
 /// The saved position from the user dragging the overlay, converted to
@@ -423,16 +463,35 @@ fn register_drag_persistence(app_handle: &AppHandle) {
         if IGNORE_NEXT_MOVE.swap(false, Ordering::SeqCst) {
             return;
         }
-        let generation = MOVE_GENERATION.fetch_add(1, Ordering::SeqCst) + 1;
-        let (x, y) = (position.x, position.y);
+        MOVE_GENERATION.fetch_add(1, Ordering::SeqCst);
+        LAST_MOVE_X.store(position.x, Ordering::SeqCst);
+        LAST_MOVE_Y.store(position.y, Ordering::SeqCst);
+
+        // The OS fires a `Moved` event on nearly every pixel of a native
+        // drag. Spawning an OS thread per event (as this used to do) added
+        // enough thread-creation overhead during the drag itself to make the
+        // capsule feel less smooth while being dragged. Instead, only one
+        // "settle watcher" thread runs per drag gesture: it re-checks the
+        // generation counter after each sleep and keeps waiting as long as
+        // new moves keep landing, then writes only the final position once
+        // the drag actually stops.
+        if DRAG_SETTLE_PENDING.swap(true, Ordering::SeqCst) {
+            return;
+        }
         let app_handle = app_handle.clone();
         std::thread::spawn(move || {
-            std::thread::sleep(DRAG_SETTLE);
-            // A newer move landed while this one was waiting out the debounce;
-            // that thread's write will supersede this one.
-            if MOVE_GENERATION.load(Ordering::SeqCst) != generation {
-                return;
+            loop {
+                let generation_before = MOVE_GENERATION.load(Ordering::SeqCst);
+                std::thread::sleep(DRAG_SETTLE);
+                if MOVE_GENERATION.load(Ordering::SeqCst) == generation_before {
+                    break;
+                }
             }
+            DRAG_SETTLE_PENDING.store(false, Ordering::SeqCst);
+            let (x, y) = (
+                LAST_MOVE_X.load(Ordering::SeqCst),
+                LAST_MOVE_Y.load(Ordering::SeqCst),
+            );
             let mut settings = settings::get_settings(&app_handle);
             settings.overlay_custom_position = Some(OverlayCustomPosition { x, y });
             settings::write_settings(&app_handle, settings);
@@ -570,18 +629,25 @@ fn show_overlay_state(app_handle: &AppHandle, state: &str) {
         return;
     }
 
-    // Reset to the default compact size in case a previous live session left
-    // the window enlarged.
+    // Reset to this state's size in case a previous live session (or either
+    // of the other compact sizes below) left the window a different size.
+    let (width, height) = match state {
+        "recording" => (RECORDING_OVERLAY_WIDTH, RECORDING_OVERLAY_HEIGHT),
+        _ => (STATUS_OVERLAY_WIDTH, STATUS_OVERLAY_HEIGHT),
+    };
     if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
         let _ = overlay_window.set_size(tauri::Size::Logical(tauri::LogicalSize {
-            width: OVERLAY_WIDTH,
-            height: OVERLAY_HEIGHT,
+            width,
+            height,
         }));
-    }
 
-    update_overlay_position(app_handle);
+        #[cfg(target_os = "linux")]
+        update_gtk_layer_shell_anchors(&overlay_window);
 
-    if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
+        if let Some(position) = resolved_overlay_position(app_handle, width, height) {
+            set_overlay_position_programmatic(&overlay_window, position);
+        }
+
         let _ = overlay_window.show();
 
         // On Windows, aggressively re-assert "topmost" in the native Z-order after showing

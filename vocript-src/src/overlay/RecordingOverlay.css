@@ -16,14 +16,84 @@
   grid-template-columns: auto 1fr auto;
   align-items: center;
   padding: 6px;
-  background: #000000cc;
+  /* A slightly-tinted near-black instead of flat #000, plus a hairline "ring"
+     and an inset top highlight instead of a plain fill — this is what stops
+     the capsule from reading as a plain rectangular window and gives it the
+     look of a solid floating object with edges, not a flat panel. Paired
+     with a soft drop shadow for depth below it. Same treatment applies to
+     every state, live included. */
+  background: rgba(21, 20, 25, 0.95);
   border-radius: 18px;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 10px 24px rgba(0, 0, 0, 0.4);
   opacity: 0;
   transition: opacity 300ms ease-out;
   box-sizing: border-box;
-  /* Draggable to anywhere on screen in every state (see handleDragStart); the
-     backend remembers where it was dropped. */
+  /* GPU compositing hint: the capsule now moves via per-frame setPosition()
+     calls during a drag (see handlePointerDown/pumpDrag) rather than sitting
+     still, so keeping it on its own composited layer avoids the window
+     re-rasterising itself on every step. */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  /* Draggable to anywhere on screen in every state (see handlePointerDown);
+     the backend remembers where it was dropped. */
   cursor: grab;
+}
+
+/* Bare "recording" capsule: just the logo + level bars, no label to fit, so
+   it can be much smaller (see RECORDING_OVERLAY_WIDTH/HEIGHT in overlay.rs,
+   which resizes the actual OS window to match). */
+.recording-overlay.compact {
+  width: 120px;
+  height: 36px;
+  padding: 6px 10px;
+  border-radius: 18px;
+  /* logo | divider | bars (flexible) | cancel button */
+  grid-template-columns: auto auto 1fr auto;
+  column-gap: 8px;
+}
+
+.recording-overlay.compact .overlay-logo svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+/* "Transcribing…"/"Processing…"/"Copied" status: just the logo + a short
+   label, so it can be nearly as small as the bare recording capsule instead
+   of the old full-width 172px bar. Width leaves enough room for most
+   translations of the label; the longest ones (see .transcribing-text/
+   .copied-text below) ellipsize rather than force the window wider. */
+.recording-overlay.status {
+  width: 132px;
+  height: 32px;
+  padding: 5px 10px;
+  border-radius: 16px;
+  column-gap: 7px;
+}
+
+.recording-overlay.status .overlay-logo svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.recording-overlay.status .overlay-middle {
+  justify-content: flex-start;
+  min-width: 0; /* let the label actually shrink/ellipsize inside the flex track */
+}
+
+/* Thin separator between the fixed logo and the live meter, so the two don't
+   read as one continuous row of bars — the logo is the static brand mark,
+   the meter to its right is what actually moves with your voice. */
+.overlay-divider {
+  width: 1px;
+  align-self: stretch;
+  margin: 2px 0;
+  background: rgba(255, 255, 255, 0.14);
+  flex-shrink: 0;
 }
 
 .recording-overlay:active {
@@ -64,21 +134,28 @@
 
 .bars-container {
   display: flex;
-  align-items: end;
+  align-items: center;
   justify-content: center;
-  gap: 3px;
-  padding-bottom: 0px;
-  height: 24px;
+  gap: 2.5px;
+  height: 20px;
   overflow: hidden;
 }
 
+/* Neutral bars with an accent-colored glow, instead of the logo's own solid
+   gradient fill — sharing the exact same look as the static logo mark made
+   the two blur into one continuous row of bars. The near-white body reads as
+   a classic VU meter and stays clearly a *different* element from the logo;
+   the glow (via the JS-driven opacity below) is what ties it back to the
+   accent color and to the sound level. Grown from the center (align-items:
+   center on .bars-container) like the logo's rects, not from the bottom like
+   a typical VU meter. */
 .bar {
-  width: 6px;
-  background: #dbeafe;
+  width: 3px;
+  background: rgba(255, 255, 255, 0.92);
   max-height: 20px;
-  border-radius: 3px;
-  min-height: 4px;
-  box-shadow: 0 0 4px rgba(147, 197, 253, 0.5);
+  border-radius: 1.5px;
+  min-height: 3px;
+  box-shadow: 0 0 5px 0.5px var(--color-logo-glow, rgba(147, 197, 253, 0.5));
 }
 
 .recording-overlay.fade-in {
@@ -87,17 +164,27 @@
 
 .transcribing-text {
   color: white;
-  font-size: 12px;
+  font-size: 11px;
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   animation: transcribing-pulse 1.5s infinite ease-in-out;
+  /* The capsule is only 132px wide (see .recording-overlay.status); a few
+     translations of this label run longer than that fits, so ellipsize
+     instead of forcing the window wider or wrapping. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .copied-text {
   color: #bbf7d0;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
@@ -152,7 +239,8 @@
     rgba(38, 37, 35, 0.62) 58%,
     rgba(38, 37, 35, 0.42) 100%
   );
-  border: 0.5px solid rgba(255, 255, 255, 0.1);
+  /* The base .recording-overlay ring + drop shadow (box-shadow above) already
+     gives this an edge and depth, so no separate border here. */
 }
 
 .recording-overlay.live .overlay-middle {
