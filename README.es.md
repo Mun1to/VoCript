@@ -106,7 +106,7 @@ En la [página de Releases](https://github.com/Mun1to/VoCript/releases/latest) t
 
 ## 🎬 Véelo en acción
 
-<video src="https://github.com/Mun1to/VoCript/releases/download/v3.5.4/vocript-demo.mp4" controls muted></video>
+<video src="https://github.com/user-attachments/assets/a5e0ab17-eb65-4db1-8eee-6ce84c20a3bb" controls muted></video>
 
 ## 🔄 Actualizaciones automáticas
 

@@ -104,7 +104,7 @@ There is also a `.deb` on the [Releases page](https://github.com/Mun1to/VoCript/
 
 ## 🎬 See it in action
 
-<video src="https://github.com/Mun1to/VoCript/releases/download/v3.5.4/vocript-demo.mp4" controls muted></video>
+<video src="https://github.com/user-attachments/assets/a5e0ab17-eb65-4db1-8eee-6ce84c20a3bb" controls muted></video>
 
 ## 🔄 Automatic updates
 
