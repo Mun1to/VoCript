@@ -3,8 +3,72 @@ fn main() {
     build_apple_intelligence_bridge();
 
     generate_tray_translations();
+    bundle_transcribe_cpp_libs();
 
     tauri_build::build()
+}
+
+/// Copy transcribe-cpp's runtime libraries (and, in `dynamic-backends`
+/// builds, its loadable compute modules) into `transcribe-libs/`, a
+/// project-relative folder `tauri.conf.json`'s `bundle.resources` places
+/// directly next to the installed executable. Without this, the app links
+/// fine but crashes on launch with "transcribe.dll not found" — the crate
+/// only bakes its native code into the binary in the (unused here) default
+/// static posture; see the transcribe-cpp README's packaging section.
+fn bundle_transcribe_cpp_libs() {
+    use std::{
+        env, fs,
+        path::{Path, PathBuf},
+    };
+
+    println!("cargo:rerun-if-env-changed=DEP_TRANSCRIBE_CPP_RUNTIME_DIR");
+    println!("cargo:rerun-if-env-changed=DEP_TRANSCRIBE_CPP_MODULE_DIR");
+
+    // Unset in a static build (not our posture, but keep this script generic).
+    let Some(runtime_dir) = env::var_os("DEP_TRANSCRIBE_CPP_RUNTIME_DIR") else {
+        return;
+    };
+
+    let dest = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("transcribe-libs");
+    fs::create_dir_all(&dest).unwrap();
+
+    // Match by name, not extension: Linux versions its libs (libtranscribe.so.0,
+    // .so.0.0.4), so an extension filter would copy only the bare dev symlink
+    // and ship a broken installer. `fs::copy` dereferences version symlinks.
+    fn copy_libs(src: &Path, dest: &Path) -> usize {
+        let mut n = 0;
+        for entry in fs::read_dir(src).unwrap_or_else(|e| panic!("read {}: {e}", src.display())) {
+            let path = entry.unwrap().path();
+            let name = path.file_name().and_then(|s| s.to_str()).unwrap_or("");
+            let is_lib = name.ends_with(".dll")
+                || name.ends_with(".dylib")
+                || name.ends_with(".so")
+                || name.contains(".so.");
+            if is_lib {
+                fs::copy(&path, dest.join(name)).unwrap();
+                n += 1;
+            }
+        }
+        n
+    }
+
+    let runtime_dir = PathBuf::from(runtime_dir);
+    assert!(
+        copy_libs(&runtime_dir, &dest) > 0,
+        "no transcribe-cpp runtime libraries in {}",
+        runtime_dir.display()
+    );
+
+    // dynamic-backends only: the loadable compute modules (ggml-vulkan.dll and
+    // friends), read back at runtime by transcribe_cpp::init_backends_default().
+    if let Some(module_dir) = env::var_os("DEP_TRANSCRIBE_CPP_MODULE_DIR") {
+        let module_dir = PathBuf::from(module_dir);
+        assert!(
+            copy_libs(&module_dir, &dest) > 0,
+            "no transcribe-cpp backend modules in {}",
+            module_dir.display()
+        );
+    }
 }
 
 /// Generate tray menu translations from frontend locale files.

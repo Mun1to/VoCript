@@ -27,7 +27,10 @@
     "active": true,
     "createUpdaterArtifacts": true,
     "targets": "all",
-    "resources": ["resources/**/*"],
+    "resources": {
+      "resources/**/*": "",
+      "transcribe-libs/*": "."
+    },
     "license": "MIT",
     "publisher": "VoCript",
     "icon": [

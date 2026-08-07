@@ -6,6 +6,8 @@ node_modules/
 target/
 **/target/
 **/gen/schemas
+# .dll/.so de transcribe-cpp que copia build.rs junto al ejecutable
+vocript-src/src-tauri/transcribe-libs/
 
 # ===== Build frontend =====
 dist/
