@@ -102,6 +102,10 @@ There is also a `.deb` on the [Releases page](https://github.com/Mun1to/VoCript/
 
 > 💡 Prefer to see all versions and files? They're on the [Releases page](https://github.com/Mun1to/VoCript/releases/latest).
 
+## 🎬 See it in action
+
+<video src="https://github.com/Mun1to/VoCript/releases/download/v3.5.4/vocript-demo.mp4" controls muted></video>
+
 ## 🔄 Automatic updates
 
 VoCript updates **itself**: on launch it checks for a new version and, if there

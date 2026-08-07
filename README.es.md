@@ -104,6 +104,10 @@ En la [página de Releases](https://github.com/Mun1to/VoCript/releases/latest) t
 
 > 💡 ¿Prefieres ver todas las versiones y archivos? Están en la [página de Releases](https://github.com/Mun1to/VoCript/releases/latest).
 
+## 🎬 Véelo en acción
+
+<video src="https://github.com/Mun1to/VoCript/releases/download/v3.5.4/vocript-demo.mp4" controls muted></video>
+
 ## 🔄 Actualizaciones automáticas
 
 VoCript se actualiza **solo**: al abrirlo comprueba si hay una versión nueva y,
