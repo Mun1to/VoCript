@@ -140,8 +140,6 @@ trabajo base. El motor de transcripción es
 
 <div align="center">
 
-🌸 Parte de la **Fundación Orquio** · *Easy Tech*
-
-<sub>Tecnología esencial orquestada de forma optimizada, positiva y transparente.</sub>
+Hecho por **[Munito (Munir Torres)](https://munito.dev)**
 
 </div>
