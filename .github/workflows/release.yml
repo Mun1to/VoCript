@@ -195,6 +195,10 @@ jobs:
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # linuxdeploy y appimagetool son AppImages: necesitan FUSE para
+          # automontarse, y los runners de GitHub no siempre lo traen. Con
+          # esto se autoextraen y ejecutan sin depender de FUSE.
+          APPIMAGE_EXTRACT_AND_RUN: "1"
           # Mismo motivo que en Windows: sin esto ggml se compila con
           # -march=native usando las instrucciones del runner (AVX-512) y la
           # app crashea con "instrucción ilegal" en CPUs de consumo.
