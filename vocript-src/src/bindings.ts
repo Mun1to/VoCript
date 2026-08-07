@@ -1313,7 +1313,13 @@ days: DayStat[]; total_words: number; total_seconds: number; total_sessions: num
  * breaks once a full day goes by with nothing dictated).
  */
 current_streak: number; longest_streak: number; best_day: DayStat | null }
-export type EngineType = "Whisper" | "Parakeet" | "Moonshine" | "MoonshineStreaming" | "SenseVoice" | "GigaAM" | "Canary" | "Cohere"
+export type EngineType = "Whisper" | "Parakeet" | "Moonshine" | "MoonshineStreaming" | "SenseVoice" | "GigaAM" | "Canary" | "Cohere" | 
+/**
+ * Runs on `transcribe-cpp` (GGUF/GGML) instead of `transcribe-rs` (ONNX) —
+ * a second, coexisting inference engine for models only Handy's newer
+ * GGUF catalog publishes (e.g. Nemotron, Parakeet Unified).
+ */
+"TranscribeCpp"
 /**
  * Result of transcribing an imported audio/video file. Both the plain text
  * and the SRT subtitle string are returned so the UI can offer either.

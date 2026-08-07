@@ -16,6 +16,11 @@ use std::sync::{Arc, Condvar, Mutex, MutexGuard, OnceLock};
 use std::thread;
 use std::time::{Duration, SystemTime};
 use tauri::{AppHandle, Emitter, Manager};
+use transcribe_cpp::{
+    Model as TranscribeCppModel, RunOptions as TranscribeCppRunOptions,
+    Session as TranscribeCppSession, Task as TranscribeCppTask,
+    TimestampKind as TranscribeCppTimestampKind,
+};
 use transcribe_rs::{
     onnx::{
         canary::CanaryModel,
@@ -56,6 +61,7 @@ enum LoadedEngine {
     GigaAM(GigaAMModel),
     Canary(CanaryModel),
     Cohere(CohereModel),
+    TranscribeCpp(TranscribeCppSession),
 }
 
 /// RAII guard that clears the `is_loading` flag and notifies waiters on drop.
@@ -387,6 +393,29 @@ impl TranscriptionManager {
                     anyhow::anyhow!(error_msg)
                 })?;
                 LoadedEngine::Cohere(engine)
+            }
+            EngineType::TranscribeCpp => {
+                // Idempotent: safe to call before every load, only does real
+                // work once per process (dynamic-backends builds need the
+                // Vulkan/Metal backend module registered before a model loads).
+                transcribe_cpp::init_backends_default().map_err(|e| {
+                    let error_msg = format!("Failed to init transcribe.cpp backends: {}", e);
+                    emit_loading_failed(&error_msg);
+                    anyhow::anyhow!(error_msg)
+                })?;
+                let cpp_model = TranscribeCppModel::load(&model_path).map_err(|e| {
+                    let error_msg =
+                        format!("Failed to load transcribe.cpp model {}: {}", model_id, e);
+                    emit_loading_failed(&error_msg);
+                    anyhow::anyhow!(error_msg)
+                })?;
+                let session = cpp_model.session().map_err(|e| {
+                    let error_msg =
+                        format!("Failed to open transcribe.cpp session for {}: {}", model_id, e);
+                    emit_loading_failed(&error_msg);
+                    anyhow::anyhow!(error_msg)
+                })?;
+                LoadedEngine::TranscribeCpp(session)
             }
         };
 
@@ -728,6 +757,40 @@ impl TranscriptionManager {
                         cohere_engine
                             .transcribe(audio, &options)
                             .map_err(|e| anyhow::anyhow!("Cohere transcription failed: {}", e))
+                    }
+                    LoadedEngine::TranscribeCpp(session) => {
+                        let lang = if validated_language == "auto" {
+                            None
+                        } else if validated_language == "zh-Hans" || validated_language == "zh-Hant"
+                        {
+                            Some("zh".to_string())
+                        } else {
+                            Some(validated_language.to_string())
+                        };
+                        let options = TranscribeCppRunOptions {
+                            task: TranscribeCppTask::Transcribe,
+                            timestamps: TranscribeCppTimestampKind::Segment,
+                            language: lang,
+                            ..Default::default()
+                        };
+                        session
+                            .run(audio, &options)
+                            .map(|t| transcribe_rs::TranscriptionResult {
+                                text: t.text,
+                                segments: Some(
+                                    t.segments
+                                        .into_iter()
+                                        .map(|s| transcribe_rs::TranscriptionSegment {
+                                            start: s.t0_ms as f32 / 1000.0,
+                                            end: s.t1_ms as f32 / 1000.0,
+                                            text: s.text,
+                                        })
+                                        .collect(),
+                                ),
+                            })
+                            .map_err(|e| {
+                                anyhow::anyhow!("transcribe.cpp transcription failed: {}", e)
+                            })
                     }
                 }
             },

@@ -27,6 +27,10 @@ pub enum EngineType {
     GigaAM,
     Canary,
     Cohere,
+    /// Runs on `transcribe-cpp` (GGUF/GGML) instead of `transcribe-rs` (ONNX) —
+    /// a second, coexisting inference engine for models only Handy's newer
+    /// GGUF catalog publishes (e.g. Nemotron, Parakeet Unified).
+    TranscribeCpp,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Type)]
@@ -646,6 +650,76 @@ impl ModelManager {
                 supports_translation: true,
                 is_recommended: false,
                 supported_languages: canary_1b_languages,
+                supports_language_selection: true,
+                is_custom: false,
+            },
+        );
+
+        // Parakeet Unified EN 0.6B: English-only, runs on transcribe-cpp (GGUF).
+        available_models.insert(
+            "parakeet-unified-en-0.6b".to_string(),
+            ModelInfo {
+                id: "parakeet-unified-en-0.6b".to_string(),
+                name: "Parakeet Unified EN 0.6B".to_string(),
+                description: "Fast, accurate live English transcription.".to_string(),
+                filename: "parakeet-unified-en-0.6b-q8_0.gguf".to_string(),
+                url: Some(
+                    "https://huggingface.co/handy-computer/parakeet-unified-en-0.6b-gguf/resolve/main/parakeet-unified-en-0.6b-Q8_0.gguf"
+                        .to_string(),
+                ),
+                sha256: Some(
+                    "4b50b6dd862bf6e346929aaf4f5eaacec003bfa3f56462d6c874b41ef2f38795".to_string(),
+                ),
+                size_mb: 731,
+                is_downloaded: false,
+                is_downloading: false,
+                partial_size: 0,
+                is_directory: false,
+                engine_type: EngineType::TranscribeCpp,
+                accuracy_score: 0.80,
+                speed_score: 0.90,
+                supports_translation: false,
+                is_recommended: false,
+                supported_languages: vec!["en".to_string()],
+                supports_language_selection: false,
+                is_custom: false,
+            },
+        );
+
+        // Nemotron Streaming 3.5: 28-language multilingual, runs on transcribe-cpp (GGUF).
+        let nemotron_streaming_languages: Vec<String> = vec![
+            "en", "es", "fr", "it", "pt", "nl", "de", "tr", "ru", "ar", "hi", "ja", "ko", "vi",
+            "uk", "pl", "sv", "cs", "nb", "da", "bg", "fi", "hr", "sk", "zh", "hu", "ro", "et",
+        ]
+        .into_iter()
+        .map(String::from)
+        .collect();
+
+        available_models.insert(
+            "nemotron-streaming-3.5".to_string(),
+            ModelInfo {
+                id: "nemotron-streaming-3.5".to_string(),
+                name: "Nemotron Streaming 3.5".to_string(),
+                description: "Live multilingual transcription across 28 languages.".to_string(),
+                filename: "nemotron-streaming-3.5-q8_0.gguf".to_string(),
+                url: Some(
+                    "https://huggingface.co/handy-computer/nemotron-3.5-asr-streaming-0.6b-gguf/resolve/main/nemotron-3.5-asr-streaming-0.6b-Q8_0.gguf"
+                        .to_string(),
+                ),
+                sha256: Some(
+                    "b94545b313b3223fda7b2857a52681da813935c2127643d1e9ff0c23d988089c".to_string(),
+                ),
+                size_mb: 751,
+                is_downloaded: false,
+                is_downloading: false,
+                partial_size: 0,
+                is_directory: false,
+                engine_type: EngineType::TranscribeCpp,
+                accuracy_score: 0.78,
+                speed_score: 0.85,
+                supports_translation: false,
+                is_recommended: false,
+                supported_languages: nemotron_streaming_languages,
                 supports_language_selection: true,
                 is_custom: false,
             },
