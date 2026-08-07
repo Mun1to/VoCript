@@ -4,7 +4,8 @@ use serde::{Deserialize, Deserializer, Serialize};
 use specta::Type;
 use std::collections::HashMap;
 use std::fmt;
-use tauri::AppHandle;
+use std::sync::{Arc, OnceLock, RwLock};
+use tauri::{AppHandle, Manager};
 use tauri_plugin_store::StoreExt;
 
 pub const APPLE_INTELLIGENCE_PROVIDER_ID: &str = "apple_intelligence";
@@ -1066,6 +1067,31 @@ impl AppSettings {
     }
 }
 
+/// Process-wide cache of the deserialized settings.
+///
+/// `get_settings` has ~150 call sites, several of them on the dictation hot
+/// path, and a number of those read a single bool. Every uncached call costs a
+/// deep clone of the settings JSON out of the store plus a full serde
+/// deserialize of the whole `AppSettings` tree — the bindings map, custom
+/// words, and post-processing providers included.
+///
+/// Settings only ever reach the store through `write_settings` and the two
+/// loaders in this module (nothing on the frontend touches the store plugin
+/// directly), so the deserialized value can be cached and refreshed at exactly
+/// those points.
+static SETTINGS_CACHE: OnceLock<RwLock<Option<AppSettings>>> = OnceLock::new();
+
+fn settings_cache() -> &'static RwLock<Option<AppSettings>> {
+    SETTINGS_CACHE.get_or_init(|| RwLock::new(None))
+}
+
+/// Replace the cached settings with `settings`.
+fn cache_settings(settings: &AppSettings) {
+    if let Ok(mut cache) = settings_cache().write() {
+        *cache = Some(settings.clone());
+    }
+}
+
 pub fn load_or_create_app_settings(app: &AppHandle) -> AppSettings {
     // Initialize store
     let store = app
@@ -1122,10 +1148,28 @@ pub fn load_or_create_app_settings(app: &AppHandle) -> AppSettings {
         store.set("settings", serde_json::to_value(&settings).unwrap());
     }
 
+    // Startup normalisation is authoritative — seed the cache from it.
+    cache_settings(&settings);
+
     settings
 }
 
 pub fn get_settings(app: &AppHandle) -> AppSettings {
+    if let Ok(cache) = settings_cache().read() {
+        if let Some(settings) = cache.as_ref() {
+            return settings.clone();
+        }
+    }
+
+    // Cold miss. Two threads racing here both do the work and store the same
+    // normalised result, which is wasteful exactly once and never wrong.
+    let settings = read_settings_from_store(app);
+    cache_settings(&settings);
+    settings
+}
+
+/// Read and normalise the settings straight from the store, bypassing the cache.
+fn read_settings_from_store(app: &AppHandle) -> AppSettings {
     let store = app
         .store(crate::portable::store_path(SETTINGS_STORE_PATH))
         .expect("Failed to initialize store");
@@ -1162,6 +1206,20 @@ pub fn write_settings(app: &AppHandle, settings: AppSettings) {
         .expect("Failed to initialize store");
 
     store.set("settings", serde_json::to_value(&settings).unwrap());
+
+    // Keep the cache warm rather than merely invalidating it: the writer
+    // already holds the authoritative value, so the next read costs nothing.
+    cache_settings(&settings);
+
+    // The idle watcher sleeps until the loaded model's unload deadline and
+    // parks when there is none, so a change to model_unload_timeout is only
+    // picked up if we wake it to recompute. `try_state` is None during early
+    // setup, before the manager is registered, which is a safe no-op.
+    if let Some(manager) =
+        app.try_state::<Arc<crate::managers::transcription::TranscriptionManager>>()
+    {
+        manager.wake_idle_watcher();
+    }
 }
 
 pub fn get_bindings(app: &AppHandle) -> HashMap<String, ShortcutBinding> {
@@ -1226,5 +1284,57 @@ mod tests {
         let out = format!("{:?}", map);
         assert!(!out.contains("secret"));
         assert!(out.contains("[REDACTED]"));
+    }
+
+    /// Measurement aid rather than a correctness check, hence `#[ignore]`.
+    /// Run with:
+    ///
+    /// ```text
+    /// cargo test --release settings_read_cost -- --ignored --nocapture
+    /// ```
+    ///
+    /// Quantifies what the settings cache removes from every `get_settings()`
+    /// call: a deep clone of the stored JSON plus a full deserialize of the
+    /// entire `AppSettings` tree, against a clone of the already-parsed struct.
+    /// Must be run in release — dev-profile serde numbers overstate the gap by
+    /// an order of magnitude and would make the win look far larger than it is.
+    #[test]
+    #[ignore]
+    fn settings_read_cost() {
+        use std::hint::black_box;
+        use std::time::Instant;
+
+        const ITERS: u32 = 2_000;
+
+        let settings = get_default_settings();
+        let stored = serde_json::to_value(&settings).unwrap();
+        println!(
+            "settings JSON: {} bytes",
+            serde_json::to_string(&stored).unwrap().len()
+        );
+
+        // What every uncached call used to do: take the store's copy, parse it.
+        let start = Instant::now();
+        for _ in 0..ITERS {
+            let value = stored.clone();
+            let parsed: AppSettings = serde_json::from_value(value).unwrap();
+            black_box(parsed);
+        }
+        let uncached = start.elapsed();
+
+        // What a cache hit costs instead.
+        let start = Instant::now();
+        for _ in 0..ITERS {
+            black_box(settings.clone());
+        }
+        let cached = start.elapsed();
+
+        let per = |d: std::time::Duration| d.as_secs_f64() * 1e6 / f64::from(ITERS);
+        println!("uncached: {:>9.2} us/call", per(uncached));
+        println!("  cached: {:>9.2} us/call", per(cached));
+        println!(
+            "  factor: {:>9.1}x",
+            uncached.as_secs_f64() / cached.as_secs_f64()
+        );
     }
 }

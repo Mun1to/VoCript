@@ -58,6 +58,18 @@ enum LoadedEngine {
     Cohere(CohereModel),
 }
 
+/// What the idle watcher should do next.
+#[derive(Clone, Copy, Debug)]
+enum IdleAction {
+    /// Nothing can time out right now, so block until something wakes us.
+    /// This is the state the app sits in whenever no model is resident.
+    Park,
+    /// Sleep this long, sized to land on the unload deadline exactly.
+    Sleep(Duration),
+    /// The model has been idle past its limit — unload it now.
+    Unload,
+}
+
 /// RAII guard that clears the `is_loading` flag and notifies waiters on drop.
 /// Ensures the loading flag is always reset, even on early returns or panics.
 pub struct LoadingGuard {
@@ -81,6 +93,9 @@ pub struct TranscriptionManager {
     current_model_id: Arc<Mutex<Option<String>>>,
     last_activity: Arc<AtomicU64>,
     shutdown_signal: Arc<AtomicBool>,
+    /// Wake channel for the idle watcher. The bool is a "re-evaluate pending"
+    /// flag, kept so a signal raised while the watcher is awake isn't lost.
+    watcher_wake: Arc<(Mutex<bool>, Condvar)>,
     watcher_handle: Arc<Mutex<Option<thread::JoinHandle<()>>>>,
     is_loading: Arc<Mutex<bool>>,
     loading_condvar: Arc<Condvar>,
@@ -95,67 +110,42 @@ impl TranscriptionManager {
             current_model_id: Arc::new(Mutex::new(None)),
             last_activity: Arc::new(AtomicU64::new(Self::now_ms())),
             shutdown_signal: Arc::new(AtomicBool::new(false)),
+            watcher_wake: Arc::new((Mutex::new(false), Condvar::new())),
             watcher_handle: Arc::new(Mutex::new(None)),
             is_loading: Arc::new(Mutex::new(false)),
             loading_condvar: Arc::new(Condvar::new()),
         };
 
-        // Start the idle watcher
+        // Start the idle watcher.
+        //
+        // The watcher is event-driven rather than periodic: it sleeps until the
+        // loaded model's unload deadline, and parks indefinitely whenever there
+        // is no deadline to wait for (no model resident, or a Never/Immediately
+        // timeout). load_model(), unload_model(), write_settings() and shutdown
+        // all wake it via wake_idle_watcher(), so parking never costs
+        // responsiveness. A tray-resident app therefore performs zero idle
+        // wakeups instead of one every 10 seconds.
         {
-            let app_handle_cloned = app_handle.clone();
             let manager_cloned = manager.clone();
             let shutdown_signal = manager.shutdown_signal.clone();
+            let wake = manager.watcher_wake.clone();
             let handle = thread::spawn(move || {
                 debug!("Idle watcher thread started");
-                while !shutdown_signal.load(Ordering::Relaxed) {
-                    thread::sleep(Duration::from_secs(10)); // Check every 10 seconds
-
-                    // Check shutdown signal again after sleep
-                    if shutdown_signal.load(Ordering::Relaxed) {
+                loop {
+                    if shutdown_signal.load(Ordering::Acquire) {
                         break;
                     }
 
-                    let settings = get_settings(&app_handle_cloned);
-                    let timeout = settings.model_unload_timeout;
-
-                    // Skip Immediately — that variant is handled by
-                    // maybe_unload_immediately() after each transcription.
-                    // Treating it as 0s here would unload the model mid-recording.
-                    if timeout == ModelUnloadTimeout::Immediately {
-                        continue;
-                    }
-
-                    // While recording, keep the idle timer fresh so the
-                    // model is never unloaded mid-session.
-                    let is_recording = app_handle_cloned
-                        .try_state::<Arc<AudioRecordingManager>>()
-                        .is_some_and(|a| a.is_recording());
-                    if is_recording {
-                        manager_cloned.touch_activity();
-                        continue;
-                    }
-
-                    if let Some(limit_seconds) = timeout.to_seconds() {
-                        let last = manager_cloned.last_activity.load(Ordering::Relaxed);
-                        let now_ms = TranscriptionManager::now_ms();
-                        let idle_ms = now_ms.saturating_sub(last);
-                        let limit_ms = limit_seconds * 1000;
-
-                        if idle_ms > limit_ms {
-                            // idle -> unload
+                    let wait_for = match manager_cloned.next_idle_action() {
+                        IdleAction::Unload => {
                             if manager_cloned.is_model_loaded() {
                                 let unload_start = std::time::Instant::now();
-                                info!(
-                                    "Model idle for {}s (limit: {}s), unloading",
-                                    idle_ms / 1000,
-                                    limit_seconds
-                                );
+                                info!("Model idle past its unload limit, unloading");
                                 match manager_cloned.unload_model() {
                                     Ok(()) => {
-                                        let unload_duration = unload_start.elapsed();
                                         info!(
                                             "Model unloaded due to inactivity (took {}ms)",
-                                            unload_duration.as_millis()
+                                            unload_start.elapsed().as_millis()
                                         );
                                     }
                                     Err(e) => {
@@ -163,8 +153,29 @@ impl TranscriptionManager {
                                     }
                                 }
                             }
+                            // Re-evaluate; with the model gone this parks.
+                            continue;
                         }
+                        IdleAction::Sleep(duration) => Some(duration),
+                        IdleAction::Park => None,
+                    };
+
+                    let (lock, condvar) = &*wake;
+                    let mut pending = lock.lock().unwrap_or_else(|p| p.into_inner());
+                    // A wake raised while we were evaluating means the schedule
+                    // is already stale — loop instead of sleeping on it.
+                    if !*pending {
+                        pending = match wait_for {
+                            Some(duration) => {
+                                condvar
+                                    .wait_timeout(pending, duration)
+                                    .unwrap_or_else(|p| p.into_inner())
+                                    .0
+                            }
+                            None => condvar.wait(pending).unwrap_or_else(|p| p.into_inner()),
+                        };
                     }
+                    *pending = false;
                 }
                 debug!("Idle watcher thread shutting down gracefully");
             });
@@ -228,6 +239,9 @@ impl TranscriptionManager {
             },
         );
 
+        // Nothing left to time out — let the watcher fall back to parking.
+        self.wake_idle_watcher();
+
         let unload_duration = unload_start.elapsed();
         debug!(
             "Model unloaded manually (took {}ms)",
@@ -246,6 +260,67 @@ impl TranscriptionManager {
     /// Reset the idle timer to now.
     fn touch_activity(&self) {
         self.last_activity.store(Self::now_ms(), Ordering::Relaxed);
+    }
+
+    /// Wake the idle watcher so it recomputes its schedule.
+    ///
+    /// Call after anything that changes *when* the model should unload: a load,
+    /// an unload, a settings write, or shutdown. Cheap, and safe to call
+    /// spuriously — a redundant wake just costs one extra evaluation.
+    pub fn wake_idle_watcher(&self) {
+        let (lock, condvar) = &*self.watcher_wake;
+        let mut pending = lock.lock().unwrap_or_else(|p| p.into_inner());
+        *pending = true;
+        condvar.notify_all();
+    }
+
+    /// Decide what the idle watcher should do next, without sleeping.
+    ///
+    /// Returns [`IdleAction::Park`] whenever nothing can time out, which lets
+    /// the watcher block indefinitely rather than poll. The cheap
+    /// `is_model_loaded` check comes first specifically so the idle path never
+    /// touches the settings store.
+    fn next_idle_action(&self) -> IdleAction {
+        // Nothing resident means nothing to unload.
+        if !self.is_model_loaded() {
+            return IdleAction::Park;
+        }
+
+        let timeout = get_settings(&self.app_handle).model_unload_timeout;
+
+        // `Immediately` is driven by maybe_unload_immediately() after each
+        // transcription; treating it as 0s here would unload mid-recording.
+        // `Never` has no deadline at all. Both park until a settings write
+        // wakes us.
+        if timeout == ModelUnloadTimeout::Immediately {
+            return IdleAction::Park;
+        }
+        let Some(limit_seconds) = timeout.to_seconds() else {
+            return IdleAction::Park;
+        };
+
+        // While recording, keep the timer fresh so the model is never unloaded
+        // mid-session, then re-check a full limit later.
+        let is_recording = self
+            .app_handle
+            .try_state::<Arc<AudioRecordingManager>>()
+            .is_some_and(|a| a.is_recording());
+        if is_recording {
+            self.touch_activity();
+            return IdleAction::Sleep(Duration::from_secs(limit_seconds));
+        }
+
+        let idle_ms = Self::now_ms().saturating_sub(self.last_activity.load(Ordering::Relaxed));
+        let limit_ms = limit_seconds.saturating_mul(1000);
+
+        // Sleep straight to the deadline instead of polling toward it. The
+        // extra millisecond avoids waking a hair early and looping twice.
+        match limit_ms.checked_sub(idle_ms) {
+            Some(remaining_ms) if remaining_ms > 0 => {
+                IdleAction::Sleep(Duration::from_millis(remaining_ms.saturating_add(1)))
+            }
+            _ => IdleAction::Unload,
+        }
     }
 
     /// Unloads the model immediately if the setting is enabled and the model is loaded
@@ -402,6 +477,9 @@ impl TranscriptionManager {
 
         // Reset idle timer so the watcher doesn't immediately unload a just-loaded model
         self.touch_activity();
+        // A model is now resident, so the watcher has a deadline to wait for.
+        // Without this it would stay parked and never unload it.
+        self.wake_idle_watcher();
 
         // Emit loading completed event
         let _ = self.app_handle.emit(
@@ -954,8 +1032,10 @@ impl Drop for TranscriptionManager {
             return;
         }
 
-        // Signal the watcher thread to shutdown
-        self.shutdown_signal.store(true, Ordering::Relaxed);
+        // Signal the watcher thread to shutdown, then wake it so the join below
+        // returns immediately instead of waiting out its current sleep.
+        self.shutdown_signal.store(true, Ordering::Release);
+        self.wake_idle_watcher();
 
         // Wait for the thread to finish gracefully
         if let Some(handle) = self.watcher_handle.lock().unwrap().take() {
