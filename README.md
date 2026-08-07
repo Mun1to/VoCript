@@ -1,7 +1,3 @@
-
-
-https://github.com/user-attachments/assets/2516e9d1-8146-4d28-9de3-30c72a2849e9
-
 <div align="center">
 
 # 🎙️ VoCript
@@ -33,7 +29,7 @@ https://github.com/user-attachments/assets/2516e9d1-8146-4d28-9de3-30c72a2849e9
 
 </div>
 
----
+https://github.com/user-attachments/assets/2516e9d1-8146-4d28-9de3-30c72a2849e9
 
 ## ✨ What it does
 
