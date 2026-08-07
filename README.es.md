@@ -29,7 +29,7 @@
 
 </div>
 
----
+https://github.com/user-attachments/assets/2516e9d1-8146-4d28-9de3-30c72a2849e9
 
 ## ✨ Qué hace
 
@@ -103,10 +103,6 @@ En la [página de Releases](https://github.com/Mun1to/VoCript/releases/latest) t
 > X11 va todo más fino.
 
 > 💡 ¿Prefieres ver todas las versiones y archivos? Están en la [página de Releases](https://github.com/Mun1to/VoCript/releases/latest).
-
-## 🎬 Véelo en acción
-
-<video src="https://github.com/user-attachments/assets/a5e0ab17-eb65-4db1-8eee-6ce84c20a3bb" controls muted></video>
 
 ## 🔄 Actualizaciones automáticas
 
