@@ -48,28 +48,6 @@ VoCript escucha tu **voz** —o el **audio que suena en tu PC**— y lo conviert
 
 ---
 
-## 📸 Así se ve
-
-<div align="center">
-  <img src="brand/screenshots/01-general.png" alt="VoCript — pantalla principal" width="820" />
-</div>
-
-<p align="center"><em>Pantalla principal: la barra de controles rápidos del header — voz/sistema, en vivo, salida (pegar/copiar), activación, perfil, idioma y tema (claro/oscuro/sistema). Todo el reconocimiento ocurre en tu equipo.</em></p>
-
-| Transcribir archivos | Modelos de transcripción | Ajustes avanzados |
-| :--: | :--: | :--: |
-| <img src="brand/screenshots/03-transcribe.png" alt="Transcribir archivos a texto o SRT" /> | <img src="brand/screenshots/02-models.png" alt="Modelos de transcripción" /> | <img src="brand/screenshots/04-advanced.png" alt="Ajustes avanzados" /> |
-
-<br />
-
-<div align="center">
-  <img src="brand/screenshots/05-personalizar.png" alt="VoCript en modo claro — fácil de personalizar" width="820" />
-</div>
-
-<p align="center"><em>Fácil de personalizar: tema claro, oscuro o automático según tu sistema. Cambia de perfil, modo, salida, activación e idioma desde el propio header, con un clic.</em></p>
-
----
-
 ## ⬇️ Descargar
 
 ### Windows
