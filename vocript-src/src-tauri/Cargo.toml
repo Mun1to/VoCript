@@ -73,7 +73,12 @@ tar = "0.4.44"
 flate2 = "1.0"
 sha2 = "0.10"
 base64 = "0.22"
-transcribe-rs = { version = "0.3.11", features = ["whisper-cpp", "onnx"] }
+# Whisper-family models run through transcribe-cpp (ggml, GGUF and legacy .bin,
+# with native backends); transcribe-rs stays for the ONNX architectures
+# (Parakeet, Moonshine, SenseVoice, GigaAM, Canary, Cohere). Per-platform
+# backend features are selected in the target tables below.
+transcribe-rs = { version = "0.3.11", features = ["onnx"] }
+transcribe-cpp = { version = "0.1.3", default-features = false }
 handy-keys = "0.2.4"
 ferrous-opencc = "0.2.3"
 clap = { version = "4", features = ["derive"] }
@@ -92,7 +97,15 @@ tauri-plugin-single-instance = "2.3.2"
 tauri-plugin-updater = "2.10.0"
 
 [target.'cfg(windows)'.dependencies]
-transcribe-rs = { version = "0.3.11", features = ["whisper-vulkan", "ort-directml"] }
+transcribe-rs = { version = "0.3.11", features = ["ort-directml"] }
+# dynamic-backends ships ggml's per-microarchitecture CPU kernels (haswell,
+# skylakex, cascadelake, ...) next to the Vulkan backend and selects the best
+# one at runtime, rather than the single static path the old whisper-cpp
+# feature baked in at compile time.
+transcribe-cpp = { version = "0.1.3", default-features = false, features = [
+  "dynamic-backends",
+  "vulkan",
+] }
 wasapi = "0.23"
 windows = { version = "0.61.3", features = [
   "Win32_Media_Audio",
@@ -112,12 +125,17 @@ winreg = "0.55"
 
 [target.'cfg(target_os = "macos")'.dependencies]
 tauri-nspanel = { git = "https://github.com/ahkohd/tauri-nspanel", branch = "v2.1" }
-transcribe-rs = { version = "0.3.11", features = ["whisper-metal"] }
+transcribe-cpp = { version = "0.1.3", default-features = false, features = [
+  "metal",
+] }
 
 [target.'cfg(target_os = "linux")'.dependencies]
 gtk-layer-shell = { version = "0.8", features = ["v0_6"] }
 gtk = "0.18"
-transcribe-rs = { version = "0.3.11", features = ["whisper-vulkan"] }
+transcribe-cpp = { version = "0.1.3", default-features = false, features = [
+  "dynamic-backends",
+  "vulkan",
+] }
 
 [patch.crates-io]
 tauri-runtime = { git = "https://github.com/cjpais/tauri.git", branch = "handy-2.10.2" }

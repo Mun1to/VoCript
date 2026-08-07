@@ -16,6 +16,9 @@ use std::sync::{Arc, Condvar, Mutex, MutexGuard, OnceLock};
 use std::thread;
 use std::time::{Duration, SystemTime};
 use tauri::{AppHandle, Emitter, Manager};
+use transcribe_cpp::{
+    Backend, Model, ModelOptions, RunExtension, RunOptions, Session, Task, WhisperRunOptions,
+};
 use transcribe_rs::{
     onnx::{
         canary::CanaryModel,
@@ -28,7 +31,6 @@ use transcribe_rs::{
     },
     transcriber::{Transcriber, VadChunked, VadChunkedConfig},
     vad::{EnergyVad, SmoothedVad},
-    whisper_cpp::{WhisperEngine, WhisperInferenceParams},
     SpeechModel, TranscribeOptions,
 };
 
@@ -48,7 +50,11 @@ pub struct ModelStateEvent {
 }
 
 enum LoadedEngine {
-    Whisper(WhisperEngine),
+    /// Whisper-family models (GGUF and legacy ggml `.bin`) through
+    /// transcribe-cpp. Holds the live [`Session`], which keeps its [`Model`]
+    /// alive internally, so repeated dictation reuses the session rather than
+    /// reloading the weights each time.
+    TranscribeCpp(Session),
     Parakeet(ParakeetModel),
     Moonshine(MoonshineModel),
     MoonshineStreaming(StreamingModel),
@@ -387,12 +393,32 @@ impl TranscriptionManager {
 
         let loaded_engine = match model_info.engine_type {
             EngineType::Whisper => {
-                let engine = WhisperEngine::load(&model_path).map_err(|e| {
+                let model_options = ModelOptions {
+                    backend: select_transcribe_backend(
+                        get_settings(&self.app_handle).whisper_accelerator,
+                    ),
+                    ..Default::default()
+                };
+                let model = Model::load_with(&model_path, &model_options).map_err(|e| {
                     let error_msg = format!("Failed to load whisper model {}: {}", model_id, e);
                     emit_loading_failed(&error_msg);
                     anyhow::anyhow!(error_msg)
                 })?;
-                LoadedEngine::Whisper(engine)
+                // The bound backend can differ from the request — Auto falls back
+                // to CPU when no GPU backend is usable — so log what actually
+                // loaded rather than what was asked for.
+                let bound_backend = model.backend();
+                let session = model.session().map_err(|e| {
+                    let error_msg =
+                        format!("Failed to create session for model {}: {}", model_id, e);
+                    emit_loading_failed(&error_msg);
+                    anyhow::anyhow!(error_msg)
+                })?;
+                info!(
+                    "Loaded '{}' through transcribe-cpp on backend {}",
+                    model_id, bound_backend
+                );
+                LoadedEngine::TranscribeCpp(session)
             }
             EngineType::Parakeet => {
                 let engine =
@@ -690,34 +716,67 @@ impl TranscriptionManager {
         let transcribe_result = catch_unwind(AssertUnwindSafe(
             || -> Result<transcribe_rs::TranscriptionResult> {
                 match &mut engine {
-                    LoadedEngine::Whisper(whisper_engine) => {
-                        let whisper_language = if validated_language == "auto" {
+                    LoadedEngine::TranscribeCpp(session) => {
+                        let language = if validated_language == "auto" {
                             None
+                        } else if validated_language == "zh-Hans" || validated_language == "zh-Hant"
+                        {
+                            Some("zh".to_string())
                         } else {
-                            let normalized = if validated_language == "zh-Hans"
-                                || validated_language == "zh-Hant"
-                            {
-                                "zh".to_string()
-                            } else {
-                                validated_language.to_string()
-                            };
-                            Some(normalized)
+                            Some(validated_language.to_string())
                         };
 
-                        let params = WhisperInferenceParams {
-                            language: whisper_language,
-                            translate: settings.translate_to_english,
-                            initial_prompt: build_whisper_initial_prompt(
-                                validated_language,
-                                &settings.custom_words,
-                                settings.translate_to_english,
-                            ),
+                        // Custom words ride along as whisper's initial prompt —
+                        // the same steering the old whisper-cpp path applied.
+                        let family = build_whisper_initial_prompt(
+                            validated_language,
+                            &settings.custom_words,
+                            settings.translate_to_english,
+                        )
+                        .map(|initial_prompt| {
+                            RunExtension::Whisper(WhisperRunOptions {
+                                initial_prompt: Some(initial_prompt),
+                                ..Default::default()
+                            })
+                        });
+
+                        let run_options = RunOptions {
+                            task: if settings.translate_to_english {
+                                Task::Translate
+                            } else {
+                                Task::Transcribe
+                            },
+                            language,
+                            family,
                             ..Default::default()
                         };
 
-                        whisper_engine
-                            .transcribe_with(audio, &params)
-                            .map_err(|e| anyhow::anyhow!("Whisper transcription failed: {}", e))
+                        session
+                            .run(audio, &run_options)
+                            .map(|transcript| transcribe_rs::TranscriptionResult {
+                                text: transcript.text,
+                                // transcribe-cpp reports segment bounds in
+                                // milliseconds; TranscriptionResult — and the SRT
+                                // writer downstream — expect seconds.
+                                segments: if transcript.segments.is_empty() {
+                                    None
+                                } else {
+                                    Some(
+                                        transcript
+                                            .segments
+                                            .into_iter()
+                                            .map(|s| transcribe_rs::TranscriptionSegment {
+                                                start: s.t0_ms as f32 / 1000.0,
+                                                end: s.t1_ms as f32 / 1000.0,
+                                                text: s.text,
+                                            })
+                                            .collect(),
+                                    )
+                                },
+                            })
+                            .map_err(|e| {
+                                anyhow::anyhow!("transcribe-cpp transcription failed: {}", e)
+                            })
                     }
                     LoadedEngine::Parakeet(parakeet_engine) => {
                         let params = ParakeetParams {
@@ -928,26 +987,81 @@ fn build_whisper_initial_prompt(
 
 /// Apply the user's accelerator preferences to the transcribe-rs global atomics.
 /// Called on startup and whenever the user changes the setting.
+/// Initialize the transcribe-cpp native backend once at startup: route native
+/// and ggml diagnostics into the `log` facade, then register the compute
+/// backend modules.
+///
+/// In a static build (macOS Metal) `init_backends_default` is a harmless no-op.
+/// In a `dynamic-backends` build it loads the per-microarchitecture CPU modules
+/// and the GPU backend from the directory holding the native library. It MUST
+/// run before the first model load: without it the process has zero registered
+/// compute devices and every load fails, including plain CPU.
+pub fn init_transcribe_backend() {
+    transcribe_cpp::init_logging();
+    match transcribe_cpp::init_backends_default() {
+        Ok(()) => {
+            let devices = transcribe_cpp::devices();
+            info!(
+                "transcribe-cpp initialized with {} compute device(s): [{}]",
+                devices.len(),
+                devices
+                    .iter()
+                    .map(|d| format!("{} ({})", d.name, d.kind))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            );
+        }
+        Err(e) => {
+            error!(
+                "transcribe-cpp backend init failed: {}. Model loading will not \
+                 work — check that the ggml backend modules shipped next to the \
+                 executable.",
+                e
+            );
+        }
+    }
+}
+
+/// Map the user's accelerator preference onto a transcribe-cpp backend.
+///
+/// `Gpu` probes the platform's GPU backends in preference order and falls back
+/// to `Auto` when none is usable, so a stale or unsupported explicit choice
+/// degrades gracefully instead of failing the model load outright.
+fn select_transcribe_backend(setting: WhisperAcceleratorSetting) -> Backend {
+    match setting {
+        WhisperAcceleratorSetting::Cpu => Backend::Cpu,
+        WhisperAcceleratorSetting::Auto => Backend::Auto,
+        WhisperAcceleratorSetting::Gpu => {
+            #[cfg(target_os = "macos")]
+            let candidates = [Backend::Metal];
+            #[cfg(not(target_os = "macos"))]
+            let candidates = [Backend::Cuda, Backend::Vulkan];
+
+            match candidates
+                .into_iter()
+                .find(|&b| transcribe_cpp::backend_available(b))
+            {
+                Some(b) => b,
+                None => {
+                    warn!("No GPU backend available for transcribe-cpp; falling back to Auto");
+                    Backend::Auto
+                }
+            }
+        }
+    }
+}
+
 pub fn apply_accelerator_settings(app: &tauri::AppHandle) {
     use transcribe_rs::accel;
 
     let settings = get_settings(app);
 
-    let whisper_pref = match settings.whisper_accelerator {
-        WhisperAcceleratorSetting::Auto => accel::WhisperAccelerator::Auto,
-        WhisperAcceleratorSetting::Cpu => accel::WhisperAccelerator::CpuOnly,
-        WhisperAcceleratorSetting::Gpu => accel::WhisperAccelerator::Gpu,
-    };
-    accel::set_whisper_accelerator(whisper_pref);
-    accel::set_whisper_gpu_device(settings.whisper_gpu_device);
+    // transcribe-cpp has no global accelerator switch — the backend is bound
+    // per model load via ModelOptions — so this preference only takes effect
+    // on the next load, not immediately.
     info!(
-        "Whisper accelerator set to: {}, gpu_device: {}",
-        whisper_pref,
-        if settings.whisper_gpu_device == accel::GPU_DEVICE_AUTO {
-            "auto".to_string()
-        } else {
-            settings.whisper_gpu_device.to_string()
-        }
+        "transcribe-cpp backend preference: {:?} (applies on next model load)",
+        select_transcribe_backend(settings.whisper_accelerator)
     );
 
     let ort_pref = match settings.ort_accelerator {
@@ -971,25 +1085,40 @@ pub struct GpuDeviceOption {
 static GPU_DEVICES: OnceLock<Vec<GpuDeviceOption>> = OnceLock::new();
 
 fn cached_gpu_devices() -> &'static [GpuDeviceOption] {
-    use transcribe_rs::whisper_cpp::gpu::list_gpu_devices;
+    use transcribe_cpp::DeviceType;
 
     GPU_DEVICES.get_or_init(|| {
         // ggml's Vulkan backend uses FMA3 instructions internally.
         // On older CPUs without FMA3 (e.g. Sandy Bridge Xeons) this causes
         // a SIGILL crash that cannot be caught. Skip enumeration entirely
-        // on those CPUs — GPU-accelerated whisper won't work there anyway.
+        // on those CPUs — GPU-accelerated inference won't work there anyway.
         #[cfg(target_arch = "x86_64")]
         if !std::arch::is_x86_feature_detected!("fma") {
             warn!("CPU lacks FMA3 support — skipping GPU device enumeration");
             return Vec::new();
         }
 
-        list_gpu_devices()
+        transcribe_cpp::devices()
             .into_iter()
-            .map(|d| GpuDeviceOption {
-                id: d.id,
-                name: d.name,
-                total_vram_mb: d.total_vram / (1024 * 1024),
+            // Only real GPUs are selectable targets — the CPU device and
+            // host-memory accelerators are not a GPU choice.
+            .filter(|d| matches!(d.device_type, DeviceType::Gpu | DeviceType::Igpu))
+            .filter_map(|d| {
+                // Without a registry index there is nothing to pass as
+                // ModelOptions::gpu_device, so the device is not offerable.
+                let index = d.index?;
+                Some(GpuDeviceOption {
+                    id: i32::try_from(index).unwrap_or(0),
+                    // `description` is the human-readable model name ("NVIDIA
+                    // GeForce RTX 3080"); `name` is the ggml backend handle
+                    // ("Vulkan0"), which is far less useful in a picker.
+                    name: if d.description.is_empty() {
+                        d.name
+                    } else {
+                        d.description
+                    },
+                    total_vram_mb: (d.memory_total / (1024 * 1024)) as usize,
+                })
             })
             .collect()
     })
@@ -1045,5 +1174,106 @@ impl Drop for TranscriptionManager {
                 debug!("Idle watcher thread joined successfully");
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    /// Runtime check for the transcribe-cpp path, plus a per-backend timing.
+    ///
+    /// Needs real weights, so it is `#[ignore]`d and takes the path from the
+    /// environment:
+    ///
+    /// ```text
+    /// $env:VOCRIPT_TEST_MODEL = "C:\path\to\ggml-tiny.bin"
+    /// cargo test --release transcribe_cpp_loads_model -- --ignored --nocapture
+    /// ```
+    ///
+    /// This exists to prove the two things a successful compile does *not*:
+    /// that transcribe-cpp accepts legacy ggml `.bin` weights — so existing
+    /// installs keep working across the migration — and which backend actually
+    /// binds on this host, since `Auto` silently falls back to CPU.
+    #[test]
+    #[ignore]
+    fn transcribe_cpp_loads_model() {
+        use std::time::Instant;
+        use transcribe_cpp::{Backend, Model, ModelOptions, RunOptions};
+
+        let path = std::env::var("VOCRIPT_TEST_MODEL")
+            .expect("set VOCRIPT_TEST_MODEL to a whisper .bin or .gguf path");
+
+        // A dynamic-backends build registers nothing until this runs, so
+        // without it every backend below reports "not available".
+        super::init_transcribe_backend();
+
+        // 10s of deterministic low-amplitude noise at 16 kHz. Pure silence lets
+        // whisper short-circuit, which would make the timing meaningless; noise
+        // forces a full encode/decode. The transcript is expected to be junk —
+        // this measures the pipeline, not accuracy.
+        const SECONDS: usize = 10;
+        let mut seed: u32 = 0x1234_5678;
+        let audio: Vec<f32> = (0..16_000 * SECONDS)
+            .map(|_| {
+                seed = seed.wrapping_mul(1_664_525).wrapping_add(1_013_904_223);
+                (seed >> 16) as f32 / 32_768.0 * 0.05 - 0.025
+            })
+            .collect();
+
+        let mut any_loaded = false;
+        // Auto goes first because it is what users actually get by default.
+        for backend in [Backend::Auto, Backend::Cpu, Backend::Vulkan, Backend::Cuda] {
+            if !transcribe_cpp::backend_available(backend) {
+                println!("{:?}: not available on this host, skipping", backend);
+                continue;
+            }
+
+            let options = ModelOptions {
+                backend,
+                gpu_device: 0,
+            };
+
+            let started = Instant::now();
+            let model = match Model::load_with(&path, &options) {
+                Ok(model) => model,
+                Err(e) => {
+                    println!("{:?}: load FAILED: {}", backend, e);
+                    continue;
+                }
+            };
+            let load_ms = started.elapsed().as_secs_f64() * 1e3;
+            let bound = model.backend();
+            let mut session = model.session().expect("failed to open session");
+
+            // First call on a GPU backend pays one-time pipeline/shader setup
+            // that steady-state dictation would not, so time both separately
+            // rather than blaming warm-up on the backend.
+            let started = Instant::now();
+            let _ = session.run(&audio, &RunOptions::default());
+            let cold_secs = started.elapsed().as_secs_f64();
+
+            let started = Instant::now();
+            let transcript = session
+                .run(&audio, &RunOptions::default())
+                .expect("run failed");
+            let warm_secs = started.elapsed().as_secs_f64();
+
+            any_loaded = true;
+            println!(
+                "{:?} -> bound={} load={:.0}ms cold={:.2}s warm={:.2}s rtf={:.1}x chars={}",
+                backend,
+                bound,
+                load_ms,
+                cold_secs,
+                warm_secs,
+                SECONDS as f64 / warm_secs,
+                transcript.text.trim().len()
+            );
+        }
+
+        assert!(
+            any_loaded,
+            "no backend could load {path} — legacy .bin support is the \
+             assumption this whole migration rests on"
+        );
     }
 }

@@ -150,6 +150,11 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     // managers, que leen/escriben en la carpeta de datos.
     portable::migrate_legacy_identifier_data(app_handle);
 
+    // Register the transcribe-cpp compute backends before anything can load a
+    // model. In a `dynamic-backends` build nothing — not even plain CPU — is
+    // registered until this runs.
+    managers::transcription::init_transcribe_backend();
+
     // Initialize the managers
     let recording_manager = Arc::new(
         AudioRecordingManager::new(app_handle).expect("Failed to initialize recording manager"),

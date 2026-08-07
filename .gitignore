@@ -68,3 +68,6 @@ VoCript-Guia.pdf
 launch_dev_window.ps1
 prototipo-ui/
 prototipo-vocript.html
+
+# Staged by build.rs from transcribe-cpp's install dirs; never checked in.
+vocript-src/src-tauri/transcribe-libs/
