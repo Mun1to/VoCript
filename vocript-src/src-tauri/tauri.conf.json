@@ -27,10 +27,7 @@
     "active": true,
     "createUpdaterArtifacts": true,
     "targets": "all",
-    "resources": {
-      "resources/**/*": "",
-      "transcribe-libs/*": "."
-    },
+    "resources": ["resources/**/*"],
     "license": "MIT",
     "publisher": "VoCript",
     "icon": [
@@ -49,16 +46,24 @@
     },
     "linux": {
       "deb": {
-        "depends": ["libgtk-layer-shell0"]
+        "depends": ["libgtk-layer-shell0"],
+        "files": {
+          "/usr/lib/VoCript": "transcribe-libs"
+        }
       },
       "rpm": {
         "compression": {
           "type": "none"
+        },
+        "files": {
+          "/usr/lib/VoCript": "transcribe-libs"
         }
       },
       "appimage": {
         "bundleMediaFramework": true,
-        "files": {}
+        "files": {
+          "/usr/lib": "transcribe-libs"
+        }
       }
     },
     "windows": {
