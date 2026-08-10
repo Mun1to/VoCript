@@ -49,4 +49,11 @@ impl VoiceActivityDetector for SileroVad {
             Ok(VadFrame::Noise)
         }
     }
+
+    /// Clears the model's recurrent state between recordings. Silero is an
+    /// LSTM: without this it carried the tail of the previous take into the
+    /// next one, which could clip the first word after a noisy session.
+    fn reset(&mut self) {
+        self.engine.reset();
+    }
 }

@@ -40,6 +40,11 @@ pub struct AudioRecorder {
     /// (16 kHz mono, post-VAD). The consumer thread appends to it; live
     /// transcription reads it via `current_samples()`.
     live_buffer: Arc<Mutex<Vec<f32>>>,
+    /// Whether to mirror captured audio into `live_buffer`. Off by default:
+    /// mirroring unconditionally kept a second full copy of every recording in
+    /// memory even with live mode disabled (~230 MB each for an hour of system
+    /// audio), for a buffer nobody would ever read.
+    mirror_live: Arc<AtomicBool>,
     /// Capture thread + shutdown flag for the WASAPI process-loopback path
     /// (per-app system audio, Windows only). `None` for the cpal path.
     #[cfg(windows)]
@@ -57,6 +62,7 @@ impl AudioRecorder {
             vad: None,
             level_cb: None,
             live_buffer: Arc::new(Mutex::new(Vec::new())),
+            mirror_live: Arc::new(AtomicBool::new(false)),
             #[cfg(windows)]
             capture_handle: None,
             #[cfg(windows)]
@@ -84,6 +90,12 @@ impl AudioRecorder {
         self.live_buffer.lock().unwrap().clone()
     }
 
+    /// Turn the live mirror on for recordings that will actually be read back
+    /// while they run (live transcription). Set before `start()`.
+    pub fn set_live_mirroring(&self, enabled: bool) {
+        self.mirror_live.store(enabled, Ordering::Relaxed);
+    }
+
     pub fn open(&mut self, device: Option<Device>) -> Result<(), Box<dyn std::error::Error>> {
         if self.worker_handle.is_some() {
             return Ok(()); // already open
@@ -106,6 +118,7 @@ impl AudioRecorder {
         // Move the optional level callback into the worker thread
         let level_cb = self.level_cb.clone();
         let live_buffer = self.live_buffer.clone();
+        let mirror_live = self.mirror_live.clone();
 
         let worker = std::thread::spawn(move || {
             let stop_flag = Arc::new(AtomicBool::new(false));
@@ -190,6 +203,7 @@ impl AudioRecorder {
                         level_cb,
                         stop_flag,
                         live_buffer,
+                        mirror_live,
                     );
                     drop(stream);
                 }
@@ -289,6 +303,7 @@ impl AudioRecorder {
         // like close-mic speech — the VAD would otherwise discard most of it.
         let level_cb = self.level_cb.clone();
         let live_buffer = self.live_buffer.clone();
+        let mirror_live = self.mirror_live.clone();
         let worker = std::thread::spawn(move || {
             run_consumer(
                 sample_rate,
@@ -298,6 +313,7 @@ impl AudioRecorder {
                 level_cb,
                 stop_flag,
                 live_buffer,
+                mirror_live,
             );
         });
 
@@ -547,6 +563,7 @@ fn run_consumer(
     level_cb: Option<Arc<dyn Fn(Vec<f32>) + Send + Sync + 'static>>,
     stop_flag: Arc<AtomicBool>,
     live_buffer: Arc<Mutex<Vec<f32>>>,
+    mirror_live: Arc<AtomicBool>,
 ) {
     let mut frame_resampler = FrameResampler::new(
         in_sample_rate as usize,
@@ -611,7 +628,10 @@ fn run_consumer(
                 });
                 // Mirror newly-appended samples into the live buffer so live
                 // transcription can read the in-progress audio.
-                if recording && processed_samples.len() > before {
+                if recording
+                    && mirror_live.load(Ordering::Relaxed)
+                    && processed_samples.len() > before
+                {
                     live_buffer
                         .lock()
                         .unwrap()

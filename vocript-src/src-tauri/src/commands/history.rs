@@ -149,9 +149,16 @@ pub async fn update_history_limit(
     history_manager: State<'_, Arc<HistoryManager>>,
     limit: usize,
 ) -> Result<(), String> {
-    let mut settings = crate::settings::get_settings(&app);
-    settings.history_limit = limit;
-    crate::settings::write_settings(&app, settings);
+    // A zero limit combined with the "preserve up to the limit" retention mode
+    // means the cleanup below wipes the entire unsaved history and its audio
+    // files on the spot — never something a stray value should be able to do.
+    if limit == 0 {
+        return Err("History limit must be at least 1".to_string());
+    }
+
+    crate::settings::update_settings(&app, |settings| {
+        settings.history_limit = limit;
+    });
 
     history_manager
         .cleanup_old_entries()

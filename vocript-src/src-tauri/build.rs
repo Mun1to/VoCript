@@ -52,8 +52,22 @@ fn stage_transcribe_runtime_libs() {
     println!("cargo:rerun-if-env-changed=DEP_TRANSCRIBE_CPP_RUNTIME_DIR");
     println!("cargo:rerun-if-env-changed=DEP_TRANSCRIBE_CPP_MODULE_DIR");
 
-    // Present only in a shared posture. A static build has nothing to ship.
+    // Present only in a shared posture. A static build has nothing to ship —
+    // but on Windows and Linux the shared posture is exactly what Cargo.toml
+    // selects, so a missing variable there means the staging silently produced
+    // nothing and the installer would ship without transcribe.dll. That is the
+    // precise failure that shipped a broken v3.5.5 and stopped the app from
+    // starting at all, so fail the build loudly instead of trusting silence.
     let Some(runtime_dir) = std::env::var_os("DEP_TRANSCRIBE_CPP_RUNTIME_DIR") else {
+        let target_os = std::env::var("CARGO_CFG_TARGET_OS").unwrap_or_default();
+        if matches!(target_os.as_str(), "windows" | "linux") {
+            panic!(
+                "DEP_TRANSCRIBE_CPP_RUNTIME_DIR is unset while building for {target_os}, where \
+                 transcribe-cpp is used in its dynamic-backends posture. Nothing would be staged \
+                 into transcribe-libs/ and the installer would ship without transcribe.dll. \
+                 Check the transcribe-cpp features in Cargo.toml."
+            );
+        }
         return;
     };
 

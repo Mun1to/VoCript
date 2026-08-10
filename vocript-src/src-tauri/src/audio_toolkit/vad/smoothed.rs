@@ -101,5 +101,8 @@ impl VoiceActivityDetector for SmoothedVad {
         self.onset_counter = 0;
         self.in_speech = false;
         self.temp_out.clear();
+        // Propagate: the wrapper's own counters were cleared but the detector
+        // underneath kept its state from the previous recording.
+        self.inner_vad.reset();
     }
 }

@@ -621,9 +621,20 @@ impl ShortcutAction for TranscribeAction {
                         crate::audio_toolkit::save_wav_file(&wav_path, &samples_for_wav)
                     });
 
-                    // Transcribe concurrently with WAV save
+                    // Transcribe concurrently with WAV save. On spawn_blocking
+                    // like the WAV write above: this waits on a condvar and then
+                    // runs minutes of inference, and doing that directly on an
+                    // async worker pinned a tokio thread, stalling commands and
+                    // events (visible as UI jank) for the whole run.
                     let transcription_time = Instant::now();
-                    let transcription_result = tm.transcribe(samples);
+                    let tm_for_run = Arc::clone(&tm);
+                    let transcription_result =
+                        match tauri::async_runtime::spawn_blocking(move || tm_for_run.transcribe(samples))
+                            .await
+                        {
+                            Ok(result) => result,
+                            Err(e) => Err(anyhow::anyhow!("Transcription task failed: {}", e)),
+                        };
 
                     // Await WAV save and verify
                     let wav_saved = match wav_handle.await {
@@ -842,7 +853,15 @@ fn stop_live(app: &AppHandle, binding_id: &str) {
             crate::audio_toolkit::save_wav_file(&wav_path, &samples_for_wav)
         });
 
-        let transcription_result = tm.transcribe(samples);
+        // Same reasoning as the dictation path: keep the inference off the
+        // async workers so the UI stays responsive while it runs.
+        let tm_for_run = Arc::clone(&tm);
+        let transcription_result =
+            match tauri::async_runtime::spawn_blocking(move || tm_for_run.transcribe(samples)).await
+            {
+                Ok(result) => result,
+                Err(e) => Err(anyhow::anyhow!("Transcription task failed: {}", e)),
+            };
 
         let wav_saved = matches!(wav_handle.await, Ok(Ok(())))
             && crate::audio_toolkit::verify_wav_file(&wav_path_for_verify, sample_count).is_ok();

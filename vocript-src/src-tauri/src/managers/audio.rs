@@ -556,6 +556,11 @@ impl AudioRecordingManager {
             }
 
             if let Some(rec) = self.recorder.lock().unwrap().as_ref() {
+                // Only keep the second, readable-while-recording copy of the
+                // audio when something will actually read it back mid-run.
+                // (The wake word polls current_samples() too, but on recorders
+                // of its own, which opt in where they are created.)
+                rec.set_live_mirroring(binding_id.ends_with("_live"));
                 if rec.start().is_ok() {
                     *self.is_recording.lock().unwrap() = true;
                     *state = RecordingState::Recording {

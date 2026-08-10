@@ -126,6 +126,9 @@ fn record_and_transcribe(app: &AppHandle) -> Result<String, String> {
     // listener will hear it later.
     let mut recorder =
         AudioRecorder::new().map_err(|e| format!("Could not create recorder: {}", e))?;
+    // Teaching polls current_samples() while it records, so it needs the live
+    // mirror, which is off unless a reader asks for it.
+    recorder.set_live_mirroring(true);
     recorder
         .open(selected_microphone(app))
         .map_err(|e| format!("Could not open the microphone: {}", e))?;
@@ -510,6 +513,8 @@ fn listen_loop(
     // No VAD and no level callback: the audio must reach the model untrimmed,
     // and the wake word must not drive the on-screen audio meter.
     let recorder = AudioRecorder::new().map_err(|e| format!("Could not create recorder: {}", e))?;
+    // The listen loop reads each window back via current_samples().
+    recorder.set_live_mirroring(true);
     *recorder_slot.lock().unwrap() = Some(recorder);
     let mut open_device: Option<Option<String>> = None;
     // Consecutive windows with no signal at all, used to spot a dead stream.

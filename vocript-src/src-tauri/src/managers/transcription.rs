@@ -596,7 +596,24 @@ impl TranscriptionManager {
         // Resolve settings and language, then run the loaded engine. The
         // engine call is shared with file transcription via `run_loaded_engine`,
         // which waits for any in-progress model load and recovers from panics.
-        let settings = get_settings(&self.app_handle);
+        let mut settings = get_settings(&self.app_handle);
+        // Asking a model that cannot translate to translate anyway silently
+        // degrades its output. The toggle persists across model switches (only
+        // the language is reset), so it is easy to leave enabled after moving
+        // to a distilled model like Turbo — honour the catalog instead.
+        if settings.translate_to_english
+            && !self
+                .model_manager
+                .get_model_info(&settings.selected_model)
+                .map(|info| info.supports_translation)
+                .unwrap_or(true)
+        {
+            debug!(
+                "Ignoring translate_to_english: model {} does not support translation",
+                settings.selected_model
+            );
+            settings.translate_to_english = false;
+        }
         let validated_language = self.resolve_language(&settings);
         let result = self.run_loaded_engine(&audio, &settings, &validated_language)?;
 
