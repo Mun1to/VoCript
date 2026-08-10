@@ -1,7 +1,8 @@
-import i18n from "i18next";
+import i18n, { type BackendModule, type ReadCallback } from "i18next";
 import { initReactI18next } from "react-i18next";
 import { locale } from "@tauri-apps/plugin-os";
 import { LANGUAGE_METADATA } from "./languages";
+import enTranslation from "./locales/en/translation.json";
 import { commands } from "@/bindings";
 import {
   getLanguageDirection,
@@ -9,23 +10,45 @@ import {
   updateDocumentLanguage,
 } from "@/lib/utils/rtl";
 
-// Auto-discover translation files using Vite's glob import
-const localeModules = import.meta.glob<{ default: Record<string, unknown> }>(
+// Auto-discover translation files using Vite's glob import.
+//
+// NOT eager: the 20 bundled languages weigh ~1.1 MB in total, and loading them
+// all put every one of them in the startup bundle even though a user only ever
+// reads one. The glob still resolves the file *paths* synchronously (so the
+// language list below is unaffected); only the JSON itself is fetched on
+// demand, through the tiny backend module further down.
+const localeLoaders = import.meta.glob<{ default: Record<string, unknown> }>(
   "./locales/*/translation.json",
-  { eager: true },
 );
 
-// Build resources from discovered locale files
-const resources: Record<string, { translation: Record<string, unknown> }> = {};
-for (const [path, module] of Object.entries(localeModules)) {
-  const langCode = path.match(/\.\/locales\/(.+)\/translation\.json/)?.[1];
-  if (langCode) {
-    resources[langCode] = { translation: module.default };
-  }
-}
+const loaderPathFor = (code: string) => `./locales/${code}/translation.json`;
+
+const availableLocaleCodes = Object.keys(localeLoaders)
+  .map((path) => path.match(/\.\/locales\/(.+)\/translation\.json/)?.[1])
+  .filter((code): code is string => Boolean(code));
+
+/**
+ * Fetches a language's translations the first time i18next needs it. English
+ * never comes through here: it is the initial and fallback language, so it
+ * stays bundled and available synchronously.
+ */
+const lazyLocaleBackend: BackendModule = {
+  type: "backend",
+  init: () => {},
+  read: (language: string, _namespace: string, callback: ReadCallback) => {
+    const loader = localeLoaders[loaderPathFor(language)];
+    if (!loader) {
+      callback(new Error(`No translation bundle for "${language}"`), false);
+      return;
+    }
+    loader()
+      .then((module) => callback(null, module.default))
+      .catch((error: unknown) => callback(error as Error, false));
+  },
+};
 
 // Build supported languages list from discovered locales + metadata
-export const SUPPORTED_LANGUAGES = Object.keys(resources)
+export const SUPPORTED_LANGUAGES = availableLocaleCodes
   .map((code) => {
     const meta = LANGUAGE_METADATA[code];
     if (!meta) {
@@ -73,17 +96,26 @@ const getSupportedLanguage = (
 
 // Initialize i18n with English as default
 // Language will be synced from settings after init
-i18n.use(initReactI18next).init({
-  resources,
-  lng: "en",
-  fallbackLng: "en",
-  interpolation: {
-    escapeValue: false, // React already escapes values
-  },
-  react: {
-    useSuspense: false, // Disable suspense for SSR compatibility
-  },
-});
+i18n
+  .use(lazyLocaleBackend)
+  .use(initReactI18next)
+  .init({
+    // Only English is bundled up front; every other language is read through
+    // the backend above. `partialBundledLanguages` is what tells i18next to
+    // still consult the backend even though `resources` is populated — and
+    // routing every changeLanguage() call through it means the four call sites
+    // across the app get lazy loading without knowing about it.
+    resources: { en: { translation: enTranslation } },
+    partialBundledLanguages: true,
+    lng: "en",
+    fallbackLng: "en",
+    interpolation: {
+      escapeValue: false, // React already escapes values
+    },
+    react: {
+      useSuspense: false, // Disable suspense for SSR compatibility
+    },
+  });
 
 // Sync language from app settings
 export const syncLanguageFromSettings = async () => {

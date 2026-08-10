@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import type { ModelInfo } from "@/bindings";
@@ -6,7 +6,7 @@ import type { ModelCardStatus } from "./ModelCard";
 import ModelCard from "./ModelCard";
 import VoCriptTextLogo from "../icons/VoCriptTextLogo";
 import { useModelStore } from "../../stores/modelStore";
-import { useSettings } from "../../hooks/useSettings";
+import { useSettingsStore } from "../../stores/settingsStore";
 import { LANGUAGES } from "../../lib/constants/languages";
 import {
   POPULAR_LANGUAGES,
@@ -20,23 +20,25 @@ interface OnboardingProps {
 
 const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
   const { t } = useTranslation();
-  const {
-    models,
-    downloadModel,
-    selectModel,
-    downloadingModels,
-    verifyingModels,
-    extractingModels,
-    downloadProgress,
-    downloadStats,
-  } = useModelStore();
-  const { settings, updateSetting } = useSettings();
+  // One selector per slice instead of the whole store: subscribing to
+  // everything re-rendered this screen (and its ~18 model cards) on unrelated
+  // changes, including every download-progress tick.
+  const models = useModelStore((s) => s.models);
+  const downloadModel = useModelStore((s) => s.downloadModel);
+  const selectModel = useModelStore((s) => s.selectModel);
+  const downloadingModels = useModelStore((s) => s.downloadingModels);
+  const verifyingModels = useModelStore((s) => s.verifyingModels);
+  const extractingModels = useModelStore((s) => s.extractingModels);
+  const downloadProgress = useModelStore((s) => s.downloadProgress);
+  const downloadStats = useModelStore((s) => s.downloadStats);
+  const updateSetting = useSettingsStore((s) => s.updateSetting);
+  // Only this one field matters here; useSettings() would subscribe the whole
+  // screen to every settings change (including the isUpdating bookkeeping that
+  // each write flips twice).
+  const language = useSettingsStore((s) => s.settings?.selected_language) ?? "es";
   const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
 
   const isDownloading = selectedModelId !== null;
-
-  // Language the user is setting up for (defaults to the app's current one).
-  const language = settings?.selected_language ?? "es";
 
   const languageLabel = useMemo(
     () => LANGUAGES.find((l) => l.value === language)?.label,
@@ -49,10 +51,13 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
     [models, language],
   );
 
-  const handleLanguageSelect = (code: string) => {
-    if (isDownloading) return;
-    updateSetting("selected_language", code);
-  };
+  const handleLanguageSelect = useCallback(
+    (code: string) => {
+      if (isDownloading) return;
+      updateSetting("selected_language", code);
+    },
+    [isDownloading, updateSetting],
+  );
 
   // Watch for the selected model to finish downloading + verifying + extracting
   useEffect(() => {
@@ -90,16 +95,21 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
     t,
   ]);
 
-  const handleDownloadModel = async (modelId: string) => {
-    setSelectedModelId(modelId);
+  // Stable identity so the memoised ModelCards are not invalidated on every
+  // render of this screen.
+  const handleDownloadModel = useCallback(
+    async (modelId: string) => {
+      setSelectedModelId(modelId);
 
-    // Error toast is handled centrally by the model-download-failed event listener
-    // in modelStore — no toast here to avoid duplicates.
-    const success = await downloadModel(modelId);
-    if (!success) {
-      setSelectedModelId(null);
-    }
-  };
+      // Error toast is handled centrally by the model-download-failed event listener
+      // in modelStore — no toast here to avoid duplicates.
+      const success = await downloadModel(modelId);
+      if (!success) {
+        setSelectedModelId(null);
+      }
+    },
+    [downloadModel],
+  );
 
   const getModelStatus = (modelId: string): ModelCardStatus => {
     if (modelId in extractingModels) return "extracting";

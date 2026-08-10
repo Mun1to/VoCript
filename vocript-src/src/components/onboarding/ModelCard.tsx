@@ -317,4 +317,11 @@ const ModelCard: React.FC<ModelCardProps> = ({
   );
 };
 
-export default ModelCard;
+/**
+ * Memoised: the onboarding screen renders ~18 of these at once, and any store
+ * change (a settings write, a download progress tick) used to re-render every
+ * one of them — each redoing its i18n lookups, language-name searches and
+ * tooltip subtrees. With stable callbacks from the parent, only the cards whose
+ * own props changed now re-render.
+ */
+export default React.memo(ModelCard);
