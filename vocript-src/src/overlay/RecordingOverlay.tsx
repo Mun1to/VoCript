@@ -48,6 +48,30 @@ const LOGO_BAR_RATIOS = [6, 12, 19, 11, 5];
 const MAX_LOGO_RATIO = Math.max(...LOGO_BAR_RATIOS);
 
 /**
+ * How the 0-1 level from the backend becomes a bar height: everything below
+ * NOISE_GATE is flat zero, and the rest is rescaled as `level^curve * gain`.
+ * A lower exponent makes a bar climb sooner at quiet levels without moving
+ * where it tops out.
+ *
+ * The gate is what lets the curve be this aggressive: without it, a level low
+ * enough to be room hiss would still lift the bars a third of the way up.
+ * Raise it if the meter ever twitches in a silent room; lower it for more
+ * sensitivity to near-whispers.
+ */
+const NOISE_GATE = 0.1;
+const BAR_CURVE = 0.55;
+const BAR_GAIN = 1.15;
+
+/**
+ * Per-bar sensitivity multiplier, dividing BAR_CURVE. The centre bar is the
+ * tallest one in the logo and the one the eye lands on, so Munir asked for it
+ * to react before the rest: at half the level of a normal syllable it is
+ * already ~15 points higher than its neighbours, while all five still reach the
+ * top together when you speak up.
+ */
+const BAR_SENSITIVITY = [1, 1, 1.4, 1, 1];
+
+/**
  * The backend's mic-level spectrum has more bands than we show (see
  * AudioVisualiser::BUCKETS in audio_toolkit). Collapse it down to BAR_COUNT by
  * taking the peak of each slice, so a handful of thick bars still reacts to
@@ -213,9 +237,11 @@ const RecordingOverlay: React.FC = () => {
         // Suavizado asimétrico: ataque rápido (sube casi al instante con la voz)
         // y caída suave (baja con elegancia). Así la animación se nota mucho más
         // y reacciona de inmediato, sin el "retardo" que la hacía parecer floja.
+        // El backend emite una lectura cada ~20 ms, así que con 0.75 de ataque
+        // una sílaba llega al 98% de su altura en dos lecturas.
         const smoothed = smoothedLevelsRef.current.map((prev, i) => {
           const target = newLevels[i] || 0;
-          const factor = target > prev ? 0.6 : 0.22;
+          const factor = target > prev ? 0.75 : 0.22;
           return prev + (target - prev) * factor;
         });
 
@@ -355,7 +381,10 @@ const RecordingOverlay: React.FC = () => {
       const curX = moveEvent.screenX * dpr;
       const curY = moveEvent.screenY * dpr;
       if (!dragArmed) {
-        if (Math.hypot(curX - originScreenX, curY - originScreenY) < DRAG_THRESHOLD_PX * dpr) {
+        if (
+          Math.hypot(curX - originScreenX, curY - originScreenY) <
+          DRAG_THRESHOLD_PX * dpr
+        ) {
           return;
         }
         dragArmed = true;
@@ -439,21 +468,40 @@ const RecordingOverlay: React.FC = () => {
         {state === "recording" && (
           <div className="bars-container">
             {levels.map((v, i) => {
-              // Ganancia extra para que los picos de voz lleguen bien arriba.
-              const gained = Math.min(1, Math.pow(v, 0.6) * 1.4);
+              // Ganancia suave: el backend ya reparte el nivel de forma pareja
+              // entre las 5 bandas (ver TILT_DB_PER_OCTAVE en visualizer.rs), así
+              // que aquí solo hace falta un empujón, no la curva agresiva de
+              // antes — que exageraba las dos barras graves y dejaba planas las
+              // otras tres.
+              const gated = Math.max(0, (v - NOISE_GATE) / (1 - NOISE_GATE));
+              const gained = Math.min(
+                1,
+                Math.pow(gated, BAR_CURVE / BAR_SENSITIVITY[i]) * BAR_GAIN,
+              );
               // Cada barra crece/decrece manteniendo la proporción de su
               // homóloga en el logo (la del medio siempre la más alta), en vez
               // de que las 5 tengan la misma altura como un ecualizador genérico.
+              //
+              // La silueta del logo se dibuja en el TECHO de cada barra, no en
+              // su base: si la base también sigue la proporción, las barras de
+              // los extremos arrancan ya medio levantadas y les queda la mitad
+              // de recorrido que a la central, así que su movimiento apenas se
+              // nota. Base casi plana + techo proporcional = misma silueta al
+              // hablar, y el doble de viaje visible en los extremos.
               const ratio = LOGO_BAR_RATIOS[i] / MAX_LOGO_RATIO;
-              const minHeight = 3 + ratio * 5;
-              const maxHeight = 8 + ratio * 14;
+              const minHeight = 3 + ratio * 1.8;
+              const maxHeight = 11 + ratio * 9;
               return (
                 <div
                   key={i}
                   className="bar"
                   style={{
                     height: `${minHeight + gained * (maxHeight - minHeight)}px`,
-                    transition: "height 70ms ease-out, opacity 100ms ease-out",
+                    // Corta (menor que el ~20 ms entre lecturas del backend) a
+                    // propósito: una transición larga nunca llega a su destino
+                    // antes de que llegue el valor siguiente, y aplana justo los
+                    // picos de voz que se quieren ver.
+                    transition: "height 45ms ease-out, opacity 100ms ease-out",
                     // Tenues en reposo (se leen como medidor neutro, distinto
                     // del logo que siempre está a color pleno) y se iluminan
                     // con la voz.
