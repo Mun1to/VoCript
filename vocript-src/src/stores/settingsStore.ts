@@ -372,11 +372,13 @@ export const useSettingsStore = create<SettingsStore>()(
       const updateKey = String(key);
       const originalValue = settings?.[key];
 
-      setUpdating(updateKey, true);
-
       try {
+        // The optimistic value and the "updating" flag go in as ONE state
+        // change: as two, every consumer of the store rendered twice before
+        // the backend was even called.
         set((state) => ({
           settings: state.settings ? { ...state.settings, [key]: value } : null,
+          isUpdating: { ...state.isUpdating, [updateKey]: true },
         }));
 
         const updater = settingUpdaters[key];
