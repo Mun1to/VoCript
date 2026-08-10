@@ -1,4 +1,4 @@
-use enigo::{Enigo, Key, Keyboard, Mouse, Settings};
+use enigo::{Direction, Enigo, Key, Keyboard, Mouse, Settings};
 use log::warn;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Mutex;
@@ -185,10 +185,33 @@ fn with_enigo(app_handle: &AppHandle, action: impl FnOnce(&mut Enigo)) {
 
 /// Pastes text directly using the enigo text method.
 /// This tries to use system input methods if possible, otherwise simulates keystrokes one by one.
+///
+/// Newlines are typed as Shift+Enter rather than plain Enter: in chat apps
+/// (Discord, Slack, WhatsApp) a bare Enter SENDS the message, so a transcript
+/// with the "Fuente: …" line attached used to fire off a half-written message
+/// and then keep typing into the next one. Shift+Enter inserts a line break in
+/// those apps and behaves like a normal newline in text editors.
 pub fn paste_text_direct(enigo: &mut Enigo, text: &str) -> Result<(), String> {
-    enigo
-        .text(text)
-        .map_err(|e| format!("Failed to send text directly: {}", e))?;
+    if !text.contains('\n') {
+        return enigo
+            .text(text)
+            .map_err(|e| format!("Failed to send text directly: {}", e));
+    }
+
+    for (index, line) in text.split('\n').enumerate() {
+        if index > 0 {
+            enigo
+                .key(Key::Shift, Direction::Press)
+                .and_then(|_| enigo.key(Key::Return, Direction::Click))
+                .and_then(|_| enigo.key(Key::Shift, Direction::Release))
+                .map_err(|e| format!("Failed to send a line break: {}", e))?;
+        }
+        if !line.is_empty() {
+            enigo
+                .text(line)
+                .map_err(|e| format!("Failed to send text directly: {}", e))?;
+        }
+    }
 
     Ok(())
 }

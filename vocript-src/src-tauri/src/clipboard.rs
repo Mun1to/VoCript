@@ -359,9 +359,22 @@ fn type_text_via_dotool(text: &str) -> Result<(), String> {
         .map_err(|e| format!("Failed to spawn dotool: {}", e))?;
 
     if let Some(mut stdin) = child.stdin.take() {
-        // dotool uses "type <text>" command
-        writeln!(stdin, "type {}", text)
-            .map_err(|e| format!("Failed to write to dotool stdin: {}", e))?;
+        // dotool reads ONE COMMAND PER LINE, so a newline inside the text used
+        // to end the `type` command and turn everything after it into further
+        // dotool commands (`key ctrl+alt+f4`, …). Transcribed text can contain
+        // newlines — the "Fuente:" line, or anything an LLM post-processor
+        // returns — so each line is typed as its own command and the breaks are
+        // replayed as explicit Enter presses.
+        for (index, line) in text.split('\n').enumerate() {
+            if index > 0 {
+                writeln!(stdin, "key enter")
+                    .map_err(|e| format!("Failed to write to dotool stdin: {}", e))?;
+            }
+            if !line.is_empty() {
+                writeln!(stdin, "type {}", line)
+                    .map_err(|e| format!("Failed to write to dotool stdin: {}", e))?;
+            }
+        }
     }
 
     let output = child

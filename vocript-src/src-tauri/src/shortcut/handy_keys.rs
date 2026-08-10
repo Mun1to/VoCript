@@ -429,6 +429,8 @@ pub fn init_shortcuts(app: &AppHandle) -> Result<(), String> {
     let user_settings = settings::load_or_create_app_settings(app);
 
     // Register all bindings except cancel (which is dynamic)
+    let mut registered = 0usize;
+    let mut attempted = 0usize;
     for (id, default_binding) in default_bindings {
         if id == "cancel" {
             continue;
@@ -444,16 +446,29 @@ pub fn init_shortcuts(app: &AppHandle) -> Result<(), String> {
             .cloned()
             .unwrap_or(default_binding);
 
-        if let Err(e) = state.register(&binding) {
-            error!(
+        attempted += 1;
+        match state.register(&binding) {
+            Ok(()) => registered += 1,
+            Err(e) => error!(
                 "Failed to register handy-keys shortcut {} during init: {}",
                 id, e
-            );
+            ),
         }
     }
 
+    // Registration failures used to be logged and swallowed, so init returned
+    // Ok and the caller never fell back to the Tauri implementation: the app
+    // came up with NO working shortcuts at all and no indication why. If not a
+    // single binding took, treat it as a failed backend.
+    if attempted > 0 && registered == 0 {
+        return Err(
+            "handy-keys registered none of the shortcuts; the backend looks unavailable"
+                .to_string(),
+        );
+    }
+
     app.manage(state);
-    info!("handy-keys shortcuts initialized");
+    info!("handy-keys shortcuts initialized ({registered}/{attempted} registered)");
     Ok(())
 }
 

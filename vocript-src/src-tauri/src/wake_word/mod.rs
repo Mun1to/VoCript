@@ -377,20 +377,36 @@ pub struct WakeWordState {
 /// Starts listening, if the setting is on and it is not already running.
 pub fn start(app: &AppHandle) {
     let state = app.state::<WakeWordState>();
-    if state.running.swap(true, Ordering::SeqCst) {
+
+    // Already up and healthy? Nothing to do.
+    if state.running.load(Ordering::SeqCst)
+        && state
+            .worker
+            .lock()
+            .unwrap()
+            .as_ref()
+            .is_some_and(|worker| !worker.is_finished())
+    {
         return;
     }
-    state.paused.store(false, Ordering::SeqCst);
 
-    // Wait out any previous thread. Without this the new one blocks on the
-    // recorder the old one has not released yet, and the listener dies silently.
+    // Wait out any previous thread BEFORE claiming `running`. Claiming it
+    // first — as this used to — re-set the very flag the old thread watches
+    // for its exit condition, so it never finished, the join below blocked
+    // forever, and with the worker handle already taken a later stop_and_wait
+    // saw no worker at all and captured over a microphone still held: the
+    // "it recorded silence" bug this module has hit before.
     //
     // The lock is released before joining: holding it across a join of up to a
     // listening window blocks everything else that touches this state.
+    state.running.store(false, Ordering::SeqCst);
     let previous = state.worker.lock().unwrap().take();
     if let Some(previous) = previous {
         let _ = previous.join();
     }
+
+    state.running.store(true, Ordering::SeqCst);
+    state.paused.store(false, Ordering::SeqCst);
 
     let app = app.clone();
     let running = Arc::clone(&state.running);
@@ -519,6 +535,8 @@ fn listen_loop(
     let mut open_device: Option<Option<String>> = None;
     // Consecutive windows with no signal at all, used to spot a dead stream.
     let mut dead_windows = 0u32;
+    // Consecutive capture errors, for logging how persistent a fault is.
+    let mut capture_failures = 0u32;
     // When the current voice-started dictation began, to cap how long it runs.
     let mut dictation_started: Option<std::time::Instant> = None;
     // Whether the previous pass was paused, so the device gets a moment to settle.
@@ -645,7 +663,34 @@ fn listen_loop(
             }
         }
 
-        let samples = capture_window(app, recorder_slot, &mut open_device)?;
+        // A failed capture used to end the whole loop through `?`: unplugging
+        // the microphone for a second killed the listener for good, with only a
+        // line in the log to show for it. Drop the device and retry instead —
+        // the next pass reopens it, which is the same recovery path already
+        // used for a stream that goes silent.
+        let samples = match capture_window(app, recorder_slot, &mut open_device) {
+            Ok(samples) => samples,
+            Err(e) => {
+                capture_failures += 1;
+                warn!(
+                    "Wake word capture failed ({capture_failures} in a row): {e}; \
+                     reopening the microphone"
+                );
+                if let Some(mut recorder) = recorder_slot.lock().unwrap().take() {
+                    let _ = recorder.close();
+                }
+                open_device = None;
+                if let Ok(recorder) = AudioRecorder::new() {
+                    recorder.set_live_mirroring(true);
+                    *recorder_slot.lock().unwrap() = Some(recorder);
+                }
+                // Back off a little so a permanently missing device does not
+                // spin this loop.
+                std::thread::sleep(DEVICE_HANDOVER);
+                continue;
+            }
+        };
+        capture_failures = 0;
         let level = loudness(&samples);
 
         // Exactly zero, and for a long stretch, before assuming the stream died.

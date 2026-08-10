@@ -441,7 +441,7 @@ fn resolved_overlay_position(
     let settings = settings::get_settings(app_handle);
 
     if let Some(saved) = settings.overlay_custom_position {
-        if is_mouse_within_monitor((saved.x, saved.y), &monitor.position(), &monitor.size()) {
+        if is_mouse_within_monitor((saved.x, saved.y), monitor.position(), monitor.size()) {
             return Some(saved_overlay_position(saved, &monitor));
         }
     }
@@ -665,10 +665,7 @@ fn show_overlay_state(app_handle: &AppHandle, state: &str) {
         _ => (STATUS_OVERLAY_WIDTH, STATUS_OVERLAY_HEIGHT),
     };
     if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
-        let _ = overlay_window.set_size(tauri::Size::Logical(tauri::LogicalSize {
-            width,
-            height,
-        }));
+        let _ = overlay_window.set_size(tauri::Size::Logical(tauri::LogicalSize { width, height }));
 
         #[cfg(target_os = "linux")]
         update_gtk_layer_shell_anchors(&overlay_window);

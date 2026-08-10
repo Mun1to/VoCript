@@ -629,8 +629,10 @@ impl ShortcutAction for TranscribeAction {
                     let transcription_time = Instant::now();
                     let tm_for_run = Arc::clone(&tm);
                     let transcription_result =
-                        match tauri::async_runtime::spawn_blocking(move || tm_for_run.transcribe(samples))
-                            .await
+                        match tauri::async_runtime::spawn_blocking(move || {
+                            tm_for_run.transcribe(samples)
+                        })
+                        .await
                         {
                             Ok(result) => result,
                             Err(e) => Err(anyhow::anyhow!("Transcription task failed: {}", e)),
@@ -856,12 +858,14 @@ fn stop_live(app: &AppHandle, binding_id: &str) {
         // Same reasoning as the dictation path: keep the inference off the
         // async workers so the UI stays responsive while it runs.
         let tm_for_run = Arc::clone(&tm);
-        let transcription_result =
-            match tauri::async_runtime::spawn_blocking(move || tm_for_run.transcribe(samples)).await
-            {
-                Ok(result) => result,
-                Err(e) => Err(anyhow::anyhow!("Transcription task failed: {}", e)),
-            };
+        let transcription_result = match tauri::async_runtime::spawn_blocking(move || {
+            tm_for_run.transcribe(samples)
+        })
+        .await
+        {
+            Ok(result) => result,
+            Err(e) => Err(anyhow::anyhow!("Transcription task failed: {}", e)),
+        };
 
         let wav_saved = matches!(wav_handle.await, Ok(Ok(())))
             && crate::audio_toolkit::verify_wav_file(&wav_path_for_verify, sample_count).is_ok();

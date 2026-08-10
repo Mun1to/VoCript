@@ -165,21 +165,31 @@ pub fn change_binding(
         error!("change_binding error: {}", error_msg);
     }
 
-    // Validate the new shortcut for the current keyboard implementation
+    // Validate the new shortcut for the current keyboard implementation.
+    // Both failure paths below put the previous shortcut back: the old one was
+    // already unregistered above, so bailing out left the user with NO working
+    // shortcut at all (settings still showed the old one) until they restarted
+    // or edited it again.
     if let Err(e) = validate_shortcut_for_implementation(&binding, settings.keyboard_implementation)
     {
         warn!("change_binding validation error: {}", e);
+        if let Err(re) = register_shortcut(&app, binding_to_modify.clone()) {
+            error!("Could not restore the previous shortcut: {}", re);
+        }
         return Err(e);
     }
 
     // Create an updated binding
-    let mut updated_binding = binding_to_modify;
+    let mut updated_binding = binding_to_modify.clone();
     updated_binding.current_binding = binding;
 
     // Register the new binding
     if let Err(e) = register_shortcut(&app, updated_binding.clone()) {
         let error_msg = format!("Failed to register shortcut: {}", e);
         error!("change_binding error: {}", error_msg);
+        if let Err(re) = register_shortcut(&app, binding_to_modify) {
+            error!("Could not restore the previous shortcut: {}", re);
+        }
         return Ok(BindingResponse {
             success: false,
             binding: None,
@@ -595,17 +605,27 @@ pub fn change_start_hidden_setting(app: AppHandle, enabled: bool) -> Result<(), 
 #[tauri::command]
 #[specta::specta]
 pub fn change_autostart_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
-    let mut settings = settings::get_settings(&app);
-    settings.autostart_enabled = enabled;
-    settings::write_settings(&app, settings);
-
-    // Apply the autostart setting immediately
+    // Apply it first and only persist what actually took effect: swallowing the
+    // error left the toggle showing "on" while the OS never registered VoCript
+    // to start with the session, and the user had no way to know.
     let autostart_manager = app.autolaunch();
-    if enabled {
-        let _ = autostart_manager.enable();
+    let applied = if enabled {
+        autostart_manager.enable()
     } else {
-        let _ = autostart_manager.disable();
+        autostart_manager.disable()
+    };
+    if let Err(e) = applied {
+        error!(
+            "Failed to {} autostart: {}",
+            if enabled { "enable" } else { "disable" },
+            e
+        );
+        return Err(format!("Could not change the autostart setting: {}", e));
     }
+
+    settings::update_settings(&app, |settings| {
+        settings.autostart_enabled = enabled;
+    });
 
     // Notify frontend
     let _ = app.emit(

@@ -502,8 +502,10 @@ impl TranscriptionManager {
                     anyhow::anyhow!(error_msg)
                 })?;
                 let session = model.session().map_err(|e| {
-                    let error_msg =
-                        format!("Failed to open transcribe.cpp session for {}: {}", model_id, e);
+                    let error_msg = format!(
+                        "Failed to open transcribe.cpp session for {}: {}",
+                        model_id, e
+                    );
                     emit_loading_failed(&error_msg);
                     anyhow::anyhow!(error_msg)
                 })?;
@@ -933,8 +935,7 @@ impl TranscriptionManager {
                 // the old one, silently and indefinitely, while the UI and the
                 // settings both reported the new model.
                 let mut engine_guard = self.lock_engine();
-                let still_current =
-                    *self.current_model_id.lock().unwrap() == borrowed_model_id;
+                let still_current = *self.current_model_id.lock().unwrap() == borrowed_model_id;
                 if still_current && engine_guard.is_none() {
                     *engine_guard = Some(engine);
                 } else {

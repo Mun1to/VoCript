@@ -202,8 +202,10 @@ impl AudioRecorder {
                         cmd_rx,
                         level_cb,
                         stop_flag,
-                        live_buffer,
-                        mirror_live,
+                        LiveMirror {
+                            buffer: live_buffer,
+                            enabled: mirror_live,
+                        },
                     );
                     drop(stream);
                 }
@@ -312,8 +314,10 @@ impl AudioRecorder {
                 cmd_rx,
                 level_cb,
                 stop_flag,
-                live_buffer,
-                mirror_live,
+                LiveMirror {
+                    buffer: live_buffer,
+                    enabled: mirror_live,
+                },
             );
         });
 
@@ -555,6 +559,13 @@ mod tests {
     }
 }
 
+/// The readable-while-recording copy of the audio and the flag that says
+/// whether to maintain it. Grouped so run_consumer keeps a sane arity.
+struct LiveMirror {
+    buffer: Arc<Mutex<Vec<f32>>>,
+    enabled: Arc<AtomicBool>,
+}
+
 fn run_consumer(
     in_sample_rate: u32,
     vad: Option<Arc<Mutex<Box<dyn vad::VoiceActivityDetector>>>>,
@@ -562,9 +573,12 @@ fn run_consumer(
     cmd_rx: mpsc::Receiver<Cmd>,
     level_cb: Option<Arc<dyn Fn(Vec<f32>) + Send + Sync + 'static>>,
     stop_flag: Arc<AtomicBool>,
-    live_buffer: Arc<Mutex<Vec<f32>>>,
-    mirror_live: Arc<AtomicBool>,
+    live: LiveMirror,
 ) {
+    let LiveMirror {
+        buffer: live_buffer,
+        enabled: mirror_live,
+    } = live;
     let mut frame_resampler = FrameResampler::new(
         in_sample_rate as usize,
         constants::WHISPER_SAMPLE_RATE as usize,

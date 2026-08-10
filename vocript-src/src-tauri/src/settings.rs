@@ -1166,9 +1166,8 @@ fn load_and_normalize_settings(app: &AppHandle) -> AppSettings {
         .expect("Failed to initialize store");
 
     let mut settings = match store.get("settings") {
-        Some(settings_value) => match serde_json::from_value::<AppSettings>(
-            settings_value.clone(),
-        ) {
+        Some(settings_value) => match serde_json::from_value::<AppSettings>(settings_value.clone())
+        {
             Ok(settings) => settings,
             Err(e) => {
                 warn!(
@@ -1181,10 +1180,8 @@ fn load_and_normalize_settings(app: &AppHandle) -> AppSettings {
                     crate::portable::app_data_dir(app),
                     serde_json::to_string_pretty(&settings_value),
                 ) {
-                    let _ = std::fs::write(
-                        dir.join(format!("{}.invalid", SETTINGS_STORE_PATH)),
-                        raw,
-                    );
+                    let _ =
+                        std::fs::write(dir.join(format!("{}.invalid", SETTINGS_STORE_PATH)), raw);
                 }
                 let salvaged = salvage_settings(&settings_value);
                 store.set("settings", serde_json::to_value(&salvaged).unwrap());

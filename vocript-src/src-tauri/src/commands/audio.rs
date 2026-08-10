@@ -87,17 +87,28 @@ fn get_windows_microphone_permission_status_impl() -> WindowsMicrophonePermissio
     let app_access = read_registry_permission_access(HKEY_CURRENT_USER, MICROPHONE_PATH);
     let desktop_app_access = read_registry_permission_access(HKEY_CURRENT_USER, DESKTOP_APPS_PATH);
 
-    let overall_access = if [device_access, app_access, desktop_app_access]
-        .into_iter()
-        .any(|access| access == PermissionAccess::Denied)
-    {
+    // VoCript ships as a plain (non-packaged) desktop app, so only two of these
+    // three switches actually govern it: the machine-wide device switch and the
+    // per-user "let desktop apps access your microphone" one. `app_access` is
+    // the setting for packaged/Store apps and says nothing about us.
+    //
+    // Taking it into account anyway made onboarding unpassable for anyone who
+    // had turned packaged-app access off: the microphone step sat on "Waiting…"
+    // forever, however many times they granted the permission that does apply
+    // (reported as issue #6).
+    let relevant = [device_access, desktop_app_access];
+    let overall_access = if relevant.contains(&PermissionAccess::Denied) {
         PermissionAccess::Denied
-    } else if [device_access, app_access, desktop_app_access]
-        .into_iter()
-        .all(|access| access == PermissionAccess::Allowed)
+    } else if relevant
+        .iter()
+        .all(|access| *access == PermissionAccess::Allowed)
     {
         PermissionAccess::Allowed
     } else {
+        // Unknown means "no explicit entry", which Windows treats as allowed
+        // for desktop apps. Blocking on it would strand users whose registry
+        // simply has no value yet — the app will surface a real error if the
+        // capture actually fails.
         PermissionAccess::Unknown
     };
 

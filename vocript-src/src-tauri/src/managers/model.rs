@@ -889,13 +889,8 @@ impl ModelManager {
         // to clear `is_downloading` on EVERY model — including ones actively
         // downloading, which both lied to the UI and defeated the single-flight
         // claim in download_model.
-        let in_flight: std::collections::HashSet<String> = self
-            .cancel_flags
-            .lock()
-            .unwrap()
-            .keys()
-            .cloned()
-            .collect();
+        let in_flight: std::collections::HashSet<String> =
+            self.cancel_flags.lock().unwrap().keys().cloned().collect();
 
         let mut models = self.available_models.lock().unwrap();
 
