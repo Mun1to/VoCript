@@ -306,9 +306,19 @@ impl AudioRecordingManager {
     /// Applies mute if mute_while_recording is enabled and stream is open
     pub fn apply_mute(&self) {
         let settings = get_settings(&self.app_handle);
+        if !settings.mute_while_recording {
+            return;
+        }
+
+        // Lock order matters: `is_open` BEFORE `did_mute`, matching
+        // start_microphone_stream and stop_microphone_stream. Taking them the
+        // other way round here was a textbook AB-BA deadlock — a shortcut
+        // starting a recording at the same moment the user switched microphone
+        // in Settings could freeze both threads permanently.
+        let open_flag = self.is_open.lock().unwrap();
         let mut did_mute_guard = self.did_mute.lock().unwrap();
 
-        if settings.mute_while_recording && *self.is_open.lock().unwrap() {
+        if *open_flag {
             set_mute(true);
             *did_mute_guard = true;
             debug!("Mute applied");

@@ -160,10 +160,9 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     // after onboarding completes. This avoids triggering permission dialogs
     // on macOS before the user is ready.
 
-    // Migra los datos de la versión antigua (com.muvox.app) si es la primera vez
-    // que se abre la versión renombrada. Debe correr ANTES de inicializar los
-    // managers, que leen/escriben en la carpeta de datos.
-    portable::migrate_legacy_identifier_data(app_handle);
+    // La migración de datos de la versión antigua (com.muvox.app) ya corrió en
+    // `setup`, antes de la primera lectura de ajustes — aquí sería demasiado
+    // tarde para los ajustes, aunque llegase a tiempo para los managers.
 
     // Register the transcribe-cpp compute backends before anything can load a
     // model. In a `dynamic-backends` build nothing — not even plain CPU — is
@@ -627,6 +626,15 @@ pub fn run(cli_args: CliArgs) {
             }
 
             win_builder.build()?;
+
+            // Migrate a pre-rebrand (com.muvox.app) install BEFORE anything
+            // reads the settings store. The store plugin caches its file per
+            // path and never re-reads it, so the first get_settings() below
+            // used to load defaults, cache them and schedule an auto-save that
+            // overwrote the settings file the migration had just moved into
+            // place — everyone upgrading from <= v2.2.4 kept their models and
+            // history but silently lost every preference.
+            portable::migrate_legacy_identifier_data(app.handle());
 
             let mut settings = get_settings(app.handle());
 

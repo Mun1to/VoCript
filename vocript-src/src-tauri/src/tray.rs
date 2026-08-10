@@ -488,8 +488,7 @@ pub fn handle_tray_action(app: &AppHandle, id: &str) {
         }
         id if id.starts_with("language_select:") => {
             let language = id.strip_prefix("language_select:").unwrap().to_string();
-            let mut settings = settings::get_settings(app);
-            if settings.app_language == language {
+            if settings::get_settings(app).app_language == language {
                 return;
             }
             // Mirrors LanguageQuickSwitch in the frontend: picking a UI
@@ -500,9 +499,12 @@ pub fn handle_tray_action(app: &AppHandle, id: &str) {
                 "zh-TW" => "zh-Hant",
                 other => other,
             };
-            settings.app_language = language.clone();
-            settings.selected_language = model_language.to_string();
-            settings::write_settings(app, settings);
+            // Atomic cycle: the tray runs on its own thread, so a plain
+            // read-mutate-write could revert a change made elsewhere.
+            settings::update_settings(app, |settings| {
+                settings.app_language = language.clone();
+                settings.selected_language = model_language.to_string();
+            });
 
             let _ = app.emit("app-language-changed", &language);
             update_tray_menu(app, &TrayIconState::Idle, Some(&language));

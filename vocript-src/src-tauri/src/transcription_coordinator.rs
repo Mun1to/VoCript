@@ -45,16 +45,35 @@ pub fn is_transcribe_binding(id: &str) -> bool {
         || id == "transcribe_system_live"
 }
 
+/// The user-facing gesture behind a binding id, ignoring the live variant.
+///
+/// Live mode has no shortcut of its own: it re-routes the existing dictation
+/// and system-audio shortcuts (see `shortcut::handler`), and that routing is
+/// recomputed from settings on every single key event. So flipping the Live
+/// chip — or the wake word resolving the binding again when it stops — made
+/// the stop event arrive under a different id than the start, fail the
+/// "is this the recording we started?" check, and leave a recording running
+/// that no key press could stop. One physical shortcut is one gesture.
+fn gesture_of(binding_id: &str) -> &str {
+    binding_id.strip_suffix("_live").unwrap_or(binding_id)
+}
+
 impl TranscriptionCoordinator {
     pub fn new(app: AppHandle) -> Self {
         let (tx, rx) = mpsc::channel();
 
         thread::spawn(move || {
-            let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                let mut stage = Stage::Idle;
-                let mut last_press: Option<Instant> = None;
+            let mut stage = Stage::Idle;
+            let mut last_press: Option<Instant> = None;
 
-                while let Ok(cmd) = rx.recv() {
+            while let Ok(cmd) = rx.recv() {
+                // One catch_unwind PER COMMAND, not around the whole loop: the
+                // actions below run manager code that can panic, and catching
+                // only on the outside meant a single panic killed this thread
+                // outright — every shortcut and tray toggle dead until the app
+                // was restarted. Now the loop survives and only the offending
+                // command is lost.
+                let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                     match cmd {
                         Command::Input {
                             binding_id,
@@ -68,7 +87,10 @@ impl TranscriptionCoordinator {
                                 let now = Instant::now();
                                 if last_press.is_some_and(|t| now.duration_since(t) < DEBOUNCE) {
                                     debug!("Debounced press for '{binding_id}'");
-                                    continue;
+                                    // `return` (not `continue`): this is now a
+                                    // per-command closure, and returning from
+                                    // it is what moves on to the next command.
+                                    return;
                                 }
                                 last_press = Some(now);
                             }
@@ -77,7 +99,8 @@ impl TranscriptionCoordinator {
                                 if is_pressed && matches!(stage, Stage::Idle) {
                                     start(&app, &mut stage, &binding_id, &hotkey_string);
                                 } else if !is_pressed
-                                    && matches!(&stage, Stage::Recording(id) if id == &binding_id)
+                                    && matches!(&stage, Stage::Recording(id)
+                                        if gesture_of(id) == gesture_of(&binding_id))
                                 {
                                     stop(&app, &mut stage, &binding_id, &hotkey_string);
                                 }
@@ -86,7 +109,9 @@ impl TranscriptionCoordinator {
                                     Stage::Idle => {
                                         start(&app, &mut stage, &binding_id, &hotkey_string);
                                     }
-                                    Stage::Recording(id) if id == &binding_id => {
+                                    Stage::Recording(id)
+                                        if gesture_of(id) == gesture_of(&binding_id) =>
+                                    {
                                         stop(&app, &mut stage, &binding_id, &hotkey_string);
                                     }
                                     _ => {
@@ -109,12 +134,17 @@ impl TranscriptionCoordinator {
                             stage = Stage::Idle;
                         }
                     }
+                }));
+                if let Err(e) = result {
+                    // The action was interrupted halfway, so nothing is
+                    // reliably running any more — go back to Idle rather than
+                    // staying stuck in Recording/Processing, where every
+                    // further press would be ignored as "pipeline busy".
+                    error!("Transcription coordinator action panicked: {e:?}; returning to idle");
+                    stage = Stage::Idle;
                 }
-                debug!("Transcription coordinator exited");
-            }));
-            if let Err(e) = result {
-                error!("Transcription coordinator panicked: {e:?}");
             }
+            debug!("Transcription coordinator exited");
         });
 
         Self { tx }

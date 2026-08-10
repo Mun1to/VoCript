@@ -510,9 +510,12 @@ fn register_drag_persistence(app_handle: &AppHandle) {
                 LAST_MOVE_X.load(Ordering::SeqCst),
                 LAST_MOVE_Y.load(Ordering::SeqCst),
             );
-            let mut settings = settings::get_settings(&app_handle);
-            settings.overlay_custom_position = Some(OverlayCustomPosition { x, y });
-            settings::write_settings(&app_handle, settings);
+            // Atomic read-modify-write: this runs on its own thread ~300 ms
+            // after the drag ends, and a snapshot taken before an unrelated
+            // toggle used to overwrite that toggle when it landed.
+            settings::update_settings(&app_handle, |settings| {
+                settings.overlay_custom_position = Some(OverlayCustomPosition { x, y });
+            });
             log::debug!("Overlay dragged by the user; remembering position ({x}, {y})");
         });
     });

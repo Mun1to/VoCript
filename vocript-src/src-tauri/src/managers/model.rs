@@ -89,6 +89,11 @@ struct DownloadCleanup<'a> {
     available_models: &'a Mutex<HashMap<String, ModelInfo>>,
     cancel_flags: &'a Arc<Mutex<HashMap<String, Arc<AtomicBool>>>>,
     model_id: String,
+    /// The exact flag this download registered. Cleanup only removes the map
+    /// entry while it is still this one — cancelling and immediately retrying
+    /// used to have the old download's cleanup delete the *new* download's
+    /// flag on its way out, leaving the retry impossible to cancel.
+    cancel_flag: Arc<AtomicBool>,
     disarmed: bool,
 }
 
@@ -103,7 +108,13 @@ impl<'a> Drop for DownloadCleanup<'a> {
                 model.is_downloading = false;
             }
         }
-        self.cancel_flags.lock().unwrap().remove(&self.model_id);
+        let mut flags = self.cancel_flags.lock().unwrap();
+        if flags
+            .get(&self.model_id)
+            .is_some_and(|current| Arc::ptr_eq(current, &self.cancel_flag))
+        {
+            flags.remove(&self.model_id);
+        }
     }
 }
 
@@ -873,6 +884,19 @@ impl ModelManager {
     }
 
     fn update_download_status(&self) -> Result<()> {
+        // Which downloads are genuinely in flight right now. This rescan is
+        // triggered from cancel/delete/import and from early exits, and it used
+        // to clear `is_downloading` on EVERY model — including ones actively
+        // downloading, which both lied to the UI and defeated the single-flight
+        // claim in download_model.
+        let in_flight: std::collections::HashSet<String> = self
+            .cancel_flags
+            .lock()
+            .unwrap()
+            .keys()
+            .cloned()
+            .collect();
+
         let mut models = self.available_models.lock().unwrap();
 
         for model in models.values_mut() {
@@ -896,7 +920,7 @@ impl ModelManager {
                 }
 
                 model.is_downloaded = model_path.exists() && model_path.is_dir();
-                model.is_downloading = false;
+                model.is_downloading = in_flight.contains(&model.id);
 
                 // Get partial file size if it exists (for the .tar.gz being downloaded)
                 if partial_path.exists() {
@@ -910,7 +934,7 @@ impl ModelManager {
                 let partial_path = self.models_dir.join(format!("{}.partial", &model.filename));
 
                 model.is_downloaded = model_path.exists();
-                model.is_downloading = false;
+                model.is_downloading = in_flight.contains(&model.id);
 
                 // Get partial file size if it exists
                 if partial_path.exists() {
@@ -1177,18 +1201,27 @@ impl ModelManager {
             0
         };
 
-        // Mark as downloading
-        {
-            let mut models = self.available_models.lock().unwrap();
-            if let Some(model) = models.get_mut(model_id) {
-                model.is_downloading = true;
-            }
-        }
-
-        // Create cancellation flag for this download
+        // Single-flight: claim the download, or bail out if one is already
+        // running for this model. Two concurrent downloads wrote into the same
+        // .partial file interleaved, corrupting it — caught later by the
+        // sha256 check, at the cost of downloading the whole thing again.
+        // Claiming and flag registration happen under the same critical
+        // section so two callers cannot both win the race.
         let cancel_flag = Arc::new(AtomicBool::new(false));
         {
+            let mut models = self.available_models.lock().unwrap();
             let mut flags = self.cancel_flags.lock().unwrap();
+            match models.get_mut(model_id) {
+                Some(model) if model.is_downloading => {
+                    info!(
+                        "Download of model {} is already in progress; ignoring the duplicate request",
+                        model_id
+                    );
+                    return Ok(());
+                }
+                Some(model) => model.is_downloading = true,
+                None => return Err(anyhow::anyhow!("Model not found: {}", model_id)),
+            }
             flags.insert(model_id.to_string(), cancel_flag.clone());
         }
 
@@ -1198,6 +1231,7 @@ impl ModelManager {
             available_models: &self.available_models,
             cancel_flags: &self.cancel_flags,
             model_id: model_id.to_string(),
+            cancel_flag: cancel_flag.clone(),
             disarmed: false,
         };
 
@@ -1219,13 +1253,26 @@ impl ModelManager {
 
         let mut response = request.send().await?;
 
-        // If we tried to resume but server returned 200 (not 206 Partial Content),
-        // the server doesn't support range requests. Delete partial file and restart
-        // fresh to avoid file corruption (appending full file to partial).
-        if resume_from > 0 && response.status() == reqwest::StatusCode::OK {
+        // Two reasons a resume attempt has to restart from scratch:
+        //
+        // - 200 instead of 206: the server ignores range requests, so appending
+        //   its full body to the partial file would corrupt it.
+        // - 416 Range Not Satisfiable: the partial is already as long as (or
+        //   longer than) the remote file — what happens when the app is closed
+        //   or crashes between the last byte arriving and the rename. Without
+        //   this branch every single retry asked for a range past the end, got
+        //   416, and errored out WITHOUT deleting the partial, so the model
+        //   could never be downloaded again until deleted by hand.
+        let must_restart = resume_from > 0
+            && matches!(
+                response.status(),
+                reqwest::StatusCode::OK | reqwest::StatusCode::RANGE_NOT_SATISFIABLE
+            );
+        if must_restart {
             warn!(
-                "Server doesn't support range requests for model {}, restarting download",
-                model_id
+                "Cannot resume download of model {} (HTTP {}); restarting it from scratch",
+                model_id,
+                response.status()
             );
             drop(response);
             let _ = fs::remove_file(&partial_path);

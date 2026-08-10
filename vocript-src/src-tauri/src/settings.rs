@@ -4,7 +4,7 @@ use serde::{Deserialize, Deserializer, Serialize};
 use specta::Type;
 use std::collections::HashMap;
 use std::fmt;
-use std::sync::{Arc, OnceLock, RwLock};
+use std::sync::{Arc, Mutex, OnceLock, RwLock};
 use tauri::{AppHandle, Manager};
 use tauri_plugin_store::StoreExt;
 
@@ -1266,7 +1266,41 @@ fn read_settings_from_store(app: &AppHandle) -> AppSettings {
     load_and_normalize_settings(app)
 }
 
+/// Serialises whole read-modify-write cycles against each other.
+///
+/// Nothing used to span the `get_settings -> mutate -> write_settings`
+/// sequence, and there are writers on at least four threads (the overlay's
+/// drag settle-watcher, the tray, async commands, and the main thread's
+/// setters). Two of them interleaving meant the second write was based on a
+/// snapshot taken before the first, silently reverting it — the user changes a
+/// toggle while the overlay is being persisted and the toggle comes back on
+/// next launch.
+static SETTINGS_WRITE_LOCK: Mutex<()> = Mutex::new(());
+
+/// Read, modify and persist the settings as one atomic step.
+///
+/// Prefer this over `get_settings` + `write_settings` for anything that
+/// updates a field: it takes the cycle lock for the whole operation, so
+/// concurrent updates queue instead of clobbering each other.
+pub fn update_settings<R>(app: &AppHandle, mutate: impl FnOnce(&mut AppSettings) -> R) -> R {
+    let _cycle = SETTINGS_WRITE_LOCK
+        .lock()
+        .unwrap_or_else(|poisoned| poisoned.into_inner());
+    let mut settings = get_settings(app);
+    let result = mutate(&mut settings);
+    write_settings_locked(app, settings);
+    result
+}
+
 pub fn write_settings(app: &AppHandle, settings: AppSettings) {
+    let _cycle = SETTINGS_WRITE_LOCK
+        .lock()
+        .unwrap_or_else(|poisoned| poisoned.into_inner());
+    write_settings_locked(app, settings);
+}
+
+/// The body of `write_settings`, for callers that already hold the cycle lock.
+fn write_settings_locked(app: &AppHandle, settings: AppSettings) {
     let store = app
         .store(crate::portable::store_path(SETTINGS_STORE_PATH))
         .expect("Failed to initialize store");

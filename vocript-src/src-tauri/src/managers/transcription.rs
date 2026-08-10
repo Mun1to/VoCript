@@ -735,6 +735,10 @@ impl TranscriptionManager {
             }
         };
 
+        // Which model this engine *is*, so the put-back below can tell whether
+        // it is still the one the app wants (see there).
+        let borrowed_model_id = self.current_model_id.lock().unwrap().clone();
+
         // Release the lock before transcribing — no mutex held during the engine call.
         drop(engine_guard);
 
@@ -904,9 +908,25 @@ impl TranscriptionManager {
 
         match transcribe_result {
             Ok(inner_result) => {
-                // Success or normal error — put the engine back.
+                // Success or normal error — put the engine back, but only if it
+                // is still the model the app wants. Nothing holds the engine
+                // mutex during transcription, so the user can switch models
+                // (or unload) meanwhile; blindly re-inserting used to drop the
+                // freshly loaded engine on the floor and keep dictating with
+                // the old one, silently and indefinitely, while the UI and the
+                // settings both reported the new model.
                 let mut engine_guard = self.lock_engine();
-                *engine_guard = Some(engine);
+                let still_current =
+                    *self.current_model_id.lock().unwrap() == borrowed_model_id;
+                if still_current && engine_guard.is_none() {
+                    *engine_guard = Some(engine);
+                } else {
+                    debug!(
+                        "Discarding the engine used for this transcription: the active model \
+                         changed while it ran (was {:?})",
+                        borrowed_model_id
+                    );
+                }
                 inner_result
             }
             Err(panic_payload) => {
