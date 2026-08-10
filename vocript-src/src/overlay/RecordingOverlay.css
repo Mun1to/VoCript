@@ -19,15 +19,21 @@
   /* A slightly-tinted near-black instead of flat #000, plus a hairline "ring"
      and an inset top highlight instead of a plain fill — this is what stops
      the capsule from reading as a plain rectangular window and gives it the
-     look of a solid floating object with edges, not a flat panel. Paired
-     with a soft drop shadow for depth below it. Same treatment applies to
-     every state, live included. */
+     look of a solid floating object with edges, not a flat panel. Same
+     treatment applies to every state, live included.
+
+     IMPORTANT: every shadow here must be INSET. The OS window is sized
+     exactly to this pill, so anything painted outside the border-radius
+     (outer ring spread, drop shadow) only has room in the rectangular
+     corner wedges beyond the curve and gets hard-clipped at the window
+     edge — which showed up as dirty semi-transparent "pointy corners"
+     around the capsule, worst on light backgrounds. */
   background: rgba(21, 20, 25, 0.95);
   border-radius: 18px;
+  overflow: hidden;
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 10px 24px rgba(0, 0, 0, 0.4);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
   opacity: 0;
   transition: opacity 300ms ease-out;
   box-sizing: border-box;
@@ -239,8 +245,8 @@
     rgba(38, 37, 35, 0.62) 58%,
     rgba(38, 37, 35, 0.42) 100%
   );
-  /* The base .recording-overlay ring + drop shadow (box-shadow above) already
-     gives this an edge and depth, so no separate border here. */
+  /* The base .recording-overlay inset ring (box-shadow above) already gives
+     this an edge, so no separate border here. */
 }
 
 .recording-overlay.live .overlay-middle {

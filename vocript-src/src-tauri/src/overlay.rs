@@ -314,8 +314,8 @@ fn get_target_monitor(app_handle: &AppHandle) -> Option<tauri::Monitor> {
     get_monitor_with_cursor(app_handle)
 }
 
-/// Returns the position where the overlay window should be placed, ready to
-/// hand to Tauri.
+/// Returns the automatic (non-dragged) position for the overlay on the given
+/// monitor, ready to hand to Tauri.
 ///
 /// Uses monitor position/size directly rather than work_area(), which can
 /// return incorrect coordinates on macOS for monitors with negative positions.
@@ -332,12 +332,12 @@ fn get_target_monitor(app_handle: &AppHandle) -> Option<tauri::Monitor> {
 ///   landed on the wrong screen.
 /// - Elsewhere it is converted back to logical units (points on macOS), which
 ///   is what those platforms expect.
-fn calculate_overlay_position_sized(
-    app_handle: &AppHandle,
+fn auto_overlay_position(
+    monitor: &tauri::Monitor,
+    overlay_position: &OverlayPosition,
     width: f64,
     height: f64,
-) -> Option<tauri::Position> {
-    let monitor = get_target_monitor(app_handle)?;
+) -> tauri::Position {
     let scale = monitor.scale_factor();
     let monitor_x = monitor.position().x as f64;
     let monitor_y = monitor.position().y as f64;
@@ -349,10 +349,8 @@ fn calculate_overlay_position_sized(
     let overlay_width = width * scale;
     let overlay_height = height * scale;
 
-    let settings = settings::get_settings(app_handle);
-
     let x = monitor_x + (monitor_width - overlay_width) / 2.0;
-    let y = match settings.overlay_position {
+    let y = match overlay_position {
         OverlayPosition::Top => monitor_y + OVERLAY_TOP_OFFSET * scale,
         OverlayPosition::Bottom | OverlayPosition::None => {
             monitor_y + monitor_height - overlay_height - OVERLAY_BOTTOM_OFFSET * scale
@@ -370,7 +368,7 @@ fn calculate_overlay_position_sized(
         y: y / scale,
     });
 
-    Some(position)
+    position
 }
 
 /// The overlay window's current logical size, read straight from the OS
@@ -396,44 +394,64 @@ fn calculate_overlay_position(app_handle: &AppHandle) -> Option<tauri::Position>
 /// `WindowEvent::Moved` always reports physical pixels, so that is what gets
 /// saved; only the *type* needs adjusting here, not the numbers. On Windows a
 /// `Physical` position is applied as-is. Elsewhere it is converted to logical
-/// units using whichever monitor the point now falls on — it may not be the
-/// monitor it was dragged on, if that display was unplugged since.
-fn custom_overlay_position(app_handle: &AppHandle) -> Option<tauri::Position> {
-    let saved = settings::get_settings(app_handle).overlay_custom_position?;
-
+/// units using the scale of `monitor` — the caller has already established
+/// that the saved point falls on it.
+fn saved_overlay_position(
+    saved: OverlayCustomPosition,
+    monitor: &tauri::Monitor,
+) -> tauri::Position {
     #[cfg(target_os = "windows")]
     {
-        Some(tauri::Position::Physical(PhysicalPosition {
+        let _ = monitor;
+        tauri::Position::Physical(PhysicalPosition {
             x: saved.x,
             y: saved.y,
-        }))
+        })
     }
     #[cfg(not(target_os = "windows"))]
     {
-        let scale = app_handle
-            .available_monitors()
-            .ok()
-            .into_iter()
-            .flatten()
-            .find(|m| is_mouse_within_monitor((saved.x, saved.y), &m.position(), &m.size()))
-            .map(|m| m.scale_factor())
-            .unwrap_or(1.0);
-        Some(tauri::Position::Logical(tauri::LogicalPosition {
+        let scale = monitor.scale_factor();
+        tauri::Position::Logical(tauri::LogicalPosition {
             x: saved.x as f64 / scale,
             y: saved.y as f64 / scale,
-        }))
+        })
     }
 }
 
-/// Where the overlay should sit right now: the user's own saved spot if they
-/// have ever dragged it, otherwise today's automatic monitor-following one.
+/// Where the overlay should sit right now: the user's own saved spot if it
+/// still falls on the monitor they're currently working on, otherwise today's
+/// automatic monitor-following one.
+///
+/// A dragged position is inherently tied to the monitor it was dropped on —
+/// dictating on a second screen should not drag the capsule back to wherever
+/// it was left on the first one. So the saved spot only applies while
+/// `get_target_monitor()` still resolves to that same monitor; anywhere else,
+/// this falls back to the auto-placed position on the monitor actually in use.
+///
+/// The target monitor and settings are resolved exactly once here and handed
+/// down — resolving the monitor twice (it involves foreground-window and
+/// monitor enumeration syscalls on Windows) could even pick two different
+/// monitors if focus moved between the calls.
 fn resolved_overlay_position(
     app_handle: &AppHandle,
     width: f64,
     height: f64,
 ) -> Option<tauri::Position> {
-    custom_overlay_position(app_handle)
-        .or_else(|| calculate_overlay_position_sized(app_handle, width, height))
+    let monitor = get_target_monitor(app_handle)?;
+    let settings = settings::get_settings(app_handle);
+
+    if let Some(saved) = settings.overlay_custom_position {
+        if is_mouse_within_monitor((saved.x, saved.y), &monitor.position(), &monitor.size()) {
+            return Some(saved_overlay_position(saved, &monitor));
+        }
+    }
+
+    Some(auto_overlay_position(
+        &monitor,
+        &settings.overlay_position,
+        width,
+        height,
+    ))
 }
 
 /// Moves the overlay and marks the resulting `Moved` event as ours, not a
@@ -555,6 +573,14 @@ pub fn create_recording_overlay(app_handle: &AppHandle) {
     .always_on_top(true)
     .skip_taskbar(true)
     .transparent(true)
+    // Windows only: without this, WebView2 falls back to its own default
+    // background for anything outside the CSS-rounded shape instead of true
+    // per-pixel alpha 0 — visible as a faint rectangular ghost of the
+    // window's real (rectangular) bounds, worst at the rounded corners where
+    // it diverges most from the pill shape drawn on top of it. Alpha must be
+    // exactly 0: Tauri's docs note Windows 8+ replaces any other alpha with
+    // 255 (opaque), so this only works as a true 0 or not at all.
+    .background_color(tauri::webview::Color(0, 0, 0, 0))
     .focused(false)
     .visible(false);
 
