@@ -757,7 +757,7 @@ fn utterance_is_wake_word(app: &AppHandle, burst: Vec<f32>, context: &str) -> bo
     let taught = get_settings(app).wake_word_samples;
     match manager.transcribe(pad_to_one_second(burst)) {
         Ok(text) if matches_taught_sample(&text, &taught) || contains_wake_word(&text) => {
-            info!("Wake word read by the {} check: {:?}", context, text.trim());
+            info!("Wake word confirmed by the {} check", context);
             true
         }
         Ok(text) if text.trim().is_empty() => {
@@ -765,10 +765,12 @@ fn utterance_is_wake_word(app: &AppHandle, burst: Vec<f32>, context: &str) -> bo
             false
         }
         Ok(text) => {
+            // Log only the length: these windows capture arbitrary speech near
+            // the microphone, which must not end up verbatim in the log file.
             info!(
-                "Wake word {} check heard {:?}, not the word",
+                "Wake word {} check heard something else ({} chars), not the word",
                 context,
-                text.trim().chars().take(40).collect::<String>()
+                text.trim().chars().count()
             );
             false
         }

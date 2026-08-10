@@ -275,28 +275,25 @@ fn preserve_case_pattern(original: &str, replacement: &str) -> String {
     }
 }
 
-/// Extracts punctuation prefix and suffix from a word
+/// Extracts punctuation prefix and suffix from a word.
+///
+/// All offsets are BYTE offsets from char_indices — counting chars and then
+/// slicing with those counts panicked on multi-byte punctuation ("¿", "…",
+/// "«»"), which Whisper emits routinely in Spanish.
 fn extract_punctuation(word: &str) -> (&str, &str) {
-    let prefix_end = word.chars().take_while(|c| !c.is_alphanumeric()).count();
+    let prefix_end = word
+        .char_indices()
+        .find(|(_, c)| c.is_alphanumeric())
+        .map(|(i, _)| i)
+        .unwrap_or(word.len());
     let suffix_start = word
         .char_indices()
         .rev()
-        .take_while(|(_, c)| !c.is_alphanumeric())
-        .count();
+        .find(|(_, c)| c.is_alphanumeric())
+        .map(|(i, c)| i + c.len_utf8())
+        .unwrap_or(word.len());
 
-    let prefix = if prefix_end > 0 {
-        &word[..prefix_end]
-    } else {
-        ""
-    };
-
-    let suffix = if suffix_start > 0 {
-        &word[word.len() - suffix_start..]
-    } else {
-        ""
-    };
-
-    (prefix, suffix)
+    (&word[..prefix_end], &word[suffix_start..])
 }
 
 /// Returns filler words appropriate for the given language code.
@@ -456,6 +453,10 @@ mod tests {
         assert_eq!(extract_punctuation("hello"), ("", ""));
         assert_eq!(extract_punctuation("!hello?"), ("!", "?"));
         assert_eq!(extract_punctuation("...hello..."), ("...", "..."));
+        // Multi-byte punctuation must not panic and must round-trip intact.
+        assert_eq!(extract_punctuation("¿hola?"), ("¿", "?"));
+        assert_eq!(extract_punctuation("«hola»…"), ("«", "»…"));
+        assert_eq!(extract_punctuation("¿¡hola!?"), ("¿¡", "!?"));
     }
 
     #[test]

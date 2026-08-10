@@ -653,7 +653,12 @@ impl TranscriptionManager {
         if final_result.is_empty() {
             info!("Transcription result is empty");
         } else {
-            info!("Transcription result: {}", final_result);
+            // Length only, never the text — the log file persists with no
+            // retention, unlike the history the user can wipe.
+            info!(
+                "Transcription completed ({} chars)",
+                final_result.chars().count()
+            );
         }
 
         self.maybe_unload_immediately("transcription");

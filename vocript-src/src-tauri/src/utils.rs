@@ -26,6 +26,11 @@ pub fn cancel_current_operation(app: &AppHandle) {
     // Cancelling must unmute too, or the user stays muted in their call.
     crate::input::release_call_mute(app);
 
+    // And it must un-pause the wake-word listener: the only other resume runs
+    // when a dictation *completes*, so a cancelled one left "VoCript" silently
+    // deaf until the next successful keyboard dictation.
+    crate::wake_word::resume(app);
+
     // Cancel any ongoing recording
     let audio_manager = app.state::<Arc<AudioRecordingManager>>();
     let recording_was_active = audio_manager.is_recording();

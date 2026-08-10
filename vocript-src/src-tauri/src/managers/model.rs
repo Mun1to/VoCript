@@ -1201,8 +1201,16 @@ impl ModelManager {
             disarmed: false,
         };
 
-        // Create HTTP client with range request for resuming
-        let client = reqwest::Client::new();
+        // Create HTTP client with range request for resuming. No total timeout
+        // (a 1.5 GB model on slow wi-fi legitimately takes a long while), but a
+        // per-read idle timeout: without it, a TCP stall left stream.next()
+        // pending forever with the progress frozen and the .partial handle held
+        // open — and the cancel flag is only checked when a chunk arrives, so
+        // cancelling never released anything either.
+        let client = reqwest::Client::builder()
+            .connect_timeout(std::time::Duration::from_secs(15))
+            .read_timeout(std::time::Duration::from_secs(60))
+            .build()?;
         let mut request = client.get(&url);
 
         if resume_from > 0 {

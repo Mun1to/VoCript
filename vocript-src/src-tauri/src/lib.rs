@@ -139,6 +139,21 @@ fn should_force_show_permissions_window(app: &AppHandle) -> bool {
     false
 }
 
+/// Log, show a native error dialog, and exit. Used for startup failures that
+/// previously panicked: a panic here closes the process with no window at all,
+/// which users experience as "the app opens and closes itself".
+fn fatal_startup_error(app_handle: &AppHandle, message: &str) -> ! {
+    log::error!("Fatal startup error: {}", message);
+    use tauri_plugin_dialog::DialogExt;
+    app_handle
+        .dialog()
+        .message(message)
+        .kind(tauri_plugin_dialog::MessageDialogKind::Error)
+        .title("VoCript")
+        .blocking_show();
+    std::process::exit(1);
+}
+
 fn initialize_core_logic(app_handle: &AppHandle) {
     // Note: Enigo (keyboard/mouse simulation) is NOT initialized here.
     // The frontend is responsible for calling the `initialize_enigo` command
@@ -165,12 +180,35 @@ fn initialize_core_logic(app_handle: &AppHandle) {
         TranscriptionManager::new(app_handle, model_manager.clone())
             .expect("Failed to initialize transcription manager"),
     );
-    let history_manager =
-        Arc::new(HistoryManager::new(app_handle).expect("Failed to initialize history manager"));
+    // A failed DB open/migration used to be a bare `expect`: the app "opened
+    // and closed itself" with exit code 101 and no window (a real incident —
+    // e.g. the database left at a NEWER version by a dev build or a rollback).
+    // Tell the user what is wrong instead.
+    let history_manager = match HistoryManager::new(app_handle) {
+        Ok(manager) => Arc::new(manager),
+        Err(e) => fatal_startup_error(
+            app_handle,
+            &format!(
+                "VoCript could not open its history database.\n\n\
+                 This usually means the data was written by a newer version of \
+                 VoCript (after a downgrade), or the file is locked or damaged.\n\n\
+                 Details: {}",
+                e
+            ),
+        ),
+    };
     // After the history manager: it owns the migrations that create the
     // dictation_stats table in the database both of them share.
-    let stats_manager =
-        Arc::new(StatsManager::new(app_handle).expect("Failed to initialize stats manager"));
+    let stats_manager = match StatsManager::new(app_handle) {
+        Ok(manager) => Arc::new(manager),
+        Err(e) => fatal_startup_error(
+            app_handle,
+            &format!(
+                "VoCript could not open its statistics database.\n\nDetails: {}",
+                e
+            ),
+        ),
+    };
 
     // Apply accelerator preferences before any model loads
     managers::transcription::apply_accelerator_settings(app_handle);

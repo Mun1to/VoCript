@@ -101,6 +101,13 @@ fn create_client(provider: &PostProcessProvider, api_key: &str) -> Result<reqwes
     let headers = build_headers(provider, api_key)?;
     reqwest::Client::builder()
         .default_headers(headers)
+        // Without timeouts, a TCP black hole (wifi drop, VPN) mid-request left
+        // the await pending forever; the pipeline then sat in Processing —
+        // where Cancel is ignored — and every shortcut was dead until an app
+        // restart. 120s leaves ample room for a slow local LLM on a long
+        // dictation while still guaranteeing the pipeline always finishes.
+        .connect_timeout(std::time::Duration::from_secs(15))
+        .timeout(std::time::Duration::from_secs(120))
         .build()
         .map_err(|e| format!("Failed to build HTTP client: {}", e))
 }

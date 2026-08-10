@@ -317,10 +317,16 @@ impl AudioRecorder {
     }
 
     pub fn stop(&self) -> Result<Vec<f32>, Box<dyn std::error::Error>> {
+        // Historic footgun: with the recorder already closed there is no worker
+        // to answer, but resp_tx stayed alive in this scope, so recv() blocked
+        // forever — while callers held the audio-manager mutex, freezing every
+        // audio operation until an app restart. No worker → nothing recorded.
+        let Some(tx) = &self.cmd_tx else {
+            log::warn!("AudioRecorder::stop() called on a closed recorder; returning no samples");
+            return Ok(Vec::new());
+        };
         let (resp_tx, resp_rx) = mpsc::channel();
-        if let Some(tx) = &self.cmd_tx {
-            tx.send(Cmd::Stop(resp_tx))?;
-        }
+        tx.send(Cmd::Stop(resp_tx))?;
         Ok(resp_rx.recv()?) // wait for the samples
     }
 

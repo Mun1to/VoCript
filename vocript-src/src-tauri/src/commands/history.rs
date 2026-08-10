@@ -34,6 +34,20 @@ pub async fn toggle_history_entry_saved(
         .map_err(|e| e.to_string())
 }
 
+/// Recordings live flat inside the recordings dir under app-generated names
+/// (`vocript-<timestamp>.wav`). Anything else — separators, `..`, or an
+/// absolute path (which `Path::join` REPLACES the base with on Windows) —
+/// would turn these commands into an arbitrary-disk-read primitive for the
+/// webview, so only a single plain path component is accepted.
+fn ensure_plain_file_name(file_name: &str) -> Result<(), String> {
+    use std::path::{Component, Path};
+    let mut components = Path::new(file_name).components();
+    match (components.next(), components.next()) {
+        (Some(Component::Normal(_)), None) => Ok(()),
+        _ => Err(format!("Invalid recording file name: {:?}", file_name)),
+    }
+}
+
 #[tauri::command]
 #[specta::specta]
 pub async fn get_audio_file_path(
@@ -41,6 +55,7 @@ pub async fn get_audio_file_path(
     history_manager: State<'_, Arc<HistoryManager>>,
     file_name: String,
 ) -> Result<String, String> {
+    ensure_plain_file_name(&file_name)?;
     let path = history_manager.get_audio_file_path(&file_name);
     path.to_str()
         .ok_or_else(|| "Invalid file path".to_string())
@@ -61,6 +76,7 @@ pub async fn get_audio_file_data(
     history_manager: State<'_, Arc<HistoryManager>>,
     file_name: String,
 ) -> Result<String, String> {
+    ensure_plain_file_name(&file_name)?;
     let path = history_manager.get_audio_file_path(&file_name);
     let bytes = std::fs::read(&path).map_err(|e| format!("Failed to read audio file: {}", e))?;
     Ok(STANDARD.encode(bytes))

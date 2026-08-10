@@ -511,6 +511,12 @@ impl ShortcutAction for TranscribeAction {
         } else {
             // Starting failed (for example due to blocked microphone permissions).
             // Revert UI state so we don't stay stuck in the recording overlay.
+            // The mute and the wake-word pause were applied above on the
+            // assumption that a dictation was really starting — without these
+            // two calls, a failed start left the user muted in their call and
+            // the wake word deaf until some later dictation completed.
+            crate::input::release_call_mute(app);
+            crate::wake_word::resume(app);
             utils::hide_recording_overlay(app);
             change_tray_icon(app, TrayIconState::Idle);
             if let Some(err) = recording_error {
@@ -645,10 +651,13 @@ impl ShortcutAction for TranscribeAction {
 
                     match transcription_result {
                         Ok(transcription) => {
+                            // Length only, never the text: the default log level
+                            // is Debug and the log file has no retention, so the
+                            // dictated content itself must never land in it.
                             debug!(
-                                "Transcription completed in {:?}: '{}'",
+                                "Transcription completed in {:?} ({} chars)",
                                 transcription_time.elapsed(),
-                                transcription
+                                transcription.chars().count()
                             );
 
                             // System-audio captures: append a "Fuente: …" line

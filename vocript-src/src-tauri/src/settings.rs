@@ -1092,61 +1092,154 @@ fn cache_settings(settings: &AppSettings) {
     }
 }
 
-pub fn load_or_create_app_settings(app: &AppHandle) -> AppSettings {
-    // Initialize store
+/// Sidecar backup of the settings, written on every save. The store plugin
+/// writes its file non-atomically and silently treats a truncated file as
+/// empty, so without this copy a crash mid-save reset every setting (shortcut
+/// bindings, API keys, personal dictionary) with no way back.
+fn settings_backup_file(app: &AppHandle) -> Option<std::path::PathBuf> {
+    crate::portable::app_data_dir(app)
+        .ok()
+        .map(|dir| dir.join(format!("{}.bak", SETTINGS_STORE_PATH)))
+}
+
+fn write_settings_backup(app: &AppHandle, settings: &AppSettings) {
+    let Some(backup) = settings_backup_file(app) else {
+        return;
+    };
+    let Ok(json) = serde_json::to_string(settings) else {
+        return;
+    };
+    // Write-temp-then-rename so the backup itself can never be half-written.
+    let tmp = backup.with_extension("bak.tmp");
+    if std::fs::write(&tmp, json).is_ok() {
+        let _ = std::fs::rename(&tmp, &backup);
+    }
+}
+
+fn read_settings_backup(app: &AppHandle) -> Option<AppSettings> {
+    let backup = settings_backup_file(app)?;
+    let json = std::fs::read_to_string(backup).ok()?;
+    serde_json::from_str(&json).ok()
+}
+
+/// Recover every field that still deserializes from an invalid settings value,
+/// instead of throwing the whole file away. Starting from the defaults, each
+/// stored top-level field is applied one at a time and kept only if the result
+/// still parses — so one bad enum value (say, from a version downgrade) loses
+/// that one field, not the user's bindings, API keys and dictionary.
+fn salvage_settings(stored: &serde_json::Value) -> AppSettings {
+    let defaults = get_default_settings();
+    let Some(stored_map) = stored.as_object() else {
+        return defaults;
+    };
+    let Ok(serde_json::Value::Object(default_map)) = serde_json::to_value(&defaults) else {
+        return defaults;
+    };
+
+    let mut current = default_map;
+    let mut dropped: Vec<&str> = Vec::new();
+    for (key, value) in stored_map {
+        let mut candidate = current.clone();
+        candidate.insert(key.clone(), value.clone());
+        if serde_json::from_value::<AppSettings>(serde_json::Value::Object(candidate.clone()))
+            .is_ok()
+        {
+            current = candidate;
+        } else {
+            dropped.push(key);
+        }
+    }
+    warn!(
+        "Salvaged settings field by field; reset to default: [{}]",
+        dropped.join(", ")
+    );
+
+    serde_json::from_value(serde_json::Value::Object(current)).unwrap_or(defaults)
+}
+
+/// The single loader both public entry points go through — they previously
+/// duplicated this logic and had drifted apart (only one of them merged the
+/// default bindings), so the cache could be seeded from the incomplete one.
+fn load_and_normalize_settings(app: &AppHandle) -> AppSettings {
     let store = app
         .store(crate::portable::store_path(SETTINGS_STORE_PATH))
         .expect("Failed to initialize store");
 
-    let mut settings = if let Some(settings_value) = store.get("settings") {
-        // Parse the entire settings object
-        match serde_json::from_value::<AppSettings>(settings_value) {
-            Ok(mut settings) => {
-                debug!("Found existing settings: {:?}", settings);
-                let default_settings = get_default_settings();
-                let mut updated = false;
-
-                // Merge default bindings into existing settings
-                for (key, value) in default_settings.bindings {
-                    #[allow(clippy::map_entry)]
-                    if !settings.bindings.contains_key(&key) {
-                        debug!("Adding missing binding: {}", key);
-                        settings.bindings.insert(key, value);
-                        updated = true;
-                    }
-                }
-
-                if updated {
-                    debug!("Settings updated with new bindings");
-                    store.set("settings", serde_json::to_value(&settings).unwrap());
-                }
-
-                settings
-            }
+    let mut settings = match store.get("settings") {
+        Some(settings_value) => match serde_json::from_value::<AppSettings>(
+            settings_value.clone(),
+        ) {
+            Ok(settings) => settings,
             Err(e) => {
-                warn!("Failed to parse settings: {}", e);
-                // Fall back to default settings if parsing fails
+                warn!(
+                    "Failed to parse settings ({}); keeping a backup of the raw file and salvaging field by field",
+                    e
+                );
+                // Preserve the unparseable original next to the store before
+                // anything overwrites it, for manual recovery.
+                if let (Ok(dir), Ok(raw)) = (
+                    crate::portable::app_data_dir(app),
+                    serde_json::to_string_pretty(&settings_value),
+                ) {
+                    let _ = std::fs::write(
+                        dir.join(format!("{}.invalid", SETTINGS_STORE_PATH)),
+                        raw,
+                    );
+                }
+                let salvaged = salvage_settings(&settings_value);
+                store.set("settings", serde_json::to_value(&salvaged).unwrap());
+                salvaged
+            }
+        },
+        None => {
+            // Empty store: a genuine first run, or a truncated file the store
+            // plugin silently treated as empty. The sidecar backup tells the
+            // two apart.
+            if let Some(from_backup) = read_settings_backup(app) {
+                warn!("Settings store was empty but a backup exists; restoring from backup");
+                store.set("settings", serde_json::to_value(&from_backup).unwrap());
+                from_backup
+            } else {
                 let default_settings = get_default_settings();
                 store.set("settings", serde_json::to_value(&default_settings).unwrap());
                 default_settings
             }
         }
-    } else {
-        let default_settings = get_default_settings();
-        store.set("settings", serde_json::to_value(&default_settings).unwrap());
-        default_settings
     };
+
+    let default_settings = get_default_settings();
+    let mut updated = false;
+
+    // Merge default bindings into existing settings
+    for (key, value) in default_settings.bindings {
+        #[allow(clippy::map_entry)]
+        if !settings.bindings.contains_key(&key) {
+            debug!("Adding missing binding: {}", key);
+            settings.bindings.insert(key, value);
+            updated = true;
+        }
+    }
 
     // Migra el volumen heredado fuera de escala (p. ej. 80 de una antigua
     // escala 0-100) a la escala 0-1 actual, para que no aparezca como "8000%".
     if settings.audio_feedback_volume > 1.0 {
         settings.audio_feedback_volume = (settings.audio_feedback_volume / 100.0).clamp(0.0, 1.0);
-        store.set("settings", serde_json::to_value(&settings).unwrap());
+        updated = true;
     }
 
     if ensure_post_process_defaults(&mut settings) {
+        updated = true;
+    }
+
+    if updated {
         store.set("settings", serde_json::to_value(&settings).unwrap());
     }
+
+    settings
+}
+
+pub fn load_or_create_app_settings(app: &AppHandle) -> AppSettings {
+    let settings = load_and_normalize_settings(app);
 
     // Startup normalisation is authoritative — seed the cache from it.
     cache_settings(&settings);
@@ -1170,34 +1263,7 @@ pub fn get_settings(app: &AppHandle) -> AppSettings {
 
 /// Read and normalise the settings straight from the store, bypassing the cache.
 fn read_settings_from_store(app: &AppHandle) -> AppSettings {
-    let store = app
-        .store(crate::portable::store_path(SETTINGS_STORE_PATH))
-        .expect("Failed to initialize store");
-
-    let mut settings = if let Some(settings_value) = store.get("settings") {
-        serde_json::from_value::<AppSettings>(settings_value).unwrap_or_else(|_| {
-            let default_settings = get_default_settings();
-            store.set("settings", serde_json::to_value(&default_settings).unwrap());
-            default_settings
-        })
-    } else {
-        let default_settings = get_default_settings();
-        store.set("settings", serde_json::to_value(&default_settings).unwrap());
-        default_settings
-    };
-
-    // Migra el volumen heredado fuera de escala (p. ej. 80 de una antigua
-    // escala 0-100) a la escala 0-1 actual, para que no aparezca como "8000%".
-    if settings.audio_feedback_volume > 1.0 {
-        settings.audio_feedback_volume = (settings.audio_feedback_volume / 100.0).clamp(0.0, 1.0);
-        store.set("settings", serde_json::to_value(&settings).unwrap());
-    }
-
-    if ensure_post_process_defaults(&mut settings) {
-        store.set("settings", serde_json::to_value(&settings).unwrap());
-    }
-
-    settings
+    load_and_normalize_settings(app)
 }
 
 pub fn write_settings(app: &AppHandle, settings: AppSettings) {
@@ -1210,6 +1276,10 @@ pub fn write_settings(app: &AppHandle, settings: AppSettings) {
     // Keep the cache warm rather than merely invalidating it: the writer
     // already holds the authoritative value, so the next read costs nothing.
     cache_settings(&settings);
+
+    // Sidecar backup (atomic write): the recovery net for a corrupted or
+    // truncated store file — see load_and_normalize_settings.
+    write_settings_backup(app, &settings);
 
     // The idle watcher sleeps until the loaded model's unload deadline and
     // parks when there is none, so a change to model_unload_timeout is only
@@ -1228,12 +1298,16 @@ pub fn get_bindings(app: &AppHandle) -> HashMap<String, ShortcutBinding> {
     settings.bindings
 }
 
-pub fn get_stored_binding(app: &AppHandle, id: &str) -> ShortcutBinding {
+/// Errors instead of panicking on an unknown id: this is reachable straight
+/// from the webview (reset_binding command), and right after an update a
+/// just-added default binding may not have been merged into the stored map yet.
+pub fn get_stored_binding(app: &AppHandle, id: &str) -> Result<ShortcutBinding, String> {
     let bindings = get_bindings(app);
 
-    let binding = bindings.get(id).unwrap().clone();
-
-    binding
+    bindings
+        .get(id)
+        .cloned()
+        .ok_or_else(|| format!("Unknown shortcut binding id: {}", id))
 }
 
 pub fn get_history_limit(app: &AppHandle) -> usize {

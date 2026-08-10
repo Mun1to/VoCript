@@ -209,9 +209,21 @@ impl AudioRecordingManager {
             system_source_snapshot: Arc::new(Mutex::new(None)),
         };
 
-        // Always-on?  Open immediately.
+        // Always-on?  Open immediately — but never let a failure here abort
+        // startup. The setting persists BEFORE the mode is first applied, so a
+        // mic that later disappears (unplugged USB, permission revoked) used
+        // to crash-loop the whole app on launch until the user hand-edited the
+        // settings JSON. Degrade to on-demand behaviour instead: dictation
+        // shortcuts will retry opening the stream (and surface their own
+        // error) when actually used.
         if matches!(mode, MicrophoneMode::AlwaysOn) {
-            manager.start_microphone_stream()?;
+            if let Err(e) = manager.start_microphone_stream() {
+                log::error!(
+                    "Always-on microphone could not be opened at startup ({}); \
+                     continuing without it — recording will retry on demand",
+                    e
+                );
+            }
         }
 
         Ok(manager)
