@@ -39,6 +39,22 @@ const ZERO_LEVELS = Array(BAR_COUNT).fill(0);
 const DRAG_THRESHOLD_PX = 4;
 
 /**
+ * How long the capsule's contents stay in the DOM after a hide, so the 300ms
+ * fade-out in RecordingOverlay.css can finish (hide_recording_overlay in
+ * overlay.rs waits the same 300ms before hiding the OS window).
+ *
+ * Everything is then unmounted, and that part is not tidiness — it is the fix
+ * for a permanent CPU leak. A hidden Tauri window is not hidden as far as
+ * Chromium is concerned: `document.hidden` stays false, so nothing inside it
+ * is ever throttled. This component used to keep whatever state the last
+ * dictation left behind, and `transcribing`/`processing` render a label with
+ * `animation: transcribing-pulse ... infinite`. Measured with the window
+ * hidden: 5% of a core in this renderer plus 7% in the GPU process, burning
+ * for as long as the app stayed open, for a window nobody could see.
+ */
+const UNMOUNT_AFTER_HIDE_MS = 350;
+
+/**
  * Height ratios of the 5 bars in the VoCript logo mark itself (see
  * VoCriptMark.tsx: rects of height 6, 12, 19, 11, 5 out of a 24-tall canvas).
  * Reusing them here makes the recording bars read as "the logo waking up"
@@ -120,6 +136,11 @@ async function applyOverlayAccent() {
 const RecordingOverlay: React.FC = () => {
   const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
+  // Whether the capsule's contents exist in the DOM at all. Separate from
+  // isVisible (which only drives the opacity fade) because the contents have
+  // to outlive the fade-out — see UNMOUNT_AFTER_HIDE_MS.
+  const [isMounted, setIsMounted] = useState(false);
+  const unmountTimerRef = useRef<number | null>(null);
   const [state, setState] = useState<OverlayState>("recording");
   const [levels, setLevels] = useState<number[]>(ZERO_LEVELS);
   const [liveText, setLiveText] = useState("");
@@ -192,6 +213,14 @@ const RecordingOverlay: React.FC = () => {
 
       // Listen for show-overlay event from Rust
       const unlistenShow = await listen("show-overlay", async (event) => {
+        // Put the contents back before anything else (and cancel a pending
+        // unmount from a hide that is still fading out), so the capsule is
+        // laid out and ready by the time the fade-in class lands below.
+        if (unmountTimerRef.current !== null) {
+          window.clearTimeout(unmountTimerRef.current);
+          unmountTimerRef.current = null;
+        }
+        setIsMounted(true);
         // Sync language + accent from settings each time the overlay is shown,
         // so a change made in the main window is reflected on the next capsule.
         await syncLanguageFromSettings();
@@ -228,6 +257,18 @@ const RecordingOverlay: React.FC = () => {
         liveTargetRef.current = "";
         setLiveFinished(false);
         setCopyFeedback(false);
+        // Once the fade-out is over, tear the contents down completely.
+        if (unmountTimerRef.current !== null) {
+          window.clearTimeout(unmountTimerRef.current);
+        }
+        unmountTimerRef.current = window.setTimeout(() => {
+          unmountTimerRef.current = null;
+          setIsMounted(false);
+          // Back to the neutral state: it is the one state with nothing
+          // animating, so a hide that races the unmount cannot leave a pulsing
+          // label behind either.
+          setState("recording");
+        }, UNMOUNT_AFTER_HIDE_MS);
       });
 
       // Listen for mic-level updates
@@ -282,6 +323,10 @@ const RecordingOverlay: React.FC = () => {
 
       // Cleanup function
       return () => {
+        if (unmountTimerRef.current !== null) {
+          window.clearTimeout(unmountTimerRef.current);
+          unmountTimerRef.current = null;
+        }
         unlistenShow();
         unlistenHide();
         unlistenLevel();
@@ -438,6 +483,12 @@ const RecordingOverlay: React.FC = () => {
       console.error("Failed to copy live transcription:", e);
     }
   };
+
+  // Away: keep the (empty) root node so the fade-in below still has something
+  // to transition from, and nothing else. See UNMOUNT_AFTER_HIDE_MS.
+  if (!isMounted) {
+    return <div className="recording-overlay" />;
+  }
 
   return (
     <div

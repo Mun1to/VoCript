@@ -27,6 +27,29 @@ fn store_tray_state(state: &TrayIconState) {
     TRAY_STATE.store(v, Ordering::Relaxed);
 }
 
+/// Text for the tray icon's tooltip.
+///
+/// Version numbers and an arrow read the same in every language, so the one
+/// place the daily background check announces itself needs no translation and
+/// no extra key in twenty locale files.
+fn tooltip_label(version_label: &str, available_update: Option<&str>) -> String {
+    match available_update {
+        Some(version) => format!("{version_label} → v{version}"),
+        None => version_label.to_string(),
+    }
+}
+
+/// What the tray is showing right now, so a caller that only wants to refresh
+/// the menu (the daily update check, say) does not have to guess and reset the
+/// icon to Idle mid-recording.
+pub fn current_tray_state() -> TrayIconState {
+    match TRAY_STATE.load(Ordering::Relaxed) {
+        1 => TrayIconState::Recording,
+        2 => TrayIconState::Transcribing,
+        _ => TrayIconState::Idle,
+    }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum TrayIconState {
     Idle,
@@ -47,15 +70,23 @@ pub fn get_current_theme(app: &AppHandle) -> AppTheme {
         // On Linux, always use the colored theme
         AppTheme::Colored
     } else {
-        // On other platforms, map system theme to our app theme
-        if let Some(main_window) = app.get_webview_window("main") {
-            match main_window.theme().unwrap_or(Theme::Dark) {
+        // On other platforms, map system theme to our app theme.
+        //
+        // Any window will do, and it must: the settings window is released
+        // after a while in the tray (see MAIN_WINDOW_REAP_DELAY in lib.rs), and
+        // keying this on that one window alone made the tray icon fall back to
+        // its dark variant the moment it went away. The overlay and the tray
+        // menu are always around.
+        let window = app
+            .get_webview_window("main")
+            .or_else(|| app.webview_windows().into_values().next());
+        match window {
+            Some(window) => match window.theme().unwrap_or(Theme::Dark) {
                 Theme::Light => AppTheme::Light,
                 Theme::Dark => AppTheme::Dark,
                 _ => AppTheme::Dark, // Default fallback
-            }
-        } else {
-            AppTheme::Dark
+            },
+            None => AppTheme::Dark,
         }
     }
 }
@@ -301,7 +332,10 @@ pub fn update_tray_menu(app: &AppHandle, state: &TrayIconState, locale: Option<&
         let _ = tray.set_menu(Some(menu));
     }
     let _ = tray.set_icon_as_template(true);
-    let _ = tray.set_tooltip(Some(version_label));
+    let _ = tray.set_tooltip(Some(tooltip_label(
+        &version_label,
+        crate::update_watch::available_update().as_deref(),
+    )));
 }
 
 fn last_transcript_text(entry: &HistoryEntry) -> &str {
@@ -385,6 +419,10 @@ pub struct TrayMenuState {
     pub active_model_name: Option<String>,
     pub languages: Vec<TrayMenuLanguage>,
     pub active_language_native: String,
+    /// Newer version found by the daily background check, if any. Just the
+    /// number: the menu shows it beside "Check for updates", which is already
+    /// translated.
+    pub available_update: Option<String>,
 }
 
 #[tauri::command]
@@ -407,6 +445,7 @@ pub fn get_tray_menu_state(app: AppHandle) -> Result<TrayMenuState, String> {
         model_loaded: app.state::<Arc<TranscriptionManager>>().is_model_loaded(),
         is_busy: TRAY_STATE.load(Ordering::Relaxed) != 0,
         update_checks_enabled: settings.update_checks_enabled,
+        available_update: crate::update_watch::available_update(),
         active_model_name: downloaded
             .iter()
             .find(|m| m.id == settings.selected_model)
@@ -532,7 +571,7 @@ pub fn handle_tray_action(app: &AppHandle, id: &str) {
 
 #[cfg(test)]
 mod tests {
-    use super::last_transcript_text;
+    use super::{last_transcript_text, tooltip_label};
     use crate::managers::history::HistoryEntry;
 
     fn build_entry(transcription: &str, post_processed: Option<&str>) -> HistoryEntry {
@@ -559,5 +598,18 @@ mod tests {
     fn falls_back_to_raw_transcription() {
         let entry = build_entry("raw", None);
         assert_eq!(last_transcript_text(&entry), "raw");
+    }
+
+    #[test]
+    fn the_tooltip_is_just_the_version_when_nothing_is_pending() {
+        assert_eq!(tooltip_label("VoCript v3.6.0", None), "VoCript v3.6.0");
+    }
+
+    #[test]
+    fn a_pending_update_shows_up_in_the_tooltip() {
+        assert_eq!(
+            tooltip_label("VoCript v3.6.0", Some("3.6.1")),
+            "VoCript v3.6.0 → v3.6.1"
+        );
     }
 }

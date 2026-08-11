@@ -52,6 +52,7 @@ interface TrayMenuState {
   active_model_name: string | null;
   languages: TrayMenuLanguage[];
   active_language_native: string;
+  available_update: string | null;
 }
 
 type View = "main" | "models" | "languages";
@@ -412,9 +413,17 @@ export const TrayMenu: React.FC = () => {
                 hint="Ctrl+,"
                 onClick={() => act("settings")}
               />
+              {/* The version number is the whole notice: the daily background
+                  check (update_watch.rs) deliberately never pops anything up,
+                  and a bare number needs no translating. */}
               <Row
                 icon={<RefreshCw className="h-4 w-4" />}
                 label={t("tray.checkUpdates")}
+                value={
+                  state.available_update
+                    ? `v${state.available_update}`
+                    : undefined
+                }
                 disabled={!state.update_checks_enabled}
                 onClick={() => act("check_updates")}
               />

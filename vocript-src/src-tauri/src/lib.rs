@@ -22,6 +22,7 @@ mod transcription_coordinator;
 mod tray;
 mod tray_i18n;
 mod tray_menu;
+mod update_watch;
 mod utils;
 mod wake_word;
 
@@ -40,8 +41,9 @@ use managers::transcription::TranscriptionManager;
 use signal_hook::consts::{SIGUSR1, SIGUSR2};
 #[cfg(unix)]
 use signal_hook::iterator::Signals;
-use std::sync::atomic::{AtomicU8, Ordering};
+use std::sync::atomic::{AtomicU64, AtomicU8, Ordering};
 use std::sync::Arc;
+use std::time::Duration;
 use tauri::image::Image;
 pub use transcription_coordinator::TranscriptionCoordinator;
 
@@ -90,7 +92,92 @@ fn build_console_filter() -> env_filter::Filter {
     builder.build()
 }
 
+/// How long the settings window keeps its webview alive after being closed to
+/// the tray, before it is torn down and rebuilt on the next open.
+///
+/// The window costs ~110 MB of private memory (plus its share of the shared
+/// GPU process) for a webview nobody is looking at, which is most of what a
+/// tray-resident VoCript holds. The delay is there so the common
+/// close-then-reopen does not pay the rebuild: only really leaving it closed
+/// gives the memory back.
+const MAIN_WINDOW_REAP_DELAY: Duration = Duration::from_secs(45);
+
+/// Bumped every time the settings window is hidden or shown, so a pending reap
+/// can tell whether it is still the one that was scheduled. Without it, closing
+/// and immediately reopening would leave a timer that destroys the window the
+/// user is looking at.
+static MAIN_WINDOW_REAP_GENERATION: AtomicU64 = AtomicU64::new(0);
+
+/// Builds the settings window. Programmatic rather than declared in
+/// tauri.conf.json so portable mode can redirect the WebView2 cache, and so it
+/// can be rebuilt after a reap (see `MAIN_WINDOW_REAP_DELAY`).
+fn build_main_window<M: Manager<tauri::Wry>>(
+    manager: &M,
+    visible: bool,
+) -> tauri::Result<tauri::WebviewWindow> {
+    let mut builder =
+        tauri::WebviewWindowBuilder::new(manager, "main", tauri::WebviewUrl::App("/".into()))
+            .title("VoCript")
+            .inner_size(1080.0, 680.0)
+            .min_inner_size(960.0, 600.0)
+            .resizable(true)
+            .maximizable(false)
+            .visible(visible);
+
+    if let Some(data_dir) = portable::data_dir() {
+        builder = builder.data_directory(data_dir.join("webview"));
+    }
+
+    builder.build()
+}
+
+/// Destroys the settings window once it has been closed to the tray for
+/// `MAIN_WINDOW_REAP_DELAY`, giving its memory back. `show_main_window` builds
+/// it again on demand.
+fn schedule_main_window_reap(app: &AppHandle) {
+    // Without a tray icon the window is the whole app, so releasing it would
+    // leave nothing to click. Same rule the startup code already applies when
+    // deciding whether `start_hidden` is safe to honour.
+    let tray_available =
+        get_settings(app).show_tray_icon && !app.state::<CliArgs>().no_tray;
+    if !tray_available {
+        return;
+    }
+
+    let generation = MAIN_WINDOW_REAP_GENERATION.fetch_add(1, Ordering::SeqCst) + 1;
+    let app = app.clone();
+    std::thread::spawn(move || {
+        std::thread::sleep(MAIN_WINDOW_REAP_DELAY);
+        if MAIN_WINDOW_REAP_GENERATION.load(Ordering::SeqCst) != generation {
+            return; // Shown (or hidden again) meanwhile — that timer owns it now.
+        }
+        let Some(window) = app.get_webview_window("main") else {
+            return;
+        };
+        // Last check on the main thread, where a show cannot race us.
+        let _ = app.run_on_main_thread(move || {
+            if window.is_visible().unwrap_or(true) {
+                return;
+            }
+            match window.destroy() {
+                Ok(()) => log::info!("Settings window released after {MAIN_WINDOW_REAP_DELAY:?} in the tray"),
+                Err(e) => log::warn!("Failed to release the settings window: {e}"),
+            }
+        });
+    });
+}
+
 pub(crate) fn show_main_window(app: &AppHandle) {
+    // Any pending reap is now stale: the user is asking for the window back.
+    MAIN_WINDOW_REAP_GENERATION.fetch_add(1, Ordering::SeqCst);
+
+    #[cfg(target_os = "macos")]
+    let restore_dock = || {
+        if let Err(e) = app.set_activation_policy(tauri::ActivationPolicy::Regular) {
+            log::error!("Failed to set activation policy to Regular: {}", e);
+        }
+    };
+
     if let Some(main_window) = app.get_webview_window("main") {
         let _ = main_window.unminimize();
         let _ = main_window.show();
@@ -98,19 +185,45 @@ pub(crate) fn show_main_window(app: &AppHandle) {
         let _ = main_window.set_focus();
         let _ = main_window.set_always_on_top(false);
         #[cfg(target_os = "macos")]
-        {
-            if let Err(e) = app.set_activation_policy(tauri::ActivationPolicy::Regular) {
-                log::error!("Failed to set activation policy to Regular: {}", e);
-            }
-        }
+        restore_dock();
         return;
     }
 
-    let webview_labels = app.webview_windows().keys().cloned().collect::<Vec<_>>();
-    log::error!(
-        "Main window not found. Webview labels: {:?}",
-        webview_labels
-    );
+    // Reaped while it sat in the tray — build it back.
+    //
+    // From a worker thread, deliberately. `build()` hands the actual window
+    // creation to the event loop and blocks until it is done, so calling it
+    // *on* the main thread (which is where a synchronous Tauri command runs)
+    // deadlocks: the event loop is busy waiting inside our own call. Both
+    // failed attempts looked the same from outside — an about:blank window
+    // that never loads and a tray "Settings" click that never returns.
+    let app_for_build = app.clone();
+    std::thread::spawn(move || {
+        // Two shows in quick succession (tray double-click, CLI relaunch) would
+        // otherwise both try to claim the "main" label and the loser would log
+        // an error for what is really a no-op.
+        if app_for_build.get_webview_window("main").is_some() {
+            return;
+        }
+        match build_main_window(&app_for_build, true) {
+            Ok(window) => {
+                let _ = window.set_focus();
+            }
+            Err(e) => {
+                let labels = app_for_build
+                    .webview_windows()
+                    .keys()
+                    .cloned()
+                    .collect::<Vec<_>>();
+                log::error!(
+                    "Failed to rebuild the settings window: {e}. Webview labels: {labels:?}"
+                );
+            }
+        }
+    });
+
+    #[cfg(target_os = "macos")]
+    restore_dock();
 }
 
 #[allow(unused_variables)]
@@ -313,6 +426,10 @@ fn initialize_core_logic(app_handle: &AppHandle) {
 
     // Create the recording overlay window (hidden by default)
     utils::create_recording_overlay(app_handle);
+
+    // Ask about new versions from the backend, once a day, with or without a
+    // window open. See update_watch.rs for why the frontend check was not enough.
+    update_watch::start(app_handle);
 }
 
 #[tauri::command]
@@ -610,22 +727,7 @@ pub fn run(cli_args: CliArgs) {
         .setup(move |app| {
             specta_builder.mount_events(app);
 
-            // Create main window programmatically so we can set data_directory
-            // for portable mode (redirects WebView2 cache to portable Data dir)
-            let mut win_builder =
-                tauri::WebviewWindowBuilder::new(app, "main", tauri::WebviewUrl::App("/".into()))
-                    .title("VoCript")
-                    .inner_size(1080.0, 680.0)
-                    .min_inner_size(960.0, 600.0)
-                    .resizable(true)
-                    .maximizable(false)
-                    .visible(false);
-
-            if let Some(data_dir) = portable::data_dir() {
-                win_builder = win_builder.data_directory(data_dir.join("webview"));
-            }
-
-            win_builder.build()?;
+            build_main_window(app, false)?;
 
             // Migrate a pre-rebrand (com.muvox.app) install BEFORE anything
             // reads the settings store. The store plugin caches its file per
@@ -688,6 +790,13 @@ pub fn run(cli_args: CliArgs) {
             tauri::WindowEvent::CloseRequested { api, .. } => {
                 api.prevent_close();
                 let _res = window.hide();
+
+                // Closing to the tray is the one moment we know the settings
+                // window is not wanted, so that is when its webview is queued
+                // for release (see MAIN_WINDOW_REAP_DELAY).
+                if window.label() == "main" {
+                    schedule_main_window_reap(&window.app_handle());
+                }
 
                 #[cfg(target_os = "macos")]
                 {

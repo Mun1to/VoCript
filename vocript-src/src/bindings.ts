@@ -1390,7 +1390,13 @@ export type ShortcutBinding = { id: string; name: string; description: string; d
 export type SoundTheme = "marimba" | "pop" | "custom"
 export type TrayMenuLanguage = { code: string; native_name: string; is_active: boolean }
 export type TrayMenuModel = { id: string; name: string; is_active: boolean }
-export type TrayMenuState = { version_label: string; live_voice: boolean; live_system: boolean; model_loaded: boolean; is_busy: boolean; update_checks_enabled: boolean; models: TrayMenuModel[]; active_model_name: string | null; languages: TrayMenuLanguage[]; active_language_native: string }
+export type TrayMenuState = { version_label: string; live_voice: boolean; live_system: boolean; model_loaded: boolean; is_busy: boolean; update_checks_enabled: boolean; models: TrayMenuModel[]; active_model_name: string | null; languages: TrayMenuLanguage[]; active_language_native: string; 
+/**
+ * Newer version found by the daily background check, if any. Just the
+ * number: the menu shows it beside "Check for updates", which is already
+ * translated.
+ */
+available_update: string | null }
 export type TypingTool = "auto" | "wtype" | "kwtype" | "dotool" | "ydotool" | "xdotool"
 export type WhisperAcceleratorSetting = "auto" | "cpu" | "gpu"
 export type WindowsMicrophonePermissionStatus = { supported: boolean; overall_access: PermissionAccess; device_access: PermissionAccess; app_access: PermissionAccess; desktop_app_access: PermissionAccess }
