@@ -35,7 +35,8 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
   // Only this one field matters here; useSettings() would subscribe the whole
   // screen to every settings change (including the isUpdating bookkeeping that
   // each write flips twice).
-  const language = useSettingsStore((s) => s.settings?.selected_language) ?? "es";
+  const language =
+    useSettingsStore((s) => s.settings?.selected_language) ?? "es";
   const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
 
   const isDownloading = selectedModelId !== null;
@@ -222,6 +223,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
               onDownload={handleDownloadModel}
               downloadProgress={getModelDownloadProgress(recommendedModel.id)}
               downloadSpeed={getModelDownloadSpeed(recommendedModel.id)}
+              preferredLanguage={language}
               recommendedLabel={recommendedBadge}
             />
           )}
@@ -236,6 +238,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
               onDownload={handleDownloadModel}
               downloadProgress={getModelDownloadProgress(model.id)}
               downloadSpeed={getModelDownloadSpeed(model.id)}
+              preferredLanguage={language}
               unsupportedLabel={
                 languageLabel && !modelSupportsLanguage(model, language)
                   ? t("onboarding.modelCard.noLanguageSupport", {

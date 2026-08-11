@@ -284,6 +284,7 @@
       "singleLanguage": "Поддържа само този език",
       "multiLanguage": "Многоезичен",
       "languageOnly": "Само {{language}}",
+      "languagesAndMore": "{{languages}} и още {{count}}",
       "translation": "Може да превежда на английски",
       "translate": "Превод на английски"
     }
@@ -291,7 +292,11 @@
   "settings": {
     "modelSettings": {
       "title": "Настройки на {{model}}",
-      "noSettingsNeeded": "Този модел работи автоматично без нужда от конфигурация."
+      "noSettingsNeeded": "Този модел работи автоматично без нужда от конфигурация.",
+      "languageNotSupported": "{{model}} не може да транскрибира {{language}}. Вместо това ще погажда езика, което често води до текст на език, който не сте искали.",
+      "switchToModel": "Превключи към {{model}}",
+      "noInstalledModelForLanguage": "Никой от инсталираните модели не поддържа {{language}}. Инсталирайте от раздел „Модели“.",
+      "switchFailed": "Моделът не можа да бъде сменен."
     },
     "general": {
       "title": "Общи",

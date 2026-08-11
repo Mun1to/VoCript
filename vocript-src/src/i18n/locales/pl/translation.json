@@ -283,7 +283,8 @@
       "translation": "Może tłumaczyć na angielski",
       "translate": "Tłumacz na angielski",
       "singleLanguage": "Obsługuje tylko ten język",
-      "languageOnly": "Tylko {{language}}"
+      "languageOnly": "Tylko {{language}}",
+      "languagesAndMore": "{{languages}} i {{count}} więcej"
     },
     "cancel": "Anuluj",
     "cancelDownload": "Anuluj pobieranie"
@@ -291,7 +292,11 @@
   "settings": {
     "modelSettings": {
       "title": "Ustawienia {{model}}",
-      "noSettingsNeeded": "Ten model działa automatycznie bez konieczności konfiguracji."
+      "noSettingsNeeded": "Ten model działa automatycznie bez konieczności konfiguracji.",
+      "languageNotSupported": "{{model}} nie potrafi transkrybować języka {{language}}. Zamiast tego będzie zgadywał język, co często kończy się tekstem w języku, którego nie wybrałeś.",
+      "switchToModel": "Przełącz na {{model}}",
+      "noInstalledModelForLanguage": "Żaden z zainstalowanych modeli nie obsługuje języka {{language}}. Zainstaluj model w zakładce Modele.",
+      "switchFailed": "Nie udało się zmienić modelu."
     },
     "models": {
       "title": "Modele transkrypcji",

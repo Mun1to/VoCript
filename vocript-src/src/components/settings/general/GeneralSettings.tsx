@@ -17,6 +17,7 @@ import { MuteWhileRecording } from "../MuteWhileRecording";
 import { MuteInCalls } from "../MuteInCalls";
 import { WakeWord } from "../WakeWord";
 import { ModelSettingsCard } from "./ModelSettingsCard";
+import { LanguageMismatchWarning } from "./LanguageMismatchWarning";
 
 export const GeneralSettings: React.FC = () => {
   const { t } = useTranslation();
@@ -56,6 +57,11 @@ export const GeneralSettings: React.FC = () => {
           <ShortcutInput shortcutId="cancel" grouped={true} />
         )}
       </SettingsGroup>
+      {/* Sits outside ModelSettingsCard on purpose: that card hides itself for
+          models with no language/translation settings, which is exactly the
+          case that needs this warning most (a single-language model like
+          GigaAM while the user has another language selected). */}
+      <LanguageMismatchWarning />
       <ModelSettingsCard />
       <SettingsGroup title={t("settings.sound.title")}>
         <MicrophoneSelector descriptionMode="tooltip" grouped={true} />

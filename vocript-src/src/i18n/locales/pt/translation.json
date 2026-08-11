@@ -283,7 +283,8 @@
       "translation": "Pode traduzir para inglês",
       "translate": "Traduzir para inglês",
       "singleLanguage": "Suporta apenas este idioma",
-      "languageOnly": "Apenas {{language}}"
+      "languageOnly": "Apenas {{language}}",
+      "languagesAndMore": "{{languages}} e mais {{count}}"
     },
     "cancel": "Cancelar",
     "cancelDownload": "Cancelar download"
@@ -291,7 +292,11 @@
   "settings": {
     "modelSettings": {
       "title": "Configurações de {{model}}",
-      "noSettingsNeeded": "Este modelo funciona automaticamente sem necessidade de configuração."
+      "noSettingsNeeded": "Este modelo funciona automaticamente sem necessidade de configuração.",
+      "languageNotSupported": "O {{model}} não consegue transcrever {{language}}. Em vez disso vai adivinhar o idioma, o que costuma dar texto num idioma que não pediste.",
+      "switchToModel": "Mudar para {{model}}",
+      "noInstalledModelForLanguage": "Nenhum dos teus modelos instalados suporta {{language}}. Instala um no separador Modelos.",
+      "switchFailed": "Não foi possível mudar de modelo."
     },
     "general": {
       "title": "Geral",

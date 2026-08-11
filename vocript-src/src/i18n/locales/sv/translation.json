@@ -284,6 +284,7 @@
       "singleLanguage": "Stöder endast detta språk",
       "multiLanguage": "Flerspråkig",
       "languageOnly": "Endast {{language}}",
+      "languagesAndMore": "{{languages}} och {{count}} till",
       "translation": "Kan översätta till engelska",
       "translate": "Översätt till engelska"
     }
@@ -291,7 +292,11 @@
   "settings": {
     "modelSettings": {
       "title": "{{model}}-inställningar",
-      "noSettingsNeeded": "Denna modell fungerar automatiskt utan att någon konfiguration krävs."
+      "noSettingsNeeded": "Denna modell fungerar automatiskt utan att någon konfiguration krävs.",
+      "languageNotSupported": "{{model}} kan inte transkribera {{language}}. Den gissar språket i stället, vilket ofta ger text på ett språk du inte bad om.",
+      "switchToModel": "Byt till {{model}}",
+      "noInstalledModelForLanguage": "Ingen av dina installerade modeller stödjer {{language}}. Installera en från fliken Modeller.",
+      "switchFailed": "Det gick inte att byta modell."
     },
     "general": {
       "title": "Allmänt",

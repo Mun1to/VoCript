@@ -284,6 +284,7 @@
       "singleLanguage": "תומך רק בשפה הזו",
       "multiLanguage": "רב-לשוני",
       "languageOnly": "{{language}} בלבד",
+      "languagesAndMore": "{{languages}} ועוד {{count}}",
       "translation": "יכול לתרגם לאנגלית",
       "translate": "תרגם לאנגלית"
     }
@@ -291,7 +292,11 @@
   "settings": {
     "modelSettings": {
       "title": "הגדרות עבור {{model}}",
-      "noSettingsNeeded": "המודל הזה עובד אוטומטית ולא דורש הגדרה נוספת."
+      "noSettingsNeeded": "המודל הזה עובד אוטומטית ולא דורש הגדרה נוספת.",
+      "languageNotSupported": "המודל {{model}} לא יכול לתמלל {{language}}. במקום זאת הוא ינחש את השפה, מה שלעתים קרובות מפיק טקסט בשפה שלא ביקשת.",
+      "switchToModel": "עבור ל־{{model}}",
+      "noInstalledModelForLanguage": "אף מודל מותקן לא תומך ב־{{language}}. התקן אחד מלשונית המודלים.",
+      "switchFailed": "לא ניתן היה להחליף מודל."
     },
     "general": {
       "title": "כללי",

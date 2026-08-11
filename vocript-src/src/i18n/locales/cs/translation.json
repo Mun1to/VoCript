@@ -283,7 +283,8 @@
       "translation": "Umí překládat do angličtiny",
       "translate": "Přeložit do angličtiny",
       "singleLanguage": "Podporuje pouze tento jazyk",
-      "languageOnly": "Pouze {{language}}"
+      "languageOnly": "Pouze {{language}}",
+      "languagesAndMore": "{{languages}} a dalších {{count}}"
     },
     "cancel": "Zrušit",
     "cancelDownload": "Zrušit stahování"
@@ -291,7 +292,11 @@
   "settings": {
     "modelSettings": {
       "title": "Nastavení {{model}}",
-      "noSettingsNeeded": "Tento model funguje automaticky bez nutnosti konfigurace."
+      "noSettingsNeeded": "Tento model funguje automaticky bez nutnosti konfigurace.",
+      "languageNotSupported": "{{model}} neumí přepisovat jazyk {{language}}. Místo toho bude jazyk hádat, co často vede k textu v jazyce, který jste nechtěli.",
+      "switchToModel": "Přepnout na {{model}}",
+      "noInstalledModelForLanguage": "Žádný z nainstalovaných modelů nepodporuje {{language}}. Nainstalujte si model na kartě Modely.",
+      "switchFailed": "Model se nepodařilo změnit."
     },
     "models": {
       "title": "Modely přepisu",

@@ -284,6 +284,7 @@
       "singleLanguage": "僅支援此語言",
       "multiLanguage": "多語言",
       "languageOnly": "僅 {{language}}",
+      "languagesAndMore": "{{languages}} 等{{count}}種",
       "translation": "可翻譯為英語",
       "translate": "翻譯為英語"
     }
@@ -291,7 +292,11 @@
   "settings": {
     "modelSettings": {
       "title": "{{model}} 設定",
-      "noSettingsNeeded": "此模型自動運行，無需設定"
+      "noSettingsNeeded": "此模型自動運行，無需設定",
+      "languageNotSupported": "{{model}} 無法轉錄{{language}}。它會改為猜測語言，結果常常是你並未要求的語言。",
+      "switchToModel": "切換到 {{model}}",
+      "noInstalledModelForLanguage": "已安裝的模型都不支援{{language}}。請在「模型」分頁中安裝一個。",
+      "switchFailed": "無法切換模型。"
     },
     "general": {
       "title": "一般",

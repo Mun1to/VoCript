@@ -315,6 +315,7 @@
       "singleLanguage": "Supports this language only",
       "multiLanguage": "Multi-language",
       "languageOnly": "{{language}} Only",
+      "languagesAndMore": "{{languages}} +{{count}} more",
       "translation": "Can translate to English",
       "translate": "Translate to English"
     }
@@ -329,7 +330,11 @@
     },
     "modelSettings": {
       "title": "{{model}} Settings",
-      "noSettingsNeeded": "This model works automatically with no configuration needed."
+      "noSettingsNeeded": "This model works automatically with no configuration needed.",
+      "languageNotSupported": "{{model}} cannot transcribe {{language}}. It will guess the language instead, which often produces text in a language you did not ask for.",
+      "switchToModel": "Switch to {{model}}",
+      "noInstalledModelForLanguage": "None of your installed models supports {{language}}. Install one from the Models tab.",
+      "switchFailed": "Could not switch model."
     },
     "fileTranscription": {
       "title": "Transcribe file",

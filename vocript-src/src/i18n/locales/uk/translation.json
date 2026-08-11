@@ -283,7 +283,8 @@
       "translation": "Може перекладати на англійську",
       "translate": "Перекласти на англійську",
       "singleLanguage": "Підтримує лише цю мову",
-      "languageOnly": "Лише {{language}}"
+      "languageOnly": "Лише {{language}}",
+      "languagesAndMore": "{{languages}} та ще {{count}}"
     },
     "cancel": "Скасувати",
     "cancelDownload": "Скасувати завантаження"
@@ -291,7 +292,11 @@
   "settings": {
     "modelSettings": {
       "title": "Налаштування {{model}}",
-      "noSettingsNeeded": "Ця модель працює автоматично без потреби в налаштуванні."
+      "noSettingsNeeded": "Ця модель працює автоматично без потреби в налаштуванні.",
+      "languageNotSupported": "{{model}} не може розпізнавати мову {{language}}. Замість цього він вгадуватиме мову, а це часто дає текст мовою, якої ви не просили.",
+      "switchToModel": "Перейти на {{model}}",
+      "noInstalledModelForLanguage": "Жодна з встановлених моделей не підтримує {{language}}. Встановіть модель у вкладці «Моделі».",
+      "switchFailed": "Не вдалося змінити модель."
     },
     "general": {
       "title": "Загальні",

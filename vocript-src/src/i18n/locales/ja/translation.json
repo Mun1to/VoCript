@@ -283,7 +283,8 @@
       "translation": "英語への翻訳が可能",
       "translate": "英語に翻訳",
       "singleLanguage": "この言語のみ対応",
-      "languageOnly": "{{language}}のみ"
+      "languageOnly": "{{language}}のみ",
+      "languagesAndMore": "{{languages}} 他{{count}}言語"
     },
     "cancel": "キャンセル",
     "cancelDownload": "ダウンロードをキャンセル"
@@ -291,7 +292,11 @@
   "settings": {
     "modelSettings": {
       "title": "{{model}} 設定",
-      "noSettingsNeeded": "このモデルは設定不要で自動的に動作します。"
+      "noSettingsNeeded": "このモデルは設定不要で自動的に動作します。",
+      "languageNotSupported": "{{model}} は{{language}}を文字起こしできません。代わりに言語を推測するため、意図しない言語のテキストになることがよくあります。",
+      "switchToModel": "{{model}} に切り替える",
+      "noInstalledModelForLanguage": "インストール済みのモデルに{{language}}対応のものがありません。モデルタブから追加してください。",
+      "switchFailed": "モデルを切り替えられませんでした。"
     },
     "models": {
       "title": "転写モデル",

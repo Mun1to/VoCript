@@ -314,7 +314,8 @@
       "translation": "Puede traducir al inglés",
       "translate": "Traducir al inglés",
       "singleLanguage": "Solo admite este idioma",
-      "languageOnly": "Solo {{language}}"
+      "languageOnly": "Solo {{language}}",
+      "languagesAndMore": "{{languages}} y {{count}} más"
     },
     "cancel": "Cancelar",
     "cancelDownload": "Cancelar descarga"
@@ -329,7 +330,11 @@
     },
     "modelSettings": {
       "title": "Configuración de {{model}}",
-      "noSettingsNeeded": "Este modelo funciona automáticamente sin necesidad de configuración."
+      "noSettingsNeeded": "Este modelo funciona automáticamente sin necesidad de configuración.",
+      "languageNotSupported": "{{model}} no puede transcribir {{language}}. En su lugar adivinará el idioma, lo que suele acabar en texto en un idioma que no pediste.",
+      "switchToModel": "Cambiar a {{model}}",
+      "noInstalledModelForLanguage": "Ninguno de tus modelos instalados admite {{language}}. Instala uno desde la pestaña Modelos.",
+      "switchFailed": "No se pudo cambiar de modelo."
     },
     "fileTranscription": {
       "title": "Transcribir archivo",

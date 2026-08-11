@@ -15,22 +15,75 @@ import {
   getTranslatedModelName,
 } from "../../lib/utils/modelTranslation";
 import { LANGUAGES } from "../../lib/constants/languages";
+import { POPULAR_LANGUAGES } from "../../lib/utils/modelRecommendation";
 import Badge from "../ui/Badge";
 import { Button } from "../ui/Button";
 import { HoverTooltip } from "../ui/HoverTooltip";
 
-// Get display text for model's language support
+// How many language names fit on the capabilities row before it is summarised.
+const MAX_LISTED_LANGUAGES = 4;
+
+/** Readable names for language codes, deduplicated and in the given order. */
+const languageNames = (codes: string[]): string[] => {
+  const seen = new Set<string>();
+  const names: string[] = [];
+  for (const code of codes) {
+    const label = LANGUAGES.find((l) => l.value === code)?.label;
+    // Whisper declares zh, zh-Hans and zh-Hant; only the two variants have a
+    // name, and a bare code is not worth showing to a user.
+    if (!label || seen.has(label)) continue;
+    seen.add(label);
+    names.push(label);
+  }
+  return names;
+};
+
+/**
+ * The capabilities row used to say only "Multilingual" for anything with more
+ * than one language, which is exactly what made people pick a model that cannot
+ * handle what they speak: to someone dictating in Japanese, Parakeet (25
+ * European languages) and Whisper (99) read identically. Now the real languages
+ * are listed, with the user's own first so a glance answers "does this one
+ * cover me?".
+ */
 const getLanguageDisplayText = (
   supportedLanguages: string[],
   t: (key: string, options?: Record<string, unknown>) => string,
+  preferredLanguage?: string,
 ): string => {
-  if (supportedLanguages.length === 1) {
-    const langCode = supportedLanguages[0];
-    const langName =
-      LANGUAGES.find((l) => l.value === langCode)?.label || langCode;
-    return t("modelSelector.capabilities.languageOnly", { language: langName });
+  // Order: the user's own language, then the widely-spoken ones, then the rest
+  // as declared. Without this the trimmed list is whatever the model happens to
+  // declare first, which is alphabetical for most of them — "Bulgarian,
+  // Croatian, Czech, Danish" tells nobody anything.
+  const first = supportedLanguages.includes(preferredLanguage ?? "")
+    ? [preferredLanguage as string]
+    : [];
+  const popular = POPULAR_LANGUAGES.filter(
+    (code) => code !== preferredLanguage && supportedLanguages.includes(code),
+  );
+  const rest = supportedLanguages.filter(
+    (code) => !first.includes(code) && !popular.includes(code),
+  );
+  const ordered =
+    preferredLanguage === "auto" || !preferredLanguage
+      ? [...popular, ...rest]
+      : [...first, ...popular, ...rest];
+
+  const names = languageNames(ordered);
+
+  // Imported models declare nothing; keep the old generic wording for them.
+  if (names.length === 0) return t("modelSelector.capabilities.multiLanguage");
+  if (names.length === 1) {
+    return t("modelSelector.capabilities.languageOnly", {
+      language: names[0],
+    });
   }
-  return t("modelSelector.capabilities.multiLanguage");
+  if (names.length <= MAX_LISTED_LANGUAGES) return names.join(", ");
+
+  return t("modelSelector.capabilities.languagesAndMore", {
+    languages: names.slice(0, MAX_LISTED_LANGUAGES).join(", "),
+    count: names.length - MAX_LISTED_LANGUAGES,
+  });
 };
 
 export type ModelCardStatus =
@@ -61,6 +114,9 @@ interface ModelCardProps {
   // When set, warns that the model can't transcribe the chosen language
   // (e.g. "No Turkish support").
   unsupportedLabel?: string;
+  // The user's dictation language, listed first among the supported ones so
+  // they can tell at a glance whether this model covers them.
+  preferredLanguage?: string;
 }
 
 const ModelCard: React.FC<ModelCardProps> = ({
@@ -78,6 +134,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
   showRecommended = true,
   recommendedLabel,
   unsupportedLabel,
+  preferredLanguage,
 }) => {
   const { t } = useTranslation();
   const isFeatured = variant === "featured";
@@ -212,15 +269,26 @@ const ModelCard: React.FC<ModelCardProps> = ({
       <div className="flex items-center gap-3 w-full -mb-0.5 mt-0.5 h-5">
         {model.supported_languages.length > 0 && (
           <HoverTooltip
+            // When the row had to be trimmed, the tooltip is where the rest of
+            // the languages live — that is the question people actually have.
             label={
               model.supported_languages.length === 1
                 ? t("modelSelector.capabilities.singleLanguage")
-                : t("modelSelector.capabilities.languageSelection")
+                : languageNames(model.supported_languages).length >
+                    MAX_LISTED_LANGUAGES
+                  ? languageNames(model.supported_languages).join(", ")
+                  : t("modelSelector.capabilities.languageSelection")
             }
-            className="flex items-center gap-1 text-xs text-text/50"
+            className="flex items-center gap-1 text-xs text-text/50 min-w-0"
           >
-            <Globe className="w-3.5 h-3.5" />
-            <span>{getLanguageDisplayText(model.supported_languages, t)}</span>
+            <Globe className="w-3.5 h-3.5 shrink-0" />
+            <span className="truncate">
+              {getLanguageDisplayText(
+                model.supported_languages,
+                t,
+                preferredLanguage,
+              )}
+            </span>
           </HoverTooltip>
         )}
         {model.supports_translation && (

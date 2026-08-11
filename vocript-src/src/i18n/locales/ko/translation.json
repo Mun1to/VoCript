@@ -284,6 +284,7 @@
       "singleLanguage": "이 언어만 지원합니다",
       "multiLanguage": "다국어",
       "languageOnly": "{{language}} 전용",
+      "languagesAndMore": "{{languages}} 외 {{count}}개",
       "translation": "영어로 번역 가능",
       "translate": "영어로 번역"
     }
@@ -291,7 +292,11 @@
   "settings": {
     "modelSettings": {
       "title": "{{model}} 설정",
-      "noSettingsNeeded": "이 모델은 별도의 설정 없이 자동으로 작동합니다."
+      "noSettingsNeeded": "이 모델은 별도의 설정 없이 자동으로 작동합니다.",
+      "languageNotSupported": "{{model}}은(는) {{language}}을(를) 변환할 수 없습니다. 대신 언어를 추측하며, 그 결과 원하지 않은 언어로 텍스트가 나오기 쉬습니다.",
+      "switchToModel": "{{model}}으로 전환",
+      "noInstalledModelForLanguage": "설치된 모델 중 {{language}}을(를) 지원하는 것이 없습니다. 모델 탭에서 설치하세요.",
+      "switchFailed": "모델을 전환할 수 없습니다."
     },
     "general": {
       "title": "일반",

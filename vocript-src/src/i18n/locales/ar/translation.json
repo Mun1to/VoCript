@@ -284,6 +284,7 @@
       "singleLanguage": "يدعم هذه اللغة فقط",
       "multiLanguage": "متعدد اللغات",
       "languageOnly": "{{language}} فقط",
+      "languagesAndMore": "{{languages}} و{{count}} أخرى",
       "translation": "يدعم الترجمة",
       "translate": "ترجمة"
     }
@@ -767,7 +768,11 @@
     },
     "modelSettings": {
       "title": "إعدادات النموذج",
-      "noSettingsNeeded": "لا توجد إعدادات مطلوبة لهذا النموذج"
+      "noSettingsNeeded": "لا توجد إعدادات مطلوبة لهذا النموذج",
+      "languageNotSupported": "لا يمكن لـ {{model}} تفريغ {{language}}. سيخمّن اللغة بدلاً من ذلك، مما ينتج غالبًا نصًا بلغة لم تطلبها.",
+      "switchToModel": "التبديل إلى {{model}}",
+      "noInstalledModelForLanguage": "لا يدعم أي من النماذج المثبتة {{language}}. ثبّت واحدًا من علامة تبويب النماذج.",
+      "switchFailed": "تعذر تغيير النموذج."
     },
     "models": {
       "title": "نماذج النسخ",

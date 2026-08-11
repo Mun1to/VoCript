@@ -283,7 +283,8 @@
       "translation": "Может переводить на английский",
       "translate": "Перевод на английский",
       "singleLanguage": "Поддерживает только этот язык",
-      "languageOnly": "Только {{language}}"
+      "languageOnly": "Только {{language}}",
+      "languagesAndMore": "{{languages}} и ещё {{count}}"
     },
     "cancel": "Отмена",
     "cancelDownload": "Отменить загрузку"
@@ -291,7 +292,11 @@
   "settings": {
     "modelSettings": {
       "title": "Настройки {{model}}",
-      "noSettingsNeeded": "Эта модель работает автоматически без необходимости настройки."
+      "noSettingsNeeded": "Эта модель работает автоматически без необходимости настройки.",
+      "languageNotSupported": "{{model}} не может распознавать язык: {{language}}. Вместо этого он будет угадывать язык, что часто даёт текст на языке, который вы не выбирали.",
+      "switchToModel": "Перейти на {{model}}",
+      "noInstalledModelForLanguage": "Ни одна из установленных моделей не поддерживает {{language}}. Установите модель на вкладке «Модели».",
+      "switchFailed": "Не удалось сменить модель."
     },
     "models": {
       "title": "Модели транскрипции",

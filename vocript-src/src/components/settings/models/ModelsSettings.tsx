@@ -74,6 +74,20 @@ export const ModelsSettings: React.FC = () => {
     return t("onboarding.recommended");
   }, [selectedLanguage, t]);
 
+  // Flags the models that cannot transcribe the chosen dictation language. The
+  // onboarding list has always shown this; the settings list did not, which is
+  // where people were picking a model that silently ignores their language.
+  const unsupportedLabelFor = useMemo(() => {
+    const langLabel =
+      selectedLanguage && selectedLanguage !== "auto"
+        ? LANGUAGES.find((l) => l.value === selectedLanguage)?.label
+        : undefined;
+    return (model: ModelInfo): string | undefined =>
+      langLabel && !modelSupportsLanguage(model, selectedLanguage)
+        ? t("onboarding.modelCard.noLanguageSupport", { language: langLabel })
+        : undefined;
+  }, [selectedLanguage, t]);
+
   // click outside handler for language dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -356,10 +370,7 @@ export const ModelsSettings: React.FC = () => {
               >
                 <div className="min-w-0 flex-1">
                   <div className="text-sm font-medium truncate">{f.name}</div>
-                  <div
-                    className="text-xs text-text/50 truncate"
-                    title={f.path}
-                  >
+                  <div className="text-xs text-text/50 truncate" title={f.path}>
                     {f.path}
                   </div>
                 </div>
@@ -511,11 +522,13 @@ export const ModelsSettings: React.FC = () => {
                 downloadProgress={getDownloadProgress(model.id)}
                 downloadSpeed={getDownloadSpeed(model.id)}
                 showRecommended={false}
+                preferredLanguage={selectedLanguage}
                 recommendedLabel={
                   model.id === recommendedModelId
                     ? recommendedBadgeText
                     : undefined
                 }
+                unsupportedLabel={unsupportedLabelFor(model)}
               />
             ))}
           </div>
@@ -538,11 +551,13 @@ export const ModelsSettings: React.FC = () => {
                   downloadProgress={getDownloadProgress(model.id)}
                   downloadSpeed={getDownloadSpeed(model.id)}
                   showRecommended={false}
+                  preferredLanguage={selectedLanguage}
                   recommendedLabel={
                     model.id === recommendedModelId
                       ? recommendedBadgeText
                       : undefined
                   }
+                  unsupportedLabel={unsupportedLabelFor(model)}
                 />
               ))}
             </div>

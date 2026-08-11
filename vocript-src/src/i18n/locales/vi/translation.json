@@ -283,7 +283,8 @@
       "translation": "Có thể dịch sang tiếng Anh",
       "translate": "Dịch sang tiếng Anh",
       "singleLanguage": "Chỉ hỗ trợ ngôn ngữ này",
-      "languageOnly": "Chỉ {{language}}"
+      "languageOnly": "Chỉ {{language}}",
+      "languagesAndMore": "{{languages}} và {{count}} ngôn ngữ khác"
     },
     "cancel": "Hủy",
     "cancelDownload": "Hủy tải xuống"
@@ -291,7 +292,11 @@
   "settings": {
     "modelSettings": {
       "title": "Cài đặt {{model}}",
-      "noSettingsNeeded": "Mô hình này hoạt động tự động mà không cần cấu hình."
+      "noSettingsNeeded": "Mô hình này hoạt động tự động mà không cần cấu hình.",
+      "languageNotSupported": "{{model}} không thể phiên âm {{language}}. Thay vào đó nó sẽ đoán ngôn ngữ, thường cho ra văn bản bằng ngôn ngữ bạn không yêu cầu.",
+      "switchToModel": "Chuyển sang {{model}}",
+      "noInstalledModelForLanguage": "Không mô hình nào đã cài đặt hỗ trợ {{language}}. Hãy cài một mô hình từ tab Mô hình.",
+      "switchFailed": "Không thể đổi mô hình."
     },
     "models": {
       "title": "Mô hình chuyển đổi",
