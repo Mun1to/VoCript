@@ -199,6 +199,10 @@
         "title": "Personlig ordlista",
         "body": "Skriver VoCript fel på ett namn eller en teknisk term? Lägg till exakta ersättningar (från → till) så tillämpas de alltid. Du kan till och med importera och exportera din lista som CSV."
       },
+      "modelMemory": {
+        "title": "Minnet medan den väntar 💾",
+        "body": "En laddad modell håller några hundra MB. VoCript frigör dem själv när du slutar diktera, och här bestämmer du hur snabbt. Kortare kostar mindre än det låter, för modellen laddas om medan du redan talar."
+      },
       "history": {
         "title": "Historik",
         "body": "Alla dina transkriptioner sparas här. Du kan spela upp originalljudet igen och kopiera texten när du behöver den."
@@ -558,7 +562,7 @@
       },
       "modelUnload": {
         "title": "Avlasta modell",
-        "description": "Frigör automatiskt GPU/CPU-minne när modellen inte har använts under den angivna tiden",
+        "description": "Frigör minnet som modellen håller, ofta flera hundra MB, när du slutar diktera. Att sänka det kostar mindre än det ser ut: modellen laddas om medan du redan talar.",
         "options": {
           "never": "Aldrig",
           "immediately": "Omedelbart",

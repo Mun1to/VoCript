@@ -199,6 +199,10 @@
         "title": "Persönliches Wörterbuch",
         "body": "Schreibt VoCript einen Namen oder Fachbegriff falsch? Füge exakte Ersetzungen hinzu (von → zu), und sie werden immer angewendet. Du kannst deine Liste sogar als CSV importieren und exportieren."
       },
+      "modelMemory": {
+        "title": "Speicher im Leerlauf 💾",
+        "body": "Ein geladenes Modell belegt einige hundert MB. VoCript gibt sie von selbst frei, sobald Sie aufhören zu diktieren, und hier legen Sie fest, wie schnell. Kürzer kostet weniger als gedacht, denn das Modell lädt erneut, während Sie bereits sprechen."
+      },
       "history": {
         "title": "Verlauf",
         "body": "Alle deine Transkriptionen werden hier gespeichert. Du kannst das Originalaudio erneut abspielen und den Text kopieren, wann immer du ihn brauchst."
@@ -558,7 +562,7 @@
       },
       "modelUnload": {
         "title": "Modell entladen",
-        "description": "GPU/CPU-Speicher automatisch freigeben, wenn das Modell für die angegebene Zeit nicht verwendet wurde",
+        "description": "Gibt den Speicher frei, den das Modell belegt, oft mehrere hundert MB, sobald Sie aufhören zu diktieren. Ein kürzerer Wert kostet weniger als gedacht: Das Modell lädt erneut, während Sie bereits sprechen.",
         "options": {
           "never": "Nie",
           "immediately": "Sofort",

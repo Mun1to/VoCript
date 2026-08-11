@@ -199,6 +199,10 @@
         "title": "Kişisel sözlük",
         "body": "VoCript bir adı veya teknik terimi yanlış mı yazıyor? Tam değiştirmeler ekleyin (şundan → şuna), her zaman uygulasın. Listenizi CSV olarak içe ve dışa bile aktarabilirsiniz."
       },
+      "modelMemory": {
+        "title": "Beklerken kullanılan bellek 💾",
+        "body": "Yüklü bir model birkaç yüz MB tutar. Dikte etmeyi bıraktığınızda VoCript bunu kendisi serbest bırakır ve süreyi burada siz belirlersiniz. Kısaltmak kulağa geldiğinden daha ucuzdur, çünkü model siz konuşurken yeniden yüklenir."
+      },
       "history": {
         "title": "Geçmiş",
         "body": "Tüm yazıya dökümleriniz burada kaydedilir. Orijinal sesi yeniden oynatabilir ve metni ihtiyaç duyduğunuzda kopyalayabilirsiniz."
@@ -558,7 +562,7 @@
       },
       "modelUnload": {
         "title": "Modeli Boşalt",
-        "description": "Belirtilen süre boyunca kullanılmadığında modelin GPU/CPU belleğini otomatik olarak serbest bırakır.",
+        "description": "Dikte etmeyi bıraktığınızda modelin tuttuğu belleği, çoğu zaman birkaç yüz MB'ı serbest bırakır. Bu süreyi düşürmek göründüğünden daha ucuzdur: model siz konuşurken yeniden yüklenir.",
         "options": {
           "never": "Asla",
           "immediately": "Hemen",

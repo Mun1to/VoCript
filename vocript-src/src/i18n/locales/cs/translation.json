@@ -199,6 +199,10 @@
         "title": "Osobní slovník",
         "body": "Píše VoCript špatně jméno nebo odborný termín? Přidejte přesné náhrady (z → na) a vždy je použije. Svůj seznam můžete dokonce importovat a exportovat ve formátu CSV."
       },
+      "modelMemory": {
+        "title": "Paměť, když jen čeká 💾",
+        "body": "Načtený model zabírá několik set MB. VoCript je uvolní sám, jakmile přestanete diktovat, a tady určíte za jak dlouho. Kratší doba stojí méně, než to zní: model se načte znovu, zatímco už mluvíte."
+      },
       "history": {
         "title": "Historie",
         "body": "Všechny vaše přepisy se ukládají sem. Můžete si znovu přehrát původní zvuk a kdykoli zkopírovat text."
@@ -558,7 +562,7 @@
       },
       "modelUnload": {
         "title": "Uvolnění modelu",
-        "description": "Automaticky uvolnit paměť GPU/CPU, když model nebyl použit po zadanou dobu",
+        "description": "Uvolní paměť, kterou model zabírá, často několik set MB, jakmile přestanete diktovat. Zkrácení stojí méně, než to vypadá: model se načte znovu, zatímco už mluvíte.",
         "options": {
           "never": "Nikdy",
           "immediately": "Okamžitě",

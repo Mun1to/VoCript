@@ -13,7 +13,7 @@ import type { SidebarSection } from "../../components/Sidebar";
  * The tour walks the main features end to end: welcome → microphone → shortcut
  * → dictation → system audio → source, then each header control one by one (profile →
  * voice → system → output → activation → language → theme) → files → custom
- * words → dictionary → history → feedback → donate.
+ * words → dictionary → model memory → history → feedback → donate.
  */
 export interface TourStep {
   id: string;
@@ -52,7 +52,10 @@ export const TOUR_STEPS: TourStep[] = [
   { id: "customWords", section: "advanced", target: "custom-words" },
   // 15. Personal dictionary (exact replacements).
   { id: "dictionary", section: "advanced", target: "dictionary" },
-  // 16. History (re-listen and copy past transcriptions).
+  // 16. Memory: the model holds a few hundred MB while it is loaded, and the
+  //     one control that changes that is easy to go a year without noticing.
+  { id: "modelMemory", section: "models", target: "model-unload" },
+  // 17. History (re-listen and copy past transcriptions).
   { id: "history", section: "history" },
   // 17. Feedback (send ideas / bugs straight to a GitHub issue).
   { id: "feedback", section: "feedback", target: "feedback" },

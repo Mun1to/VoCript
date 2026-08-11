@@ -67,7 +67,11 @@ export const ModelUnloadTimeoutSetting: React.FC<ModelUnloadTimeoutProps> = ({
     }
   };
 
-  const currentValue = getSetting("model_unload_timeout") ?? "never";
+  // "min5" is the real default (ModelUnloadTimeout::default() in settings.rs).
+  // The old fallback here was "never", so during the moment before settings
+  // load this control claimed the model is kept forever — the exact opposite
+  // of what it does, on the one screen where someone is worried about memory.
+  const currentValue = getSetting("model_unload_timeout") ?? "min5";
 
   const options = useMemo(() => {
     return settings?.debug_mode === true ? debugTimeoutOptions : timeoutOptions;

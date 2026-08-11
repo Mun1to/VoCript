@@ -13,6 +13,7 @@ import {
 import { toast } from "sonner";
 import type { ModelCardStatus } from "@/components/onboarding";
 import { ModelCard } from "@/components/onboarding";
+import { ModelUnloadTimeoutSetting } from "@/components/settings/ModelUnloadTimeout";
 import { useModelStore } from "@/stores/modelStore";
 import { useSettings } from "@/hooks/useSettings";
 import { LANGUAGES } from "@/lib/constants/languages.ts";
@@ -317,6 +318,15 @@ export const ModelsSettings: React.FC = () => {
         <p className="text-sm text-text/60">
           {t("settings.models.description")}
         </p>
+      </div>
+
+      {/* The one setting that decides whether an idle model keeps holding
+          memory. It also lives under Advanced, but nobody goes looking there,
+          and this is the screen where you are already thinking about the
+          model — so here it is, with its explanation in plain sight instead of
+          hidden behind a tooltip. */}
+      <div data-tour="model-unload">
+        <ModelUnloadTimeoutSetting descriptionMode="inline" />
       </div>
 
       {/* Reuse existing models: scan the computer or import manually */}

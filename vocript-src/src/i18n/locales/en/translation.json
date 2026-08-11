@@ -119,6 +119,10 @@
         "title": "Personal dictionary",
         "body": "Does VoCript mistype a name or a technical term? Add exact replacements (from → to) and it'll always apply them. You can even import and export your list as CSV."
       },
+      "modelMemory": {
+        "title": "Memory while it waits 💾",
+        "body": "While a model is loaded it holds a few hundred MB. VoCript frees them on its own once you stop dictating, and here you decide how soon. Shorter is cheaper than it sounds, because the model loads again while you are already speaking."
+      },
       "history": {
         "title": "History",
         "body": "All your transcriptions are saved here. You can replay the original audio and copy the text whenever you need it."
@@ -621,7 +625,7 @@
       },
       "modelUnload": {
         "title": "Unload Model",
-        "description": "Automatically free GPU/CPU memory when the model hasn't been used for the specified time",
+        "description": "Frees the memory the model holds, often several hundred MB, once you stop dictating. Lowering it costs less than it looks: the model loads again while you are already speaking.",
         "options": {
           "never": "Never",
           "immediately": "Immediately",

@@ -199,6 +199,10 @@
         "title": "Từ điển cá nhân",
         "body": "VoCript viết sai một cái tên hay thuật ngữ kỹ thuật? Thêm các thay thế chính xác (từ → thành) và nó sẽ luôn áp dụng. Bạn thậm chí có thể nhập và xuất danh sách dưới dạng CSV."
       },
+      "modelMemory": {
+        "title": "Bộ nhớ khi chờ 💾",
+        "body": "Khi một mô hình đang được nạp, nó giữ vài trăm MB. VoCript tự giải phóng khi bạn ngừng đọc chính tả, và ở đây bạn quyết định sau bao lâu. Rút ngắn rẻ hơn vẻ ngoài của nó, vì mô hình nạp lại trong lúc bạn đã đang nói."
+      },
       "history": {
         "title": "Lịch sử",
         "body": "Tất cả bản chép lời của bạn được lưu tại đây. Bạn có thể phát lại âm thanh gốc và sao chép văn bản bất cứ khi nào cần."
@@ -558,7 +562,7 @@
       },
       "modelUnload": {
         "title": "Giải phóng mô hình",
-        "description": "Tự động giải phóng bộ nhớ GPU/CPU khi mô hình không được sử dụng trong thời gian quy định",
+        "description": "Giải phóng bộ nhớ mà mô hình đang giữ, thường là vài trăm MB, khi bạn ngừng đọc chính tả. Giảm thời gian này rẻ hơn vẻ ngoài của nó: mô hình tải lại trong lúc bạn đã đang nói.",
         "options": {
           "never": "Không bao giờ",
           "immediately": "Ngay lập tức",

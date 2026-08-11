@@ -199,6 +199,10 @@
         "title": "Dizionario personale",
         "body": "VoCript scrive male un nome o un termine tecnico? Aggiungi sostituzioni esatte (da → a) e le applicherà sempre. Puoi anche importare ed esportare il tuo elenco in CSV."
       },
+      "modelMemory": {
+        "title": "La memoria mentre aspetta 💾",
+        "body": "Quando un modello è caricato occupa qualche centinaio di MB. VoCript li libera da solo quando smetti di dettare, e qui decidi dopo quanto. Più corto costa meno di quanto sembri, perché il modello si ricarica mentre stai già parlando."
+      },
       "history": {
         "title": "Cronologia",
         "body": "Tutte le tue trascrizioni vengono salvate qui. Puoi riascoltare l'audio originale e copiare il testo quando ti serve."
@@ -558,7 +562,7 @@
       },
       "modelUnload": {
         "title": "Disattiva Model",
-        "description": "Libera automaticamente la memoria della GPU/CPU quando il modello non viene utilizzato per un certo periodo",
+        "description": "Libera la memoria occupata dal modello, spesso diverse centinaia di MB, quando smetti di dettare. Abbassarlo costa meno di quanto sembri: il modello si ricarica mentre stai già parlando.",
         "options": {
           "never": "Mai",
           "immediately": "Immediatamente",

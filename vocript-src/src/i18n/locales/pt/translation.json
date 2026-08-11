@@ -199,6 +199,10 @@
         "title": "Dicionário pessoal",
         "body": "O VoCript escreve errado um nome ou termo técnico? Adicione substituições exatas (de → para) e ele sempre as aplicará. Você pode até importar e exportar sua lista em CSV."
       },
+      "modelMemory": {
+        "title": "A memória enquanto espera 💾",
+        "body": "Enquanto um modelo está carregado ocupa algumas centenas de MB. O VoCript liberta-os sozinho quando paras de ditar, e aqui decides quando. Mais curto custa menos do que parece, porque o modelo volta a carregar enquanto já estás a falar."
+      },
       "history": {
         "title": "Histórico",
         "body": "Todas as suas transcrições ficam salvas aqui. Você pode reproduzir o áudio original e copiar o texto sempre que precisar."
@@ -558,7 +562,7 @@
       },
       "modelUnload": {
         "title": "Descarregar Modelo",
-        "description": "Liberar automaticamente memória GPU/CPU quando o modelo não for usado pelo tempo especificado",
+        "description": "Liberta a memória que o modelo ocupa, muitas vezes várias centenas de MB, quando paras de ditar. Baixar isto custa menos do que parece: o modelo volta a carregar enquanto já estás a falar.",
         "options": {
           "never": "Nunca",
           "immediately": "Imediatamente",

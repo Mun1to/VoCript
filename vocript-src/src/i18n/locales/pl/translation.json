@@ -199,6 +199,10 @@
         "title": "Słownik osobisty",
         "body": "VoCript źle zapisuje nazwę lub termin techniczny? Dodaj dokładne zamiany (z → na), a zawsze będą stosowane. Możesz nawet importować i eksportować swoją listę w formacie CSV."
       },
+      "modelMemory": {
+        "title": "Pamięć w czasie bezczynności 💾",
+        "body": "Wczytany model zajmuje kilkaset MB. VoCript zwalnia je sam, gdy przestajesz dyktować, a tutaj decydujesz po jakim czasie. Krócej kosztuje mniej, niż brzmi, bo model wczytuje się ponownie, gdy już mówisz."
+      },
       "history": {
         "title": "Historia",
         "body": "Wszystkie Twoje transkrypcje są tu zapisywane. Możesz ponownie odtworzyć oryginalny dźwięk i skopiować tekst, kiedy go potrzebujesz."
@@ -558,7 +562,7 @@
       },
       "modelUnload": {
         "title": "Wyładowanie modelu",
-        "description": "Automatycznie zwalnia pamięć GPU/CPU po określonym czasie nieużywania",
+        "description": "Zwalnia pamięć zajmowaną przez model, często kilkaset MB, gdy przestajesz dyktować. Skrócenie tego czasu kosztuje mniej, niż się wydaje: model wczytuje się ponownie, gdy już mówisz.",
         "options": {
           "never": "Nigdy",
           "immediately": "Natychmiast",
