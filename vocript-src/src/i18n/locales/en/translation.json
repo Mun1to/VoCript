@@ -278,6 +278,9 @@
       "grant": "Grant Permission",
       "granted": "Granted",
       "waiting": "Waiting...",
+      "stillWaitingHint": "Windows sometimes keeps reporting the old setting. You can continue — if the microphone really is blocked, VoCript will tell you when you first record.",
+      "recheck": "Check again",
+      "continueAnyway": "Continue anyway",
       "allGranted": "All set!",
       "errors": {
         "checkFailed": "Failed to check permissions. Please try again.",

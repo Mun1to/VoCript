@@ -128,6 +128,9 @@
       "grant": "Cấp quyền",
       "granted": "Đã cấp",
       "waiting": "Đang chờ...",
+      "stillWaitingHint": "Đôi khi Windows vẫn báo thiết lập cũ. Bạn có thể tiếp tục — nếu micro thực sự bị chặn, VoCript sẽ báo cho bạn ở lần ghi âm đầu tiên.",
+      "recheck": "Kiểm tra lại",
+      "continueAnyway": "Vẫn tiếp tục",
       "allGranted": "Hoàn tất!",
       "errors": {
         "checkFailed": "Không thể kiểm tra quyền. Vui lòng thử lại.",

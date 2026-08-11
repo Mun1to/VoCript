@@ -128,6 +128,9 @@
       "grant": "Berechtigung erteilen",
       "granted": "Erteilt",
       "waiting": "Warten...",
+      "stillWaitingHint": "Windows meldet manchmal weiterhin die alte Einstellung. Du kannst fortfahren — falls das Mikrofon wirklich blockiert ist, meldet VoCript es bei der ersten Aufnahme.",
+      "recheck": "Erneut prüfen",
+      "continueAnyway": "Trotzdem fortfahren",
       "allGranted": "Alles bereit!",
       "errors": {
         "checkFailed": "Berechtigungsprüfung fehlgeschlagen. Bitte erneut versuchen.",

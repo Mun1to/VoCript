@@ -128,6 +128,9 @@
       "grant": "İzin Ver",
       "granted": "Verildi",
       "waiting": "Bekleniyor...",
+      "stillWaitingHint": "Windows bazen eski ayarı bildirmeye devam eder. Devam edebilirsiniz — mikrofon gerçekten engelliyse VoCript ilk kayıtta size söyler.",
+      "recheck": "Yeniden kontrol et",
+      "continueAnyway": "Yine de devam et",
       "allGranted": "Her şey hazır!",
       "errors": {
         "checkFailed": "İzinler kontrol edilemedi. Lütfen tekrar deneyin.",

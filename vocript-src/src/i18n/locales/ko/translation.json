@@ -128,6 +128,9 @@
       "grant": "권한 부여",
       "granted": "승인됨",
       "waiting": "대기 중...",
+      "stillWaitingHint": "Windows가 이전 설정을 계속 보고하는 경우가 있습니다. 그대로 계속해도 됩니다 — 마이크가 정말 차단되어 있다면 첫 녹음 때 VoCript가 알려줍니다.",
+      "recheck": "다시 확인",
+      "continueAnyway": "그래도 계속",
       "allGranted": "모두 설정 완료!",
       "errors": {
         "checkFailed": "권한 확인에 실패했습니다. 다시 시도해주세요.",

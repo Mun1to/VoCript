@@ -278,6 +278,9 @@
       "grant": "Conceder Permiso",
       "granted": "Concedido",
       "waiting": "Esperando...",
+      "stillWaitingHint": "A veces Windows sigue informando del ajuste anterior. Puedes continuar: si el micrófono está bloqueado de verdad, VoCript te lo dirá al grabar por primera vez.",
+      "recheck": "Volver a comprobar",
+      "continueAnyway": "Continuar de todos modos",
       "allGranted": "¡Todo listo!",
       "errors": {
         "checkFailed": "Error al verificar permisos. Por favor, inténtalo de nuevo.",

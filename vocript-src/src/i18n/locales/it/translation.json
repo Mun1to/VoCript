@@ -128,6 +128,9 @@
       "grant": "Concedi Permesso",
       "granted": "Concesso",
       "waiting": "In attesa...",
+      "stillWaitingHint": "A volte Windows continua a segnalare l'impostazione precedente. Puoi continuare: se il microfono è davvero bloccato, VoCript te lo dirà alla prima registrazione.",
+      "recheck": "Controlla di nuovo",
+      "continueAnyway": "Continua comunque",
       "allGranted": "Tutto pronto!",
       "errors": {
         "checkFailed": "Impossibile verificare i permessi. Riprova.",

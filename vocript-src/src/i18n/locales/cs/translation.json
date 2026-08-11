@@ -128,6 +128,9 @@
       "grant": "Udělit oprávnění",
       "granted": "Uděleno",
       "waiting": "Čekání...",
+      "stillWaitingHint": "Windows někdy stále hlásí původní nastavení. Můžete pokračovat — pokud je mikrofon opravdu zablokovaný, VoCript vás upozorní při prvním nahrávání.",
+      "recheck": "Zkontrolovat znovu",
+      "continueAnyway": "Přesto pokračovat",
       "allGranted": "Vše připraveno!",
       "errors": {
         "checkFailed": "Nepodařilo se zkontrolovat oprávnění. Zkuste to prosím znovu.",

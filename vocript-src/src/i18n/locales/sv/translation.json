@@ -128,6 +128,9 @@
       "grant": "Bevilja behörighet",
       "granted": "Beviljad",
       "waiting": "Väntar...",
+      "stillWaitingHint": "Windows rapporterar ibland fortfarande den gamla inställningen. Du kan fortsätta — om mikrofonen verkligen är blockerad säger VoCript till vid första inspelningen.",
+      "recheck": "Kontrollera igen",
+      "continueAnyway": "Fortsätt ändå",
       "allGranted": "Allt klart!",
       "errors": {
         "checkFailed": "Misslyckades med att kontrollera behörigheter. Försök igen.",

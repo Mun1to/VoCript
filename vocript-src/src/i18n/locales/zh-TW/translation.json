@@ -128,6 +128,9 @@
       "grant": "授予權限",
       "granted": "已授予",
       "waiting": "等待中...",
+      "stillWaitingHint": "Windows 有時會繼續回報舊的設定。你可以繼續 — 如果麥克風真的被封鎖，VoCript 會在你第一次錄音時告知你。",
+      "recheck": "重新檢查",
+      "continueAnyway": "仍然繼續",
       "allGranted": "全部完成！",
       "errors": {
         "checkFailed": "檢查權限失敗，請重試",

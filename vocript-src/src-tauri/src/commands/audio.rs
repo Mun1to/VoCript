@@ -76,6 +76,54 @@ fn read_registry_permission_access(root_hkey: HKEY, path: &str) -> PermissionAcc
     }
 }
 
+/// Combine the Windows consent switches that actually govern a non-packaged
+/// desktop app into one verdict. Pure so the cases that stranded real users can
+/// be pinned by tests instead of by re-reading someone's registry.
+///
+/// `this_app_access` is VoCript's own entry under NonPackaged, which Windows
+/// writes when you toggle a single app in the desktop-app list. It overrides the
+/// blanket desktop-app switch, so it is checked first.
+///
+/// `app_access` (the packaged/Store-app switch) is deliberately ignored: it says
+/// nothing about us. Honouring it made onboarding unpassable for anyone who had
+/// turned packaged-app access off — the microphone step sat on "Waiting…"
+/// forever no matter how many times they granted the permission that does apply
+/// (issue #6).
+fn combine_microphone_access(
+    device_access: PermissionAccess,
+    desktop_app_access: PermissionAccess,
+    this_app_access: PermissionAccess,
+) -> PermissionAccess {
+    // The machine-wide device switch overrides everything below it.
+    if device_access == PermissionAccess::Denied {
+        return PermissionAccess::Denied;
+    }
+
+    // Our own entry, when present, beats the blanket desktop-app switch.
+    let desktop = if this_app_access == PermissionAccess::Unknown {
+        desktop_app_access
+    } else {
+        this_app_access
+    };
+
+    match (device_access, desktop) {
+        (_, PermissionAccess::Denied) => PermissionAccess::Denied,
+        (PermissionAccess::Allowed, PermissionAccess::Allowed) => PermissionAccess::Allowed,
+        // Unknown means "no explicit entry", which Windows treats as allowed for
+        // desktop apps. Blocking on it would strand users whose registry simply
+        // has no value yet — a real capture failure is reported separately.
+        _ => PermissionAccess::Unknown,
+    }
+}
+
+/// Registry sub-key Windows uses for a single desktop app: its full path with
+/// backslashes replaced by `#`.
+#[cfg(target_os = "windows")]
+fn current_exe_consent_key() -> Option<String> {
+    let exe = std::env::current_exe().ok()?;
+    Some(exe.to_string_lossy().replace('\\', "#"))
+}
+
 #[cfg(target_os = "windows")]
 fn get_windows_microphone_permission_status_impl() -> WindowsMicrophonePermissionStatus {
     const MICROPHONE_PATH: &str =
@@ -86,30 +134,31 @@ fn get_windows_microphone_permission_status_impl() -> WindowsMicrophonePermissio
     let device_access = read_registry_permission_access(HKEY_LOCAL_MACHINE, MICROPHONE_PATH);
     let app_access = read_registry_permission_access(HKEY_CURRENT_USER, MICROPHONE_PATH);
     let desktop_app_access = read_registry_permission_access(HKEY_CURRENT_USER, DESKTOP_APPS_PATH);
+    let this_app_access = current_exe_consent_key()
+        .map(|key| {
+            read_registry_permission_access(
+                HKEY_CURRENT_USER,
+                &format!("{DESKTOP_APPS_PATH}\\{key}"),
+            )
+        })
+        .unwrap_or(PermissionAccess::Unknown);
 
-    // VoCript ships as a plain (non-packaged) desktop app, so only two of these
-    // three switches actually govern it: the machine-wide device switch and the
-    // per-user "let desktop apps access your microphone" one. `app_access` is
-    // the setting for packaged/Store apps and says nothing about us.
-    //
-    // Taking it into account anyway made onboarding unpassable for anyone who
-    // had turned packaged-app access off: the microphone step sat on "Waiting…"
-    // forever, however many times they granted the permission that does apply
-    // (reported as issue #6).
-    let relevant = [device_access, desktop_app_access];
-    let overall_access = if relevant.contains(&PermissionAccess::Denied) {
-        PermissionAccess::Denied
-    } else if relevant
-        .iter()
-        .all(|access| *access == PermissionAccess::Allowed)
-    {
-        PermissionAccess::Allowed
+    let from_registry =
+        combine_microphone_access(device_access, desktop_app_access, this_app_access);
+
+    // The registry is a hint; the microphone itself is the authority. Users have
+    // been locked out of onboarding twice now by a consent value that did not
+    // match what the audio stack actually allows, so when the registry says no,
+    // ask the device before believing it.
+    let overall_access = if from_registry == PermissionAccess::Denied {
+        match microphone_opens_successfully() {
+            Some(true) => PermissionAccess::Allowed,
+            Some(false) => PermissionAccess::Denied,
+            // Could not tell (no device, device busy): do not block on a guess.
+            None => PermissionAccess::Unknown,
+        }
     } else {
-        // Unknown means "no explicit entry", which Windows treats as allowed
-        // for desktop apps. Blocking on it would strand users whose registry
-        // simply has no value yet — the app will surface a real error if the
-        // capture actually fails.
-        PermissionAccess::Unknown
+        from_registry
     };
 
     WindowsMicrophonePermissionStatus {
@@ -118,6 +167,38 @@ fn get_windows_microphone_permission_status_impl() -> WindowsMicrophonePermissio
         device_access,
         app_access,
         desktop_app_access,
+    }
+}
+
+/// Try to actually open the default input device.
+///
+/// `Some(true)` = capture works, `Some(false)` = the OS refused on permission
+/// grounds, `None` = inconclusive (no input device, device in use, driver
+/// error), which must never be treated as a denial.
+#[cfg(target_os = "windows")]
+fn microphone_opens_successfully() -> Option<bool> {
+    use crate::audio_toolkit::audio::is_microphone_access_denied;
+    use cpal::traits::{DeviceTrait, HostTrait};
+
+    let device = cpal::default_host().default_input_device()?;
+    let config = device.default_input_config().ok()?;
+
+    match device.build_input_stream(
+        &config.into(),
+        |_: &[f32], _: &cpal::InputCallbackInfo| {},
+        |_| {},
+        None,
+    ) {
+        Ok(_stream) => Some(true),
+        Err(e) => {
+            let message = e.to_string();
+            if is_microphone_access_denied(&message) {
+                Some(false)
+            } else {
+                warn!("Microphone probe was inconclusive: {message}");
+                None
+            }
+        }
     }
 }
 
@@ -320,4 +401,72 @@ pub fn get_clamshell_microphone(app: AppHandle) -> Result<String, String> {
 pub fn is_recording(app: AppHandle) -> bool {
     let audio_manager = app.state::<Arc<AudioRecordingManager>>();
     audio_manager.is_recording()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{combine_microphone_access, PermissionAccess};
+
+    /// The exact registry state from issue #6: packaged-app access off, desktop
+    /// access on. VoCript is a desktop app, so this must read as allowed — it
+    /// used to read as denied and left the reporter stuck on "Waiting…" forever.
+    #[test]
+    fn packaged_app_switch_being_off_does_not_block_us() {
+        assert_eq!(
+            combine_microphone_access(
+                PermissionAccess::Allowed,
+                PermissionAccess::Allowed,
+                PermissionAccess::Unknown,
+            ),
+            PermissionAccess::Allowed
+        );
+    }
+
+    #[test]
+    fn the_machine_wide_device_switch_wins() {
+        assert_eq!(
+            combine_microphone_access(
+                PermissionAccess::Denied,
+                PermissionAccess::Allowed,
+                PermissionAccess::Allowed,
+            ),
+            PermissionAccess::Denied
+        );
+    }
+
+    #[test]
+    fn our_own_entry_overrides_the_blanket_desktop_switch() {
+        // Blanket switch off but VoCript explicitly allowed.
+        assert_eq!(
+            combine_microphone_access(
+                PermissionAccess::Allowed,
+                PermissionAccess::Denied,
+                PermissionAccess::Allowed,
+            ),
+            PermissionAccess::Allowed
+        );
+        // Blanket switch on but VoCript explicitly turned off in the app list.
+        assert_eq!(
+            combine_microphone_access(
+                PermissionAccess::Allowed,
+                PermissionAccess::Allowed,
+                PermissionAccess::Denied,
+            ),
+            PermissionAccess::Denied
+        );
+    }
+
+    #[test]
+    fn a_registry_with_no_entries_is_never_a_denial() {
+        // Windows treats "no value" as allowed for desktop apps, and blocking on
+        // it would strand users whose registry has simply never been written.
+        assert_eq!(
+            combine_microphone_access(
+                PermissionAccess::Unknown,
+                PermissionAccess::Unknown,
+                PermissionAccess::Unknown,
+            ),
+            PermissionAccess::Unknown
+        );
+    }
 }

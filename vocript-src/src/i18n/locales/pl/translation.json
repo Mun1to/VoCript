@@ -128,6 +128,9 @@
       "grant": "Przyznaj uprawnienie",
       "granted": "Przyznano",
       "waiting": "Oczekiwanie...",
+      "stillWaitingHint": "Windows czasem nadal zgłasza starą wartość. Możesz kontynuować — jeśli mikrofon naprawdę jest zablokowany, VoCript poinformuje o tym przy pierwszym nagraniu.",
+      "recheck": "Sprawdź ponownie",
+      "continueAnyway": "Kontynuuj mimo to",
       "allGranted": "Wszystko gotowe!",
       "errors": {
         "checkFailed": "Nie udało się sprawdzić uprawnień. Spróbuj ponownie.",

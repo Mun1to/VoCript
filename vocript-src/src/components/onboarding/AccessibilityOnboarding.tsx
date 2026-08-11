@@ -45,6 +45,13 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const errorCountRef = useRef<number>(0);
   const MAX_POLLING_ERRORS = 3;
+  // Seconds on "Waiting…" before we offer a way out of this screen.
+  const ESCAPE_HATCH_DELAY_MS = 8000;
+  // This screen blocks the entire app, so it must never become a dead end.
+  // Twice now a permission check has disagreed with reality and left users
+  // staring at "Waiting…" forever with no button to press (issue #6). Whatever
+  // the checks say, after a few seconds there is always a way forward.
+  const [showEscapeHatch, setShowEscapeHatch] = useState(false);
 
   const isMacOS = permissionPlatform === "macos";
   const isWindows = permissionPlatform === "windows";
@@ -256,6 +263,24 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
     };
   }, []);
 
+  // Arm the escape hatch once a permission has been sitting on "Waiting…".
+  const isWaiting =
+    permissions.microphone === "waiting" ||
+    permissions.accessibility === "waiting";
+
+  useEffect(() => {
+    if (!isWaiting) {
+      setShowEscapeHatch(false);
+      return;
+    }
+
+    const id = setTimeout(
+      () => setShowEscapeHatch(true),
+      ESCAPE_HATCH_DELAY_MS,
+    );
+    return () => clearTimeout(id);
+  }, [isWaiting]);
+
   const handleGrantAccessibility = async () => {
     try {
       await requestAccessibilityPermission();
@@ -281,6 +306,43 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
       console.error("Failed to request microphone permission:", error);
       toast.error(t("onboarding.permissions.errors.requestFailed"));
     }
+  };
+
+  const stopPolling = () => {
+    if (pollingRef.current) {
+      clearInterval(pollingRef.current);
+      pollingRef.current = null;
+    }
+  };
+
+  // Check right now instead of waiting for the next poll tick, and drop back to
+  // the actionable "needed" state if it still is not granted — anything is
+  // better than leaving the user on a spinner with nothing to press.
+  const handleRecheck = async () => {
+    try {
+      const granted = isWindows
+        ? await hasWindowsMicrophoneAccess()
+        : await checkMicrophonePermission();
+
+      if (granted) {
+        stopPolling();
+        setPermissions((prev) => ({ ...prev, microphone: "granted" }));
+        await completeOnboarding();
+        return;
+      }
+    } catch (error) {
+      console.warn("Re-check of microphone permission failed:", error);
+    }
+
+    setPermissions((prev) => ({ ...prev, microphone: "needed" }));
+  };
+
+  // Last resort: let the user into the app regardless of what the permission
+  // check believes. If the microphone really is blocked, the first recording
+  // reports it with a real error instead of a screen you cannot leave.
+  const handleContinueAnyway = async () => {
+    stopPolling();
+    await completeOnboarding();
   };
 
   const isChecking =
@@ -350,9 +412,32 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
                     {t("onboarding.permissions.granted")}
                   </div>
                 ) : permissions.microphone === "waiting" ? (
-                  <div className="flex items-center gap-2 text-text/50 text-sm">
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    {t("onboarding.permissions.waiting")}
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-2 text-text/50 text-sm">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      {t("onboarding.permissions.waiting")}
+                    </div>
+                    {showEscapeHatch && (
+                      <>
+                        <p className="text-xs text-text/50">
+                          {t("onboarding.permissions.stillWaitingHint")}
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          <button
+                            onClick={handleRecheck}
+                            className="px-3 py-1.5 rounded-lg bg-logo-primary hover:bg-logo-primary/90 text-white text-xs font-medium transition-colors"
+                          >
+                            {t("onboarding.permissions.recheck")}
+                          </button>
+                          <button
+                            onClick={handleContinueAnyway}
+                            className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-text text-xs font-medium transition-colors"
+                          >
+                            {t("onboarding.permissions.continueAnyway")}
+                          </button>
+                        </div>
+                      </>
+                    )}
                   </div>
                 ) : (
                   <button

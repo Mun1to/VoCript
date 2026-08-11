@@ -128,6 +128,9 @@
       "grant": "権限を許可",
       "granted": "許可済み",
       "waiting": "待機中...",
+      "stillWaitingHint": "Windows が古い設定を報告し続けることがあります。そのまま続行できます — マイクが本当にブロックされている場合は、最初の録音時に VoCript がお知らせします。",
+      "recheck": "再確認",
+      "continueAnyway": "それでも続行",
       "allGranted": "準備完了！",
       "errors": {
         "checkFailed": "権限の確認に失敗しました。もう一度お試しください。",
