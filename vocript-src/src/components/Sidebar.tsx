@@ -153,7 +153,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         title={t(section.labelKey)}
         className={`group relative flex items-center gap-3 w-full rounded-xl ps-3.5 pe-3 py-2.5 text-start transition-all duration-200 font-semibold text-xs ${
           isActive
-            ? "bg-logo-primary text-white shadow-[0_0_15px_var(--color-logo-glow)]"
+            ? "bg-logo-primary text-white"
             : isLight
               ? "text-slate-600 hover:bg-slate-200/60 hover:text-slate-900"
               : "text-slate-400 hover:bg-white/[0.05] hover:text-slate-200"

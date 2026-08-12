@@ -559,8 +559,62 @@ fn default_ui_font_size() -> u32 {
     14
 }
 
+/// Dictation language codes VoCript can be set to, mirroring `LANGUAGES` in
+/// `src/lib/constants/languages.ts`. Only used to validate a guess made from the
+/// OS locale, so a code the app does not offer never reaches the settings.
+const DICTATION_LANGUAGES: &[&str] = &[
+    "en", "zh-Hans", "zh-Hant", "yue", "de", "es", "ru", "ko", "fr", "ja", "pt", "tr", "pl", "ca",
+    "nl", "ar", "sv", "it", "id", "hi", "fi", "vi", "he", "uk", "el", "ms", "cs", "ro", "da", "hu",
+    "ta", "no", "th", "ur", "hr", "bg", "lt", "la", "mi", "ml", "cy", "sk", "te", "fa", "lv", "bn",
+    "sr", "az", "sl", "kn", "et", "mk", "br", "eu", "is", "hy", "ne", "mn", "bs", "kk", "sq", "sw",
+    "gl", "mr", "pa", "si", "km", "sn", "yo", "so", "af", "oc", "ka", "be", "tg", "sd", "gu", "am",
+    "yi", "lo", "uz", "fo", "ht", "ps", "tk", "nn", "mt", "sa", "lb", "my", "bo", "tl", "mg", "as",
+    "tt", "haw", "ln", "ha", "ba", "jw", "su",
+];
+
+/// Language the user is assumed to dictate in on a fresh install: the one the
+/// computer is set to.
+///
+/// It used to be a hardcoded "es" for everybody, which is wrong for all but one
+/// country and does real damage on first run: the onboarding screen recommends a
+/// model *for the dictation language*, so a German or Japanese user was offered
+/// the model that suits Spanish before they had touched anything.
+///
+/// Whisper-style codes are not BCP 47, so the mapping is not always the language
+/// subtag: Chinese splits by script and Norwegian Bokmål has its own code.
 fn default_selected_language() -> String {
-    "es".to_string()
+    let Some(locale) = tauri_plugin_os::locale() else {
+        return "en".to_string();
+    };
+    dictation_language_for_locale(&locale)
+}
+
+/// The dictation code for an OS locale like "es-ES", "zh-TW" or "nb_NO",
+/// falling back to English when the language is one no model here can write.
+fn dictation_language_for_locale(locale: &str) -> String {
+    let locale = locale.replace('_', "-").to_lowercase();
+    let (lang, region) = match locale.split_once('-') {
+        Some((lang, rest)) => (lang, rest.split('-').next_back().unwrap_or("")),
+        None => (locale.as_str(), ""),
+    };
+
+    // Script matters more than region for Chinese, and Windows reports both
+    // forms ("zh-Hant-TW" as well as "zh-TW").
+    if lang == "zh" {
+        let traditional = locale.contains("hant") || matches!(region, "tw" | "hk" | "mo");
+        return if traditional { "zh-Hant" } else { "zh-Hans" }.to_string();
+    }
+    // Bokmål and Nynorsk both report as Norwegian; the models only know "no"
+    // (and "nn"), never "nb".
+    if lang == "nb" {
+        return "no".to_string();
+    }
+
+    DICTATION_LANGUAGES
+        .iter()
+        .find(|code| code.to_lowercase() == lang)
+        .map(|code| code.to_string())
+        .unwrap_or_else(|| "en".to_string())
 }
 
 fn default_overlay_position() -> OverlayPosition {
@@ -994,7 +1048,7 @@ pub fn get_default_settings() -> AppSettings {
         selected_output_device: None,
         system_audio_app: None,
         translate_to_english: false,
-        selected_language: "es".to_string(),
+        selected_language: default_selected_language(),
         overlay_position: default_overlay_position(),
         overlay_custom_position: None,
         debug_mode: false,
@@ -1354,6 +1408,32 @@ pub fn get_recording_retention_period(app: &AppHandle) -> RecordingRetentionPeri
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn the_computers_language_becomes_the_dictation_language() {
+        assert_eq!(dictation_language_for_locale("es-ES"), "es");
+        assert_eq!(dictation_language_for_locale("de_DE"), "de");
+        assert_eq!(dictation_language_for_locale("pt-BR"), "pt");
+        assert_eq!(dictation_language_for_locale("en"), "en");
+    }
+
+    #[test]
+    fn chinese_is_split_by_script_not_by_language() {
+        assert_eq!(dictation_language_for_locale("zh-CN"), "zh-Hans");
+        assert_eq!(dictation_language_for_locale("zh-TW"), "zh-Hant");
+        assert_eq!(dictation_language_for_locale("zh-HK"), "zh-Hant");
+        assert_eq!(dictation_language_for_locale("zh-Hant-TW"), "zh-Hant");
+        assert_eq!(dictation_language_for_locale("zh"), "zh-Hans");
+    }
+
+    #[test]
+    fn a_language_no_model_can_write_falls_back_to_english() {
+        // Klingon is not in the list, and neither is anything else invented.
+        assert_eq!(dictation_language_for_locale("tlh-AA"), "en");
+        assert_eq!(dictation_language_for_locale(""), "en");
+        // Bokmål reports as "nb" but the models only know "no".
+        assert_eq!(dictation_language_for_locale("nb-NO"), "no");
+    }
 
     #[test]
     fn default_settings_disable_auto_submit() {

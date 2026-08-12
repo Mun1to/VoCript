@@ -608,6 +608,13 @@ impl ShortcutAction for TranscribeAction {
                         samples.len(),
                         MIN_TRANSCRIPTION_SAMPLES
                     );
+                    // Silence here reads as "the app is broken": you press the
+                    // shortcut, say one word, and nothing whatsoever happens.
+                    // The window is the only place that can explain it, and it
+                    // only does so when it is the one being dictated into.
+                    if utils::dictating_into_ourselves(&ah) {
+                        let _ = ah.emit("recording-too-short", ());
+                    }
                     utils::hide_recording_overlay(&ah);
                     change_tray_icon(&ah, TrayIconState::Idle);
                 } else {
@@ -732,7 +739,9 @@ impl ShortcutAction for TranscribeAction {
                             if processed.final_text.is_empty() {
                                 utils::hide_recording_overlay(&ah);
                                 change_tray_icon(&ah, TrayIconState::Idle);
-                            } else if get_settings(&ah).clipboard_only {
+                            } else if get_settings(&ah).clipboard_only
+                                && !utils::dictating_into_ourselves(&ah)
+                            {
                                 // Copy to clipboard and show a confirmation in
                                 // the overlay instead of pasting into the active
                                 // app — ideal when capturing system audio so the

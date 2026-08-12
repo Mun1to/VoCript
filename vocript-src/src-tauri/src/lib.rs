@@ -138,8 +138,7 @@ fn schedule_main_window_reap(app: &AppHandle) {
     // Without a tray icon the window is the whole app, so releasing it would
     // leave nothing to click. Same rule the startup code already applies when
     // deciding whether `start_hidden` is safe to honour.
-    let tray_available =
-        get_settings(app).show_tray_icon && !app.state::<CliArgs>().no_tray;
+    let tray_available = get_settings(app).show_tray_icon && !app.state::<CliArgs>().no_tray;
     if !tray_available {
         return;
     }
@@ -160,7 +159,9 @@ fn schedule_main_window_reap(app: &AppHandle) {
                 return;
             }
             match window.destroy() {
-                Ok(()) => log::info!("Settings window released after {MAIN_WINDOW_REAP_DELAY:?} in the tray"),
+                Ok(()) => log::info!(
+                    "Settings window released after {MAIN_WINDOW_REAP_DELAY:?} in the tray"
+                ),
                 Err(e) => log::warn!("Failed to release the settings window: {e}"),
             }
         });
@@ -795,7 +796,7 @@ pub fn run(cli_args: CliArgs) {
                 // window is not wanted, so that is when its webview is queued
                 // for release (see MAIN_WINDOW_REAP_DELAY).
                 if window.label() == "main" {
-                    schedule_main_window_reap(&window.app_handle());
+                    schedule_main_window_reap(window.app_handle());
                 }
 
                 #[cfg(target_os = "macos")]

@@ -211,7 +211,9 @@
         "title": "Hlasové diktování",
         "body": "Umístěte kurzor tam, kam chcete psát, stiskněte svou zkratku pro diktování, mluvte a pusťte – text se objeví sám.\n\nVyzkoušejte to hned tady: klikněte na pole níže a něco nadiktujte svou zkratkou.",
         "placeholder": "Klikněte sem a diktujte svou zkratkou…",
-        "success": "✓ Funguje to! Tak jednoduché to je."
+        "success": "✓ Funguje to! Tak jednoduché to je.",
+        "tooShort": "Bylo to moc krátké. Podrž zkratku a řekni celou větu.",
+        "keepFocus": "Nech kurzor v tomhle poli, dokud diktuješ."
       },
       "donate": {
         "title": "A to je vše! 🎉",
@@ -259,7 +261,16 @@
         "body": "A poslední detail: přepni mezi světlým a tmavým motivem. A to je celé záhlaví! 🎨"
       }
     },
-    "chooseLanguage": "V jakém jazyce budete diktovat?"
+    "chooseLanguage": "V jakém jazyce budete diktovat?",
+    "otherLanguage": "Jiný jazyk…",
+    "why": {
+      "specialist": "Tenhle model je udělaný přímo pro jazyk {{language}}, takže trefí víc než univerzální a stáhne se rychleji.",
+      "balanced": "Je to nejlepší poměr přesnosti, rychlosti a velikosti stahování pro jazyk {{language}}."
+    },
+    "changeLater": "Model můžeš kdykoli změnit v nastavení.",
+    "showOtherModels_one": "Zobrazit druhý model",
+    "showOtherModels_other": "Zobrazit další modely ({{count}})",
+    "hideOtherModels": "Skrýt ostatní modely"
   },
   "modelSelector": {
     "custom": "Vlastní",
@@ -417,12 +428,12 @@
         "sent": "F13 odeslána"
       },
       "wakeWord": {
-        "label": "Začít slovem „VoCript“",
-        "description": "Poslouchá slovo „VoCript“ a jakmile ho uslyší, začne diktovat. Nauč ho tak, že slovo řekneš jednou, ve třech samostatných nahrávkách.",
+        "label": "Spustit vyslovením tvého slova",
+        "description": "Poslouchá slovo, které si sám vybereš, a jakmile ho uslyší, začne diktovat. Nauč ho to tak, že své slovo řekneš jednou, ve třech samostatných nahrávkách. Může to být cokoli: tvoje jméno, „počítači“, co chceš.",
         "hint": "Dokud je to zapnuté, mikrofon zůstává otevřený. Vše se zpracovává v tvém počítači a k modelu se dostanou jen krátké úseky řeči, ale spotřebuje to víc CPU než zkratka: hodí se sem rychlý model jako Parakeet nebo Moonshine.",
         "teach": "Nauč ji",
         "listening": "Řekni to jednou, teď",
-        "teachPrompt": "Stiskni a řekni „VoCript“ JEDNOU. Zopakuj to třikrát, neříkej to třikrát za sebou.",
+        "teachPrompt": "Stiskni a řekni SVÉ slovo JEDNOU. Zopakuj to třikrát, neříkej ho třikrát za sebou.",
         "taught": "Naučeno z {{count}} nahrávky/nahrávek. Přidej další, pokud tě nechytá pokaždé.",
         "captured": "Naučeno",
         "forgotten": "Nahrávky smazány",
@@ -432,7 +443,8 @@
           "tooShort": "Bylo to moc krátké. Řekni celé slovo, bez spěchu.",
           "deadDevice": "Mikrofon nic nevrátil. Zkontroluj, že není ztlumený nebo používaný jinou aplikací."
         },
-        "beta": "Beta"
+        "beta": "Beta",
+        "stopHint": "Diktování zastavíš tím, že řekneš stejné slovo znovu. Když nic neřekneš, samo skončí po minutě a půl."
       }
     },
     "sound": {
@@ -1058,5 +1070,9 @@
       "englishOnly": "Překládá se pouze do angličtiny. Hlasové modely dostávají přepínač „přeložit“, ne cílový jazyk, takže jiné dvojice dnes nejsou možné.",
       "future": "Překlad do libovolného jazyka potřebuje jazykový model. Přijde s místním čištěním pomocí AI, takže bude fungovat i bez internetu."
     }
+  },
+  "dictation": {
+    "copiedNoField": "Zkopírováno do schránky",
+    "copiedNoFieldHint": "Kurzor nebyl v žádném textovém poli, tak si text vlož tam, kde ho potřebuješ."
   }
 }

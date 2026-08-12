@@ -7,6 +7,7 @@ import React, {
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
+import { listen } from "@tauri-apps/api/event";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { Coffee, X } from "lucide-react";
 import { useTourStore } from "../../stores/tourStore";
@@ -35,6 +36,65 @@ const GAP = 12;
 
 const CARD_CLASS =
   "bg-background border border-mid-gray/20 rounded-xl shadow-2xl p-4 max-h-[82vh] overflow-y-auto";
+
+/**
+ * "Dictate something here" — the one step of the tour where the user works the
+ * app for real instead of reading about it.
+ *
+ * It keeps the focus on the box: the text arrives wherever the caret is, and a
+ * click anywhere else means the dictation lands somewhere else. It also answers
+ * the one thing that used to leave people stuck, a recording too short to be
+ * transcribed, which the app otherwise discards without a word.
+ */
+const DictationPractice: React.FC<{
+  practiced: boolean;
+  onPracticed: (practiced: boolean) => void;
+}> = ({ practiced, onPracticed }) => {
+  const { t } = useTranslation();
+  const boxRef = useRef<HTMLTextAreaElement>(null);
+  const [tooShort, setTooShort] = useState(false);
+
+  useEffect(() => {
+    const unlisten = listen("recording-too-short", () => {
+      setTooShort(true);
+      boxRef.current?.focus();
+    });
+    return () => {
+      unlisten.then((fn) => fn());
+    };
+  }, []);
+
+  return (
+    <div className="flex flex-col gap-1.5">
+      <textarea
+        ref={boxRef}
+        rows={3}
+        autoFocus
+        placeholder={t("onboarding.tour.dictation.placeholder")}
+        onChange={(e) => {
+          const written = e.target.value.trim().length > 0;
+          onPracticed(written);
+          if (written) setTooShort(false);
+        }}
+        className="w-full text-sm rounded-lg border border-mid-gray/30 bg-mid-gray/5 p-2 resize-none focus:outline-none focus:border-logo-primary"
+      />
+      {practiced ? (
+        <span className="text-xs text-green-500 vc-fade-in">
+          {t("onboarding.tour.dictation.success")}
+        </span>
+      ) : tooShort ? (
+        <span className="text-xs text-amber-500 vc-fade-in">
+          {t("onboarding.tour.dictation.tooShort")}
+        </span>
+      ) : (
+        <span className="text-xs text-text/45">
+          {t("onboarding.tour.dictation.keepFocus")}
+        </span>
+      )}
+    </div>
+  );
+};
+DictationPractice.displayName = "DictationPractice";
 
 interface TourCardBodyProps {
   step: (typeof TOUR_STEPS)[number];
@@ -103,20 +163,7 @@ const TourCardBody = React.memo<TourCardBodyProps>(
         )}
 
         {step.practice === "dictation" && (
-          <div className="flex flex-col gap-1">
-            <textarea
-              rows={2}
-              autoFocus
-              placeholder={t("onboarding.tour.dictation.placeholder")}
-              onChange={(e) => onPracticed(e.target.value.trim().length > 0)}
-              className="w-full text-sm rounded-lg border border-mid-gray/30 bg-mid-gray/5 p-2 resize-none focus:outline-none focus:border-logo-primary"
-            />
-            {practiced && (
-              <span className="text-xs text-green-500 vc-fade-in">
-                {t("onboarding.tour.dictation.success")}
-              </span>
-            )}
-          </div>
+          <DictationPractice practiced={practiced} onPracticed={onPracticed} />
         )}
 
         {step.donate && (

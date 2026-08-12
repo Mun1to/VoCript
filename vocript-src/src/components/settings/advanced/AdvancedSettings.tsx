@@ -30,7 +30,7 @@ export const AdvancedSettings: React.FC = () => {
   const isCustomProfile = getSetting("work_profile") === "custom";
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-6">
+    <div className="vc-settings-column space-y-6">
       <SettingsGroup title={t("settings.advanced.groups.appearance")}>
         <div data-tour="theme-selector">
           <ThemeSelector descriptionMode="tooltip" grouped={true} />

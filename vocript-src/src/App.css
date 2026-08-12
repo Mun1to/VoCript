@@ -147,17 +147,36 @@
   cursor: not-allowed;
 }
 
+/*
+ * The one column every settings section lives in.
+ *
+ * The width used to be `max-w-3xl` repeated in a dozen files; it lives here now
+ * so there is a single number to change. 700px is a deliberate choice, not the
+ * most the window can give: a settings row is a label on one side and its
+ * control on the other, and past this width the two drift so far apart that
+ * pairing them takes a second look.
+ */
+.vc-settings-column {
+  width: 100%;
+  max-width: 700px;
+  margin-inline: auto;
+}
+
 /* Premium Visual Utility Classes */
 .vc-card-glow {
   background: var(--vc-card-bg);
   border: 1px solid var(--vc-border);
   border-radius: 16px;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Hover lifts the border, nothing more. The old halo behind every card is the
+   look people read as "generated", and with a card on screen at all times it
+   never stopped happening. */
 :root[data-theme="dark"] .vc-card-glow:hover {
-  border-color: var(--color-logo-glow);
-  box-shadow: 0 0 20px var(--color-logo-glow-soft);
+  border-color: var(--color-logo-glow-soft);
 }
 
 :root[data-theme="light"] .vc-card-glow {

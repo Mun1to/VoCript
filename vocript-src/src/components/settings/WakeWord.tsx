@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Check, Info, Loader2, Mic, Trash2 } from "lucide-react";
+import { Check, Info, Loader2, Mic, Square, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { commands } from "@/bindings";
 import { ToggleSwitch } from "../ui/ToggleSwitch";
@@ -146,6 +146,16 @@ export const WakeWord: React.FC<WakeWordProps> = React.memo(
                   )}
                 </div>
               )}
+            </div>
+
+            {/* How to stop was nowhere in the app, and it is not guessable:
+                people started dictating by voice and then sat there talking,
+                with no idea what ends it. */}
+            <div className="flex items-start gap-2.5 rounded-lg border border-mid-gray/20 bg-mid-gray/5 px-3 py-2.5">
+              <Square className="mt-0.5 h-3.5 w-3.5 shrink-0 text-logo-primary" />
+              <p className="text-xs leading-relaxed text-text/60">
+                {t("settings.general.wakeWord.stopHint")}
+              </p>
             </div>
 
             <p className="text-xs leading-relaxed text-text/45">

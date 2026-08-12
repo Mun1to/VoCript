@@ -178,7 +178,7 @@ export const FileTranscription: React.FC = () => {
   };
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-6">
+    <div className="vc-settings-column space-y-6">
       <SettingsGroup
         title={t("settings.fileTranscription.title")}
         description={t("settings.fileTranscription.description")}

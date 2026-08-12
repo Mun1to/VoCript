@@ -91,7 +91,7 @@ export const ActivitySettings: React.FC = () => {
   const averageWpm = totalSeconds > 0 ? totalWords / (totalSeconds / 60) : 0;
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-6">
+    <div className="vc-settings-column space-y-6">
       <SettingsGroup title={t("activity.title")}>
         <div className="flex flex-col gap-5 p-5">
           <p className="text-sm text-text/70">{t("activity.subtitle")}</p>

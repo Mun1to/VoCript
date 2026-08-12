@@ -15,6 +15,7 @@ import {
   getTranslatedModelName,
 } from "../../lib/utils/modelTranslation";
 import { LANGUAGES } from "../../lib/constants/languages";
+import { languageName } from "../../lib/utils/languageNames";
 import { POPULAR_LANGUAGES } from "../../lib/utils/modelRecommendation";
 import Badge from "../ui/Badge";
 import { Button } from "../ui/Button";
@@ -24,13 +25,14 @@ import { HoverTooltip } from "../ui/HoverTooltip";
 const MAX_LISTED_LANGUAGES = 4;
 
 /** Readable names for language codes, deduplicated and in the given order. */
-const languageNames = (codes: string[]): string[] => {
+const languageNames = (codes: string[], uiLanguage: string): string[] => {
   const seen = new Set<string>();
   const names: string[] = [];
   for (const code of codes) {
-    const label = LANGUAGES.find((l) => l.value === code)?.label;
     // Whisper declares zh, zh-Hans and zh-Hant; only the two variants have a
     // name, and a bare code is not worth showing to a user.
+    if (!LANGUAGES.some((l) => l.value === code)) continue;
+    const label = languageName(code, uiLanguage);
     if (!label || seen.has(label)) continue;
     seen.add(label);
     names.push(label);
@@ -49,6 +51,7 @@ const languageNames = (codes: string[]): string[] => {
 const getLanguageDisplayText = (
   supportedLanguages: string[],
   t: (key: string, options?: Record<string, unknown>) => string,
+  uiLanguage: string,
   preferredLanguage?: string,
 ): string => {
   // Order: the user's own language, then the widely-spoken ones, then the rest
@@ -69,7 +72,7 @@ const getLanguageDisplayText = (
       ? [...popular, ...rest]
       : [...first, ...popular, ...rest];
 
-  const names = languageNames(ordered);
+  const names = languageNames(ordered, uiLanguage);
 
   // Imported models declare nothing; keep the old generic wording for them.
   if (names.length === 0) return t("modelSelector.capabilities.multiLanguage");
@@ -136,7 +139,8 @@ const ModelCard: React.FC<ModelCardProps> = ({
   unsupportedLabel,
   preferredLanguage,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const uiLanguage = i18n.language;
   const isFeatured = variant === "featured";
   const isClickable =
     status === "available" || status === "active" || status === "downloadable";
@@ -161,7 +165,10 @@ const ModelCard: React.FC<ModelCardProps> = ({
   const getInteractiveClasses = () => {
     if (!isClickable) return "";
     if (disabled) return "opacity-50 cursor-not-allowed";
-    return "cursor-pointer hover:border-logo-primary/50 hover:bg-logo-primary/5 hover:shadow-lg hover:scale-[1.01] active:scale-[0.99] group";
+    // Border and tint only. A card that grows and casts a shadow under the
+    // pointer is the "generated" look, and these cards are big enough that the
+    // 1% scale visibly nudged the whole list.
+    return "cursor-pointer hover:border-logo-primary/50 hover:bg-logo-primary/5 active:bg-logo-primary/10 group";
   };
 
   const handleClick = () => {
@@ -274,9 +281,11 @@ const ModelCard: React.FC<ModelCardProps> = ({
             label={
               model.supported_languages.length === 1
                 ? t("modelSelector.capabilities.singleLanguage")
-                : languageNames(model.supported_languages).length >
+                : languageNames(model.supported_languages, uiLanguage).length >
                     MAX_LISTED_LANGUAGES
-                  ? languageNames(model.supported_languages).join(", ")
+                  ? languageNames(model.supported_languages, uiLanguage).join(
+                      ", ",
+                    )
                   : t("modelSelector.capabilities.languageSelection")
             }
             className="flex items-center gap-1 text-xs text-text/50 min-w-0"
@@ -286,6 +295,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
               {getLanguageDisplayText(
                 model.supported_languages,
                 t,
+                uiLanguage,
                 preferredLanguage,
               )}
             </span>

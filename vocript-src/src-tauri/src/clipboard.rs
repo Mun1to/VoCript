@@ -6,7 +6,7 @@ use enigo::{Direction, Enigo, Key, Keyboard};
 use log::info;
 use std::process::Command;
 use std::time::Duration;
-use tauri::{AppHandle, Manager};
+use tauri::{AppHandle, Emitter, Manager};
 use tauri_plugin_clipboard_manager::ClipboardExt;
 
 #[cfg(target_os = "linux")]
@@ -632,6 +632,50 @@ fn should_send_auto_submit(auto_submit: bool, paste_method: PasteMethod) -> bool
     auto_submit && paste_method != PasteMethod::None
 }
 
+/// Event carrying a transcription the frontend has to insert itself, because
+/// simulating a paste into our own window cannot work. See [`paste`].
+pub const INSERT_INTO_APP_EVENT: &str = "insert-transcription";
+
+/// Is VoCript's own settings window the one the text would land in?
+///
+/// On Windows this asks the OS which window is in front and whether it is ours,
+/// rather than `WebviewWindow::is_focused()`. That one reads a flag tao keeps
+/// from WM_SETFOCUS/WM_KILLFOCUS on the *frame*, and keyboard focus here lives
+/// in the WebView2 child window — so the frame is told it lost focus at exactly
+/// the moment the user clicks into a text field, which is the case we need to
+/// detect. The foreground window is process-wide and has no such blind spot.
+#[cfg(target_os = "windows")]
+pub fn dictating_into_ourselves(app_handle: &AppHandle) -> bool {
+    use windows::Win32::System::Threading::GetCurrentProcessId;
+    use windows::Win32::UI::WindowsAndMessaging::{GetForegroundWindow, GetWindowThreadProcessId};
+
+    // The main window is where the text fields are; with it closed to the tray
+    // there is nothing of ours worth typing into.
+    if app_handle.get_webview_window("main").is_none() {
+        return false;
+    }
+
+    unsafe {
+        let hwnd = GetForegroundWindow();
+        if hwnd.0.is_null() {
+            return false;
+        }
+        let mut pid = 0u32;
+        GetWindowThreadProcessId(hwnd, Some(&mut pid));
+        pid != 0 && pid == GetCurrentProcessId()
+    }
+}
+
+/// Same question elsewhere. macOS and Linux have no equivalent blind spot, so
+/// the window's own focus flag is enough.
+#[cfg(not(target_os = "windows"))]
+pub fn dictating_into_ourselves(app_handle: &AppHandle) -> bool {
+    app_handle
+        .get_webview_window("main")
+        .and_then(|window| window.is_focused().ok())
+        .unwrap_or(false)
+}
+
 pub fn paste(text: String, app_handle: AppHandle) -> Result<(), String> {
     let settings = get_settings(&app_handle);
     let paste_method = settings.paste_method;
@@ -643,6 +687,25 @@ pub fn paste(text: String, app_handle: AppHandle) -> Result<(), String> {
     } else {
         text
     };
+
+    // Dictating into VoCript itself never worked, and could not: this function
+    // runs on the main thread, which on Windows is also the thread that pumps
+    // messages for our own window. Everything below blocks it for ~200ms —
+    // sleeps around the keystroke, then restoring the user's clipboard — so by
+    // the time the webview gets to handle the Ctrl+V we simulated, the
+    // transcription is no longer on the clipboard and the previous contents
+    // are. That is why the tour's "try dictating here" box did nothing.
+    //
+    // So when the target is us, skip the whole clipboard dance and hand the
+    // text to the frontend, which puts it in the focused field directly. It
+    // also makes dictation work in the app's own text fields (custom words,
+    // the dictionary, the feedback form) regardless of the paste method.
+    if dictating_into_ourselves(&app_handle) {
+        info!("Target is VoCript's own window; inserting the text directly");
+        return app_handle
+            .emit(INSERT_INTO_APP_EVENT, text)
+            .map_err(|e| format!("Failed to hand the transcription to the window: {}", e));
+    }
 
     info!(
         "Using paste method: {:?}, delay: {}ms",

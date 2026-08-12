@@ -24,7 +24,7 @@ export const ThemesSettings: React.FC = () => {
   const currentSize = getSetting("ui_font_size") ?? DEFAULT_UI_FONT_SIZE;
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-6">
+    <div className="vc-settings-column space-y-6">
       <SettingsGroup title={t("themes.title")}>
         <div className="p-5 flex flex-col gap-4">
           <p className="text-sm text-text/70">{t("themes.subtitle")}</p>

@@ -211,7 +211,9 @@
         "title": "Röstdiktering",
         "body": "Placera markören där du vill skriva, tryck på din dikteringsgenväg, tala och släpp – texten dyker upp av sig själv.\n\nProva direkt här: klicka i rutan nedan och diktera något med din genväg.",
         "placeholder": "Klicka här och diktera med din genväg…",
-        "success": "✓ Det funkar! Så enkelt är det."
+        "success": "✓ Det funkar! Så enkelt är det.",
+        "tooShort": "Det var för kort. Håll ner kortkommandot och säg en hel mening.",
+        "keepFocus": "Håll markören i den här rutan medan du dikterar."
       },
       "donate": {
         "title": "Det var allt! 🎉",
@@ -259,7 +261,16 @@
         "body": "Och sista touchen: växla mellan ljust och mörkt tema. Det var hela sidhuvudet! 🎨"
       }
     },
-    "chooseLanguage": "På vilket språk ska du diktera?"
+    "chooseLanguage": "På vilket språk ska du diktera?",
+    "otherLanguage": "Ett annat språk…",
+    "why": {
+      "specialist": "Den här är byggd särskilt för {{language}}, så den träffar rätt oftare än allroundmodellerna och laddas ner snabbare.",
+      "balanced": "Den ger bäst balans mellan träffsäkerhet, hastighet och nedladdningsstorlek för {{language}}."
+    },
+    "changeLater": "Du kan byta modell när du vill, under Inställningar.",
+    "showOtherModels_one": "Visa den andra modellen",
+    "showOtherModels_other": "Visa de andra {{count}} modellerna",
+    "hideOtherModels": "Dölj de andra modellerna"
   },
   "modelSelector": {
     "custom": "Anpassad",
@@ -386,12 +397,12 @@
         "sent": "F13 skickad"
       },
       "wakeWord": {
-        "label": "Börja genom att säga \"VoCript\"",
-        "description": "Lyssnar efter ordet 'VoCript' och börjar diktera när det hörs. Lär den genom att säga ordet en gång, i tre separata inspelningar.",
+        "label": "Starta genom att säga ditt ord",
+        "description": "Lyssnar efter ett ord du väljer själv och börjar diktera så fort det hörs. Lär det ordet genom att säga det en gång, i tre separata inspelningar. Det kan vara vad som helst: ditt namn, ”dator”, vad du vill.",
         "hint": "Mikrofonen är öppen så länge det här är på. Allt bearbetas på din dator och bara korta talstunder når modellen, men det drar mer CPU än snabbkommandot: en snabb modell som Parakeet eller Moonshine passar bättre här.",
         "teach": "Lär den",
         "listening": "Säg det en gång, nu",
-        "teachPrompt": "Tryck och säg 'VoCript' EN gång. Gör om det tre gånger, säg det inte tre gånger i rad.",
+        "teachPrompt": "Tryck och säg DITT ord EN gång. Upprepa tre gånger, säg det inte tre gånger i rad.",
         "taught": "Inlärt från {{count}} inspelning(ar). Lägg till fler om den inte alltid uppfattar dig.",
         "captured": "Inlärt",
         "forgotten": "Inspelningar rensade",
@@ -401,7 +412,8 @@
           "tooShort": "Det var för kort. Säg hela ordet, utan att stressa.",
           "deadDevice": "Mikrofonen gav ingenting. Kontrollera att den inte är avstängd eller används av en annan app."
         },
-        "beta": "Beta"
+        "beta": "Beta",
+        "stopHint": "Säg samma ord igen för att sluta diktera. Säger du inget avslutas det av sig självt efter en och en halv minut."
       }
     },
     "models": {
@@ -1058,5 +1070,9 @@
       "englishOnly": "Översättning sker bara till engelska. Talmodellerna får en \"översätt\"-flagga, inte ett målspråk, så andra par går inte i dag.",
       "future": "Att översätta till vilket språk som helst kräver en språkmodell. Den kommer med den lokala AI-städningen och fungerar därför fortfarande utan internet."
     }
+  },
+  "dictation": {
+    "copiedNoField": "Kopierat till urklipp",
+    "copiedNoFieldHint": "Markören stod inte i något textfält, så klistra in texten där du behöver den."
   }
 }

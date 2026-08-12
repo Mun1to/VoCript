@@ -211,7 +211,9 @@
         "title": "Ditado por voz",
         "body": "Posicione o cursor onde quer escrever, pressione seu atalho de ditado, fale e solte: o texto aparece sozinho.\n\nExperimente aqui mesmo: clique na caixa abaixo e dite algo com seu atalho.",
         "placeholder": "Clique aqui e dite com seu atalho…",
-        "success": "✓ Funciona! Simples assim."
+        "success": "✓ Funciona! Simples assim.",
+        "tooShort": "Foi curto demais. Mantém o atalho e diz uma frase inteira.",
+        "keepFocus": "Mantém o cursor nesta caixa enquanto ditas."
       },
       "donate": {
         "title": "É isso! 🎉",
@@ -259,7 +261,16 @@
         "body": "E o toque final: alterna entre tema claro e escuro. E este é todo o cabeçalho! 🎨"
       }
     },
-    "chooseLanguage": "Em que idioma você vai ditar?"
+    "chooseLanguage": "Em que idioma você vai ditar?",
+    "otherLanguage": "Outro idioma…",
+    "why": {
+      "specialist": "Este foi feito de propósito para {{language}}, por isso acerta mais do que os modelos genéricos e descarrega mais depressa.",
+      "balanced": "É o melhor equilíbrio entre precisão, velocidade e tamanho de descarga para {{language}}."
+    },
+    "changeLater": "Podes trocar de modelo quando quiseres, nas definições.",
+    "showOtherModels_one": "Ver o outro modelo",
+    "showOtherModels_other": "Ver os outros {{count}} modelos",
+    "hideOtherModels": "Ocultar os outros modelos"
   },
   "modelSelector": {
     "custom": "Personalizado",
@@ -386,12 +397,12 @@
         "sent": "F13 enviada"
       },
       "wakeWord": {
-        "label": "Começar dizendo «VoCript»",
-        "description": "Fica à escuta da palavra «VoCript» e começa a ditar quando a ouve. Ensina-lhe dizendo a palavra uma só vez, em três gravações distintas.",
+        "label": "Começar dizendo a tua palavra",
+        "description": "Escuta uma palavra à tua escolha e começa a ditar assim que a ouve. Ensina-lha dizendo a tua palavra uma só vez, em três gravações diferentes. Pode ser qualquer uma: o teu nome, «computador», o que quiseres.",
         "hint": "Enquanto estiver ativo, o microfone fica aberto. Tudo é processado no teu computador e só chegam ao modelo os bocados em que falas, mas gasta mais CPU do que o atalho: aqui encaixa melhor um modelo rápido como o Parakeet ou o Moonshine.",
         "teach": "Ensina-lhe",
         "listening": "Di-la uma vez, agora",
-        "teachPrompt": "Carrega e diz «VoCript» UMA vez. Repete o processo três vezes, não a digas três vezes seguidas.",
+        "teachPrompt": "Carrega e diz a TUA palavra UMA vez. Repete o processo três vezes, não a digas três vezes seguidas.",
         "taught": "Aprendida a partir de {{count}} gravação(ões). Acrescenta mais se nem sempre te apanhar.",
         "captured": "Aprendida",
         "forgotten": "Gravações apagadas",
@@ -401,7 +412,8 @@
           "tooShort": "Foi demasiado breve. Diz a palavra inteira, sem pressa.",
           "deadDevice": "O microfone não devolveu nada. Verifica que não está silenciado nem a ser usado por outra app."
         },
-        "beta": "Beta"
+        "beta": "Beta",
+        "stopHint": "Para parar de ditar, diz outra vez a mesma palavra. Se não disseres nada, termina sozinho ao fim de um minuto e meio."
       }
     },
     "models": {
@@ -1058,5 +1070,9 @@
       "englishOnly": "A tradução vai apenas para inglês. Os modelos de voz recebem um interruptor de «traduzir», não um idioma de destino, por isso hoje não há outras combinações.",
       "future": "Traduzir para qualquer idioma precisa de um modelo de linguagem. Virá com a limpeza por IA local, por isso continuará a funcionar sem ligação."
     }
+  },
+  "dictation": {
+    "copiedNoField": "Copiado para a área de transferência",
+    "copiedNoFieldHint": "Nenhuma caixa de texto tinha o cursor, por isso cola-o onde precisares."
   }
 }

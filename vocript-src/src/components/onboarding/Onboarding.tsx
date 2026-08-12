@@ -1,15 +1,19 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import type { ModelInfo } from "@/bindings";
 import type { ModelCardStatus } from "./ModelCard";
 import ModelCard from "./ModelCard";
 import VoCriptTextLogo from "../icons/VoCriptTextLogo";
+import { Dropdown } from "../ui/Dropdown";
 import { useModelStore } from "../../stores/modelStore";
 import { useSettingsStore } from "../../stores/settingsStore";
 import { LANGUAGES } from "../../lib/constants/languages";
+import { languageName } from "../../lib/utils/languageNames";
 import {
   POPULAR_LANGUAGES,
+  getRecommendationReason,
   getRecommendedModelId,
   modelSupportsLanguage,
 } from "../../lib/utils/modelRecommendation";
@@ -19,7 +23,8 @@ interface OnboardingProps {
 }
 
 const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const uiLanguage = i18n.language;
   // One selector per slice instead of the whole store: subscribing to
   // everything re-rendered this screen (and its ~18 model cards) on unrelated
   // changes, including every download-progress tick.
@@ -36,14 +41,15 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
   // screen to every settings change (including the isUpdating bookkeeping that
   // each write flips twice).
   const language =
-    useSettingsStore((s) => s.settings?.selected_language) ?? "es";
+    useSettingsStore((s) => s.settings?.selected_language) ?? "en";
   const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
+  const [showAllModels, setShowAllModels] = useState(false);
 
   const isDownloading = selectedModelId !== null;
 
   const languageLabel = useMemo(
-    () => LANGUAGES.find((l) => l.value === language)?.label,
-    [language],
+    () => languageName(language, uiLanguage),
+    [language, uiLanguage],
   );
 
   // Best model for the chosen language.
@@ -58,6 +64,32 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
       updateSetting("selected_language", code);
     },
     [isDownloading, updateSetting],
+  );
+
+  // Quick-pick chips. The user's own language always gets one, even when it is
+  // not among the widely-spoken ones — otherwise a Polish speaker opens this
+  // screen with every chip pointing at somebody else's language.
+  const languageChips = useMemo(() => {
+    const codes = POPULAR_LANGUAGES.includes(language)
+      ? POPULAR_LANGUAGES
+      : [language, ...POPULAR_LANGUAGES];
+    return codes
+      .map((code) => ({ code, label: languageName(code, uiLanguage) }))
+      .filter((chip): chip is { code: string; label: string } => !!chip.label);
+  }, [language, uiLanguage]);
+
+  // Every language the app can dictate in, for the ones the chips leave out.
+  // "Auto" is deliberately absent: this screen exists to recommend a model for
+  // a language, and "whatever comes out" cannot be recommended for.
+  const allLanguageOptions = useMemo(
+    () =>
+      LANGUAGES.filter((l) => l.value !== "auto")
+        .map((l) => ({
+          value: l.value,
+          label: languageName(l.value, uiLanguage) ?? l.label,
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label, uiLanguage)),
+    [uiLanguage],
   );
 
   // Watch for the selected model to finish downloading + verifying + extracting
@@ -172,6 +204,22 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
       ? t("settings.models.recommendedForLanguage", { language: languageLabel })
       : t("onboarding.recommended");
 
+  // Why this one and not another. Vague reassurance is what people ignore; the
+  // actual reason is what lets them accept the suggestion and move on.
+  const recommendationWhy =
+    languageLabel && recommendedModel
+      ? t(
+          `onboarding.why.${getRecommendationReason(recommendedModel.id, language)}`,
+          {
+            language: languageLabel,
+          },
+        )
+      : null;
+
+  // With nothing to feature — every model already on disk, or a language no
+  // model covers — a collapsed list would leave the screen looking empty.
+  const listIsOpen = showAllModels || !recommendedModel;
+
   return (
     <div className="h-screen w-screen flex flex-col p-6 gap-4 inset-0">
       <div className="flex flex-col items-center gap-2 shrink-0">
@@ -181,73 +229,122 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
         </p>
       </div>
 
-      <div className="max-w-[600px] w-full mx-auto text-center flex-1 flex flex-col min-h-0 overflow-y-auto px-2">
-        {/* Language quick-pick: recommends the best model for your language */}
-        <div className="flex flex-col gap-2 pb-4 shrink-0">
-          <p className="text-sm font-medium text-text/70">
-            {t("onboarding.chooseLanguage")}
-          </p>
-          <div className="flex flex-wrap justify-center gap-2">
-            {POPULAR_LANGUAGES.map((code) => {
-              const label =
-                LANGUAGES.find((l) => l.value === code)?.label ?? code;
-              const active = code === language;
-              return (
-                <button
-                  key={code}
-                  type="button"
-                  disabled={isDownloading}
-                  onClick={() => handleLanguageSelect(code)}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-full transition-colors disabled:opacity-50 ${
-                    active
-                      ? "bg-logo-primary/80 text-white"
-                      : "bg-mid-gray/10 text-text/70 hover:bg-mid-gray/20"
-                  }`}
-                >
-                  {label}
-                </button>
-              );
-            })}
+      {/* `my-auto` centres the short state (one recommended model) and gives
+          way to scrolling once the full list is unfolded. */}
+      <div className="max-w-[640px] w-full mx-auto flex-1 flex flex-col min-h-0 overflow-y-auto px-2">
+        <div className="my-auto flex flex-col">
+          {/* Language quick-pick: recommends the best model for your language */}
+          <div className="flex flex-col gap-2 pb-4 shrink-0 text-center">
+            <p className="text-sm font-medium text-text/70">
+              {t("onboarding.chooseLanguage")}
+            </p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {languageChips.map(({ code, label }) => {
+                const active = code === language;
+                return (
+                  <button
+                    key={code}
+                    type="button"
+                    disabled={isDownloading}
+                    onClick={() => handleLanguageSelect(code)}
+                    className={`px-3 py-1.5 text-sm font-medium rounded-full transition-colors disabled:opacity-50 ${
+                      active
+                        ? "bg-logo-primary/80 text-white"
+                        : "bg-mid-gray/10 text-text/70 hover:bg-mid-gray/20"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+            {/* The chips already say which language is picked, so this one keeps
+              reading "Another language…": it is the way out of the shortlist,
+              not a second display of the same state. */}
+            <div className="mx-auto w-56 pt-1">
+              <Dropdown
+                options={allLanguageOptions}
+                selectedValue={null}
+                onSelect={handleLanguageSelect}
+                disabled={isDownloading}
+                placeholder={t("onboarding.otherLanguage")}
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="flex flex-col gap-4 pb-6">
-          {recommendedModel && (
-            <ModelCard
-              key={recommendedModel.id}
-              model={recommendedModel}
-              variant="featured"
-              status={getModelStatus(recommendedModel.id)}
-              disabled={isDownloading}
-              onSelect={handleDownloadModel}
-              onDownload={handleDownloadModel}
-              downloadProgress={getModelDownloadProgress(recommendedModel.id)}
-              downloadSpeed={getModelDownloadSpeed(recommendedModel.id)}
-              preferredLanguage={language}
-              recommendedLabel={recommendedBadge}
-            />
-          )}
+          <div className="flex flex-col gap-4 pb-6">
+            {recommendedModel && (
+              <div className="flex flex-col gap-2">
+                {recommendationWhy && (
+                  <p className="text-sm text-text/70 text-center px-2">
+                    {recommendationWhy}
+                  </p>
+                )}
+                <ModelCard
+                  key={recommendedModel.id}
+                  model={recommendedModel}
+                  variant="featured"
+                  status={getModelStatus(recommendedModel.id)}
+                  disabled={isDownloading}
+                  onSelect={handleDownloadModel}
+                  onDownload={handleDownloadModel}
+                  downloadProgress={getModelDownloadProgress(
+                    recommendedModel.id,
+                  )}
+                  downloadSpeed={getModelDownloadSpeed(recommendedModel.id)}
+                  preferredLanguage={language}
+                  recommendedLabel={recommendedBadge}
+                />
+                <p className="text-xs text-text/45 text-center">
+                  {t("onboarding.changeLater")}
+                </p>
+              </div>
+            )}
 
-          {otherModels.map((model: ModelInfo) => (
-            <ModelCard
-              key={model.id}
-              model={model}
-              status={getModelStatus(model.id)}
-              disabled={isDownloading}
-              onSelect={handleDownloadModel}
-              onDownload={handleDownloadModel}
-              downloadProgress={getModelDownloadProgress(model.id)}
-              downloadSpeed={getModelDownloadSpeed(model.id)}
-              preferredLanguage={language}
-              unsupportedLabel={
-                languageLabel && !modelSupportsLanguage(model, language)
-                  ? t("onboarding.modelCard.noLanguageSupport", {
-                      language: languageLabel,
-                    })
-                  : undefined
-              }
-            />
-          ))}
+            {/* The other models stay folded away. Eighteen cards on the very
+              first screen is not a choice, it is a wall — and every one of
+              them needed reading to find out it was the wrong one. */}
+            {otherModels.length > 0 && recommendedModel && (
+              <button
+                type="button"
+                onClick={() => setShowAllModels((open) => !open)}
+                className="flex items-center justify-center gap-1.5 text-sm font-medium text-text/60 hover:text-text transition-colors"
+              >
+                <ChevronDown
+                  className={`w-4 h-4 transition-transform ${
+                    listIsOpen ? "rotate-180" : ""
+                  }`}
+                />
+                {listIsOpen
+                  ? t("onboarding.hideOtherModels")
+                  : t("onboarding.showOtherModels", {
+                      count: otherModels.length,
+                    })}
+              </button>
+            )}
+
+            {listIsOpen &&
+              otherModels.map((model: ModelInfo) => (
+                <ModelCard
+                  key={model.id}
+                  model={model}
+                  status={getModelStatus(model.id)}
+                  disabled={isDownloading}
+                  onSelect={handleDownloadModel}
+                  onDownload={handleDownloadModel}
+                  downloadProgress={getModelDownloadProgress(model.id)}
+                  downloadSpeed={getModelDownloadSpeed(model.id)}
+                  preferredLanguage={language}
+                  unsupportedLabel={
+                    languageLabel && !modelSupportsLanguage(model, language)
+                      ? t("onboarding.modelCard.noLanguageSupport", {
+                          language: languageLabel,
+                        })
+                      : undefined
+                  }
+                />
+              ))}
+          </div>
         </div>
       </div>
 

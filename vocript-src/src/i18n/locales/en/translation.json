@@ -131,7 +131,9 @@
         "title": "Voice dictation",
         "body": "Place your cursor where you want to type, press your dictation shortcut, speak and release — the text appears on its own.\n\nTry it right here: click the box below and dictate something with your shortcut.",
         "placeholder": "Click here and dictate with your shortcut…",
-        "success": "✓ It works! That easy."
+        "success": "✓ It works! That easy.",
+        "tooShort": "That was too short. Hold the shortcut and say a whole sentence.",
+        "keepFocus": "Keep the cursor in this box while you dictate."
       },
       "donate": {
         "title": "That's it! 🎉",
@@ -290,7 +292,16 @@
         "checkFailed": "Failed to check permissions. Please try again.",
         "requestFailed": "Failed to request permission. Please try again."
       }
-    }
+    },
+    "otherLanguage": "Another language…",
+    "why": {
+      "specialist": "This one is built specifically for {{language}}, so it gets more right than the all-purpose models, and it downloads faster.",
+      "balanced": "It strikes the best balance of accuracy, speed and download size for {{language}}."
+    },
+    "changeLater": "You can switch models whenever you like, in Settings.",
+    "showOtherModels_one": "Show the other model",
+    "showOtherModels_other": "Show the other {{count}} models",
+    "hideOtherModels": "Hide the other models"
   },
   "modelSelector": {
     "custom": "Custom",
@@ -449,12 +460,12 @@
         "sent": "F13 sent"
       },
       "wakeWord": {
-        "label": "Start by saying \"VoCript\"",
-        "description": "Listens for the word 'VoCript' and starts dictating when it hears it. Teach it by saying the word once, three separate times.",
+        "label": "Start by saying your word",
+        "description": "Listens for a word you choose and starts dictating the moment it hears it. Teach it by saying your word once, in three separate recordings. It can be anything: your name, \"computer\", whatever you like.",
         "hint": "The microphone stays open while this is on. Everything is processed on your computer and only short bursts of speech reach the model, but it uses more CPU than the shortcut: a fast model like Parakeet or Moonshine fits better here.",
         "teach": "Teach it",
         "listening": "Say it once, now",
-        "teachPrompt": "Press and say 'VoCript' ONCE. Do that three times over, not three times in one go.",
+        "teachPrompt": "Press and say YOUR word ONCE. Repeat the process three times; don't say it three times in a row.",
         "taught": "Learned from {{count}} recording(s). Add more if it does not always catch it.",
         "captured": "Got it",
         "forgotten": "Recordings cleared",
@@ -464,7 +475,8 @@
           "tooShort": "That was too brief. Say the whole word, without rushing.",
           "deadDevice": "The microphone gave nothing back. Check it is not muted or in use by another app."
         },
-        "beta": "Beta"
+        "beta": "Beta",
+        "stopHint": "To stop dictating, say the same word again. If you say nothing, it ends on its own after a minute and a half."
       }
     },
     "models": {
@@ -1058,5 +1070,9 @@
       "englishOnly": "Translation goes into English only. The speech models take a \"translate\" flag, not a target language, so other pairs are not possible today.",
       "future": "Translating into any language needs a language model. It will come with the local AI cleanup, so it still works without an internet connection."
     }
+  },
+  "dictation": {
+    "copiedNoField": "Copied to the clipboard",
+    "copiedNoFieldHint": "No text box had the cursor, so paste it wherever you need it."
   }
 }

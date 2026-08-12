@@ -211,7 +211,9 @@
         "title": "Đọc chính tả bằng giọng nói",
         "body": "Đặt con trỏ vào nơi bạn muốn nhập, nhấn phím tắt đọc chính tả, nói rồi thả ra: văn bản tự xuất hiện.\n\nHãy thử ngay tại đây: nhấp vào ô bên dưới và đọc gì đó bằng phím tắt của bạn.",
         "placeholder": "Nhấp vào đây và đọc bằng phím tắt của bạn…",
-        "success": "✓ Hoạt động rồi! Đơn giản vậy thôi."
+        "success": "✓ Hoạt động rồi! Đơn giản vậy thôi.",
+        "tooShort": "Ngắn quá. Giữ phím tắt và nói trọn một câu.",
+        "keepFocus": "Giữ con trỏ trong ô này khi bạn đọc."
       },
       "donate": {
         "title": "Vậy là xong! 🎉",
@@ -259,7 +261,16 @@
         "body": "Và nét cuối: chuyển giữa giao diện sáng và tối. Vậy là hết thanh tiêu đề! 🎨"
       }
     },
-    "chooseLanguage": "Bạn sẽ đọc chính tả bằng ngôn ngữ nào?"
+    "chooseLanguage": "Bạn sẽ đọc chính tả bằng ngôn ngữ nào?",
+    "otherLanguage": "Ngôn ngữ khác…",
+    "why": {
+      "specialist": "Mô hình này được làm riêng cho {{language}}, nên chính xác hơn các mô hình đa dụng và tải về cũng nhanh hơn.",
+      "balanced": "Đây là lựa chọn cân bằng nhất giữa độ chính xác, tốc độ và dung lượng tải về cho {{language}}."
+    },
+    "changeLater": "Bạn có thể đổi mô hình bất cứ lúc nào trong Cài đặt.",
+    "showOtherModels_one": "Xem mô hình còn lại",
+    "showOtherModels_other": "Xem {{count}} mô hình còn lại",
+    "hideOtherModels": "Ẩn các mô hình khác"
   },
   "modelSelector": {
     "custom": "Tùy chỉnh",
@@ -417,12 +428,12 @@
         "sent": "Đã gửi F13"
       },
       "wakeWord": {
-        "label": "Bắt đầu bằng cách nói \"VoCript\"",
-        "description": "Lắng nghe từ 'VoCript' và bắt đầu đọc chính tả khi nghe thấy. Dạy nó bằng cách nói từ đó một lần, trong ba lần ghi riêng biệt.",
+        "label": "Bắt đầu bằng từ của bạn",
+        "description": "Lắng nghe một từ do bạn chọn và bắt đầu đọc chính tả ngay khi nghe thấy. Dạy nó bằng cách nói từ của bạn một lần, trong ba bản ghi riêng. Từ nào cũng được: tên bạn, \"máy tính\", tuỳ bạn.",
         "hint": "Micrô vẫn mở khi bật tính năng này. Mọi thứ được xử lý trên máy của bạn và chỉ những đoạn nói ngắn mới đi tới mô hình, nhưng tốn CPU hơn phím tắt: ở đây một mô hình nhanh như Parakeet hay Moonshine sẽ hợp hơn.",
         "teach": "Dạy nó",
         "listening": "Nói một lần, ngay bây giờ",
-        "teachPrompt": "Nhấn và nói 'VoCript' MỘT lần. Lặp lại quá trình ba lần, không nói ba lần liên tiếp.",
+        "teachPrompt": "Nhấn rồi nói từ của bạn MỘT lần. Lặp lại ba lần, đừng nói ba lần liên tiếp.",
         "taught": "Đã học từ {{count}} bản ghi. Thêm nữa nếu không phải lúc nào cũng nhận ra.",
         "captured": "Đã học",
         "forgotten": "Đã xóa các bản ghi",
@@ -432,7 +443,8 @@
           "tooShort": "Quá ngắn. Hãy nói trọn từ, đừng vội.",
           "deadDevice": "Micrô không trả về gì cả. Hãy kiểm tra xem nó có bị tắt tiếng hoặc đang bị ứng dụng khác dùng không."
         },
-        "beta": "Beta"
+        "beta": "Beta",
+        "stopHint": "Muốn dừng đọc chính tả, hãy nói lại đúng từ đó. Nếu bạn không nói gì, nó tự dừng sau một phút rưỡi."
       }
     },
     "sound": {
@@ -1058,5 +1070,9 @@
       "englishOnly": "Chỉ dịch sang tiếng Anh. Các mô hình giọng nói nhận một công tắc \"dịch\", không phải ngôn ngữ đích, nên hiện chưa có cặp nào khác.",
       "future": "Dịch sang ngôn ngữ bất kỳ cần một mô hình ngôn ngữ. Nó sẽ đến cùng phần dọn dẹp bằng AI cục bộ, nên vẫn chạy được khi không có mạng."
     }
+  },
+  "dictation": {
+    "copiedNoField": "Đã sao chép vào bảng nhớ tạm",
+    "copiedNoFieldHint": "Con trỏ không ở trong ô văn bản nào, hãy dán vào nơi bạn cần."
   }
 }

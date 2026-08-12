@@ -72,7 +72,7 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
             className={`w-11 h-6 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-logo-primary ${
               isLight
                 ? "bg-slate-200 border border-slate-300 peer-checked:border-logo-primary shadow-inner"
-                : "bg-slate-800/80 border border-white/10 peer-checked:shadow-[0_0_12px_var(--color-logo-glow)]"
+                : "bg-slate-800/80 border border-white/10"
             }`}
           ></div>
         </label>

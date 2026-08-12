@@ -83,10 +83,10 @@ export const HeaderDropdown: React.FC<HeaderDropdownProps> = ({
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
-          className={`flex items-center gap-1.5 py-1 px-1.5 rounded-lg text-xs font-bold text-logo-primary transition-all ${
-            glow
-              ? "shadow-[0_0_8px_-1px_var(--color-logo-glow)] hover:shadow-[0_0_12px_0px_var(--color-logo-glow)]"
-              : ""
+          // A tinted pill instead of a halo: it still reads as "this is a
+          // control you can press", without every chip in the header glowing.
+          className={`flex items-center gap-1.5 py-1 px-1.5 rounded-lg text-xs font-bold text-logo-primary transition-colors ${
+            glow ? "bg-logo-primary/10" : ""
           } ${isLight ? "hover:bg-slate-100" : "hover:bg-white/[0.06]"}`}
         >
           {icon}

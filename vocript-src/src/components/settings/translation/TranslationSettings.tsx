@@ -47,7 +47,7 @@ export const TranslationSettings: React.FC = () => {
         dictationLanguage);
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-6">
+    <div className="vc-settings-column space-y-6">
       <SettingsGroup title={t("translation.title")}>
         <div className="flex flex-col gap-4 p-5">
           <p className="text-sm text-text/70">{t("translation.subtitle")}</p>

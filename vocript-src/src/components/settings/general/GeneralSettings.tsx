@@ -32,7 +32,7 @@ export const GeneralSettings: React.FC = () => {
     // browser fallback
   }
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-6">
+    <div className="vc-settings-column space-y-6">
       <SettingsGroup title={t("settings.general.title")}>
         <div data-tour="shortcut-transcribe">
           <ShortcutInput shortcutId="transcribe" grouped={true} />

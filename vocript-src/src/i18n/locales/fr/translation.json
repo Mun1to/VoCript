@@ -211,7 +211,9 @@
         "title": "Dictée vocale",
         "body": "Placez le curseur là où vous voulez écrire, appuyez sur votre raccourci de dictée, parlez puis relâchez : le texte apparaît tout seul.\n\nEssayez ici même : cliquez dans le champ ci-dessous et dictez quelque chose avec votre raccourci.",
         "placeholder": "Cliquez ici et dictez avec votre raccourci…",
-        "success": "✓ Ça marche ! C'est aussi simple que ça."
+        "success": "✓ Ça marche ! C'est aussi simple que ça.",
+        "tooShort": "C'était trop court. Maintenez le raccourci et dites une phrase entière.",
+        "keepFocus": "Gardez le curseur dans ce champ pendant la dictée."
       },
       "donate": {
         "title": "C'est tout ! 🎉",
@@ -259,7 +261,16 @@
         "body": "Et la touche finale : passer du thème clair au sombre. Et voilà tout l'en-tête ! 🎨"
       }
     },
-    "chooseLanguage": "Dans quelle langue allez-vous dicter ?"
+    "chooseLanguage": "Dans quelle langue allez-vous dicter ?",
+    "otherLanguage": "Une autre langue…",
+    "why": {
+      "specialist": "Celui-ci est conçu spécialement pour {{language}} : il se trompe moins que les modèles polyvalents et se télécharge plus vite.",
+      "balanced": "C'est le meilleur compromis entre précision, rapidité et taille de téléchargement pour {{language}}."
+    },
+    "changeLater": "Vous pouvez changer de modèle quand vous voulez, dans les réglages.",
+    "showOtherModels_one": "Voir l'autre modèle",
+    "showOtherModels_other": "Voir les {{count}} autres modèles",
+    "hideOtherModels": "Masquer les autres modèles"
   },
   "modelSelector": {
     "custom": "Personnalisé",
@@ -417,12 +428,12 @@
         "sent": "F13 envoyée"
       },
       "wakeWord": {
-        "label": "Démarrer en disant « VoCript »",
-        "description": "Écoute le mot « VoCript » et commence à dicter dès qu il l entend. Apprenez-lui en disant le mot une seule fois, sur trois enregistrements distincts.",
+        "label": "Démarrer en disant votre mot",
+        "description": "Écoute un mot que vous choisissez et démarre la dictée dès qu'il l'entend. Apprenez-le-lui en disant votre mot une seule fois, dans trois enregistrements distincts. Ce peut être n'importe quoi : votre prénom, « ordinateur », ce que vous voulez.",
         "hint": "Le microphone reste ouvert tant que c'est activé. Tout est traité sur votre ordinateur et seuls les courts passages parlés atteignent le modèle, mais cela consomme plus de CPU que le raccourci : un modèle rapide comme Parakeet ou Moonshine convient mieux ici.",
         "teach": "Apprenez-lui",
         "listening": "Dites-le une fois, maintenant",
-        "teachPrompt": "Appuyez et dites « VoCript » UNE fois. Recommencez trois fois, pas trois fois d affilée.",
+        "teachPrompt": "Appuyez et dites VOTRE mot UNE fois. Répétez l'opération trois fois, ne le dites pas trois fois de suite.",
         "taught": "Apprise à partir de {{count}} enregistrement(s). Ajoutez-en si elle ne vous entend pas toujours.",
         "captured": "Apprise",
         "forgotten": "Enregistrements effacés",
@@ -432,7 +443,8 @@
           "tooShort": "Trop bref. Dites le mot en entier, sans vous presser.",
           "deadDevice": "Le microphone n a rien renvoyé. Vérifiez qu il n est pas coupé ni utilisé par une autre application."
         },
-        "beta": "Bêta"
+        "beta": "Bêta",
+        "stopHint": "Pour arrêter la dictée, redites le même mot. Sans rien dire, elle s'arrête toute seule au bout d'une minute et demie."
       }
     },
     "sound": {
@@ -1058,5 +1070,9 @@
       "englishOnly": "La traduction ne va que vers l'anglais. Les modèles vocaux reçoivent un indicateur « traduire », pas une langue cible, donc aucune autre combinaison n'est possible aujourd'hui.",
       "future": "Traduire vers n'importe quelle langue nécessite un modèle de langage. Cela viendra avec le nettoyage par IA locale, donc cela fonctionnera toujours sans connexion."
     }
+  },
+  "dictation": {
+    "copiedNoField": "Copié dans le presse-papiers",
+    "copiedNoFieldHint": "Aucun champ de texte n'avait le curseur : collez-le où vous en avez besoin."
   }
 }

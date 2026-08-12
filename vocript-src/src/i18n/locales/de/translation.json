@@ -211,7 +211,9 @@
         "title": "Sprachdiktat",
         "body": "Setze den Cursor an die Stelle, an der du schreiben möchtest, drücke deinen Diktat-Shortcut, sprich und lass los – der Text erscheint von selbst.\n\nProbier es gleich hier aus: Klicke in das Feld unten und diktiere etwas mit deinem Shortcut.",
         "placeholder": "Hier klicken und mit deinem Shortcut diktieren…",
-        "success": "✓ Es funktioniert! So einfach ist das."
+        "success": "✓ Es funktioniert! So einfach ist das.",
+        "tooShort": "Das war zu kurz. Halte das Kürzel gedrückt und sag einen ganzen Satz.",
+        "keepFocus": "Lass den Cursor beim Diktieren in diesem Feld."
       },
       "donate": {
         "title": "Das war's! 🎉",
@@ -259,7 +261,16 @@
         "body": "Und der letzte Schliff: zwischen hellem und dunklem Design wechseln. Das war die ganze Kopfleiste! 🎨"
       }
     },
-    "chooseLanguage": "In welcher Sprache möchtest du diktieren?"
+    "chooseLanguage": "In welcher Sprache möchtest du diktieren?",
+    "otherLanguage": "Andere Sprache…",
+    "why": {
+      "specialist": "Dieses Modell ist eigens für {{language}} gebaut, trifft dort also besser als die Allzweckmodelle und ist schneller geladen.",
+      "balanced": "Es bietet für {{language}} das beste Verhältnis aus Genauigkeit, Tempo und Downloadgröße."
+    },
+    "changeLater": "Du kannst das Modell jederzeit in den Einstellungen wechseln.",
+    "showOtherModels_one": "Das andere Modell anzeigen",
+    "showOtherModels_other": "Die anderen {{count}} Modelle anzeigen",
+    "hideOtherModels": "Andere Modelle ausblenden"
   },
   "modelSelector": {
     "custom": "Benutzerdefiniert",
@@ -417,12 +428,12 @@
         "sent": "F13 gesendet"
       },
       "wakeWord": {
-        "label": "Mit „VoCript“ starten",
-        "description": "Hört auf das Wort „VoCript“ und beginnt dann zu diktieren. Bring es ihm bei, indem du das Wort einmal sagst, in drei getrennten Aufnahmen.",
+        "label": "Mit deinem Wort starten",
+        "description": "Hört auf ein Wort, das du selbst wählst, und beginnt zu diktieren, sobald es das hört. Bring es ihm bei, indem du dein Wort einmal sagst, in drei getrennten Aufnahmen. Es kann alles sein: dein Name, „Computer“, was du magst.",
         "hint": "Solange das an ist, bleibt das Mikrofon offen. Alles wird auf deinem Computer verarbeitet und nur kurze Sprachstellen erreichen das Modell, aber es braucht mehr CPU als das Tastenkürzel: hier passt ein schnelles Modell wie Parakeet oder Moonshine besser.",
         "teach": "Beibringen",
         "listening": "Jetzt einmal sagen",
-        "teachPrompt": "Drücken und „VoCript“ EINMAL sagen. Das Ganze dreimal wiederholen, nicht dreimal hintereinander sagen.",
+        "teachPrompt": "Drücken und dein Wort EINMAL sagen. Wiederhole das dreimal, sag es nicht dreimal hintereinander.",
         "taught": "Aus {{count}} Aufnahme(n) gelernt. Nimm mehr auf, wenn es dich nicht immer versteht.",
         "captured": "Gelernt",
         "forgotten": "Aufnahmen gelöscht",
@@ -432,7 +443,8 @@
           "tooShort": "Das war zu kurz. Sag das ganze Wort, ohne Eile.",
           "deadDevice": "Das Mikrofon hat nichts geliefert. Prüfe, ob es stummgeschaltet ist oder von einer anderen App benutzt wird."
         },
-        "beta": "Beta"
+        "beta": "Beta",
+        "stopHint": "Zum Beenden sagst du dasselbe Wort noch einmal. Sagst du nichts, hört es nach anderthalb Minuten von selbst auf."
       }
     },
     "sound": {
@@ -1058,5 +1070,9 @@
       "englishOnly": "Übersetzt wird nur ins Englische. Die Sprachmodelle bekommen einen „Übersetzen“-Schalter, keine Zielsprache, andere Paare sind heute also nicht möglich.",
       "future": "Für Übersetzungen in beliebige Sprachen braucht es ein Sprachmodell. Das kommt mit der lokalen KI-Bereinigung und funktioniert damit weiterhin ohne Internet."
     }
+  },
+  "dictation": {
+    "copiedNoField": "In die Zwischenablage kopiert",
+    "copiedNoFieldHint": "In keinem Textfeld stand der Cursor, füge den Text also dort ein, wo du ihn brauchst."
   }
 }

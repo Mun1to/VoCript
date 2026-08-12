@@ -17,6 +17,7 @@ import Header from "./components/Header";
 import { GuidedTour } from "./components/tour/GuidedTour";
 import { AppContextMenu } from "./components/ui/AppContextMenu";
 import { useSettings } from "./hooks/useSettings";
+import { useDictationIntoApp } from "./hooks/useDictationIntoApp";
 import { useResolvedTheme } from "./hooks/useResolvedTheme";
 import {
   DEFAULT_ACCENT,
@@ -61,6 +62,10 @@ function App() {
     (state) => state.refreshOutputDevices,
   );
   const hasCompletedPostOnboardingInit = useRef(false);
+
+  // Dictating into VoCript's own fields takes a different route than dictating
+  // into any other app; see the hook for why.
+  useDictationIntoApp();
 
   useEffect(() => {
     commands.showMainWindowCommand().catch(() => {});
@@ -347,7 +352,10 @@ function App() {
         <div className="flex-1 flex flex-col overflow-hidden">
           <Header />
           <div className="flex-1 overflow-y-auto">
-            <div className="flex flex-col items-center p-4 gap-4">
+            {/* Padding grows with the window instead of a flat 1rem, so a wide
+                screen gets breathing room and a narrow one keeps every pixel
+                for the settings themselves. */}
+            <div className="flex flex-col items-center gap-4 px-3 py-4 sm:px-5 lg:px-8">
               <AccessibilityPermissions />
               {renderSettingsContent(currentSection)}
             </div>

@@ -211,7 +211,9 @@
         "title": "Sesli dikte",
         "body": "İmleci yazmak istediğiniz yere getirin, dikte kısayolunuza basın, konuşun ve bırakın: metin kendiliğinden görünür.\n\nHemen burada deneyin: aşağıdaki kutuya tıklayın ve kısayolunuzla bir şeyler söyleyin.",
         "placeholder": "Buraya tıklayın ve kısayolunuzla konuşun…",
-        "success": "✓ Çalışıyor! İşte bu kadar kolay."
+        "success": "✓ Çalışıyor! İşte bu kadar kolay.",
+        "tooShort": "Çok kısaydı. Kısayolu basılı tut ve tam bir cümle söyle.",
+        "keepFocus": "Dikte ederken imleci bu kutuda bırak."
       },
       "donate": {
         "title": "Hepsi bu kadar! 🎉",
@@ -259,7 +261,16 @@
         "body": "Ve son dokunuş: açık ve koyu tema arasında geçiş yap. İşte tüm başlık bu kadar! 🎨"
       }
     },
-    "chooseLanguage": "Hangi dilde dikte edeceksiniz?"
+    "chooseLanguage": "Hangi dilde dikte edeceksiniz?",
+    "otherLanguage": "Başka bir dil…",
+    "why": {
+      "specialist": "Bu model özellikle {{language}} için yapıldı; genel amaçlı modellerden daha isabetli ve daha hızlı iniyor.",
+      "balanced": "{{language}} için doğruluk, hız ve indirme boyutu arasındaki en iyi dengeyi kuruyor."
+    },
+    "changeLater": "Modeli istediğin zaman Ayarlar'dan değiştirebilirsin.",
+    "showOtherModels_one": "Diğer modeli göster",
+    "showOtherModels_other": "Diğer {{count}} modeli göster",
+    "hideOtherModels": "Diğer modelleri gizle"
   },
   "modelSelector": {
     "custom": "Özel",
@@ -417,12 +428,12 @@
         "sent": "F13 gönderildi"
       },
       "wakeWord": {
-        "label": "\"VoCript\" diyerek başlat",
-        "description": "'VoCript' kelimesini dinler ve duyduğunda dikteye başlar. Kelimeyi bir kez söyleyerek, üç ayrı kayıtta öğret.",
+        "label": "Kendi kelimeni söyleyerek başlat",
+        "description": "Kendi seçtiğin bir kelimeyi dinler ve duyar duymaz dikteye başlar. Kelimeni bir kez söyleyerek, üç ayrı kayıtta öğret. Ne olursa olsun: adın, \"bilgisayar\", ne istersen.",
         "hint": "Bu açıkken mikrofon açık kalır. Her şey senin bilgisayarında işlenir ve modele yalnızca kısa konuşma parçaları ulaşır, ama kısayoldan daha çok işlemci harcar: burada Parakeet veya Moonshine gibi hızlı bir model daha uygun.",
         "teach": "Öğret",
         "listening": "Şimdi bir kez söyle",
-        "teachPrompt": "Bas ve 'VoCript' de BİR kez. Bunu üç kez tekrarla, arka arkaya üç kez söyleme.",
+        "teachPrompt": "Bas ve KENDİ kelimeni BİR kez söyle. Bunu üç kez tekrarla, arka arkaya üç kez söyleme.",
         "taught": "{{count}} kayıttan öğrenildi. Her seferinde yakalamıyorsa daha fazla ekle.",
         "captured": "Öğrenildi",
         "forgotten": "Kayıtlar silindi",
@@ -432,7 +443,8 @@
           "tooShort": "Çok kısaydı. Kelimenin tamamını, acele etmeden söyle.",
           "deadDevice": "Mikrofon hiçbir şey döndürmedi. Sessize alınmadığından veya başka bir uygulamanın kullanmadığından emin ol."
         },
-        "beta": "Beta"
+        "beta": "Beta",
+        "stopHint": "Dikteyi durdurmak için aynı kelimeyi tekrar söyle. Hiçbir şey söylemezsen bir buçuk dakika sonra kendi kendine biter."
       }
     },
     "sound": {
@@ -1058,5 +1070,9 @@
       "englishOnly": "Çeviri yalnızca İngilizceye yapılır. Ses modelleri hedef dil değil, bir \"çevir\" anahtarı alır; bu yüzden bugün başka eşleşme mümkün değil.",
       "future": "Herhangi bir dile çeviri için bir dil modeli gerekir. Yerel yapay zekâ temizliğiyle birlikte gelecek, yani internetsiz de çalışacak."
     }
+  },
+  "dictation": {
+    "copiedNoField": "Panoya kopyalandı",
+    "copiedNoFieldHint": "İmleç hiçbir metin kutusunda değildi, metni ihtiyacın olan yere yapıştır."
   }
 }

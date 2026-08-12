@@ -15,7 +15,7 @@ export const SettingsGroup: React.FC<SettingsGroupProps> = ({
   const isLight = useResolvedTheme() === "light";
 
   return (
-    <div className="space-y-2 w-full max-w-3xl">
+    <div className="space-y-2 w-full">
       {title && (
         <div className="px-1.5 mb-2.5">
           <h2
@@ -23,7 +23,7 @@ export const SettingsGroup: React.FC<SettingsGroupProps> = ({
               isLight ? "text-logo-primary" : "text-logo-primary"
             }`}
           >
-            <span className="h-3.5 w-1 rounded-full bg-logo-primary shadow-[0_0_8px_var(--color-logo-glow)]" />
+            <span className="h-3.5 w-1 rounded-full bg-logo-primary" />
             {title}
           </h2>
           {description && (
