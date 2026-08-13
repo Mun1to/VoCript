@@ -13,7 +13,14 @@ import {
   checkMicrophonePermission,
   requestMicrophonePermission,
 } from "tauri-plugin-macos-permissions-api";
-import { Check, Download, Globe, Keyboard, Mic } from "lucide-react";
+import {
+  Check,
+  ChevronLeft,
+  Download,
+  Globe,
+  Keyboard,
+  Mic,
+} from "lucide-react";
 import { toast } from "sonner";
 import { commands } from "@/bindings";
 import VoCriptTextLogo from "../icons/VoCriptTextLogo";
@@ -60,9 +67,21 @@ const PERFIL_DE_USO: Record<Uso, string | null> = {
 const Paso: React.FC<{
   numero: number;
   total: number;
+  /** Absent on the first screen: there is nowhere to go back to. */
+  onAtras?: () => void;
+  atras: string;
   children: React.ReactNode;
-}> = ({ numero, total, children }) => (
+}> = ({ numero, total, onAtras, atras, children }) => (
   <div className="flex h-screen w-screen flex-col overflow-hidden">
+    {/* Progress along the very top edge of the window. Three dashes in the
+        corner were a decoration you had to go looking for; a bar that fills
+        is read without being looked at. */}
+    <div className="absolute inset-x-0 top-0 z-10 h-[3px] bg-[var(--vc-border)]">
+      <span
+        className="block h-full bg-logo-primary transition-[width] duration-300"
+        style={{ width: `${((numero + 1) / total) * 100}%` }}
+      />
+    </div>
     {/* The accent bleeds in from the top corner. The screen is mostly empty by
         design — one question at a time — and a flat wall of background read as
         an unfinished page rather than a calm one. */}
@@ -73,24 +92,22 @@ const Paso: React.FC<{
           "radial-gradient(680px 320px at 78% -8%, color-mix(in srgb, var(--color-logo-primary) 20%, transparent), transparent 72%)",
       }}
     />
-    <div className="relative flex shrink-0 items-center gap-4 px-8 pt-6">
-      <VoCriptTextLogo width={116} />
-      <div className="ms-auto flex items-center gap-[7px]">
-        {Array.from({ length: total }, (_, i) => (
-          <span
-            key={i}
-            className="h-[3px] w-[22px] rounded-sm"
-            style={{
-              background:
-                i < numero
-                  ? "color-mix(in srgb, var(--color-logo-primary) 45%, transparent)"
-                  : i === numero
-                    ? "var(--vc-accent-text)"
-                    : "var(--vc-border)",
-            }}
-          />
-        ))}
+    <div className="relative flex shrink-0 items-center gap-3 px-8 pt-6">
+      {/* The slot is there even on the first screen, so the brand doesn't
+          jump sideways when the back button appears. */}
+      <div className="w-[86px] shrink-0">
+        {onAtras && (
+          <button
+            type="button"
+            onClick={onAtras}
+            className="-ms-2 flex items-center gap-1 rounded-lg px-2 py-1.5 text-[13px] text-[var(--vc-text-muted)] transition-colors hover:text-[var(--vc-text-main)]"
+          >
+            <ChevronLeft size={15} className="rtl:-scale-x-100" />
+            {atras}
+          </button>
+        )}
       </div>
+      <VoCriptTextLogo width={116} />
     </div>
     {children}
   </div>
@@ -145,6 +162,15 @@ export const FirstRun: React.FC<FirstRunProps> = ({
     useSettingsStore((s) => s.settings?.selected_language) ?? "en";
 
   const [paso, setPaso] = useState(0);
+  /**
+   * Picking an answer moves on by itself. The short pause is so the card is
+   * seen to light up first: instant navigation reads as "the click did
+   * something else" rather than as an answer being taken.
+   */
+  const avanzar = useCallback(
+    () => window.setTimeout(() => setPaso((p) => Math.min(2, p + 1)), 180),
+    [],
+  );
   /** So the "Another language" card can open the list under it. */
   const selectorIdiomas = useRef<HTMLDivElement>(null);
   const [idioma, setIdioma] = useState<string>(idiomaSistema);
@@ -223,9 +249,13 @@ export const FirstRun: React.FC<FirstRunProps> = ({
     return () => window.clearInterval(id);
   }, [paso, revisarPermisos]);
 
-  const elegirIdioma = (code: string) => {
+  const elegirIdioma = (code: string, seguir = true) => {
     setIdioma(code);
     updateSetting("selected_language", code);
+    if (seguir) {
+      empezarDescarga(code);
+      avanzar();
+    }
   };
 
   /**
@@ -233,17 +263,26 @@ export const FirstRun: React.FC<FirstRunProps> = ({
    * that shows the bar: the whole point is that the wait happens while you are
    * answering the next question instead of afterwards.
    */
-  const empezarDescarga = useCallback(() => {
-    if (descargando || yaDescargados.length > 0 || !recomendadoId) return;
-    setDescargando(recomendadoId);
-    setFallo(false);
-    void downloadModel(recomendadoId).then((ok) => {
-      if (!ok) {
-        setDescargando(null);
-        setFallo(true);
-      }
-    });
-  }, [descargando, yaDescargados.length, recomendadoId, downloadModel]);
+  const empezarDescarga = useCallback(
+    (codigoIdioma?: string) => {
+      // The id is recomputed here rather than read from the render: this runs
+      // from the same click that picks the language, and the memo hasn't caught
+      // up yet — it would download the model for the previous answer.
+      const objetivo = codigoIdioma
+        ? getRecommendedModelId(models, codigoIdioma)
+        : recomendadoId;
+      if (descargando || yaDescargados.length > 0 || !objetivo) return;
+      setDescargando(objetivo);
+      setFallo(false);
+      void downloadModel(objetivo).then((ok) => {
+        if (!ok) {
+          setDescargando(null);
+          setFallo(true);
+        }
+      });
+    },
+    [descargando, yaDescargados.length, recomendadoId, downloadModel, models],
+  );
 
   // Model ready (downloaded, verified and extracted): make it the active one.
   useEffect(() => {
@@ -302,17 +341,10 @@ export const FirstRun: React.FC<FirstRunProps> = ({
     }
   };
 
+  // Back lives at the top now, next to the progress bar, so the footer only
+  // carries the button that moves forward.
   const Pie: React.FC<{ children: React.ReactNode }> = ({ children }) => (
     <div className="relative flex shrink-0 items-center gap-2 px-8 pb-6 pt-4">
-      {paso > 0 && (
-        <button
-          type="button"
-          onClick={() => setPaso((p) => p - 1)}
-          className="rounded-lg px-2 py-2 text-[13.5px] text-[var(--vc-text-muted)] transition-colors hover:text-[var(--vc-text-main)]"
-        >
-          {t("onboarding.first.back")}
-        </button>
-      )}
       <div className="ms-auto flex items-center gap-2">{children}</div>
     </div>
   );
@@ -412,7 +444,7 @@ export const FirstRun: React.FC<FirstRunProps> = ({
     );
 
     return (
-      <Paso numero={0} total={3}>
+      <Paso numero={0} total={3} atras={t("onboarding.first.back")}>
         <Pregunta texto={t("onboarding.first.language.question")}>
           <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
             {tarjetas}
@@ -449,9 +481,15 @@ export const FirstRun: React.FC<FirstRunProps> = ({
     const elegir = (v: Uso) => {
       setUso(v);
       updateSetting("work_profile", PERFIL_DE_USO[v]);
+      avanzar();
     };
     return (
-      <Paso numero={1} total={3}>
+      <Paso
+        numero={1}
+        total={3}
+        atras={t("onboarding.first.back")}
+        onAtras={() => setPaso(0)}
+      >
         <Pregunta
           texto={t("onboarding.first.use.question")}
           ayuda={t("onboarding.first.use.hint")}
@@ -483,15 +521,6 @@ export const FirstRun: React.FC<FirstRunProps> = ({
             />
           </div>
         </Pregunta>
-        <Pie>
-          <button
-            type="button"
-            onClick={() => setPaso(2)}
-            className="rounded-lg bg-logo-primary px-[18px] py-[9px] text-[13.5px] font-semibold text-white transition hover:brightness-110"
-          >
-            {t("onboarding.first.next")}
-          </button>
-        </Pie>
       </Paso>
     );
   }
@@ -540,7 +569,12 @@ export const FirstRun: React.FC<FirstRunProps> = ({
   );
 
   return (
-    <Paso numero={2} total={3}>
+    <Paso
+      numero={2}
+      total={3}
+      atras={t("onboarding.first.back")}
+      onAtras={() => setPaso(1)}
+    >
       <Pregunta
         texto={t("onboarding.first.permission.question")}
         ayuda={
@@ -592,7 +626,7 @@ export const FirstRun: React.FC<FirstRunProps> = ({
             {fallo && (
               <button
                 type="button"
-                onClick={empezarDescarga}
+                onClick={() => empezarDescarga()}
                 className="mt-1 text-[12.5px] font-semibold text-accent hover:underline"
               >
                 {t("onboarding.first.model.retry")}
