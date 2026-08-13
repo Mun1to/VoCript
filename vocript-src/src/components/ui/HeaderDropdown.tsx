@@ -101,19 +101,15 @@ export const HeaderDropdown: React.FC<HeaderDropdownProps> = ({
         </button>
       </HoverTooltip>
       {open && (
+        // Hangs off the bottom edge of the rail, not off the chip: the 5px is
+        // the rail's own padding, so the panel starts exactly where the rail
+        // ends and reads as the rail opening rather than as a card that
+        // happens to be nearby. Same surface and border as the rail, too.
         <div
-          className={`absolute top-full ${align === "end" ? "end-0" : "start-0"} mt-1 min-w-full rounded-lg border shadow-lg z-50 ${panelClassName} ${
-            isLight
-              ? "bg-white border-slate-200"
-              : "bg-[#141620] border-white/10"
-          }`}
+          className={`absolute top-full ${align === "end" ? "end-0" : "start-0"} z-50 mt-[5px] min-w-full rounded-lg border border-[var(--vc-border)] bg-[var(--vc-card-bg)] shadow-lg ${panelClassName}`}
         >
           {title && (
-            <div
-              className={`text-[9px] uppercase tracking-wider px-3 pt-0.5 pb-1.5 ${
-                isLight ? "text-slate-400" : "text-slate-500"
-              }`}
-            >
+            <div className="px-3 pt-1 pb-1.5 text-[9px] uppercase tracking-wider text-[var(--vc-text-muted)]">
               {title}
             </div>
           )}

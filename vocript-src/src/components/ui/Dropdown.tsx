@@ -59,20 +59,26 @@ export const Dropdown: React.FC<DropdownProps> = ({
   };
 
   return (
+    // Open, the list is joined to the control: the button drops its bottom
+    // corners and its bottom border, the list picks up where it left off. A
+    // detached card floating a few pixels below read as a second, unrelated
+    // thing rather than as this control showing you its options.
     <div className={`relative ${className}`} ref={dropdownRef}>
       <button
         type="button"
-        className={`px-2 py-1 text-sm font-semibold bg-mid-gray/10 border border-mid-gray/80 rounded-md min-w-[200px] text-start flex items-center justify-between transition-all duration-150 ${
+        className={`flex min-w-[200px] items-center justify-between border border-[var(--vc-border)] bg-[var(--vc-card-bg)] px-2.5 py-1.5 text-start text-[13px] font-medium text-[var(--vc-text-main)] transition-colors ${
+          isOpen ? "rounded-t-lg border-b-transparent" : "rounded-lg"
+        } ${
           disabled
-            ? "opacity-50 cursor-not-allowed"
-            : "hover:bg-logo-primary/10 cursor-pointer hover:border-logo-primary"
+            ? "cursor-not-allowed opacity-50"
+            : "cursor-pointer hover:border-[var(--vc-text-muted)]"
         }`}
         onClick={handleToggle}
         disabled={disabled}
       >
         <span className="truncate">{selectedOption?.label || placeholder}</span>
         <svg
-          className={`w-4 h-4 ms-2 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""}`}
+          className={`ms-2 h-4 w-4 shrink-0 text-[var(--vc-text-muted)] transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -86,9 +92,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
         </svg>
       </button>
       {isOpen && !disabled && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-mid-gray/80 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
+        <div className="absolute top-full start-0 end-0 z-50 max-h-60 overflow-y-auto rounded-b-lg border border-t-0 border-[var(--vc-border)] bg-[var(--vc-card-bg)] py-1 shadow-lg">
           {options.length === 0 ? (
-            <div className="px-2 py-1 text-sm text-mid-gray">
+            <div className="px-2.5 py-1.5 text-[13px] text-[var(--vc-text-muted)]">
               {t("common.noOptionsFound")}
             </div>
           ) : (
@@ -96,15 +102,15 @@ export const Dropdown: React.FC<DropdownProps> = ({
               <button
                 key={option.value}
                 type="button"
-                className={`w-full px-2 py-1 text-sm text-start hover:bg-logo-primary/10 transition-colors duration-150 ${
+                className={`w-full px-2.5 py-1.5 text-start text-[13px] transition-colors hover:bg-[color-mix(in_srgb,var(--color-logo-primary)_12%,transparent)] ${
                   selectedValue === option.value
-                    ? "bg-logo-primary/20 font-semibold"
-                    : ""
-                } ${option.disabled ? "opacity-50 cursor-not-allowed" : ""}`}
+                    ? "font-semibold text-accent"
+                    : "text-[var(--vc-text-main)]"
+                } ${option.disabled ? "cursor-not-allowed opacity-50" : ""}`}
                 onClick={() => handleSelect(option.value)}
                 disabled={option.disabled}
               >
-                <span className="truncate">{option.label}</span>
+                <span className="block truncate">{option.label}</span>
               </button>
             ))
           )}
