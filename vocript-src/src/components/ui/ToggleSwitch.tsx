@@ -23,11 +23,10 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
   isUpdating = false,
   label,
   description,
-  descriptionMode = "tooltip",
+  descriptionMode,
   grouped = false,
   tooltipPosition = "top",
 }) => {
-  const { t } = useTranslation();
   const isLight = useResolvedTheme() === "light";
 
   // Tell the enclosing block whether we're on, so its header can summarise
@@ -49,26 +48,13 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
       disabled={disabled}
       tooltipPosition={tooltipPosition}
     >
-      <div className="flex items-center gap-3 select-none">
-        {/* In the row, to the left of the label. It used to be an overlay
-            covering the whole setting, which printed the spinner on top of the
-            ON/OFF text. */}
+      {/* No ON/OFF caption next to it any more: the switch already says which
+          way it is, and printing the word again put a second, louder label on
+          every single row. */}
+      <div className="flex items-center gap-2.5 select-none">
         {isUpdating && (
           <div className="w-3.5 h-3.5 shrink-0 border-2 border-logo-primary border-t-transparent rounded-full animate-spin" />
         )}
-        <span
-          className={`text-[11px] font-bold uppercase tracking-wider transition-colors ${
-            checked
-              ? isLight
-                ? "text-accent font-mono"
-                : "text-accent font-mono"
-              : isLight
-                ? "text-slate-400 font-mono"
-                : "text-slate-500 font-mono opacity-60"
-          }`}
-        >
-          {checked ? t("common.enabled", "ON") : t("common.disabled", "OFF")}
-        </span>
         <label
           className={`relative inline-flex items-center ${disabled || isUpdating ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
         >
@@ -80,10 +66,8 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
             onChange={(e) => onChange(e.target.checked)}
           />
           <div
-            className={`w-11 h-6 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-logo-primary ${
-              isLight
-                ? "bg-slate-200 border border-slate-300 peer-checked:border-logo-primary shadow-inner"
-                : "bg-slate-800/80 border border-white/10"
+            className={`h-[19px] w-[34px] rounded-full transition-colors after:absolute after:top-[2px] after:left-[2px] after:h-[15px] after:w-[15px] after:rounded-full after:bg-white after:transition-transform after:content-[''] peer-checked:bg-logo-primary peer-checked:after:translate-x-[15px] ${
+              isLight ? "bg-slate-900/[0.16]" : "bg-white/[0.16]"
             }`}
           ></div>
         </label>

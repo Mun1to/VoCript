@@ -21,7 +21,6 @@
     "debug": "Felsökning",
     "about": "Om",
     "fileTranscription": "Transkribera",
-    "feedback": "Feedback",
     "activity": "Aktivitet",
     "translation": "Översättning",
     "groups": {
@@ -284,10 +283,6 @@
       "customWords": {
         "title": "Egna ord",
         "body": "Finns det namn eller termer som VoCript ofta stavar fel? Lägg till dem här, så justeras ord som låter liknande automatiskt efter din lista — perfekt för egennamn och facktermer."
-      },
-      "feedback": {
-        "title": "Din feedback",
-        "body": "En idé, ett fel eller en kommentar? Skicka den på några sekunder härifrån — det öppnas ett förifyllt ärende (issue) på GitHub. Vi läser varje meddelande för att förbättra VoCript."
       },
       "audioSource": {
         "title": "Ange ljudkällan",
@@ -880,6 +875,11 @@
         "title": "Kontakt",
         "description": "Om mig och mina andra projekt",
         "button": "Visa portfolio"
+      },
+      "reportIssue": {
+        "button": "Öppna en issue",
+        "description": "Öppnar issue-formuläret på GitHub. Skriv vad du förväntade dig och vad som hände i stället.",
+        "title": "Rapportera ett problem"
       }
     },
     "theme": {
@@ -914,23 +914,6 @@
         "save": "Det gick inte att spara filen"
       }
     },
-    "feedback": {
-      "title": "Feedback & Framtida Funktioner",
-      "description": "Dina synpunkter hjälper oss att forma kommande versioner och nya appar.",
-      "categories": {
-        "idea": "Förslag",
-        "ideaDesc": "Nya funktioner",
-        "bug": "Rapportera ett problem",
-        "bugDesc": "Fel eller buggar",
-        "general": "Allmän feedback",
-        "generalDesc": "Din upplevelse"
-      },
-      "formLabel": "Beskriv ditt meddelande eller din idé:",
-      "placeholder": "Skriv din åsikt, ett funktionsförslag eller ett problem du hittat...",
-      "note": "Vi läser varje meddelande för att förbättra VoCript.",
-      "sent": "Skickat!",
-      "sendBtn": "Skicka feedback"
-    },
     "summary": {
       "active": "{{on}} av {{total}} på"
     },
@@ -941,6 +924,17 @@
       "inSection": "Filtrera i {{section}}",
       "generic": "Filtrera inställningar",
       "empty": "Inget här matchar det. Prova förstoringsglaset ovan för att söka i hela appen."
+    },
+    "pageSubtitle": {
+      "about": "Version, licenser och var VoCript kommer ifrån.",
+      "advanced": "Detaljerna: inklistring, tangentbord, acceleration och minne.",
+      "debug": "Loggar och verktyg för när något går fel.",
+      "file": "Gör text av en ljud- eller videofil du redan har.",
+      "general": "Hur dikteringen startar och vad som händer med texten när den slutar.",
+      "history": "Allt du har dikterat, med ljudet om du sparade det.",
+      "postProcessing": "Kör det du dikterar genom en språkmodell innan det skrivs.",
+      "themes": "Färgen, typsnittet och storleken på hela gränssnittet.",
+      "translation": "Diktera på ett språk och låt det skrivas på ett annat."
     }
   },
   "footer": {

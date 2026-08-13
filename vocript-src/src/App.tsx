@@ -12,7 +12,12 @@ import "./App.css";
 import AccessibilityPermissions from "./components/AccessibilityPermissions";
 import Footer from "./components/footer";
 import Onboarding, { AccessibilityOnboarding } from "./components/onboarding";
-import { Sidebar, SidebarSection, SECTIONS_CONFIG } from "./components/Sidebar";
+import {
+  Sidebar,
+  SidebarSection,
+  SECTIONS_CONFIG,
+  SECTION_SUBTITLE,
+} from "./components/Sidebar";
 import { SettingsLayout } from "./components/ui/SettingsLayout";
 import { CommandPalette } from "./components/CommandPalette";
 import { TodayScreen } from "./components/today/TodayScreen";
@@ -56,6 +61,7 @@ const renderSettingsContent = (
     <SettingsLayout
       key={section}
       sectionKey={SECTIONS_CONFIG[section]?.labelKey}
+      subtitleKey={SECTION_SUBTITLE[section]}
     >
       <ActiveComponent />
     </SettingsLayout>
@@ -390,23 +396,23 @@ function App() {
         onClose={() => setPaletaAbierta(false)}
         onNavigate={setCurrentSection}
       />
-      {/* Main content area that takes remaining space */}
+      {/* The bar spans the whole window, with the brand in it, and the sidebar
+          starts below — so the control rail stays centred in the window
+          instead of drifting every time the sidebar is collapsed. */}
+      <Header onSearch={() => setPaletaAbierta(true)} />
       <div className="flex-1 flex overflow-hidden">
         <Sidebar
           activeSection={currentSection}
           onSectionChange={setCurrentSection}
         />
         {/* Scrollable content area */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <Header onSearch={() => setPaletaAbierta(true)} />
-          <div className="flex-1 overflow-y-auto">
-            {/* Padding grows with the window instead of a flat 1rem, so a wide
-                screen gets breathing room and a narrow one keeps every pixel
-                for the settings themselves. */}
-            <div className="flex flex-col items-center gap-4 px-3 py-4 sm:px-5 lg:px-8">
-              <AccessibilityPermissions />
-              {renderSettingsContent(currentSection, setCurrentSection)}
-            </div>
+        <div className="flex-1 overflow-y-auto">
+          {/* Padding grows with the window instead of a flat 1rem, so a wide
+              screen gets breathing room and a narrow one keeps every pixel
+              for the settings themselves. */}
+          <div className="flex flex-col items-center gap-4 px-3 py-5 sm:px-5 lg:px-8">
+            <AccessibilityPermissions />
+            {renderSettingsContent(currentSection, setCurrentSection)}
           </div>
         </div>
       </div>

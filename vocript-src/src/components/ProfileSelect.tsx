@@ -34,13 +34,7 @@ export const ProfileSelect: React.FC = () => {
     <HeaderDropdown
       dataTour="header-profile"
       tooltip={t("header.profile.label")}
-      icon={
-        <Briefcase
-          className={`w-3.5 h-3.5 shrink-0 ${
-            isLight ? "text-slate-500" : "text-slate-400"
-          }`}
-        />
-      }
+      icon={<Briefcase className="w-3.5 h-3.5 shrink-0" />}
       label={currentLabel}
     >
       {PROFILES.map((p) => (

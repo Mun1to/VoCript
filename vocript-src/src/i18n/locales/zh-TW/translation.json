@@ -21,7 +21,6 @@
     "debug": "偵錯",
     "about": "關於",
     "fileTranscription": "轉寫",
-    "feedback": "意見回饋",
     "activity": "活動",
     "translation": "翻譯",
     "groups": {
@@ -284,10 +283,6 @@
       "customWords": {
         "title": "自訂詞彙",
         "body": "有沒有 VoCript 經常寫錯的名字或術語？在這裡新增它們，發音相近的詞會自動依你的清單進行校正——非常適合專有名詞和專業術語。"
-      },
-      "feedback": {
-        "title": "你的回饋",
-        "body": "有想法、問題或建議？在這裡幾秒鐘即可送出——會在 GitHub 上開啟一個預先填好的 issue。我們會閱讀每一則訊息，持續改進 VoCript。"
       },
       "audioSource": {
         "title": "標註音訊來源",
@@ -880,6 +875,11 @@
         "title": "聯絡方式",
         "description": "關於我以及我的其他專案",
         "button": "查看作品集"
+      },
+      "reportIssue": {
+        "button": "建立 issue",
+        "description": "打開 GitHub 的 issue 表單。說明你預期的結果和實際發生的情況。",
+        "title": "回報問題"
       }
     },
     "theme": {
@@ -914,23 +914,6 @@
         "save": "無法儲存檔案"
       }
     },
-    "feedback": {
-      "title": "回饋與未來功能規劃",
-      "description": "您的回饋將直接幫助我們改進 VoCript 的後續版本及未來推出的新應用。",
-      "categories": {
-        "idea": "建議",
-        "ideaDesc": "新功能",
-        "bug": "回報問題",
-        "bugDesc": "錯誤或故障",
-        "general": "整體意見",
-        "generalDesc": "你的使用體驗"
-      },
-      "formLabel": "請描述你的訊息或想法：",
-      "placeholder": "寫下你的意見、功能建議或遇到的問題……",
-      "note": "我們會檢視每一則訊息，以改善 VoCript。",
-      "sent": "傳送成功！",
-      "sendBtn": "傳送意見回饋"
-    },
     "summary": {
       "active": "{{total}} 項中 {{on}} 項已開啟"
     },
@@ -941,6 +924,17 @@
       "inSection": "在「{{section}}」中篩選",
       "generic": "篩選設定",
       "empty": "這裡沒有相符的項目。試試上方的放大鏡，搜尋整個應用程式。"
+    },
+    "pageSubtitle": {
+      "about": "版本、授權，以及 VoCript 的來歷。",
+      "advanced": "細節設定：貼上、鍵盤、加速和記憶體。",
+      "debug": "出問題時用的日誌和工具。",
+      "file": "把你已經有的音訊或影片檔案變成文字。",
+      "general": "口述怎麼開始，以及結束後文字去哪裡。",
+      "history": "你口述過的全部內容，保留了錄音就一併在這裡。",
+      "postProcessing": "先讓語言模型處理你口述的內容，再寫出來。",
+      "themes": "整個介面的顏色、字體和大小。",
+      "translation": "用一種語言說，用另一種語言寫。"
     }
   },
   "footer": {

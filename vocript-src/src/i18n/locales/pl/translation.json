@@ -21,7 +21,6 @@
     "debug": "Debugowanie",
     "about": "O programie",
     "fileTranscription": "Transkrybuj",
-    "feedback": "Opinie",
     "activity": "Aktywność",
     "translation": "Tłumaczenie",
     "groups": {
@@ -284,10 +283,6 @@
       "customWords": {
         "title": "Słowa niestandardowe",
         "body": "Czy są nazwy lub terminy, które VoCript ciągle zapisuje błędnie? Dodaj je tutaj, a podobnie brzmiące słowa zostaną automatycznie dopasowane do Twojej listy — idealne dla nazw własnych i żargonu."
-      },
-      "feedback": {
-        "title": "Twoja opinia się liczy",
-        "body": "Masz pomysł, błąd albo uwagę? Wyślij to stąd w kilka sekund — otworzy się wstępnie wypełnione zgłoszenie na GitHubie. Czytamy każdą wiadomość, aby ulepszać VoCript."
       },
       "audioSource": {
         "title": "Oznacz źródło dźwięku",
@@ -880,6 +875,11 @@
         "title": "Kontakt",
         "description": "O mnie i moich innych projektach",
         "button": "Zobacz portfolio"
+      },
+      "reportIssue": {
+        "button": "Otwórz issue",
+        "description": "Otwiera formularz issue na GitHubie. Napisz, czego oczekiwałeś i co się stało zamiast tego.",
+        "title": "Zgłoś problem"
       }
     },
     "theme": {
@@ -914,23 +914,6 @@
         "save": "Nie udało się zapisać pliku"
       }
     },
-    "feedback": {
-      "title": "Opinie i Przyszłe Funkcje",
-      "description": "Twoje opinie pomagają kształtować nadchodzące wersje i nowe aplikacje.",
-      "categories": {
-        "idea": "Sugestia",
-        "ideaDesc": "Nowe funkcje",
-        "bug": "Zgłoś problem",
-        "bugDesc": "Błędy lub usterki",
-        "general": "Ogólna opinia",
-        "generalDesc": "Twoje doświadczenie"
-      },
-      "formLabel": "Opisz swoją wiadomość lub pomysł:",
-      "placeholder": "Napisz swoją opinię, propozycję funkcji lub napotkany problem...",
-      "note": "Czytamy każdą wiadomość, aby ulepszać VoCript.",
-      "sent": "Wysłano pomyślnie!",
-      "sendBtn": "Wyślij opinię"
-    },
     "summary": {
       "active": "{{on}} z {{total}} włączonych"
     },
@@ -941,6 +924,17 @@
       "inSection": "Filtruj w sekcji {{section}}",
       "generic": "Filtruj ustawienia",
       "empty": "Nic tu nie pasuje. Spróbuj lupy u góry, żeby przeszukać całą aplikację."
+    },
+    "pageSubtitle": {
+      "about": "Wersja, licencje i skąd pochodzi VoCript.",
+      "advanced": "Szczegóły: wklejanie, klawiatura, przyspieszenie i pamięć.",
+      "debug": "Dzienniki i narzędzia na wypadek problemów.",
+      "file": "Zamień na tekst plik audio lub wideo, który już masz.",
+      "general": "Jak zaczyna się dyktowanie i co dzieje się z tekstem na końcu.",
+      "history": "Wszystko, co podyktowałeś, z nagraniem, jeśli je zachowałeś.",
+      "postProcessing": "Przepuść podyktowany tekst przez model językowy przed zapisem.",
+      "themes": "Kolor, krój i rozmiar całego interfejsu.",
+      "translation": "Dyktuj w jednym języku, a niech zapisze się w innym."
     }
   },
   "footer": {

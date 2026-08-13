@@ -21,7 +21,6 @@
     "debug": "Gỡ lỗi",
     "about": "Giới thiệu",
     "fileTranscription": "Chép lời",
-    "feedback": "Phản hồi",
     "activity": "Hoạt động",
     "translation": "Dịch",
     "groups": {
@@ -284,10 +283,6 @@
       "customWords": {
         "title": "Từ tùy chỉnh",
         "body": "Có tên riêng hay thuật ngữ mà VoCript hay nhận sai? Thêm chúng vào đây và những từ phát âm gần giống sẽ tự động được chỉnh theo danh sách của bạn — lý tưởng cho tên riêng và thuật ngữ chuyên ngành."
-      },
-      "feedback": {
-        "title": "Ý kiến của bạn",
-        "body": "Một ý tưởng, một lỗi hay một góp ý? Gửi ngay từ đây trong vài giây — một issue điền sẵn sẽ mở trên GitHub. Chúng tôi đọc mọi tin nhắn để cải thiện VoCript."
       },
       "audioSource": {
         "title": "Ghi nguồn âm thanh",
@@ -880,6 +875,11 @@
         "title": "Liên hệ",
         "description": "Về tôi và các dự án khác của tôi",
         "button": "Xem portfolio"
+      },
+      "reportIssue": {
+        "button": "Mở issue",
+        "description": "Mở biểu mẫu issue trên GitHub. Hãy nói bạn mong đợi gì và chuyện gì đã xảy ra.",
+        "title": "Báo lỗi"
       }
     },
     "theme": {
@@ -914,23 +914,6 @@
         "save": "Không thể lưu tệp"
       }
     },
-    "feedback": {
-      "title": "Phản hồi & Tính năng Tương lai",
-      "description": "Ý kiến của bạn giúp chúng tôi phát triển các phiên bản và ứng dụng tiếp theo.",
-      "categories": {
-        "idea": "Đề xuất",
-        "ideaDesc": "Tính năng mới",
-        "bug": "Báo cáo sự cố",
-        "bugDesc": "Lỗi hoặc trục trặc",
-        "general": "Phản hồi chung",
-        "generalDesc": "Trải nghiệm của bạn"
-      },
-      "formLabel": "Mô tả tin nhắn hoặc ý tưởng của bạn:",
-      "placeholder": "Viết ý kiến, đề xuất tính năng hoặc sự cố bạn gặp phải...",
-      "note": "Chúng tôi đọc mọi tin nhắn để cải thiện VoCript.",
-      "sent": "Đã gửi thành công!",
-      "sendBtn": "Gửi phản hồi"
-    },
     "summary": {
       "active": "{{on}} trên {{total}} đang bật"
     },
@@ -941,6 +924,17 @@
       "inSection": "Lọc trong {{section}}",
       "generic": "Lọc cài đặt",
       "empty": "Ở đây không có gì khớp. Thử kính lúp phía trên để tìm trong toàn bộ ứng dụng."
+    },
+    "pageSubtitle": {
+      "about": "Phiên bản, giấy phép và VoCript đến từ đâu.",
+      "advanced": "Chi tiết: dán, bàn phím, tăng tốc và bộ nhớ.",
+      "debug": "Nhật ký và công cụ cho lúc có trục trặc.",
+      "file": "Biến một tệp âm thanh hoặc video bạn đã có thành chữ.",
+      "general": "Đọc chính tả bắt đầu thế nào và văn bản đi đâu khi kết thúc.",
+      "history": "Mọi thứ bạn đã đọc, kèm âm thanh nếu bạn giữ lại.",
+      "postProcessing": "Cho nội dung bạn đọc qua một mô hình ngôn ngữ trước khi viết.",
+      "themes": "Màu, kiểu chữ và cỡ chữ của toàn bộ giao diện.",
+      "translation": "Nói bằng một thứ tiếng và viết ra bằng thứ tiếng khác."
     }
   },
   "footer": {

@@ -305,7 +305,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
         {/* The engine */}
         <div className="vc-panel">
           <h3 className="vc-panel-title">{t("today.engine.title")}</h3>
-          <dl className="flex flex-col gap-2 text-[13px]">
+          <dl className="vc-panel-list text-[13px]">
             <Row
               label={t("today.engine.model")}
               value={modelName ?? t("today.engine.noModel")}
@@ -345,7 +345,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
             </p>
           ) : (
             <>
-              <ul className="flex flex-col gap-3">
+              <ul className="vc-panel-list">
                 {recent.map((entry) => {
                   const text =
                     entry.post_processed_text ?? entry.transcription_text;

@@ -93,9 +93,9 @@ export const ActivitySettings: React.FC = () => {
   return (
     <div className="vc-settings-column space-y-6">
       <SettingsGroup title={t("activity.title")}>
+        {/* The explanation is the page subtitle now (see SECTION_SUBTITLE), so
+            it isn't repeated inside the block. */}
         <div className="flex flex-col gap-5 p-5">
-          <p className="text-sm text-text/70">{t("activity.subtitle")}</p>
-
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <SummaryCard
               icon={<Type className="h-3.5 w-3.5" />}

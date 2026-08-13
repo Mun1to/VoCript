@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getVersion } from "@tauri-apps/api/app";
 import { openUrl } from "@tauri-apps/plugin-opener";
-import { Coffee, Heart } from "lucide-react";
+import { Bug, Coffee, Heart } from "lucide-react";
 import { SettingsGroup } from "../../ui/SettingsGroup";
 import { SettingContainer } from "../../ui/SettingContainer";
 import { Button } from "../../ui/Button";
@@ -12,6 +12,7 @@ import { LogDirectory } from "../debug";
 
 const BMC_URL = "https://buymeacoffee.com/munito";
 const VOCRIPT_REPO_URL = "https://github.com/Mun1to/VoCript";
+const NEW_ISSUE_URL = "https://github.com/Mun1to/VoCript/issues/new";
 
 export const AboutSettings: React.FC = () => {
   const { t } = useTranslation();
@@ -75,6 +76,26 @@ export const AboutSettings: React.FC = () => {
             onClick={() => openUrl(VOCRIPT_REPO_URL)}
           >
             {t("settings.about.sourceCode.button")}
+          </Button>
+        </SettingContainer>
+
+        {/* This used to be a whole section with a category picker and a text
+            box, which only ever ended up opening this same page with the
+            fields prefilled. GitHub's own form does that better, and asks the
+            questions that actually help. */}
+        <SettingContainer
+          title={t("settings.about.reportIssue.title")}
+          description={t("settings.about.reportIssue.description")}
+          grouped={true}
+        >
+          <Button
+            variant="secondary"
+            size="md"
+            onClick={() => openUrl(NEW_ISSUE_URL)}
+            className="flex items-center gap-2"
+          >
+            <Bug className="w-3.5 h-3.5" />
+            {t("settings.about.reportIssue.button")}
           </Button>
         </SettingContainer>
 

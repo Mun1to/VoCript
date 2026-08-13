@@ -9,7 +9,6 @@ export { AboutSettings } from "./about/AboutSettings";
 export { PostProcessingSettings } from "./post-processing/PostProcessingSettings";
 export { ModelsSettings } from "./models/ModelsSettings";
 export { FileTranscription } from "./file-transcription/FileTranscription";
-export { FeedbackSettings } from "./feedback/FeedbackSettings";
 export { ThemesSettings } from "./themes/ThemesSettings";
 
 // Individual setting components

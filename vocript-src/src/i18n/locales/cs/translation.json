@@ -21,7 +21,6 @@
     "debug": "Ladění",
     "about": "O aplikaci",
     "fileTranscription": "Přepsat",
-    "feedback": "Zpětná vazba",
     "activity": "Aktivita",
     "translation": "Překlad",
     "groups": {
@@ -284,10 +283,6 @@
       "customWords": {
         "title": "Vlastní slova",
         "body": "Plete si VoCript jména nebo odborné termíny? Přidejte je sem a podobně znějící slova se automaticky upraví podle vašeho seznamu — ideální pro vlastní jména a žargon."
-      },
-      "feedback": {
-        "title": "Vaše zpětná vazba",
-        "body": "Máte nápad, chybu nebo připomínku? Pošlete je odsud během pár vteřin — otevře se předvyplněné hlášení (issue) na GitHubu. Čteme každou zprávu, abychom VoCript vylepšovali."
       },
       "audioSource": {
         "title": "Zdroj zvuku",
@@ -880,6 +875,11 @@
         "title": "Kontakt",
         "description": "O mně a mých dalších projektech",
         "button": "Zobrazit portfolio"
+      },
+      "reportIssue": {
+        "button": "Otevřít issue",
+        "description": "Otevře formulář issue na GitHubu. Napiš, co jsi čekal a co se stalo místo toho.",
+        "title": "Nahlásit problém"
       }
     },
     "theme": {
@@ -914,23 +914,6 @@
         "save": "Soubor se nepodařilo uložit"
       }
     },
-    "feedback": {
-      "title": "Zpětná vazba a budoucí funkce",
-      "description": "Vaše názory pomáhají utvářet budoucí verze VoCript a další aplikace.",
-      "categories": {
-        "idea": "Návrh",
-        "ideaDesc": "Nové funkce",
-        "bug": "Nahlásit problém",
-        "bugDesc": "Chyby nebo závady",
-        "general": "Obecná zpětná vazba",
-        "generalDesc": "Vaše zkušenost"
-      },
-      "formLabel": "Popište svou zprávu nebo nápad:",
-      "placeholder": "Napište svůj názor, návrh funkce nebo nalezený problém...",
-      "note": "Čteme každou zprávu, abychom vylepšili VoCript.",
-      "sent": "Úspěšně odesláno!",
-      "sendBtn": "Odeslat zpětnou vazbu"
-    },
     "summary": {
       "active": "{{on}} z {{total}} zapnuto"
     },
@@ -941,6 +924,17 @@
       "inSection": "Filtrovat v sekci {{section}}",
       "generic": "Filtrovat nastavení",
       "empty": "Tady nic neodpovídá. Zkus lupu nahoře a prohledej celou aplikaci."
+    },
+    "pageSubtitle": {
+      "about": "Verze, licence a odkud se VoCript vzal.",
+      "advanced": "Detaily: vkládání, klávesnice, akcelerace a paměť.",
+      "debug": "Záznamy a nástroje pro případ, že něco nefunguje.",
+      "file": "Převeď na text zvukový nebo video soubor, který už máš.",
+      "general": "Jak se diktování spouští a co se s textem stane na konci.",
+      "history": "Všechno, co jsi nadiktoval, i se zvukem, pokud sis ho nechal.",
+      "postProcessing": "Pusť nadiktovaný text přes jazykový model, než se zapíše.",
+      "themes": "Barva, písmo a velikost celého rozhraní.",
+      "translation": "Diktuj v jednom jazyce a nech to zapsat v jiném."
     }
   },
   "footer": {

@@ -93,11 +93,11 @@ export const TranscriptionModeSwitch: React.FC = () => {
         dataTour={control.tour}
         tooltip={t(control.labelKey)}
         title={t(control.labelKey)}
+        // No colour here: inside the header rail the icon inherits the muted
+        // tone from the chip, and lights up with it on hover.
         icon={
           <Icon
-            className={`w-3.5 h-3.5 shrink-0 ${
-              isLight ? "text-slate-500" : "text-slate-400"
-            } ${updating ? "opacity-50" : ""}`}
+            className={`w-3.5 h-3.5 shrink-0 ${updating ? "opacity-50" : ""}`}
           />
         }
         label={currentLabel}
@@ -120,10 +120,21 @@ export const TranscriptionModeSwitch: React.FC = () => {
     );
   };
 
+  const visibles = CONTROLS.filter((c) => isWindows || !c.windowsOnly);
+  // Where the audio controls end and the text ones begin. The rail draws a
+  // hairline there: "what I listen to" and "what happens to the text" are two
+  // different questions, and six chips in an unbroken row read as one.
+  const corte = visibles.findIndex((c) => c.key === "clipboard_only");
+
   return (
-    <div className="flex items-center gap-2">
-      {CONTROLS.filter((c) => isWindows || !c.windowsOnly).map(renderControl)}
-    </div>
+    <>
+      {visibles.map((control, i) => (
+        <React.Fragment key={control.key}>
+          {i === corte && corte > 0 && <span className="vc-chips-sep" />}
+          {renderControl(control)}
+        </React.Fragment>
+      ))}
+    </>
   );
 };
 

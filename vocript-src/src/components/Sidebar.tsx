@@ -12,12 +12,9 @@ import {
   Cpu,
   AudioLines,
   FileAudio,
-  MessageSquare,
   Palette,
   Home,
 } from "lucide-react";
-import VoCriptTextLogo from "./icons/VoCriptTextLogo";
-import VoCriptMark from "./icons/VoCriptMark";
 import { useSettings } from "../hooks/useSettings";
 import { useResolvedTheme } from "../hooks/useResolvedTheme";
 import {
@@ -31,7 +28,6 @@ import {
   PostProcessingSettings,
   ModelsSettings,
   FileTranscription,
-  FeedbackSettings,
   ThemesSettings,
 } from "./settings";
 import { TodayScreen } from "./today/TodayScreen";
@@ -120,12 +116,6 @@ export const SECTIONS_CONFIG = {
     component: AboutSettings,
     enabled: () => true,
   },
-  feedback: {
-    labelKey: "sidebar.feedback",
-    icon: MessageSquare,
-    component: FeedbackSettings,
-    enabled: () => true,
-  },
   advanced: {
     labelKey: "sidebar.advanced",
     icon: Cog,
@@ -159,11 +149,29 @@ const SECTION_GROUPS = [
       "postprocessing",
       "debug",
       "about",
-      "feedback",
       "advanced",
     ] as SidebarSection[],
   },
 ];
+
+/**
+ * The line under each page heading. Models and Activity already had one of
+ * their own inside the section, so those two reuse their existing text rather
+ * than getting a second, near-identical sentence written for them.
+ */
+export const SECTION_SUBTITLE: Partial<Record<SidebarSection, string>> = {
+  general: "settings.pageSubtitle.general",
+  models: "settings.models.description",
+  file: "settings.pageSubtitle.file",
+  history: "settings.pageSubtitle.history",
+  translation: "settings.pageSubtitle.translation",
+  activity: "activity.subtitle",
+  themes: "settings.pageSubtitle.themes",
+  postprocessing: "settings.pageSubtitle.postProcessing",
+  debug: "settings.pageSubtitle.debug",
+  about: "settings.pageSubtitle.about",
+  advanced: "settings.pageSubtitle.advanced",
+};
 
 /** Collapsed state is pure UI, so it lives in localStorage, not in settings. */
 const CLAVE_PLEGADO = "vocript_sidebar_collapsed";
@@ -225,21 +233,34 @@ export const Sidebar: React.FC<SidebarProps> = ({
         onClick={() => onSectionChange(section.id)}
         title={t(section.labelKey)}
         aria-current={isActive ? "page" : undefined}
-        className={`group relative flex items-center rounded-xl py-2.5 text-start transition-all duration-200 font-semibold text-xs ${
-          plegado ? "justify-center px-0 w-full" : "gap-3 w-full ps-3.5 pe-3"
+        // The selected item is a tint of the accent with normal text, not a
+        // solid accent pill with white on top: with a bold accent the solid
+        // version was the loudest thing on screen, louder than the content.
+        className={`group relative flex items-center rounded-lg py-[7px] text-start text-[13.5px] transition-colors ${
+          plegado
+            ? "justify-center px-0 w-full"
+            : "gap-2.5 w-full ps-2.5 pe-2.5"
         } ${
           isActive
-            ? "bg-logo-primary text-white"
+            ? "font-semibold text-[var(--vc-text-main)]"
             : isLight
-              ? "text-slate-600 hover:bg-slate-200/60 hover:text-slate-900"
-              : "text-slate-400 hover:bg-white/[0.05] hover:text-slate-200"
+              ? "text-slate-600 hover:bg-slate-900/[0.05] hover:text-slate-900"
+              : "text-slate-400 hover:bg-white/[0.06] hover:text-slate-200"
         }`}
+        style={
+          isActive
+            ? {
+                background:
+                  "color-mix(in srgb, var(--color-logo-primary) 20%, transparent)",
+              }
+            : undefined
+        }
       >
         <Icon
-          width={18}
-          height={18}
+          width={17}
+          height={17}
           className={`shrink-0 transition-colors ${
-            isActive ? "text-white" : "text-accent"
+            isActive ? "text-accent" : "opacity-85"
           }`}
         />
         {!plegado && <span className="truncate">{t(section.labelKey)}</span>}
@@ -249,20 +270,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <div
-      className={`flex flex-col h-full shrink-0 border-e select-none transition-[width,background-color] duration-200 ${
-        plegado ? "w-14" : "w-52"
-      } ${isLight ? "bg-slate-100 border-slate-200" : "bg-[var(--vc-sidebar-bg)] border-white/10"}`}
+      className={`flex flex-col h-full shrink-0 select-none border-e border-[var(--vc-border)] bg-[var(--vc-sidebar-bg)] transition-[width] duration-200 ${
+        plegado ? "w-14" : "w-[206px]"
+      }`}
     >
-      <div
-        className={`flex flex-col items-center pt-5 pb-3 ${plegado ? "px-2" : "px-4"}`}
-      >
-        {plegado ? <VoCriptMark width={24} /> : <VoCriptTextLogo width={136} />}
-      </div>
-      <div className="mx-4 mb-3 h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
-
+      {/* No brand here: it lives in the bar across the top now, so the menu
+          starts at the first section instead of a logo and a divider. */}
       <nav
-        className={`flex flex-col gap-1.5 py-1 overflow-y-auto overflow-x-hidden flex-1 min-h-0 ${
-          plegado ? "px-2" : "px-3"
+        className={`flex flex-col gap-0.5 overflow-y-auto overflow-x-hidden flex-1 min-h-0 p-2 ${
+          plegado ? "px-1.5" : ""
         }`}
       >
         {agrupadas.map((grupo, i) =>
@@ -273,15 +289,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   // Collapsed there's no room for a heading, so the group
                   // becomes a hairline: the grouping survives, the clipped
                   // half-word doesn't.
-                  <div
-                    className={`mx-2 my-1.5 h-px ${isLight ? "bg-slate-300" : "bg-white/10"}`}
-                  />
+                  <div className="mx-3 my-2 h-px bg-[var(--vc-border)]" />
                 ) : (
-                  <div
-                    className={`px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-[0.08em] ${
-                      isLight ? "text-slate-400" : "text-slate-500"
-                    }`}
-                  >
+                  <div className="px-2.5 pt-3.5 pb-1.5 text-[10.5px] font-bold uppercase tracking-[0.11em] text-[var(--vc-text-muted)] opacity-80">
                     {t(grupo.rotulo)}
                   </div>
                 ))}
@@ -291,23 +301,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
         )}
       </nav>
 
-      <div
-        className={`border-t transition-colors ${plegado ? "px-2 py-2" : "px-3 py-2.5"} ${
-          isLight ? "border-slate-200" : "border-white/10"
-        }`}
-      >
+      <div className="border-t border-[var(--vc-border)] p-2">
         <button
           type="button"
           onClick={() => setPlegado((v) => !v)}
           title={t(plegado ? "sidebar.expand" : "sidebar.collapse")}
           aria-expanded={!plegado}
-          className={`flex items-center rounded-xl py-2 text-xs font-medium transition-colors ${
-            plegado ? "justify-center w-full" : "gap-2.5 w-full ps-3.5 pe-3"
-          } ${
-            isLight
-              ? "text-slate-500 hover:bg-slate-200/60 hover:text-slate-800"
-              : "text-slate-500 hover:bg-white/[0.05] hover:text-slate-300"
-          }`}
+          className={`flex items-center rounded-lg py-1.5 text-[12.5px] text-[var(--vc-text-muted)] transition-colors ${
+            plegado ? "justify-center w-full" : "gap-2.5 w-full ps-2.5 pe-2.5"
+          } ${isLight ? "hover:bg-slate-900/[0.05]" : "hover:bg-white/[0.06]"}`}
         >
           <ChevronLeft
             size={16}

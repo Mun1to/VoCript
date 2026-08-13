@@ -52,7 +52,6 @@
     "themes": "Themes",
     "debug": "Debug",
     "about": "About",
-    "feedback": "Feedback",
     "activity": "Activity",
     "translation": "Translation",
     "groups": {
@@ -204,10 +203,6 @@
       "customWords": {
         "title": "Custom words",
         "body": "Are there names or terms VoCript keeps getting wrong? Add them here and similar-sounding words are nudged to match your list automatically — great for proper names and jargon."
-      },
-      "feedback": {
-        "title": "Your feedback",
-        "body": "Got an idea, a bug or a comment? Send it in seconds from here — it opens a prefilled issue on GitHub. We read every message to keep improving VoCript."
       },
       "audioSource": {
         "title": "Tag the audio source",
@@ -943,24 +938,12 @@
           "description": "VoCript is a fork of the open-source project Handy, created by cjpais.",
           "button": "View Handy"
         }
-      }
-    },
-    "feedback": {
-      "title": "Feedback & Future Features",
-      "description": "Your feedback helps shape upcoming versions of VoCript and future applications.",
-      "categories": {
-        "idea": "Suggestion",
-        "ideaDesc": "New features",
-        "bug": "Report a problem",
-        "bugDesc": "Errors or glitches",
-        "general": "General feedback",
-        "generalDesc": "Your experience"
       },
-      "formLabel": "Describe your message or idea:",
-      "placeholder": "Write your opinion, a feature suggestion or a problem you found...",
-      "note": "We review every message to improve VoCript.",
-      "sent": "Sent successfully!",
-      "sendBtn": "Send feedback"
+      "reportIssue": {
+        "button": "Open an issue",
+        "description": "Opens the issue form on GitHub. Say what you expected and what happened instead.",
+        "title": "Report a problem"
+      }
     },
     "summary": {
       "active": "{{on}} of {{total}} on"
@@ -972,6 +955,17 @@
       "inSection": "Filter within {{section}}",
       "generic": "Filter settings",
       "empty": "Nothing here matches that. Try the magnifier above to search the whole app."
+    },
+    "pageSubtitle": {
+      "about": "Version, licences, and where VoCript comes from.",
+      "advanced": "The fine print: pasting, keyboard, acceleration and memory.",
+      "debug": "Logs and tools for when something goes wrong.",
+      "file": "Turn an audio or video file you already have into text.",
+      "general": "How dictation starts, and what happens to the text when it ends.",
+      "history": "Everything you have dictated, with the audio if you kept it.",
+      "postProcessing": "Run what you dictate through a language model before it lands.",
+      "themes": "The colour, the typeface and the size of the whole interface.",
+      "translation": "Dictate in one language and have it written in another."
     }
   },
   "footer": {

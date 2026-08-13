@@ -21,7 +21,6 @@
     "debug": "Hata Ayıklama",
     "about": "Hakkında",
     "fileTranscription": "Yazıya dök",
-    "feedback": "Geri bildirim",
     "activity": "Etkinlik",
     "translation": "Çeviri",
     "groups": {
@@ -284,10 +283,6 @@
       "customWords": {
         "title": "Özel kelimeler",
         "body": "VoCript'in sürekli yanlış yazdığı isimler veya terimler mi var? Bunları buraya ekleyin; benzer sesli kelimeler otomatik olarak listenize göre düzeltilir — özel adlar ve teknik terimler için idealdir."
-      },
-      "feedback": {
-        "title": "Geri bildiriminiz",
-        "body": "Bir fikir, bir hata ya da bir yorum mu? Buradan saniyeler içinde gönderin — GitHub'da önceden doldurulmuş bir konu (issue) açılır. VoCript'i geliştirmek için her mesajı okuyoruz."
       },
       "audioSource": {
         "title": "Ses kaynağını ekle",
@@ -880,6 +875,11 @@
         "title": "İletişim",
         "description": "Hakkımda ve diğer projelerim",
         "button": "Portföyü gör"
+      },
+      "reportIssue": {
+        "button": "Issue aç",
+        "description": "GitHub'daki issue formunu açar. Ne beklediğini ve bunun yerine ne olduğunu yaz.",
+        "title": "Sorun bildir"
       }
     },
     "theme": {
@@ -914,23 +914,6 @@
         "save": "Dosya kaydedilemedi"
       }
     },
-    "feedback": {
-      "title": "Geri Bildirim ve Gelecek Özellikler",
-      "description": "Geri bildirimleriniz gelecek sürümleri ve yeni uygulamaları geliştirmemize yardımcı olur.",
-      "categories": {
-        "idea": "Öneri",
-        "ideaDesc": "Yeni özellikler",
-        "bug": "Sorun bildir",
-        "bugDesc": "Hatalar veya arızalar",
-        "general": "Genel geri bildirim",
-        "generalDesc": "Deneyiminiz"
-      },
-      "formLabel": "Mesajınızı veya fikrinizi açıklayın:",
-      "placeholder": "Görüşünüzü, bir özellik önerisini veya karşılaştığınız bir sorunu yazın...",
-      "note": "VoCript'i geliştirmek için her mesajı okuyoruz.",
-      "sent": "Başarıyla gönderildi!",
-      "sendBtn": "Geri bildirim gönder"
-    },
     "summary": {
       "active": "{{total}} ayardan {{on}} tanesi açık"
     },
@@ -941,6 +924,17 @@
       "inSection": "{{section}} içinde filtrele",
       "generic": "Ayarları filtrele",
       "empty": "Burada eşleşen bir şey yok. Tüm uygulamada aramak için yukarıdaki büyüteci dene."
+    },
+    "pageSubtitle": {
+      "about": "Sürüm, lisanslar ve VoCript nereden geliyor.",
+      "advanced": "İnce ayarlar: yapıştırma, klavye, hızlandırma ve bellek.",
+      "debug": "Bir şeyler ters gittiğinde işe yarayan kayıtlar ve araçlar.",
+      "file": "Elindeki bir ses ya da video dosyasını yazıya çevir.",
+      "general": "Dikte nasıl başlar ve bittiğinde metne ne olur.",
+      "history": "Dikte ettiğin her şey, sakladıysan sesiyle birlikte.",
+      "postProcessing": "Dikte ettiğini yazılmadan önce bir dil modelinden geçir.",
+      "themes": "Tüm arayüzün rengi, yazı tipi ve boyutu.",
+      "translation": "Bir dilde konuş, başka bir dilde yazılsın."
     }
   },
   "footer": {

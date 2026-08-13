@@ -1269,13 +1269,13 @@ theme?: AppTheme;
 /**
  * Color de acento de la interfaz (hex, p. ej. "#3b82f6"). Tema de color.
  */
-accent_color?: string;
+accent_color?: string; 
 /**
  * Si el acento tiñe además los fondos, paneles y separadores, en vez de
  * pintar solo botones e interruptores. Activado por defecto: es lo que da
  * al tema elegido presencia en toda la ventana.
  */
-accent_tint_surfaces?: boolean;
+accent_tint_surfaces?: boolean; 
 /**
  * Al transcribir audio del sistema, añade al final una línea de «Fuente»
  * con lo que sonaba (título, artista/canal, app y minuto), vía SMTC.
@@ -1383,10 +1383,10 @@ export type KeyboardImplementation = "tauri" | "handy_keys"
 export type LLMPrompt = { id: string; name: string; prompt: string }
 export type LogLevel = "trace" | "debug" | "info" | "warn" | "error"
 export type ModelInfo = { id: string; name: string; description: string; filename: string; url: string | null; sha256: string | null; size_mb: number; is_downloaded: boolean; is_downloading: boolean; partial_size: number; is_directory: boolean; engine_type: EngineType; accuracy_score: number; speed_score: number; supports_translation: boolean; is_recommended: boolean; supported_languages: string[]; supports_language_selection: boolean; is_custom: boolean }
-export type ModelLoadStatus = { is_loaded: boolean; current_model: string | null;
+export type ModelLoadStatus = { is_loaded: boolean; current_model: string | null; 
 /**
  * How long the last dictation took to transcribe, in milliseconds, or
- * `null` if nothing has been transcribed since the app started.
+ * `None` if nothing has been transcribed since the app started.
  */
 last_transcription_ms: number | null }
 export type ModelUnloadTimeout = "never" | "immediately" | "min_2" | "min_5" | "min_10" | "min_15" | "hour_1" | "sec_15"

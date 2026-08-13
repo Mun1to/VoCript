@@ -1,12 +1,11 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Sun, Moon, Monitor, Search } from "lucide-react";
+import VoCriptTextLogo from "./icons/VoCriptTextLogo";
 import { useSettings } from "../hooks/useSettings";
-import { useResolvedTheme } from "../hooks/useResolvedTheme";
 import { TranscriptionModeSwitch } from "./TranscriptionModeSwitch";
 import { ProfileSelect } from "./ProfileSelect";
 import { LanguageQuickSwitch } from "./LanguageQuickSwitch";
-import { AccentThemeSwitch } from "./AccentThemeSwitch";
 import type { AppTheme } from "@/bindings";
 
 interface HeaderProps {
@@ -14,11 +13,18 @@ interface HeaderProps {
   onSearch?: () => void;
 }
 
+/**
+ * The bar across the top of the window: brand, the control rail, and the two
+ * square buttons on the right.
+ *
+ * It spans the whole width now, with the brand in it — the sidebar starts
+ * below. That is the shape from the mockup, and it is what lets the rail sit
+ * centred in the window rather than centred in whatever is left over after the
+ * sidebar, which moved every time the sidebar was collapsed.
+ */
 export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   const { t } = useTranslation();
   const { settings, updateSetting } = useSettings();
-
-  const isLight = useResolvedTheme() === "light";
 
   // Header toggle cycles through the three real settings (system → light →
   // dark) so "system" stays reachable; the button shows the current mode.
@@ -29,72 +35,50 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
     updateSetting("theme", next);
   };
   const themeMeta = {
-    system: {
-      icon: <Monitor className="w-3.5 h-3.5 text-accent" />,
-      label: t("header.systemMode"),
-    },
-    light: {
-      icon: <Sun className="w-3.5 h-3.5 text-amber-400" />,
-      label: t("header.lightMode"),
-    },
-    dark: {
-      icon: <Moon className="w-3.5 h-3.5 text-accent" />,
-      label: t("header.darkMode"),
-    },
+    system: { icon: <Monitor size={15} />, label: t("header.systemMode") },
+    light: { icon: <Sun size={15} />, label: t("header.lightMode") },
+    dark: { icon: <Moon size={15} />, label: t("header.darkMode") },
   }[theme];
 
   return (
-    <header
-      className={`h-14 border-b px-6 flex items-center gap-4 shrink-0 select-none transition-colors duration-200 ${
-        isLight ? "bg-white border-slate-200" : "bg-[#0c0d12] border-white/10"
-      }`}
-    >
-      {/* Left slot (flex-1 keeps the center group centered): quick accent-color
-          picker. The full control lives in the Themes section. The active
-          section isn't repeated here (it's in the sidebar + page heading). */}
-      <div className="flex-1 min-w-0 flex items-center">
-        <AccentThemeSwitch />
+    <header className="vc-topbar select-none">
+      <div className="vc-brand">
+        <VoCriptTextLogo width={104} />
       </div>
 
-      {/* Center: profile + control pills + language, grouped together */}
-      <div className="flex items-center gap-3">
-        <ProfileSelect />
-        <TranscriptionModeSwitch />
-        <LanguageQuickSwitch />
+      {/* The rail: profile, the mode chips, and language, in one frame with
+          hairlines between the groups. */}
+      <div className="flex-1 min-w-0 flex justify-center">
+        <div className="vc-chips">
+          <ProfileSelect />
+          <span className="vc-chips-sep" />
+          <TranscriptionModeSwitch />
+          <span className="vc-chips-sep" />
+          <LanguageQuickSwitch />
+        </div>
       </div>
 
-      {/* Right: search + theme (flex-1, pushed to the end) */}
-      <div className="flex-1 min-w-0 flex items-center justify-end gap-3">
-        {onSearch && (
-          <button
-            type="button"
-            onClick={onSearch}
-            title={`${t("palette.title")} (Ctrl+K)`}
-            aria-label={t("palette.title")}
-            className={`p-1.5 rounded-lg transition-colors active:scale-95 ${
-              isLight
-                ? "text-slate-500 hover:bg-slate-100 hover:text-slate-800"
-                : "text-slate-400 hover:bg-white/[0.06] hover:text-slate-200"
-            }`}
-          >
-            <Search size={16} />
-          </button>
-        )}
+      {onSearch && (
         <button
           type="button"
-          data-tour="header-theme"
-          onClick={cycleTheme}
-          title={themeMeta.label}
-          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors active:scale-95 ${
-            isLight
-              ? "text-slate-800 hover:bg-slate-100"
-              : "text-slate-200 hover:bg-white/[0.06]"
-          }`}
+          onClick={onSearch}
+          title={`${t("palette.title")} (Ctrl+K)`}
+          aria-label={t("palette.title")}
+          className="vc-iconbtn active:scale-95"
         >
-          {themeMeta.icon}
-          <span>{themeMeta.label}</span>
+          <Search size={15} />
         </button>
-      </div>
+      )}
+      <button
+        type="button"
+        data-tour="header-theme"
+        onClick={cycleTheme}
+        title={themeMeta.label}
+        aria-label={themeMeta.label}
+        className="vc-iconbtn active:scale-95"
+      >
+        {themeMeta.icon}
+      </button>
     </header>
   );
 };

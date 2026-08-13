@@ -83,17 +83,19 @@ export const HeaderDropdown: React.FC<HeaderDropdownProps> = ({
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
-          // A tinted pill instead of a halo: it still reads as "this is a
-          // control you can press", without every chip in the header glowing.
-          className={`flex items-center gap-1.5 py-1 px-1.5 rounded-lg text-xs font-bold text-accent transition-colors ${
-            glow ? "bg-logo-primary/10" : ""
-          } ${isLight ? "hover:bg-slate-100" : "hover:bg-white/[0.06]"}`}
+          // Flat inside the rail. Each chip used to carry its own tinted pill,
+          // and six tinted pills in a row read as a fence rather than as six
+          // separate things you can press. The icon does the labelling, in the
+          // muted colour, and only the value is spelled out.
+          className="vc-chip group flex items-center gap-1.5 py-1 px-2.5 rounded-lg text-[12.5px] font-semibold text-[var(--vc-text-main)] whitespace-nowrap transition-colors hover:bg-[var(--vc-card-bg)]"
         >
-          {icon}
+          <span className="flex items-center text-[var(--vc-text-muted)] transition-colors group-hover:text-accent">
+            {icon}
+          </span>
           <span>{label}</span>
           {showChevron && (
             <ChevronDown
-              className={`w-3.5 h-3.5 shrink-0 transition-transform ${open ? "rotate-180" : ""}`}
+              className={`w-3.5 h-3.5 shrink-0 text-[var(--vc-text-muted)] transition-transform ${open ? "rotate-180" : ""}`}
             />
           )}
         </button>

@@ -311,14 +311,8 @@ export const ModelsSettings: React.FC = () => {
 
   return (
     <div className="vc-settings-column space-y-4">
-      <div className="mb-4">
-        <h1 className="text-xl font-semibold mb-2">
-          {t("settings.models.title")}
-        </h1>
-        <p className="text-sm text-text/60">
-          {t("settings.models.description")}
-        </p>
-      </div>
+      {/* No heading here: the page already has one, with this section's own
+          description under it (see SECTION_SUBTITLE). */}
 
       {/* The one setting that decides whether an idle model keeps holding
           memory. It also lives under Advanced, but nobody goes looking there,

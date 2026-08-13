@@ -21,7 +21,6 @@
     "debug": "Debugging",
     "about": "Info",
     "fileTranscription": "Transkribieren",
-    "feedback": "Feedback",
     "activity": "Aktivität",
     "translation": "Übersetzung",
     "groups": {
@@ -284,10 +283,6 @@
       "customWords": {
         "title": "Eigene Wörter",
         "body": "Gibt es Namen oder Begriffe, die VoCript ständig falsch schreibt? Füge sie hier hinzu, und ähnlich klingende Wörter werden automatisch an deine Liste angepasst – ideal für Eigennamen und Fachbegriffe."
-      },
-      "feedback": {
-        "title": "Dein Feedback",
-        "body": "Eine Idee, ein Fehler oder ein Kommentar? Sende es in Sekunden von hier – es öffnet ein vorausgefülltes Issue auf GitHub. Wir lesen jede Nachricht, um VoCript weiter zu verbessern."
       },
       "audioSource": {
         "title": "Audioquelle angeben",
@@ -880,6 +875,11 @@
         "title": "Kontakt",
         "description": "Über mich und meine anderen Projekte",
         "button": "Portfolio ansehen"
+      },
+      "reportIssue": {
+        "button": "Issue öffnen",
+        "description": "Öffnet das Issue-Formular auf GitHub. Sag, was du erwartet hast und was stattdessen passiert ist.",
+        "title": "Problem melden"
       }
     },
     "theme": {
@@ -914,23 +914,6 @@
         "save": "Die Datei konnte nicht gespeichert werden"
       }
     },
-    "feedback": {
-      "title": "Feedback & Zukünftige Funktionen",
-      "description": "Ihre Rückmeldungen helfen uns, zukünftige Versionen und neue Apps zu gestalten.",
-      "categories": {
-        "idea": "Vorschlag",
-        "ideaDesc": "Neue Funktionen",
-        "bug": "Problem melden",
-        "bugDesc": "Fehler oder Störungen",
-        "general": "Allgemeines Feedback",
-        "generalDesc": "Deine Erfahrung"
-      },
-      "formLabel": "Beschreibe deine Nachricht oder Idee:",
-      "placeholder": "Schreibe deine Meinung, einen Funktionsvorschlag oder ein gefundenes Problem...",
-      "note": "Wir lesen jede Nachricht, um VoCript zu verbessern.",
-      "sent": "Erfolgreich gesendet!",
-      "sendBtn": "Feedback senden"
-    },
     "summary": {
       "active": "{{on}} von {{total}} aktiv"
     },
@@ -941,6 +924,17 @@
       "inSection": "In {{section}} filtern",
       "generic": "Einstellungen filtern",
       "empty": "Hier passt nichts dazu. Probier die Lupe oben, um die ganze App zu durchsuchen."
+    },
+    "pageSubtitle": {
+      "about": "Version, Lizenzen und woher VoCript kommt.",
+      "advanced": "Das Kleingedruckte: Einfügen, Tastatur, Beschleunigung, Speicher.",
+      "debug": "Protokolle und Werkzeuge für den Fall, dass etwas schiefgeht.",
+      "file": "Mach aus einer Audio- oder Videodatei, die du schon hast, Text.",
+      "general": "Wie das Diktat startet und was mit dem Text passiert, wenn es endet.",
+      "history": "Alles, was du diktiert hast, mit Audio, falls du es behalten hast.",
+      "postProcessing": "Schick das Diktierte durch ein Sprachmodell, bevor es landet.",
+      "themes": "Farbe, Schrift und Größe der gesamten Oberfläche.",
+      "translation": "Diktiere in einer Sprache und lass es in einer anderen schreiben."
     }
   },
   "footer": {

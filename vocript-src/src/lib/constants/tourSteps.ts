@@ -13,7 +13,7 @@ import type { SidebarSection } from "../../components/Sidebar";
  * The tour walks the main features end to end: welcome → microphone → shortcut
  * → dictation → system audio → source, then each header control one by one (profile →
  * voice → system → output → activation → language → theme) → files → custom
- * words → dictionary → model memory → history → feedback → donate.
+ * words → dictionary → model memory → history → donate.
  */
 export interface TourStep {
   id: string;
@@ -58,7 +58,6 @@ export const TOUR_STEPS: TourStep[] = [
   // 17. History (re-listen and copy past transcriptions).
   { id: "history", section: "history" },
   // 17. Feedback (send ideas / bugs straight to a GitHub issue).
-  { id: "feedback", section: "feedback", target: "feedback" },
   // 18. Closing + support.
   { id: "donate", section: "about", donate: true },
 ];

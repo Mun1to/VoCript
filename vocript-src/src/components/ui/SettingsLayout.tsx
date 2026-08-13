@@ -37,7 +37,9 @@ export const SettingsLayout: React.FC<{
   children: React.ReactNode;
   /** i18n key of the section name, for the "Filter within Models" placeholder. */
   sectionKey?: string;
-}> = ({ children, sectionKey }) => {
+  /** i18n key of the one line under the heading saying what the page is for. */
+  subtitleKey?: string;
+}> = ({ children, sectionKey, subtitleKey }) => {
   const { t } = useTranslation();
   const [bloques, setBloques] = useState<BloqueRegistrado[]>([]);
   const [filtro, setFiltro] = useState("");
@@ -110,8 +112,20 @@ export const SettingsLayout: React.FC<{
     <SettingsPageContext.Provider value={ctx}>
       <div className="vc-settings-grid">
         <div className="min-w-0">
-          <div className="vc-settings-column mb-4">
-            <label className="vc-filter">
+          <div className="vc-settings-column">
+            {/* The section name as a heading. The sidebar says where you are
+                too, but it stops saying it the moment it's collapsed. */}
+            {sectionKey && (
+              <div className="mb-4">
+                <h1 className="vc-page-title !mb-[3px]">{t(sectionKey)}</h1>
+                {subtitleKey && (
+                  <p className="text-[13.5px] text-[var(--vc-text-muted)]">
+                    {t(subtitleKey)}
+                  </p>
+                )}
+              </div>
+            )}
+            <label className="vc-filter mb-[18px]">
               <Search size={14} className="shrink-0 opacity-60" />
               <input
                 type="text"
@@ -135,8 +149,13 @@ export const SettingsLayout: React.FC<{
         {/* The index only earns its space once there's more than one block to
             jump between, and only on windows wide enough (see App.css). */}
         {bloques.filter((b) => !bloquesOcultos.includes(b.id)).length > 1 && (
-          <nav className="vc-settings-index" aria-label={t("settings.index.title")}>
-            <div className="vc-settings-index-title">{t("settings.index.title")}</div>
+          <nav
+            className="vc-settings-index"
+            aria-label={t("settings.index.title")}
+          >
+            <div className="vc-settings-index-title">
+              {t("settings.index.title")}
+            </div>
             {bloques
               .filter((b) => !bloquesOcultos.includes(b.id))
               .map((b) => (

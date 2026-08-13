@@ -24,7 +24,10 @@ interface SettingsGroupProps {
  * "1 of 2 on" without every settings section having to count its own switches
  * and keep that count in sync by hand.
  */
-type GroupCtx = { informar: (id: string, encendido: boolean) => void; olvidar: (id: string) => void };
+type GroupCtx = {
+  informar: (id: string, encendido: boolean) => void;
+  olvidar: (id: string) => void;
+};
 const SettingsGroupContext = createContext<GroupCtx | null>(null);
 
 /** Used by ToggleSwitch. Returns null outside a group, which is fine. */
@@ -54,7 +57,9 @@ export const SettingsGroup: React.FC<SettingsGroupProps> = ({
   const id = title ? slug(title) : idAuto;
 
   const [abierto, setAbierto] = useState(true);
-  const [interruptores, setInterruptores] = useState<Record<string, boolean>>({});
+  const [interruptores, setInterruptores] = useState<Record<string, boolean>>(
+    {},
+  );
 
   const informar = useCallback((sid: string, encendido: boolean) => {
     setInterruptores((prev) =>
@@ -81,7 +86,12 @@ export const SettingsGroup: React.FC<SettingsGroupProps> = ({
   const numAjustes = React.Children.count(children);
   useEffect(() => {
     if (!pagina || !title) return;
-    pagina.registrar({ id, titulo: title, ajustes: numAjustes, orden: orden.current });
+    pagina.registrar({
+      id,
+      titulo: title,
+      ajustes: numAjustes,
+      orden: orden.current,
+    });
     return () => pagina.olvidar(id);
   }, [pagina, id, title, numAjustes]);
 
@@ -91,62 +101,47 @@ export const SettingsGroup: React.FC<SettingsGroupProps> = ({
     ? t("settings.summary.active", { on: encendidos, total })
     : null;
 
+  // The header is part of the card, not a caption floating above it: the name
+  // in the accent colour, the summary next to it, and a hairline under the
+  // whole thing. No uppercase and no accent bar down the side — both were
+  // shouting a heading that the block's own frame already announces.
   return (
     <SettingsGroupContext.Provider value={ctx}>
-      <div className="space-y-2 w-full" id={id} style={{ scrollMarginTop: "0.5rem" }}>
+      <div
+        className={`vc-block w-full ${isLight ? "shadow-sm" : ""}`}
+        id={id}
+        data-abierto={abierto ? "1" : "0"}
+      >
         {title && (
           <button
             type="button"
             onClick={() => setAbierto((v) => !v)}
             aria-expanded={abierto}
-            className="w-full px-1.5 mb-2.5 flex items-center gap-2 text-start"
+            className="vc-block-head"
           >
-            <span className="h-3.5 w-1 rounded-full bg-logo-primary shrink-0" />
-            <h2 className="text-[11px] font-bold uppercase tracking-wider text-accent shrink-0">
-              {title}
-            </h2>
+            <h2>{title}</h2>
             {resumen && (
-              <span
-                className={`text-[11px] truncate ${isLight ? "text-slate-500" : "text-slate-400"}`}
-              >
+              <span className="flex-1 truncate text-[12.5px] text-[var(--vc-text-muted)]">
                 {resumen}
               </span>
             )}
             <ChevronDown
               size={15}
-              className={`ms-auto shrink-0 transition-transform ${
+              className={`ms-auto shrink-0 text-[var(--vc-text-muted)] transition-transform ${
                 abierto ? "" : "-rotate-90 rtl:rotate-90"
-              } ${isLight ? "text-slate-400" : "text-slate-500"}`}
+              }`}
             />
           </button>
         )}
         {title && description && abierto && (
-          <p
-            className={`text-xs -mt-1 mb-2 ms-3.5 px-1.5 ${
-              isLight ? "text-slate-500" : "text-slate-400"
-            }`}
-          >
+          <p className="px-4 pt-3 text-[12.5px] text-[var(--vc-text-muted)]">
             {description}
           </p>
         )}
         {/* Kept mounted while collapsed: the switches inside are what feed the
             "1 of 2 on" summary, and unmounting them would blank it out. */}
-        <div className={abierto ? "" : "hidden"}>
-          {/* Surfaces come from the themed tokens, not fixed white/#12131a, or
-              the accent tint would stop at the card edge. */}
-          <div
-            className={`vc-card-glow bg-[var(--vc-card-bg)] border-[var(--vc-border)] ${
-              isLight ? "shadow-sm" : ""
-            }`}
-          >
-            <div
-              className={`divide-y [&>*:first-child]:rounded-t-2xl [&>*:last-child]:rounded-b-2xl ${
-                isLight ? "divide-slate-100" : "divide-white/5"
-              }`}
-            >
-              {children}
-            </div>
-          </div>
+        <div className={`vc-block-body ${abierto ? "" : "hidden"}`}>
+          {children}
         </div>
       </div>
     </SettingsGroupContext.Provider>

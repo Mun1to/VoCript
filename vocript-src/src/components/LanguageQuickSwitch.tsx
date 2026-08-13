@@ -42,13 +42,7 @@ export const LanguageQuickSwitch: React.FC = () => {
       tooltip={t("header.language.label")}
       align="end"
       panelClassName="py-1 max-h-72 overflow-y-auto"
-      icon={
-        <Globe
-          className={`w-3.5 h-3.5 shrink-0 ${
-            isLight ? "text-slate-500" : "text-slate-400"
-          }`}
-        />
-      }
+      icon={<Globe className="w-3.5 h-3.5 shrink-0" />}
       label={currentLabel}
     >
       {SUPPORTED_LANGUAGES.map((lang) => (
