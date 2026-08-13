@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { platform } from "@tauri-apps/plugin-os";
 import {
@@ -139,6 +145,8 @@ export const FirstRun: React.FC<FirstRunProps> = ({
     useSettingsStore((s) => s.settings?.selected_language) ?? "en";
 
   const [paso, setPaso] = useState(0);
+  /** So the "Another language" card can open the list under it. */
+  const selectorIdiomas = useRef<HTMLDivElement>(null);
   const [idioma, setIdioma] = useState<string>(idiomaSistema);
   const [uso, setUso] = useState<Uso | null>(null);
   const [descargando, setDescargando] = useState<string | null>(null);
@@ -333,45 +341,82 @@ export const FirstRun: React.FC<FirstRunProps> = ({
     const nombreSistema = languageName(idiomaSistema, uiLanguage);
     const esOtro =
       idioma !== idiomaSistema && idioma !== "en" && idioma !== "auto";
+
+    /**
+     * Built rather than hard-coded, because the obvious four cards collide:
+     * an English system printed "English" twice, both of them selected, and
+     * a system set to "auto" would have done the same against "Several".
+     */
+    const tarjetas: React.ReactNode[] = [];
+    if (idiomaSistema !== "auto") {
+      tarjetas.push(
+        <Opcion
+          key="sistema"
+          activa={idioma === idiomaSistema}
+          onClick={() => elegirIdioma(idiomaSistema)}
+          icon={<Globe size={18} />}
+          titulo={conMayuscula(nombreSistema ?? idiomaSistema, uiLanguage)}
+          pie={t("onboarding.first.language.fromSystem")}
+        />,
+      );
+    }
+    if (idiomaSistema !== "en") {
+      tarjetas.push(
+        <Opcion
+          key="en"
+          activa={idioma === "en"}
+          onClick={() => elegirIdioma("en")}
+          icon={<Globe size={18} />}
+          titulo={conMayuscula(
+            languageName("en", uiLanguage) ?? "English",
+            uiLanguage,
+          )}
+          pie="English"
+        />,
+      );
+    }
+    tarjetas.push(
+      <Opcion
+        key="otro"
+        activa={esOtro}
+        // Nothing of its own to set: it hands over to the list below, which is
+        // where the other hundred languages are. A card that looked pressable
+        // and did nothing was worse than no card at all.
+        onClick={() =>
+          selectorIdiomas.current?.querySelector("button")?.click()
+        }
+        titulo={
+          esOtro
+            ? conMayuscula(
+                languageName(idioma, uiLanguage) ?? idioma,
+                uiLanguage,
+              )
+            : t("onboarding.first.language.other")
+        }
+        pie={t("onboarding.first.language.otherHint", {
+          count: idiomasTodos.length,
+        })}
+      />,
+    );
+    tarjetas.push(
+      <Opcion
+        key="varios"
+        activa={idioma === "auto"}
+        onClick={() => elegirIdioma("auto")}
+        titulo={t("onboarding.first.language.mixed")}
+        pie={t("onboarding.first.language.mixedHint")}
+      />,
+    );
+
     return (
       <Paso numero={0} total={3}>
         <Pregunta texto={t("onboarding.first.language.question")}>
           <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-            <Opcion
-              activa={idioma === idiomaSistema}
-              onClick={() => elegirIdioma(idiomaSistema)}
-              icon={<Globe size={18} />}
-              titulo={conMayuscula(nombreSistema ?? idiomaSistema, uiLanguage)}
-              pie={t("onboarding.first.language.fromSystem")}
-            />
-            <Opcion
-              activa={idioma === "en"}
-              onClick={() => elegirIdioma("en")}
-              icon={<Globe size={18} />}
-              titulo={conMayuscula(
-                languageName("en", uiLanguage) ?? "English",
-                uiLanguage,
-              )}
-              pie="English"
-            />
-            <Opcion
-              activa={esOtro}
-              onClick={() => {}}
-              titulo={t("onboarding.first.language.other")}
-              pie={t("onboarding.first.language.otherHint", {
-                count: idiomasTodos.length,
-              })}
-            />
-            <Opcion
-              activa={idioma === "auto"}
-              onClick={() => elegirIdioma("auto")}
-              titulo={t("onboarding.first.language.mixed")}
-              pie={t("onboarding.first.language.mixedHint")}
-            />
+            {tarjetas}
           </div>
           {/* The way out of the four cards. Full width so it reads as part of
               the answer grid rather than as a stray control under it. */}
-          <div className="[&_button]:w-full">
+          <div className="[&_button]:w-full" ref={selectorIdiomas}>
             <Dropdown
               options={idiomasTodos}
               selectedValue={esOtro ? idioma : null}
