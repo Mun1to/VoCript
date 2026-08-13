@@ -1,8 +1,3 @@
-
-
-
-
-
 <div align="center">
 
 # 🎙️ VoCript
