@@ -110,62 +110,66 @@ export const SettingsLayout: React.FC<{
 
   return (
     <SettingsPageContext.Provider value={ctx}>
-      <div className="vc-settings-grid">
-        <div className="min-w-0">
-          <div className="vc-settings-column">
-            {/* The section name as a heading. The sidebar says where you are
+      <div className="vc-settings-shell">
+        <div className="vc-settings-grid">
+          <div className="min-w-0">
+            <div className="vc-settings-column">
+              {/* The section name as a heading. The sidebar says where you are
                 too, but it stops saying it the moment it's collapsed. */}
-            {sectionKey && (
-              <div className="mb-4">
-                <h1 className="vc-page-title !mb-[3px]">{t(sectionKey)}</h1>
-                {subtitleKey && (
-                  <p className="text-[13.5px] text-[var(--vc-text-muted)]">
-                    {t(subtitleKey)}
-                  </p>
-                )}
-              </div>
+              {sectionKey && (
+                <div className="mb-4">
+                  <h1 className="vc-page-title !mb-[3px]">{t(sectionKey)}</h1>
+                  {subtitleKey && (
+                    <p className="text-[13.5px] text-[var(--vc-text-muted)]">
+                      {t(subtitleKey)}
+                    </p>
+                  )}
+                </div>
+              )}
+              <label className="vc-filter mb-[18px]">
+                <Search size={14} className="shrink-0 opacity-60" />
+                <input
+                  type="text"
+                  value={filtro}
+                  onChange={(e) => setFiltro(e.target.value)}
+                  placeholder={
+                    sectionKey
+                      ? t("settings.filter.inSection", {
+                          section: t(sectionKey),
+                        })
+                      : t("settings.filter.generic")
+                  }
+                />
+              </label>
+            </div>
+            <div ref={contenido}>{children}</div>
+            {sinResultados && (
+              <p className="vc-settings-column text-xs text-center py-6 text-[var(--vc-text-muted)]">
+                {t("settings.filter.empty")}
+              </p>
             )}
-            <label className="vc-filter mb-[18px]">
-              <Search size={14} className="shrink-0 opacity-60" />
-              <input
-                type="text"
-                value={filtro}
-                onChange={(e) => setFiltro(e.target.value)}
-                placeholder={
-                  sectionKey
-                    ? t("settings.filter.inSection", { section: t(sectionKey) })
-                    : t("settings.filter.generic")
-                }
-              />
-            </label>
           </div>
-          <div ref={contenido}>{children}</div>
-          {sinResultados && (
-            <p className="vc-settings-column text-xs text-center py-6 text-[var(--vc-text-muted)]">
-              {t("settings.filter.empty")}
-            </p>
+          {/* The index only earns its space once there's more than one block to
+            jump between, and only on windows wide enough (see App.css). */}
+          {bloques.filter((b) => !bloquesOcultos.includes(b.id)).length > 1 && (
+            <nav
+              className="vc-settings-index"
+              aria-label={t("settings.index.title")}
+            >
+              <div className="vc-settings-index-title">
+                {t("settings.index.title")}
+              </div>
+              {bloques
+                .filter((b) => !bloquesOcultos.includes(b.id))
+                .map((b) => (
+                  <button key={b.id} type="button" onClick={() => irA(b.id)}>
+                    <span className="truncate">{b.titulo}</span>
+                    <em>{b.ajustes}</em>
+                  </button>
+                ))}
+            </nav>
           )}
         </div>
-        {/* The index only earns its space once there's more than one block to
-            jump between, and only on windows wide enough (see App.css). */}
-        {bloques.filter((b) => !bloquesOcultos.includes(b.id)).length > 1 && (
-          <nav
-            className="vc-settings-index"
-            aria-label={t("settings.index.title")}
-          >
-            <div className="vc-settings-index-title">
-              {t("settings.index.title")}
-            </div>
-            {bloques
-              .filter((b) => !bloquesOcultos.includes(b.id))
-              .map((b) => (
-                <button key={b.id} type="button" onClick={() => irA(b.id)}>
-                  <span className="truncate">{b.titulo}</span>
-                  <em>{b.ajustes}</em>
-                </button>
-              ))}
-          </nav>
-        )}
       </div>
     </SettingsPageContext.Provider>
   );

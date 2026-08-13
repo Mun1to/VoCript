@@ -234,11 +234,14 @@
   display: flex;
   align-items: center;
   gap: 2px;
-  overflow: hidden;
   background: color-mix(in srgb, var(--vc-text-main) 5%, transparent);
   border: 1px solid var(--vc-border);
   border-radius: 10px;
   padding: 2px;
+  /* NOT overflow:hidden, however tempting the rounded corners are. The mockup
+     could afford it because its chips were painted, not real: here each one
+     opens an absolutely-positioned panel, and hiding the overflow clipped
+     every one of them to nothing. */
 }
 
 .vc-chips-sep {
@@ -422,6 +425,15 @@
  * which is the part people actually came for. The column keeps its own 700px
  * cap, so the pair sits centred with the index hanging in the gutter.
  */
+/* The shell exists to be measured: the index appears based on the space left
+   over next to the sidebar, not on the window width. Keyed to the window it
+   never showed up at all, because the default window (1080) minus the sidebar
+   never reached the threshold. */
+.vc-settings-shell {
+  container-type: inline-size;
+  width: 100%;
+}
+
 .vc-settings-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -433,9 +445,9 @@
   display: none;
 }
 
-@media (min-width: 1100px) {
+@container (min-width: 800px) {
   .vc-settings-grid {
-    grid-template-columns: minmax(0, 1fr) 190px;
+    grid-template-columns: minmax(0, 1fr) 176px;
   }
   .vc-settings-index {
     display: block;
