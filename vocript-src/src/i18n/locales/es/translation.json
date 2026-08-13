@@ -937,6 +937,11 @@
       "recordingBuffer": {
         "title": "Búfer de grabación adicional",
         "description": "Tiempo adicional (en milisegundos) para seguir grabando después de soltar la tecla, para capturar el audio restante. 0 = sin búfer adicional."
+      },
+      "replayFirstRun": {
+        "action": "Volver a verlo",
+        "description": "Olvida que este ordenador ya está configurado y recarga. No borra nada más.",
+        "title": "Volver a ver el primer arranque"
       }
     },
     "about": {

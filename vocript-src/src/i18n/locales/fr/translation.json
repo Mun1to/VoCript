@@ -874,6 +874,11 @@
       "recordingBuffer": {
         "title": "Tampon d'enregistrement supplémentaire",
         "description": "Temps supplémentaire (en millisecondes) pour continuer l'enregistrement après avoir relâché la touche, pour capturer l'audio restant. 0 = pas de tampon supplémentaire."
+      },
+      "replayFirstRun": {
+        "action": "Revoir",
+        "description": "Oublie que cet ordinateur est déjà configuré et recharge. Rien d'autre n'est supprimé.",
+        "title": "Revoir le premier démarrage"
       }
     },
     "about": {

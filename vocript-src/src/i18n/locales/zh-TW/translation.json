@@ -874,6 +874,11 @@
       "recordingBuffer": {
         "title": "額外錄音緩衝",
         "description": "放開按鍵後繼續錄音的額外時間（毫秒），以捕捉尾音。0 = 無額外緩衝。"
+      },
+      "replayFirstRun": {
+        "action": "再看一次",
+        "description": "忘記這台電腦已設定過並重新載入，不會刪除其他任何東西。",
+        "title": "再看一次首次啟動"
       }
     },
     "about": {

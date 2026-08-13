@@ -874,6 +874,11 @@
       "recordingBuffer": {
         "title": "Zusätzlicher Aufnahmepuffer",
         "description": "Zusätzliche Zeit (in Millisekunden), um nach dem Loslassen der Taste weiter aufzunehmen, um nachlaufendes Audio zu erfassen. 0 = kein zusätzlicher Puffer."
+      },
+      "replayFirstRun": {
+        "action": "Erneut ansehen",
+        "description": "Vergisst, dass dieser Rechner eingerichtet ist, und lädt neu. Sonst wird nichts gelöscht.",
+        "title": "Ersteinrichtung erneut ansehen"
       }
     },
     "about": {

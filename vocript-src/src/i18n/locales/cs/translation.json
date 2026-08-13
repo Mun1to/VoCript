@@ -874,6 +874,11 @@
       "recordingBuffer": {
         "title": "Extra vyrovnávací paměť nahrávání",
         "description": "Extra čas (v milisekundách) pro pokračování nahrávání po uvolnění klávesy, pro zachycení zbývajícího zvuku. 0 = žádná extra vyrovnávací paměť."
+      },
+      "replayFirstRun": {
+        "action": "Zobrazit znovu",
+        "description": "Zapomene, že je tenhle počítač nastavený, a načte znovu. Nic jiného se nemaže.",
+        "title": "Zobrazit první spuštění znovu"
       }
     },
     "about": {

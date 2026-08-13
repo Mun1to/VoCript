@@ -874,6 +874,11 @@
       "recordingBuffer": {
         "title": "Extra inspelningsbuffert",
         "description": "Extra tid (i millisekunder) för att fortsätta spela in efter att du släppt tangenten, för att fånga upp avslutande ljud. 0 = ingen extra buffert."
+      },
+      "replayFirstRun": {
+        "action": "Visa igen",
+        "description": "Glömmer att den här datorn är inställd och laddar om. Inget annat raderas.",
+        "title": "Se första starten igen"
       }
     },
     "about": {

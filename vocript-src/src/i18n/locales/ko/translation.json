@@ -874,6 +874,11 @@
         "appData": "앱 데이터:",
         "models": "모델:",
         "settings": "설정:"
+      },
+      "replayFirstRun": {
+        "action": "다시 보기",
+        "description": "이 컴퓨터가 설정되었다는 기록만 지우고 새로 고칩니다. 다른 건 지우지 않습니다.",
+        "title": "첫 실행 다시 보기"
       }
     },
     "about": {

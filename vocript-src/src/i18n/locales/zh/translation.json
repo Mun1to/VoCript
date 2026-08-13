@@ -874,6 +874,11 @@
       "recordingBuffer": {
         "title": "额外录音缓冲",
         "description": "放开按键后继续录音的额外时间（毫秒），以捕捉尾音。0 = 无额外缓冲。"
+      },
+      "replayFirstRun": {
+        "action": "再看一次",
+        "description": "忘记这台电脑已设置过并重新加载，不会删除其他任何东西。",
+        "title": "再看一次首次启动"
       }
     },
     "about": {

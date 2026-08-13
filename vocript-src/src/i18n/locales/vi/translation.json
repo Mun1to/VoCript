@@ -874,6 +874,11 @@
       "recordingBuffer": {
         "title": "Bộ đệm ghi âm thêm",
         "description": "Thời gian thêm (tính bằng mili giây) để tiếp tục ghi âm sau khi nhả phím, để thu âm thanh cuối. 0 = không có bộ đệm thêm."
+      },
+      "replayFirstRun": {
+        "action": "Xem lại",
+        "description": "Quên rằng máy này đã được thiết lập và tải lại. Không xóa gì khác.",
+        "title": "Xem lại lần chạy đầu tiên"
       }
     },
     "about": {
