@@ -326,7 +326,46 @@
     "changeLater": "Podes trocar de modelo quando quiseres, nas definições.",
     "showOtherModels_one": "Ver o outro modelo",
     "showOtherModels_other": "Ver os outros {{count}} modelos",
-    "hideOtherModels": "Ocultar os outros modelos"
+    "hideOtherModels": "Ocultar os outros modelos",
+    "first": {
+      "next": "Seguinte",
+      "back": "Voltar",
+      "seeGuide": "Ver o guia",
+      "start": "Começar a ditar",
+      "language": {
+        "question": "Em que língua vais falar?",
+        "fromSystem": "A do teu sistema",
+        "other": "Outra língua",
+        "otherHint": "{{count}} disponíveis",
+        "mixed": "Várias",
+        "mixedHint": "Mudo muitas vezes"
+      },
+      "use": {
+        "question": "Para que o vais usar?",
+        "hint": "Isto escolhe o modelo e os comandos de voz. Muda-se depois num clique.",
+        "daily": "Escrever no dia a dia",
+        "dailyHint": "E-mails, conversas, notas",
+        "coding": "Programar",
+        "codingHint": "Dita símbolos: arroba, ponto e vírgula",
+        "custom": "Comandos meus",
+        "customHint": "Tu pões as palavras, eu escrevo os símbolos",
+        "unsure": "Ainda não sei",
+        "unsureHint": "Começa no normal"
+      },
+      "permission": {
+        "question": "Só falta o microfone",
+        "hint": "O Windows pergunta uma vez. Nada do que disseres sai deste computador.",
+        "hintDownloading": "O teu modelo está a descarregar por trás. Não é preciso esperar aqui.",
+        "micHint": "Para o VoCript te poder ouvir",
+        "accHint": "Para o VoCript poder escrever onde tens o cursor",
+        "grant": "Permitir"
+      },
+      "model": {
+        "ready": "Pronto",
+        "failed": "Não foi possível descarregar",
+        "retry": "Tentar de novo"
+      }
+    }
   },
   "modelSelector": {
     "custom": "Personalizado",

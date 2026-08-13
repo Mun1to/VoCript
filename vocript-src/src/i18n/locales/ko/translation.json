@@ -326,7 +326,46 @@
     "changeLater": "모델은 설정에서 언제든지 바꿀 수 있습니다.",
     "showOtherModels_one": "다른 모델 보기",
     "showOtherModels_other": "다른 모델 {{count}}개 보기",
-    "hideOtherModels": "다른 모델 숨기기"
+    "hideOtherModels": "다른 모델 숨기기",
+    "first": {
+      "next": "다음",
+      "back": "뒤로",
+      "seeGuide": "가이드 보기",
+      "start": "받아쓰기 시작",
+      "language": {
+        "question": "어느 언어로 말하실 건가요?",
+        "fromSystem": "시스템 언어",
+        "other": "다른 언어",
+        "otherHint": "{{count}}개 중 선택",
+        "mixed": "여러 개",
+        "mixedHint": "자주 바꿉니다"
+      },
+      "use": {
+        "question": "어디에 쓰실 건가요?",
+        "hint": "이걸로 모델과 음성 명령을 고릅니다. 나중에 클릭 한 번으로 바꿉니다.",
+        "daily": "일상적인 글쓰기",
+        "dailyHint": "메일, 채팅, 메모",
+        "coding": "코딩",
+        "codingHint": "기호를 받아쓰기: 곤백이, 세미콜론",
+        "custom": "내 명령어",
+        "customHint": "단어를 정하면 기호를 적습니다",
+        "unsure": "아직 모릅니다",
+        "unsureHint": "기본으로 시작"
+      },
+      "permission": {
+        "question": "이제 마이크만 남았어요",
+        "hint": "Windows가 한 번 물어봅니다. 말한 내용은 이 컴퓨터를 벗어나지 않습니다.",
+        "hintDownloading": "모델은 뒤에서 받고 있습니다. 여기서 기다릴 필요 없어요.",
+        "micHint": "VoCript가 들을 수 있도록",
+        "accHint": "VoCript가 커서 위치에 쓸 수 있도록",
+        "grant": "허용"
+      },
+      "model": {
+        "ready": "준비됨",
+        "failed": "다운로드 실패",
+        "retry": "다시 시도"
+      }
+    }
   },
   "modelSelector": {
     "custom": "사용자 정의",

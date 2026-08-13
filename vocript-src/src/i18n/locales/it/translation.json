@@ -326,7 +326,46 @@
     "changeLater": "Puoi cambiare modello quando vuoi, nelle impostazioni.",
     "showOtherModels_one": "Mostra l'altro modello",
     "showOtherModels_other": "Mostra gli altri {{count}} modelli",
-    "hideOtherModels": "Nascondi gli altri modelli"
+    "hideOtherModels": "Nascondi gli altri modelli",
+    "first": {
+      "next": "Avanti",
+      "back": "Indietro",
+      "seeGuide": "Vedi la guida",
+      "start": "Inizia a dettare",
+      "language": {
+        "question": "In che lingua parlerai?",
+        "fromSystem": "Quella del tuo sistema",
+        "other": "Un'altra lingua",
+        "otherHint": "{{count}} disponibili",
+        "mixed": "Diverse",
+        "mixedHint": "Cambio spesso"
+      },
+      "use": {
+        "question": "Per cosa lo userai?",
+        "hint": "Serve a scegliere il modello e i comandi vocali. Si cambia con un clic.",
+        "daily": "Scrivere ogni giorno",
+        "dailyHint": "Email, chat, appunti",
+        "coding": "Programmare",
+        "codingHint": "Detta i simboli: chiocciola, punto e virgola",
+        "custom": "Comandi miei",
+        "customHint": "Tu dici le parole, io scrivo i simboli",
+        "unsure": "Non lo so ancora",
+        "unsureHint": "Parti da normale"
+      },
+      "permission": {
+        "question": "Manca solo il microfono",
+        "hint": "Windows lo chiede una volta. Niente di quello che dici esce da questo computer.",
+        "hintDownloading": "Il tuo modello si sta scaricando dietro. Non serve aspettare qui.",
+        "micHint": "Perché VoCript possa sentirti",
+        "accHint": "Perché VoCript possa scrivere dove hai il cursore",
+        "grant": "Consenti"
+      },
+      "model": {
+        "ready": "Pronto",
+        "failed": "Scaricamento fallito",
+        "retry": "Riprova"
+      }
+    }
   },
   "modelSelector": {
     "custom": "Personalizzato",

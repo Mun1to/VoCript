@@ -326,7 +326,46 @@
     "changeLater": "Model můžeš kdykoli změnit v nastavení.",
     "showOtherModels_one": "Zobrazit druhý model",
     "showOtherModels_other": "Zobrazit další modely ({{count}})",
-    "hideOtherModels": "Skrýt ostatní modely"
+    "hideOtherModels": "Skrýt ostatní modely",
+    "first": {
+      "next": "Dál",
+      "back": "Zpět",
+      "seeGuide": "Zobrazit průvodce",
+      "start": "Začít diktovat",
+      "language": {
+        "question": "Jakým jazykem budeš mluvit?",
+        "fromSystem": "Tím ze systému",
+        "other": "Jiný jazyk",
+        "otherHint": "{{count}} na výběr",
+        "mixed": "Více jazyků",
+        "mixedHint": "Často přepínám"
+      },
+      "use": {
+        "question": "K čemu to budeš používat?",
+        "hint": "Podle toho vyberu model a hlasové příkazy. Později změníš jedním klikem.",
+        "daily": "Běžné psaní",
+        "dailyHint": "Maily, chaty, poznámky",
+        "coding": "Programování",
+        "codingHint": "Diktuj znaky: zavináč, středník",
+        "custom": "Vlastní příkazy",
+        "customHint": "Ty určíš slova, já napíšu znaky",
+        "unsure": "Ještě nevím",
+        "unsureHint": "Začni normálně"
+      },
+      "permission": {
+        "question": "Zbývá už jen mikrofon",
+        "hint": "Windows se zeptá jednou. Nic z toho, co řekneš, neopustí tenhle počítač.",
+        "hintDownloading": "Tvůj model se stáhne na pozadí. Nemusíš tu čekat.",
+        "micHint": "Aby tě VoCript slyšel",
+        "accHint": "Aby VoCript mohl psát tam, kde máš kurzor",
+        "grant": "Povolit"
+      },
+      "model": {
+        "ready": "Hotovo",
+        "failed": "Stažení selhalo",
+        "retry": "Zkusit znovu"
+      }
+    }
   },
   "modelSelector": {
     "custom": "Vlastní",

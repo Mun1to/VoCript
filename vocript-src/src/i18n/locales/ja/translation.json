@@ -326,7 +326,46 @@
     "changeLater": "モデルは設定からいつでも変えられます。",
     "showOtherModels_one": "ほかのモデルを表示",
     "showOtherModels_other": "ほかの{{count}}件のモデルを表示",
-    "hideOtherModels": "ほかのモデルを隠す"
+    "hideOtherModels": "ほかのモデルを隠す",
+    "first": {
+      "next": "次へ",
+      "back": "戻る",
+      "seeGuide": "ガイドを見る",
+      "start": "口述を始める",
+      "language": {
+        "question": "何語で話しますか？",
+        "fromSystem": "システムの言語",
+        "other": "別の言語",
+        "otherHint": "{{count}} 言語から選べます",
+        "mixed": "複数",
+        "mixedHint": "よく切り替える"
+      },
+      "use": {
+        "question": "何に使いますか？",
+        "hint": "これでモデルと音声コマンドを選びます。あとでワンクリックで変えられます。",
+        "daily": "普段の文章",
+        "dailyHint": "メール、チャット、メモ",
+        "coding": "プログラミング",
+        "codingHint": "記号を口述：アットマーク、セミコロン",
+        "custom": "自分のコマンド",
+        "customHint": "言葉を決めれば、記号を書きます",
+        "unsure": "まだわからない",
+        "unsureHint": "普通で始める"
+      },
+      "permission": {
+        "question": "あとはマイクだけ",
+        "hint": "Windows が一度だけ尋ねます。話した内容はこのパソコンから出ません。",
+        "hintDownloading": "モデルは裏でダウンロード中です。ここで待つ必要はありません。",
+        "micHint": "VoCript が聲を聞けるように",
+        "accHint": "VoCript がカーソル位置に書けるように",
+        "grant": "許可"
+      },
+      "model": {
+        "ready": "準備完了",
+        "failed": "ダウンロード失敗",
+        "retry": "もう一度"
+      }
+    }
   },
   "modelSelector": {
     "custom": "カスタム",

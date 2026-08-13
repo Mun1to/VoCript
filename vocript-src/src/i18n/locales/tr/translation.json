@@ -326,7 +326,46 @@
     "changeLater": "Modeli istediğin zaman Ayarlar'dan değiştirebilirsin.",
     "showOtherModels_one": "Diğer modeli göster",
     "showOtherModels_other": "Diğer {{count}} modeli göster",
-    "hideOtherModels": "Diğer modelleri gizle"
+    "hideOtherModels": "Diğer modelleri gizle",
+    "first": {
+      "next": "İleri",
+      "back": "Geri",
+      "seeGuide": "Kılavuzu gör",
+      "start": "Dikteye başla",
+      "language": {
+        "question": "Hangi dilde konuşacaksın?",
+        "fromSystem": "Sistemin dili",
+        "other": "Başka bir dil",
+        "otherHint": "{{count}} seçenek",
+        "mixed": "Birkaçı",
+        "mixedHint": "Sık değiştiriyorum"
+      },
+      "use": {
+        "question": "Ne için kullanacaksın?",
+        "hint": "Bu, modeli ve sesli komutları seçer. Sonradan tek tıkla değişir.",
+        "daily": "Günlük yazışma",
+        "dailyHint": "E-postalar, sohbetler, notlar",
+        "coding": "Kod yazmak",
+        "codingHint": "Sembolleri dikte et: köpek işareti, noktalı virgül",
+        "custom": "Kendi komutlarım",
+        "customHint": "Kelimeleri sen koy, sembolleri ben yazayım",
+        "unsure": "Henüz bilmiyorum",
+        "unsureHint": "Normalde başla"
+      },
+      "permission": {
+        "question": "Geriye sadece mikrofon kaldı",
+        "hint": "Windows bir kez sorar. Söylediğin hiçbir şey bu bilgisayardan çıkmaz.",
+        "hintDownloading": "Modelin arkada iniyor. Burada beklemene gerek yok.",
+        "micHint": "VoCript seni duyabilsin diye",
+        "accHint": "VoCript imlecin olduğu yere yazabilsin diye",
+        "grant": "İzin ver"
+      },
+      "model": {
+        "ready": "Hazır",
+        "failed": "İndirilemedi",
+        "retry": "Tekrar dene"
+      }
+    }
   },
   "modelSelector": {
     "custom": "Özel",

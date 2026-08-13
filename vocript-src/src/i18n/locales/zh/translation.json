@@ -326,7 +326,46 @@
     "changeLater": "你随时可以在设置里更换模型。",
     "showOtherModels_one": "查看另一个模型",
     "showOtherModels_other": "查看其他 {{count}} 个模型",
-    "hideOtherModels": "隐藏其他模型"
+    "hideOtherModels": "隐藏其他模型",
+    "first": {
+      "next": "下一步",
+      "back": "返回",
+      "seeGuide": "看看指南",
+      "start": "开始口述",
+      "language": {
+        "question": "你会用哪种语言说？",
+        "fromSystem": "系统的语言",
+        "other": "其他语言",
+        "otherHint": "共 {{count}} 种可选",
+        "mixed": "多种",
+        "mixedHint": "我经常切换"
+      },
+      "use": {
+        "question": "你会拿它做什么？",
+        "hint": "这决定了模型和语音命令。以后一个键就能改。",
+        "daily": "日常书写",
+        "dailyHint": "邮件、聊天、笔记",
+        "coding": "写代码",
+        "codingHint": "口述符号：@、分号",
+        "custom": "我自己的命令",
+        "customHint": "你定词，我写符号",
+        "unsure": "还不知道",
+        "unsureHint": "先用普通模式"
+      },
+      "permission": {
+        "question": "只差麦克风了",
+        "hint": "Windows 会问一次。你说的话不会离开这台电脑。",
+        "hintDownloading": "模型正在后台下载，不用在这里等。",
+        "micHint": "让 VoCript 能听到你",
+        "accHint": "让 VoCript 能在光标处写字",
+        "grant": "允许"
+      },
+      "model": {
+        "ready": "就绪",
+        "failed": "下载失败",
+        "retry": "重试"
+      }
+    }
   },
   "modelSelector": {
     "custom": "自定义",

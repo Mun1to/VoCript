@@ -326,7 +326,46 @@
     "changeLater": "Bạn có thể đổi mô hình bất cứ lúc nào trong Cài đặt.",
     "showOtherModels_one": "Xem mô hình còn lại",
     "showOtherModels_other": "Xem {{count}} mô hình còn lại",
-    "hideOtherModels": "Ẩn các mô hình khác"
+    "hideOtherModels": "Ẩn các mô hình khác",
+    "first": {
+      "next": "Tiếp",
+      "back": "Quay lại",
+      "seeGuide": "Xem hướng dẫn",
+      "start": "Bắt đầu đọc",
+      "language": {
+        "question": "Bạn sẽ nói bằng tiếng gì?",
+        "fromSystem": "Tiếng của hệ thống",
+        "other": "Ngôn ngữ khác",
+        "otherHint": "Có {{count}} lựa chọn",
+        "mixed": "Nhiều thứ",
+        "mixedHint": "Tôi hay đổi"
+      },
+      "use": {
+        "question": "Bạn sẽ dùng để làm gì?",
+        "hint": "Điều này chọn mô hình và lệnh giọng nói. Sau đổi bằng một cú nhấp.",
+        "daily": "Viết hằng ngày",
+        "dailyHint": "Email, trò chuyện, ghi chú",
+        "coding": "Lập trình",
+        "codingHint": "Đọc ký hiệu: a còng, chấm phẩy",
+        "custom": "Lệnh của tôi",
+        "customHint": "Bạn đặt từ, tôi viết ký hiệu",
+        "unsure": "Chưa biết",
+        "unsureHint": "Bắt đầu bình thường"
+      },
+      "permission": {
+        "question": "Chỉ còn micro nữa thôi",
+        "hint": "Windows hỏi một lần. Không có gì bạn nói rời khỏi máy này.",
+        "hintDownloading": "Mô hình đang tải ở phía sau. Không cần đợi ở đây.",
+        "micHint": "Để VoCript nghe được bạn",
+        "accHint": "Để VoCript viết được ngay chỗ con trỏ",
+        "grant": "Cho phép"
+      },
+      "model": {
+        "ready": "Sẵn sàng",
+        "failed": "Không tải được",
+        "retry": "Thử lại"
+      }
+    }
   },
   "modelSelector": {
     "custom": "Tùy chỉnh",

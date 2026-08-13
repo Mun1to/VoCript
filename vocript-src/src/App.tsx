@@ -11,7 +11,7 @@ import { ModelStateEvent, RecordingErrorEvent } from "./lib/types/events";
 import "./App.css";
 import AccessibilityPermissions from "./components/AccessibilityPermissions";
 import Footer from "./components/footer";
-import Onboarding, { AccessibilityOnboarding } from "./components/onboarding";
+import { AccessibilityOnboarding, FirstRun } from "./components/onboarding";
 import {
   Sidebar,
   SidebarSection,
@@ -42,7 +42,7 @@ import { useTourStore } from "./stores/tourStore";
 import { commands } from "@/bindings";
 import { getLanguageDirection, initializeRTL } from "@/lib/utils/rtl";
 
-type OnboardingStep = "accessibility" | "model" | "done";
+type OnboardingStep = "accessibility" | "first" | "done";
 
 const renderSettingsContent = (
   section: SidebarSection,
@@ -330,11 +330,11 @@ function App() {
 
         setOnboardingStep("done");
       } else {
-        // First run: full onboarding. If models are already on disk, jump
-        // straight to the model step so the "use installed vs download" prompt
-        // shows; otherwise start from the accessibility step.
+        // First run: the three questions. It handles the permission and the
+        // model download itself, including the case where models are already
+        // on disk from a previous install.
         setIsReturningUser(false);
-        setOnboardingStep(hasModels ? "model" : "accessibility");
+        setOnboardingStep("first");
       }
     } catch (error) {
       console.error(
@@ -345,17 +345,16 @@ function App() {
     }
   };
 
+  // The permission screen is only reached by someone coming back who revoked
+  // it, so from there it's always straight into the app.
   const handleAccessibilityComplete = () => {
-    // Returning users already have models, skip to main app
-    // New users need to select a model
-    setOnboardingStep(isReturningUser ? "done" : "model");
+    setOnboardingStep(isReturningUser ? "done" : "first");
   };
 
-  const handleModelSelected = () => {
-    // Remember onboarding is done so future launches skip straight to the app.
+  /** Done with the three questions. The tour only runs if it was asked for. */
+  const terminarPrimerArranque = (conGuia: boolean) => {
     localStorage.setItem("vocript_onboarded", "1");
-    // New users go straight into the app with the guided tour running.
-    startTour();
+    if (conGuia) startTour();
     setOnboardingStep("done");
   };
 
@@ -368,8 +367,13 @@ function App() {
     return <AccessibilityOnboarding onComplete={handleAccessibilityComplete} />;
   }
 
-  if (onboardingStep === "model") {
-    return <Onboarding onModelSelected={handleModelSelected} />;
+  if (onboardingStep === "first") {
+    return (
+      <FirstRun
+        onDone={() => terminarPrimerArranque(false)}
+        onDoneWithTour={() => terminarPrimerArranque(true)}
+      />
+    );
   }
 
   // The main app is mounted once onboarding is "done". New users get the

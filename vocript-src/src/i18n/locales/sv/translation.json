@@ -326,7 +326,46 @@
     "changeLater": "Du kan byta modell när du vill, under Inställningar.",
     "showOtherModels_one": "Visa den andra modellen",
     "showOtherModels_other": "Visa de andra {{count}} modellerna",
-    "hideOtherModels": "Dölj de andra modellerna"
+    "hideOtherModels": "Dölj de andra modellerna",
+    "first": {
+      "next": "Nästa",
+      "back": "Tillbaka",
+      "seeGuide": "Se guiden",
+      "start": "Börja diktera",
+      "language": {
+        "question": "Vilket språk ska du prata?",
+        "fromSystem": "Systemets språk",
+        "other": "Ett annat språk",
+        "otherHint": "{{count}} att välja på",
+        "mixed": "Flera",
+        "mixedHint": "Jag byter ofta"
+      },
+      "use": {
+        "question": "Vad ska du använda det till?",
+        "hint": "Det väljer modell och röstkommandon. Ändras sedan med ett klick.",
+        "daily": "Vardagligt skrivande",
+        "dailyHint": "Mejl, chattar, anteckningar",
+        "coding": "Programmering",
+        "codingHint": "Diktera tecken: snabel-a, semikolon",
+        "custom": "Egna kommandon",
+        "customHint": "Du sätter orden, jag skriver tecknen",
+        "unsure": "Vet inte än",
+        "unsureHint": "Börja normalt"
+      },
+      "permission": {
+        "question": "Bara mikrofonen kvar",
+        "hint": "Windows frågar en gång. Inget du säger lämnar den här datorn.",
+        "hintDownloading": "Din modell laddas ner i bakgrunden. Du behöver inte vänta här.",
+        "micHint": "För att VoCript ska höra dig",
+        "accHint": "För att VoCript ska kunna skriva där markören står",
+        "grant": "Tillåt"
+      },
+      "model": {
+        "ready": "Klart",
+        "failed": "Nedladdningen misslyckades",
+        "retry": "Försök igen"
+      }
+    }
   },
   "modelSelector": {
     "custom": "Anpassad",

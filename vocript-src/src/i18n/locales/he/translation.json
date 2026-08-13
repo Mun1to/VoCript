@@ -326,7 +326,46 @@
     "changeLater": "אפשר להחליף מודל מתי שרוצים, בהגדרות.",
     "showOtherModels_one": "הצג את המודל האחר",
     "showOtherModels_other": "הצג עוד {{count}} מודלים",
-    "hideOtherModels": "הסתר את שאר המודלים"
+    "hideOtherModels": "הסתר את שאר המודלים",
+    "first": {
+      "next": "הבא",
+      "back": "חזרה",
+      "seeGuide": "לצפות במדריך",
+      "start": "להתחיל להכתיב",
+      "language": {
+        "question": "באיזו שפה תדבר?",
+        "fromSystem": "זו של המערכת",
+        "other": "שפה אחרת",
+        "otherHint": "{{count}} זמינות",
+        "mixed": "כמה",
+        "mixedHint": "אני מחליף הרבה"
+      },
+      "use": {
+        "question": "למה תשתמש בזה?",
+        "hint": "זה בוחר את המודל ואת פקודות הקול. משתנה אחר כך בלחיצה.",
+        "daily": "כתיבה יומיומית",
+        "dailyHint": "מיילים, צ'אטים, פתקים",
+        "coding": "תכנות",
+        "codingHint": "להכתיב סימנים: שטרודל, נקודה-פסיק",
+        "custom": "הפקודות שלי",
+        "customHint": "אתה קובע את המילים, אני כותב את הסימנים",
+        "unsure": "עוד לא יודע",
+        "unsureHint": "תתחיל רגיל"
+      },
+      "permission": {
+        "question": "נשאר רק המיקרופון",
+        "hint": "Windows שואל פעם אחת. שום דבר ממה שתגיד לא עוזב את המחשב הזה.",
+        "hintDownloading": "המודל שלך יורד ברקע. אין צורך לחכות כאן.",
+        "micHint": "כדי ש-VoCript יוכל לשמוע אותך",
+        "accHint": "כדי ש-VoCript יוכל לכתוב איפה שהסמן",
+        "grant": "לאפשר"
+      },
+      "model": {
+        "ready": "מוכן",
+        "failed": "ההורדה נכשלה",
+        "retry": "לנסות שוב"
+      }
+    }
   },
   "modelSelector": {
     "custom": "מותאם אישית",

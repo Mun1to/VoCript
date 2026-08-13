@@ -357,7 +357,46 @@
     "changeLater": "You can switch models whenever you like, in Settings.",
     "showOtherModels_one": "Show the other model",
     "showOtherModels_other": "Show the other {{count}} models",
-    "hideOtherModels": "Hide the other models"
+    "hideOtherModels": "Hide the other models",
+    "first": {
+      "next": "Next",
+      "back": "Back",
+      "seeGuide": "See the guide",
+      "start": "Start dictating",
+      "language": {
+        "question": "What language will you speak?",
+        "fromSystem": "The one your system uses",
+        "other": "Another language",
+        "otherHint": "{{count}} to choose from",
+        "mixed": "Several",
+        "mixedHint": "I switch often"
+      },
+      "use": {
+        "question": "What will you use it for?",
+        "hint": "This picks the model and the voice commands. One click to change it later.",
+        "daily": "Everyday writing",
+        "dailyHint": "Emails, chats, notes",
+        "coding": "Coding",
+        "codingHint": "Dictate symbols: at sign, semicolon",
+        "custom": "My own commands",
+        "customHint": "You set the words, I'll write the symbols",
+        "unsure": "I don't know yet",
+        "unsureHint": "Start plain"
+      },
+      "permission": {
+        "question": "Just the microphone left",
+        "hint": "Windows asks once. Nothing you say leaves this computer.",
+        "hintDownloading": "Your model is downloading behind this. No need to wait here.",
+        "micHint": "So VoCript can hear you",
+        "accHint": "So VoCript can type where your cursor is",
+        "grant": "Allow"
+      },
+      "model": {
+        "ready": "Ready",
+        "failed": "Couldn't download",
+        "retry": "Try again"
+      }
+    }
   },
   "modelSelector": {
     "custom": "Custom",

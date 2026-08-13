@@ -326,7 +326,46 @@
     "changeLater": "Model możesz zmienić w każdej chwili w ustawieniach.",
     "showOtherModels_one": "Pokaż drugi model",
     "showOtherModels_other": "Pokaż pozostałe modele ({{count}})",
-    "hideOtherModels": "Ukryj pozostałe modele"
+    "hideOtherModels": "Ukryj pozostałe modele",
+    "first": {
+      "next": "Dalej",
+      "back": "Wstecz",
+      "seeGuide": "Zobacz przewodnik",
+      "start": "Zacznij dyktować",
+      "language": {
+        "question": "W jakim języku będziesz mówić?",
+        "fromSystem": "Ten z twojego systemu",
+        "other": "Inny język",
+        "otherHint": "{{count}} do wyboru",
+        "mixed": "Kilka",
+        "mixedHint": "Często zmieniam"
+      },
+      "use": {
+        "question": "Do czego będziesz tego używać?",
+        "hint": "To wybiera model i komendy głosowe. Później zmienisz jednym kliknięciem.",
+        "daily": "Codzienne pisanie",
+        "dailyHint": "Maile, czaty, notatki",
+        "coding": "Programowanie",
+        "codingHint": "Dyktuj znaki: małpa, średnik",
+        "custom": "Własne komendy",
+        "customHint": "Ty podajesz słowa, ja piszę znaki",
+        "unsure": "Jeszcze nie wiem",
+        "unsureHint": "Zacznij normalnie"
+      },
+      "permission": {
+        "question": "Został tylko mikrofon",
+        "hint": "Windows zapyta raz. Nic z tego, co powiesz, nie opuszcza tego komputera.",
+        "hintDownloading": "Twój model pobiera się w tle. Nie musisz tu czekać.",
+        "micHint": "Żeby VoCript mógł cię słyszeć",
+        "accHint": "Żeby VoCript mógł pisać tam, gdzie masz kursor",
+        "grant": "Zezwól"
+      },
+      "model": {
+        "ready": "Gotowe",
+        "failed": "Nie udało się pobrać",
+        "retry": "Spróbuj ponownie"
+      }
+    }
   },
   "modelSelector": {
     "custom": "Własny",
