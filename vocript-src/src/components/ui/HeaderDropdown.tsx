@@ -79,7 +79,9 @@ export const HeaderDropdown: React.FC<HeaderDropdownProps> = ({
 
   return (
     <div className="relative" ref={ref} data-tour={dataTour}>
-      <HoverTooltip label={tooltip}>
+      {/* While the panel is open its own heading says what this is, so the
+          hint would just be a second label hanging over the first option. */}
+      <HoverTooltip label={tooltip} disabled={open}>
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}

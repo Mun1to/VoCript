@@ -7,6 +7,9 @@ interface HoverTooltipProps {
   position?: "top" | "bottom";
   /** Applied to the wrapper, which is inline-flex by default. */
   className?: string;
+  /** Suppresses the hint entirely. For a control whose panel is open: the
+   *  panel names itself, and the hint would hang over its first option. */
+  disabled?: boolean;
   children: React.ReactNode;
 }
 
@@ -26,6 +29,7 @@ export const HoverTooltip: React.FC<HoverTooltipProps> = ({
   label,
   position = "bottom",
   className = "inline-flex",
+  disabled = false,
   children,
 }) => {
   const ref = useRef<HTMLSpanElement>(null);
@@ -41,6 +45,7 @@ export const HoverTooltip: React.FC<HoverTooltipProps> = ({
 
   const show = () => {
     cancel();
+    if (disabled) return;
     timer.current = setTimeout(() => setVisible(true), DELAY_MS);
   };
 
@@ -62,7 +67,7 @@ export const HoverTooltip: React.FC<HoverTooltipProps> = ({
       onBlur={hide}
     >
       {children}
-      {visible && label && (
+      {visible && label && !disabled && (
         <Tooltip targetRef={ref} position={position}>
           <p className="text-xs text-text/80">{label}</p>
         </Tooltip>
