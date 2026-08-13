@@ -1021,7 +1021,8 @@
     "off": "Wyłącz",
     "yes": "Tak",
     "no": "Nie",
-    "noOptionsFound": "Nie znaleziono opcji"
+    "noOptionsFound": "Nie znaleziono opcji",
+    "search": "Szukaj"
   },
   "accessibility": {
     "permissionsRequired": "Wymagane uprawnienia dostępności",

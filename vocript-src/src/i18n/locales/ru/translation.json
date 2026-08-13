@@ -1021,7 +1021,8 @@
     "off": "Выключенный",
     "yes": "Да",
     "no": "Нет",
-    "noOptionsFound": "Вариантов не найдено"
+    "noOptionsFound": "Вариантов не найдено",
+    "search": "Поиск"
   },
   "accessibility": {
     "permissionsRequired": "Требуются разрешения на доступ",

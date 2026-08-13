@@ -1021,7 +1021,8 @@
     "off": "關",
     "yes": "是",
     "no": "否",
-    "noOptionsFound": "未找到選項"
+    "noOptionsFound": "未找到選項",
+    "search": "搜尋"
   },
   "accessibility": {
     "permissionsRequired": "需要輔助使用權限",

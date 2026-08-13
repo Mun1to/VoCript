@@ -1021,7 +1021,8 @@
     "off": "כבוי",
     "yes": "כן",
     "no": "לא",
-    "noOptionsFound": "לא נמצאו אפשרויות"
+    "noOptionsFound": "לא נמצאו אפשרויות",
+    "search": "חיפוש"
   },
   "accessibility": {
     "permissionsRequired": "נדרשות הרשאות נגישות",

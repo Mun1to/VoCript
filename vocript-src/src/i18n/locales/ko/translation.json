@@ -1021,7 +1021,8 @@
     "off": "꺼짐",
     "yes": "예",
     "no": "아니오",
-    "noOptionsFound": "옵션을 찾을 수 없습니다"
+    "noOptionsFound": "옵션을 찾을 수 없습니다",
+    "search": "검색"
   },
   "accessibility": {
     "permissionsRequired": "접근성 권한 필요",

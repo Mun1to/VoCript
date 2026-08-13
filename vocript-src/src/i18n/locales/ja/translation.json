@@ -1021,7 +1021,8 @@
     "off": "オフ",
     "yes": "はい",
     "no": "いいえ",
-    "noOptionsFound": "オプションが見つかりません"
+    "noOptionsFound": "オプションが見つかりません",
+    "search": "検索"
   },
   "accessibility": {
     "permissionsRequired": "アクセシビリティ権限が必要です",

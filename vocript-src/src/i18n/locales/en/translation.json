@@ -1052,7 +1052,8 @@
     "off": "Off",
     "yes": "Yes",
     "no": "No",
-    "noOptionsFound": "No options found"
+    "noOptionsFound": "No options found",
+    "search": "Search"
   },
   "accessibility": {
     "permissionsRequired": "Accessibility Permissions Required",

@@ -1021,7 +1021,8 @@
     "off": "Desligado",
     "yes": "Sim",
     "no": "Não",
-    "noOptionsFound": "Nenhuma opção encontrada"
+    "noOptionsFound": "Nenhuma opção encontrada",
+    "search": "Procurar"
   },
   "accessibility": {
     "permissionsRequired": "Permissões de Acessibilidade Necessárias",

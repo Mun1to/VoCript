@@ -1021,7 +1021,8 @@
     "off": "Tắt",
     "yes": "Có",
     "no": "Không",
-    "noOptionsFound": "Không tìm thấy tùy chọn"
+    "noOptionsFound": "Không tìm thấy tùy chọn",
+    "search": "Tìm"
   },
   "accessibility": {
     "permissionsRequired": "Cần quyền truy cập",

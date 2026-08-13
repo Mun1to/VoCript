@@ -1021,7 +1021,8 @@
     "off": "Вимк.",
     "yes": "Так",
     "no": "Ні",
-    "noOptionsFound": "Опцій не знайдено"
+    "noOptionsFound": "Опцій не знайдено",
+    "search": "Пошук"
   },
   "accessibility": {
     "permissionsRequired": "Потрібні права доступу",

@@ -178,7 +178,10 @@ export const FirstRun: React.FC<FirstRunProps> = ({
       LANGUAGES.filter((l) => l.value !== "auto")
         .map((l) => ({
           value: l.value,
-          label: languageName(l.value, uiLanguage) ?? l.label,
+          label: conMayuscula(
+            languageName(l.value, uiLanguage) ?? l.label,
+            uiLanguage,
+          ),
         }))
         .sort((a, b) => a.label.localeCompare(b.label, uiLanguage)),
     [uiLanguage],

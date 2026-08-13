@@ -1021,7 +1021,8 @@
     "off": "Изкл.",
     "yes": "Да",
     "no": "Не",
-    "noOptionsFound": "Няма намерени опции"
+    "noOptionsFound": "Няма намерени опции",
+    "search": "Търсене"
   },
   "accessibility": {
     "permissionsRequired": "Необходими са разрешения за достъпност",
