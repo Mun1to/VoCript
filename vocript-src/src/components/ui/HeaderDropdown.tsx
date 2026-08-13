@@ -87,7 +87,17 @@ export const HeaderDropdown: React.FC<HeaderDropdownProps> = ({
           // and six tinted pills in a row read as a fence rather than as six
           // separate things you can press. The icon does the labelling, in the
           // muted colour, and only the value is spelled out.
-          className="vc-chip group flex items-center gap-1.5 py-1 px-2.5 rounded-lg text-[12.5px] font-semibold text-[var(--vc-text-main)] whitespace-nowrap transition-colors hover:bg-[var(--vc-card-bg)]"
+          //
+          // Open, the chip becomes the top half of one box: it takes the
+          // surface and the border, keeps only its top corners, and drops the
+          // bottom border so the list below continues the same frame. The
+          // border is always there, transparent when closed, so nothing shifts
+          // by a pixel when it opens.
+          className={`vc-chip group relative z-[51] flex items-center gap-1.5 whitespace-nowrap border px-2.5 py-1 text-[12.5px] font-semibold text-[var(--vc-text-main)] transition-colors ${
+            open
+              ? "rounded-t-lg rounded-b-none border-[var(--vc-border)] bg-[var(--vc-card-bg)]"
+              : "rounded-lg border-transparent hover:bg-[var(--vc-card-bg)]"
+          }`}
         >
           <span className="flex items-center text-[var(--vc-text-muted)] transition-colors group-hover:text-accent">
             {icon}
@@ -101,12 +111,11 @@ export const HeaderDropdown: React.FC<HeaderDropdownProps> = ({
         </button>
       </HoverTooltip>
       {open && (
-        // Hangs off the bottom edge of the rail, not off the chip: the 5px is
-        // the rail's own padding, so the panel starts exactly where the rail
-        // ends and reads as the rail opening rather than as a card that
-        // happens to be nearby. Same surface and border as the rail, too.
+        // The bottom half of that same box: starts where the chip ends, no
+        // gap and no top border, so the two read as one frame with a hairline
+        // across it. It draws over the rail's own edge on the way down.
         <div
-          className={`absolute top-full ${align === "end" ? "end-0" : "start-0"} z-50 mt-[5px] min-w-full rounded-lg border border-[var(--vc-border)] bg-[var(--vc-card-bg)] shadow-lg ${panelClassName}`}
+          className={`absolute top-full ${align === "end" ? "end-0" : "start-0"} z-50 min-w-full rounded-b-lg border border-t-0 border-[var(--vc-border)] bg-[var(--vc-card-bg)] shadow-lg ${panelClassName}`}
         >
           {title && (
             <div className="px-3 pt-1 pb-1.5 text-[9px] uppercase tracking-wider text-[var(--vc-text-muted)]">
