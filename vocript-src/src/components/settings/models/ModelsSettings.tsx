@@ -344,7 +344,7 @@ export const ModelsSettings: React.FC = () => {
             type="button"
             onClick={handleScan}
             disabled={scanning}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg bg-logo-primary/20 text-logo-primary hover:bg-logo-primary/30 transition-colors disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg bg-logo-primary/20 text-accent hover:bg-logo-primary/30 transition-colors disabled:opacity-50"
           >
             {scanning ? (
               <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
@@ -397,7 +397,7 @@ export const ModelsSettings: React.FC = () => {
                     type="button"
                     onClick={() => doImport(f.path)}
                     disabled={importingPath === f.path}
-                    className="flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-md bg-logo-primary/20 text-logo-primary hover:bg-logo-primary/30 transition-colors disabled:opacity-50 shrink-0"
+                    className="flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-md bg-logo-primary/20 text-accent hover:bg-logo-primary/30 transition-colors disabled:opacity-50 shrink-0"
                   >
                     {importingPath === f.path ? (
                       <span className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
@@ -434,7 +434,7 @@ export const ModelsSettings: React.FC = () => {
                   onClick={() => setLanguageDropdownOpen(!languageDropdownOpen)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
                     languageFilter !== "all"
-                      ? "bg-logo-primary/20 text-logo-primary"
+                      ? "bg-logo-primary/20 text-accent"
                       : "bg-mid-gray/10 text-text/60 hover:bg-mid-gray/20"
                   }`}
                 >
@@ -486,7 +486,7 @@ export const ModelsSettings: React.FC = () => {
                         }}
                         className={`w-full px-3 py-1.5 text-sm text-left transition-colors ${
                           languageFilter === "all"
-                            ? "bg-logo-primary/20 text-logo-primary font-semibold"
+                            ? "bg-logo-primary/20 text-accent font-semibold"
                             : "hover:bg-mid-gray/10"
                         }`}
                       >
@@ -503,7 +503,7 @@ export const ModelsSettings: React.FC = () => {
                           }}
                           className={`w-full px-3 py-1.5 text-sm text-left transition-colors ${
                             languageFilter === lang.value
-                              ? "bg-logo-primary/20 text-logo-primary font-semibold"
+                              ? "bg-logo-primary/20 text-accent font-semibold"
                               : "hover:bg-mid-gray/10"
                           }`}
                         >

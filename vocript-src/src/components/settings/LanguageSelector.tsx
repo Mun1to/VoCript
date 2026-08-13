@@ -162,7 +162,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
                       type="button"
                       className={`w-full px-2 py-1 text-sm text-start hover:bg-logo-primary/10 transition-colors duration-150 ${
                         selectedLanguage === language.value
-                          ? "bg-logo-primary/20 text-logo-primary font-semibold"
+                          ? "bg-logo-primary/20 text-accent font-semibold"
                           : ""
                       }`}
                       onClick={() => handleLanguageSelect(language.value)}

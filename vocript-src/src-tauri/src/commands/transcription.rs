@@ -11,6 +11,9 @@ use transcribe_rs::TranscriptionSegment;
 pub struct ModelLoadStatus {
     is_loaded: bool,
     current_model: Option<String>,
+    /// How long the last dictation took to transcribe, in milliseconds, or
+    /// `None` if nothing has been transcribed since the app started.
+    last_transcription_ms: Option<u64>,
 }
 
 #[tauri::command]
@@ -29,6 +32,7 @@ pub fn get_model_load_status(
     Ok(ModelLoadStatus {
         is_loaded: transcription_manager.is_model_loaded(),
         current_model: transcription_manager.get_current_model(),
+        last_transcription_ms: transcription_manager.last_transcription_ms(),
     })
 }
 

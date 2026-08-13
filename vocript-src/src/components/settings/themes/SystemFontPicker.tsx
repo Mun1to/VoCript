@@ -98,7 +98,7 @@ export const SystemFontPicker: React.FC = () => {
                 >
                   <span className="truncate">{font}</span>
                   {font === selected && (
-                    <Check className="h-3.5 w-3.5 shrink-0 text-logo-primary" />
+                    <Check className="h-3.5 w-3.5 shrink-0 text-accent" />
                   )}
                 </button>
               ))}

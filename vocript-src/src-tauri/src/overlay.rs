@@ -651,7 +651,17 @@ pub fn create_recording_overlay(app_handle: &AppHandle) {
     }
 }
 
+/// Tell the main window what dictation is doing right now, so the "Today"
+/// screen can follow along. Emitted app-wide and *before* the overlay's own
+/// position check: someone who turned the capsule off still gets the state on
+/// the panel they deliberately opened.
+fn emit_dictation_state(app_handle: &AppHandle, state: &str) {
+    let _ = app_handle.emit("dictation-state", state);
+}
+
 fn show_overlay_state(app_handle: &AppHandle, state: &str) {
+    emit_dictation_state(app_handle, state);
+
     // Check if overlay should be shown based on position setting
     let settings = settings::get_settings(app_handle);
     if settings.overlay_position == OverlayPosition::None {
@@ -707,6 +717,8 @@ pub fn show_copied_overlay(app_handle: &AppHandle) {
 /// Shows the live-transcription capsule: a wider/taller overlay that displays
 /// the text as it is recognised. Resizes the overlay window accordingly.
 pub fn show_live_overlay(app_handle: &AppHandle) {
+    emit_dictation_state(app_handle, "live");
+
     let settings = settings::get_settings(app_handle);
     if settings.overlay_position == OverlayPosition::None {
         return;
@@ -752,6 +764,8 @@ pub fn update_overlay_position(app_handle: &AppHandle) {
 
 /// Hides the recording overlay window with fade-out animation
 pub fn hide_recording_overlay(app_handle: &AppHandle) {
+    emit_dictation_state(app_handle, "idle");
+
     // Always hide the overlay regardless of settings - if setting was changed while recording,
     // we still want to hide it properly
     if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {

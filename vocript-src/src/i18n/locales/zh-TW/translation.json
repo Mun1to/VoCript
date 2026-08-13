@@ -23,7 +23,68 @@
     "fileTranscription": "轉寫",
     "feedback": "意見回饋",
     "activity": "活動",
-    "translation": "翻譯"
+    "translation": "翻譯",
+    "groups": {
+      "dictation": "語音輸入",
+      "content": "內容",
+      "system": "系統"
+    },
+    "collapse": "收合選單",
+    "expand": "展開選單",
+    "today": "今天"
+  },
+  "today": {
+    "status": {
+      "idle": {
+        "title": "可以開始口述",
+        "hintHold": "按住 {{shortcut}} 開口說。模型會在你說話時載入，而不是提前載入。",
+        "hintToggle": "按 {{shortcut}} 開始說，說完再按一次。模型會在你說話時載入。"
+      },
+      "listening": {
+        "title": "我在聽",
+        "hintHold": "說完放開快速鍵。{{cancel}} 會丟掉錄音。",
+        "hintToggle": "說完再按一次 {{shortcut}}。{{cancel}} 會丟掉錄音。"
+      },
+      "working": {
+        "title": "正在轉成文字",
+        "hint": "{{model}}，在你自己的電腦上。不會上傳任何內容。",
+        "hintNoModel": "在你自己的電腦上。不會上傳任何內容。"
+      },
+      "done": {
+        "title": "已寫到游標所在的位置",
+        "titleCopied": "已複製到剪貼簿",
+        "hint": "歷史紀錄裡也有。"
+      },
+      "live": {
+        "title": "即時轉寫",
+        "hint": "你說話時文字會逐步出現。"
+      }
+    },
+    "dictated": {
+      "title": "你口述的量",
+      "words": "個字用聲音輸入",
+      "wordsSince": "個字用聲音輸入，自 {{month}} 起",
+      "streakHint": "連續 · 最佳紀錄 {{count}}",
+      "streakHintNone": "連續"
+    },
+    "engine": {
+      "title": "引擎",
+      "model": "模型",
+      "noModel": "尚未選擇",
+      "memory": "記憶體中",
+      "loaded": "已載入",
+      "loadedSize": "{{mb}} MB",
+      "unloaded": "未載入",
+      "unloadsAfter": "自動釋放",
+      "lastRun": "上次轉寫",
+      "seconds": "{{seconds}} 秒",
+      "noneYet": "還沒有"
+    },
+    "latest": {
+      "title": "你最近口述的",
+      "empty": "還沒有。你口述的內容會出現在這裡。",
+      "seeAll": "查看全部歷史"
+    }
   },
   "onboarding": {
     "subtitle": "首先，請選擇一種模型",
@@ -869,6 +930,17 @@
       "note": "我們會檢視每一則訊息，以改善 VoCript。",
       "sent": "傳送成功！",
       "sendBtn": "傳送意見回饋"
+    },
+    "summary": {
+      "active": "{{total}} 項中 {{on}} 項已開啟"
+    },
+    "index": {
+      "title": "本頁內容"
+    },
+    "filter": {
+      "inSection": "在「{{section}}」中篩選",
+      "generic": "篩選設定",
+      "empty": "這裡沒有相符的項目。試試上方的放大鏡，搜尋整個應用程式。"
     }
   },
   "footer": {
@@ -1011,6 +1083,10 @@
       "chooseSystemFont": "選擇字體…",
       "searchFonts": "搜尋字體",
       "noFonts": "沒有符合的字體。"
+    },
+    "tint": {
+      "label": "背景也上色",
+      "description": "在面板和邊框上加一點強調色"
     }
   },
   "activity": {
@@ -1074,5 +1150,10 @@
   "dictation": {
     "copiedNoField": "已複製到剪貼簿",
     "copiedNoFieldHint": "游標不在任何文字方塊裡，請貼上到你需要的地方。"
+  },
+  "palette": {
+    "title": "搜尋",
+    "placeholder": "跳到某個區段…",
+    "empty": "沒有相符的區段。"
   }
 }

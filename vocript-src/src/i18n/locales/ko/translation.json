@@ -23,7 +23,68 @@
     "fileTranscription": "받아쓰기",
     "feedback": "피드백",
     "activity": "활동",
-    "translation": "번역"
+    "translation": "번역",
+    "groups": {
+      "dictation": "받아쓰기",
+      "content": "콘텐츠",
+      "system": "시스템"
+    },
+    "collapse": "메뉴 접기",
+    "expand": "메뉴 펼치기",
+    "today": "오늘"
+  },
+  "today": {
+    "status": {
+      "idle": {
+        "title": "받아쓸 준비 완료",
+        "hintHold": "{{shortcut}} 를 누른 채 말하세요. 모델은 말하는 동안 로드됩니다.",
+        "hintToggle": "{{shortcut}} 를 누르고 말한 뒤 다시 누르세요. 모델은 말하는 동안 로드됩니다."
+      },
+      "listening": {
+        "title": "듣고 있어요",
+        "hintHold": "끝나면 키를 놓으세요. {{cancel}} 를 누르면 버려집니다.",
+        "hintToggle": "끝나면 {{shortcut}} 를 다시 누르세요. {{cancel}} 를 누르면 버려집니다."
+      },
+      "working": {
+        "title": "텍스트로 바꾸는 중",
+        "hint": "{{model}}, 내 컴퓨터에서 처리됩니다. 아무것도 전송되지 않아요.",
+        "hintNoModel": "내 컴퓨터에서 처리됩니다. 아무것도 전송되지 않아요."
+      },
+      "done": {
+        "title": "커서가 있던 곳에 썼어요",
+        "titleCopied": "클립보드에 복사했어요",
+        "hint": "기록에도 남아 있어요."
+      },
+      "live": {
+        "title": "실시간 받아쓰기",
+        "hint": "말하는 동안 텍스트가 나타납니다."
+      }
+    },
+    "dictated": {
+      "title": "지금까지 받아쓴 양",
+      "words": "단어를 목소리로",
+      "wordsSince": "단어를 목소리로, {{month}}부터",
+      "streakHint": "연속 · 최고 기록 {{count}}",
+      "streakHintNone": "연속"
+    },
+    "engine": {
+      "title": "엔진",
+      "model": "모델",
+      "noModel": "선택 안 함",
+      "memory": "메모리에",
+      "loaded": "로드됨",
+      "loadedSize": "{{mb}} MB",
+      "unloaded": "로드 안 됨",
+      "unloadsAfter": "자동 해제",
+      "lastRun": "마지막 변환",
+      "seconds": "{{seconds}}초",
+      "noneYet": "아직 없음"
+    },
+    "latest": {
+      "title": "마지막으로 받아쓴 것",
+      "empty": "아직 없어요. 받아쓰면 여기에 나타납니다.",
+      "seeAll": "기록 전체 보기"
+    }
   },
   "onboarding": {
     "subtitle": "시작하려면 음성 인식 모델을 선택하세요",
@@ -869,6 +930,17 @@
       "note": "모든 메시지를 검토하여 VoCript를 개선합니다.",
       "sent": "전송되었습니다!",
       "sendBtn": "피드백 보내기"
+    },
+    "summary": {
+      "active": "{{total}}개 중 {{on}}개 켜짐"
+    },
+    "index": {
+      "title": "이 페이지에서"
+    },
+    "filter": {
+      "inSection": "{{section}} 안에서 찾기",
+      "generic": "설정 검색",
+      "empty": "여기에는 일치하는 항목이 없습니다. 위쪽 돋보기로 앱 전체를 검색해 보세요."
     }
   },
   "footer": {
@@ -1011,6 +1083,10 @@
       "chooseSystemFont": "글꼴 선택…",
       "searchFonts": "글꼴 검색",
       "noFonts": "일치하는 글꼴이 없습니다."
+    },
+    "tint": {
+      "label": "배경에도 색 입히기",
+      "description": "패널과 테두리에 강조색을 살짝"
     }
   },
   "activity": {
@@ -1074,5 +1150,10 @@
   "dictation": {
     "copiedNoField": "클립보드에 복사했습니다",
     "copiedNoFieldHint": "커서가 있는 입력란이 없어서 복사만 했습니다. 필요한 곳에 붙여넣으세요."
+  },
+  "palette": {
+    "title": "검색",
+    "placeholder": "섹션으로 이동…",
+    "empty": "일치하는 섹션이 없습니다."
   }
 }

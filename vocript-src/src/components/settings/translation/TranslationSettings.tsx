@@ -57,7 +57,7 @@ export const TranslationSettings: React.FC = () => {
             <span className="text-sm font-semibold text-text">
               {sourceLabel}
             </span>
-            <ArrowRight className="h-4 w-4 shrink-0 text-logo-primary" />
+            <ArrowRight className="h-4 w-4 shrink-0 text-accent" />
             <span className="text-sm font-semibold text-text">
               {t("translation.english")}
             </span>

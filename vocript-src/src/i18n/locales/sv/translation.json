@@ -23,7 +23,68 @@
     "fileTranscription": "Transkribera",
     "feedback": "Feedback",
     "activity": "Aktivitet",
-    "translation": "Översättning"
+    "translation": "Översättning",
+    "groups": {
+      "dictation": "Diktering",
+      "content": "Innehåll",
+      "system": "System"
+    },
+    "collapse": "Fäll ihop menyn",
+    "expand": "Fäll ut menyn",
+    "today": "Idag"
+  },
+  "today": {
+    "status": {
+      "idle": {
+        "title": "Redo att diktera",
+        "hintHold": "Håll in {{shortcut}} och prata. Modellen laddas medan du pratar, inte innan.",
+        "hintToggle": "Tryck {{shortcut}}, prata och tryck igen. Modellen laddas medan du pratar."
+      },
+      "listening": {
+        "title": "Jag lyssnar",
+        "hintHold": "Släpp genvägen när du är klar. {{cancel}} slänger allt.",
+        "hintToggle": "Tryck {{shortcut}} igen när du är klar. {{cancel}} slänger allt."
+      },
+      "working": {
+        "title": "Gör om det till text",
+        "hint": "{{model}}, på din egen dator. Inget skickas i väg.",
+        "hintNoModel": "På din egen dator. Inget skickas i väg."
+      },
+      "done": {
+        "title": "Skrivet där markören stod",
+        "titleCopied": "Kopierat till urklipp",
+        "hint": "Finns också i historiken."
+      },
+      "live": {
+        "title": "Direkttranskribering",
+        "hint": "Texten dyker upp medan du pratar."
+      }
+    },
+    "dictated": {
+      "title": "Vad du har dikterat",
+      "words": "ord med rösten",
+      "wordsSince": "ord med rösten, sedan {{month}}",
+      "streakHint": "i rad · bästa svit, {{count}}",
+      "streakHintNone": "i rad"
+    },
+    "engine": {
+      "title": "Motorn",
+      "model": "Modell",
+      "noModel": "Ingen vald",
+      "memory": "I minnet",
+      "loaded": "Laddad",
+      "loadedSize": "{{mb}} MB",
+      "unloaded": "Inte laddad",
+      "unloadsAfter": "Frigörs automatiskt",
+      "lastRun": "Senaste transkribering",
+      "seconds": "{{seconds}} s",
+      "noneYet": "Inget än"
+    },
+    "latest": {
+      "title": "Det senaste du dikterade",
+      "empty": "Inget än. Det du dikterar dyker upp här.",
+      "seeAll": "Visa hela historiken"
+    }
   },
   "onboarding": {
     "subtitle": "För att komma igång, välj en transkriptionsmodell",
@@ -869,6 +930,17 @@
       "note": "Vi läser varje meddelande för att förbättra VoCript.",
       "sent": "Skickat!",
       "sendBtn": "Skicka feedback"
+    },
+    "summary": {
+      "active": "{{on}} av {{total}} på"
+    },
+    "index": {
+      "title": "På den här sidan"
+    },
+    "filter": {
+      "inSection": "Filtrera i {{section}}",
+      "generic": "Filtrera inställningar",
+      "empty": "Inget här matchar det. Prova förstoringsglaset ovan för att söka i hela appen."
     }
   },
   "footer": {
@@ -1011,6 +1083,10 @@
       "chooseSystemFont": "Välj ett typsnitt…",
       "searchFonts": "Sök typsnitt",
       "noFonts": "Inget typsnitt matchar."
+    },
+    "tint": {
+      "label": "Tona även bakgrunderna",
+      "description": "En gnutta accentfärg på paneler och kanter"
     }
   },
   "activity": {
@@ -1074,5 +1150,10 @@
   "dictation": {
     "copiedNoField": "Kopierat till urklipp",
     "copiedNoFieldHint": "Markören stod inte i något textfält, så klistra in texten där du behöver den."
+  },
+  "palette": {
+    "title": "Sök",
+    "placeholder": "Gå till en sektion…",
+    "empty": "Ingen sektion matchar."
   }
 }

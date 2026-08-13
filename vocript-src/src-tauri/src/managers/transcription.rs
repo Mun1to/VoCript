@@ -107,6 +107,11 @@ pub struct TranscriptionManager {
     watcher_handle: Arc<Mutex<Option<thread::JoinHandle<()>>>>,
     is_loading: Arc<Mutex<bool>>,
     loading_condvar: Arc<Condvar>,
+    /// How long the last dictation took to transcribe, in milliseconds. Zero
+    /// means nothing has been transcribed since the app started. It was already
+    /// being measured for the log line; the "Today" panel shows it so the cost
+    /// of a dictation is visible without opening the log file.
+    last_transcription_ms: Arc<AtomicU64>,
 }
 
 impl TranscriptionManager {
@@ -122,6 +127,7 @@ impl TranscriptionManager {
             watcher_handle: Arc::new(Mutex::new(None)),
             is_loading: Arc::new(Mutex::new(false)),
             loading_condvar: Arc::new(Condvar::new()),
+            last_transcription_ms: Arc::new(AtomicU64::new(0)),
         };
 
         // Start the idle watcher.
@@ -574,6 +580,15 @@ impl TranscriptionManager {
         current_model.clone()
     }
 
+    /// Milliseconds the last dictation took to transcribe, or `None` if nothing
+    /// has been transcribed since the app started.
+    pub fn last_transcription_ms(&self) -> Option<u64> {
+        match self.last_transcription_ms.load(Ordering::Relaxed) {
+            0 => None,
+            ms => Some(ms),
+        }
+    }
+
     pub fn transcribe(&self, audio: Vec<f32>) -> Result<String> {
         #[cfg(debug_assertions)]
         if std::env::var("HANDY_FORCE_TRANSCRIPTION_FAILURE").is_ok() {
@@ -661,10 +676,12 @@ impl TranscriptionManager {
         } else {
             ""
         };
+        let elapsed_ms = (et - st).as_millis();
+        self.last_transcription_ms
+            .store(elapsed_ms as u64, Ordering::Relaxed);
         info!(
             "Transcription completed in {}ms{}",
-            (et - st).as_millis(),
-            translation_note
+            elapsed_ms, translation_note
         );
 
         let final_result = replaced_result;

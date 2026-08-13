@@ -13,6 +13,9 @@ import AccessibilityPermissions from "./components/AccessibilityPermissions";
 import Footer from "./components/footer";
 import Onboarding, { AccessibilityOnboarding } from "./components/onboarding";
 import { Sidebar, SidebarSection, SECTIONS_CONFIG } from "./components/Sidebar";
+import { SettingsLayout } from "./components/ui/SettingsLayout";
+import { CommandPalette } from "./components/CommandPalette";
+import { TodayScreen } from "./components/today/TodayScreen";
 import Header from "./components/Header";
 import { GuidedTour } from "./components/tour/GuidedTour";
 import { AppContextMenu } from "./components/ui/AppContextMenu";
@@ -36,10 +39,27 @@ import { getLanguageDirection, initializeRTL } from "@/lib/utils/rtl";
 
 type OnboardingStep = "accessibility" | "model" | "done";
 
-const renderSettingsContent = (section: SidebarSection) => {
+const renderSettingsContent = (
+  section: SidebarSection,
+  onNavigate: (section: SidebarSection) => void,
+) => {
+  // "Today" is panels, not settings rows: no filter box and no on-this-page
+  // index, both of which would be filtering and indexing nothing.
+  if (section === "today") return <TodayScreen onNavigate={onNavigate} />;
+
   const ActiveComponent =
     SECTIONS_CONFIG[section]?.component || SECTIONS_CONFIG.general.component;
-  return <ActiveComponent />;
+  // Wrapping here rather than inside each of the twelve sections: the layout
+  // gives every one of them the on-this-page index for free, and the `key`
+  // remounts it on section change so the index never shows the old blocks.
+  return (
+    <SettingsLayout
+      key={section}
+      sectionKey={SECTIONS_CONFIG[section]?.labelKey}
+    >
+      <ActiveComponent />
+    </SettingsLayout>
+  );
 };
 
 function App() {
@@ -50,8 +70,8 @@ function App() {
   // Track if this is a returning user who just needs to grant permissions
   // (vs a new user who needs full onboarding including model selection)
   const [isReturningUser, setIsReturningUser] = useState(false);
-  const [currentSection, setCurrentSection] =
-    useState<SidebarSection>("general");
+  const [currentSection, setCurrentSection] = useState<SidebarSection>("today");
+  const [paletaAbierta, setPaletaAbierta] = useState(false);
   const startTour = useTourStore((state) => state.start);
   const { settings, updateSetting } = useSettings();
   const direction = getLanguageDirection(i18n.language);
@@ -102,6 +122,29 @@ function App() {
       darkenHex(accentColor, 0.12),
     );
   }, [accentColor]);
+
+  // Ctrl+K (Cmd+K on macOS) opens the section palette from anywhere. Bound on
+  // the window rather than a field so it works with nothing focused.
+  useEffect(() => {
+    const alPulsar = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() === "k" && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        setPaletaAbierta((v) => !v);
+      }
+    };
+    window.addEventListener("keydown", alPulsar);
+    return () => window.removeEventListener("keydown", alPulsar);
+  }, []);
+
+  // Whether the accent also tints backgrounds, panels and hairlines. The CSS
+  // does the work: this only flips the percentages to zero (see App.css).
+  const tintSurfaces = settings?.accent_tint_surfaces ?? true;
+  useEffect(() => {
+    document.documentElement.setAttribute(
+      "data-tint",
+      tintSurfaces ? "on" : "off",
+    );
+  }, [tintSurfaces]);
 
   // Typography: family and root size, both driven from settings (see App.css).
   const uiFont = settings?.ui_font ?? DEFAULT_UI_FONT;
@@ -342,6 +385,11 @@ function App() {
           },
         }}
       />
+      <CommandPalette
+        open={paletaAbierta}
+        onClose={() => setPaletaAbierta(false)}
+        onNavigate={setCurrentSection}
+      />
       {/* Main content area that takes remaining space */}
       <div className="flex-1 flex overflow-hidden">
         <Sidebar
@@ -350,14 +398,14 @@ function App() {
         />
         {/* Scrollable content area */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          <Header />
+          <Header onSearch={() => setPaletaAbierta(true)} />
           <div className="flex-1 overflow-y-auto">
             {/* Padding grows with the window instead of a flat 1rem, so a wide
                 screen gets breathing room and a narrow one keeps every pixel
                 for the settings themselves. */}
             <div className="flex flex-col items-center gap-4 px-3 py-4 sm:px-5 lg:px-8">
               <AccessibilityPermissions />
-              {renderSettingsContent(currentSection)}
+              {renderSettingsContent(currentSection, setCurrentSection)}
             </div>
           </div>
         </div>

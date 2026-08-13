@@ -54,7 +54,68 @@
     "about": "About",
     "feedback": "Feedback",
     "activity": "Activity",
-    "translation": "Translation"
+    "translation": "Translation",
+    "groups": {
+      "dictation": "Dictation",
+      "content": "Content",
+      "system": "System"
+    },
+    "collapse": "Collapse menu",
+    "expand": "Expand menu",
+    "today": "Today"
+  },
+  "today": {
+    "status": {
+      "idle": {
+        "title": "Ready to dictate",
+        "hintHold": "Hold {{shortcut}} and talk. The model loads while you speak, not before.",
+        "hintToggle": "Press {{shortcut}}, talk, and press it again. The model loads while you speak, not before."
+      },
+      "listening": {
+        "title": "I'm listening",
+        "hintHold": "Let go of the shortcut when you're done. {{cancel}} throws it away.",
+        "hintToggle": "Press {{shortcut}} again when you're done. {{cancel}} throws it away."
+      },
+      "working": {
+        "title": "Turning it into text",
+        "hint": "{{model}}, on your own computer. Nothing is uploaded.",
+        "hintNoModel": "On your own computer. Nothing is uploaded."
+      },
+      "done": {
+        "title": "Written where your cursor was",
+        "titleCopied": "Copied to the clipboard",
+        "hint": "It's in your history too."
+      },
+      "live": {
+        "title": "Live transcription",
+        "hint": "The text appears as you speak."
+      }
+    },
+    "dictated": {
+      "title": "What you have dictated",
+      "words": "words with your voice",
+      "wordsSince": "words with your voice, since {{month}}",
+      "streakHint": "in a row · best streak, {{count}}",
+      "streakHintNone": "in a row"
+    },
+    "engine": {
+      "title": "The engine",
+      "model": "Model",
+      "noModel": "None chosen yet",
+      "memory": "In memory",
+      "loaded": "Loaded",
+      "loadedSize": "{{mb}} MB",
+      "unloaded": "Not loaded",
+      "unloadsAfter": "Auto-unload",
+      "lastRun": "Last transcription",
+      "seconds": "{{seconds}} s",
+      "noneYet": "Nothing yet"
+    },
+    "latest": {
+      "title": "The last thing you dictated",
+      "empty": "Nothing yet. What you dictate shows up here.",
+      "seeAll": "See the whole history"
+    }
   },
   "onboarding": {
     "profiles": {
@@ -900,6 +961,17 @@
       "note": "We review every message to improve VoCript.",
       "sent": "Sent successfully!",
       "sendBtn": "Send feedback"
+    },
+    "summary": {
+      "active": "{{on}} of {{total}} on"
+    },
+    "index": {
+      "title": "On this page"
+    },
+    "filter": {
+      "inSection": "Filter within {{section}}",
+      "generic": "Filter settings",
+      "empty": "Nothing here matches that. Try the magnifier above to search the whole app."
     }
   },
   "footer": {
@@ -1011,6 +1083,10 @@
       "chooseSystemFont": "Choose a font…",
       "searchFonts": "Search fonts",
       "noFonts": "No font matches that."
+    },
+    "tint": {
+      "label": "Tint the backgrounds too",
+      "description": "A hint of the accent on panels and borders"
     }
   },
   "activity": {
@@ -1074,5 +1150,10 @@
   "dictation": {
     "copiedNoField": "Copied to the clipboard",
     "copiedNoFieldHint": "No text box had the cursor, so paste it wherever you need it."
+  },
+  "palette": {
+    "title": "Search",
+    "placeholder": "Go to a section…",
+    "empty": "No section matches that."
   }
 }

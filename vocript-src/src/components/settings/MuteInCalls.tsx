@@ -51,7 +51,7 @@ export const MuteInCalls: React.FC<MuteInCallsProps> = React.memo(
           <div className="px-4 pb-4">
             <div className="flex items-center justify-between gap-4 rounded-lg border border-mid-gray/20 bg-mid-gray/5 px-3 py-2.5">
               <div className="flex items-start gap-2.5">
-                <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-logo-primary" />
+                <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent" />
                 <p className="text-xs leading-relaxed text-text/60">
                   {t("settings.general.muteInCalls.setupHint")}
                 </p>

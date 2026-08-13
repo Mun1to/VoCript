@@ -85,7 +85,7 @@ export const HeaderDropdown: React.FC<HeaderDropdownProps> = ({
           onClick={() => setOpen((o) => !o)}
           // A tinted pill instead of a halo: it still reads as "this is a
           // control you can press", without every chip in the header glowing.
-          className={`flex items-center gap-1.5 py-1 px-1.5 rounded-lg text-xs font-bold text-logo-primary transition-colors ${
+          className={`flex items-center gap-1.5 py-1 px-1.5 rounded-lg text-xs font-bold text-accent transition-colors ${
             glow ? "bg-logo-primary/10" : ""
           } ${isLight ? "hover:bg-slate-100" : "hover:bg-white/[0.06]"}`}
         >
@@ -151,7 +151,7 @@ export const HeaderDropdownOption: React.FC<HeaderDropdownOptionProps> = ({
       onClick={handleClick}
       className={`block w-full text-start px-3 py-1.5 text-xs font-semibold whitespace-nowrap transition-colors ${
         active
-          ? "text-logo-primary"
+          ? "text-accent"
           : isLight
             ? "text-slate-700 hover:bg-slate-100"
             : "text-slate-300 hover:bg-white/[0.06]"

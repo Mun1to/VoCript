@@ -23,7 +23,68 @@
     "fileTranscription": "תמלל",
     "feedback": "משוב",
     "activity": "פעילות",
-    "translation": "תרגום"
+    "translation": "תרגום",
+    "groups": {
+      "dictation": "הכתבה",
+      "content": "תוכן",
+      "system": "מערכת"
+    },
+    "collapse": "כיווץ התפריט",
+    "expand": "פתיחת התפריט",
+    "today": "היום"
+  },
+  "today": {
+    "status": {
+      "idle": {
+        "title": "מוכן להכתבה",
+        "hintHold": "החזק את {{shortcut}} ודבר. המודל נטען בזמן שאתה מדבר, לא לפני כן.",
+        "hintToggle": "לחץ על {{shortcut}}, דבר, ולחץ שוב. המודל נטען בזמן שאתה מדבר."
+      },
+      "listening": {
+        "title": "אני מקשיב",
+        "hintHold": "שחרר את הקיצור כשתסיים. {{cancel}} מבטל הכל.",
+        "hintToggle": "לחץ שוב על {{shortcut}} כשתסיים. {{cancel}} מבטל הכל."
+      },
+      "working": {
+        "title": "ממיר לטקסט",
+        "hint": "{{model}}, על המחשב שלך. שום דבר לא נשלח.",
+        "hintNoModel": "על המחשב שלך. שום דבר לא נשלח."
+      },
+      "done": {
+        "title": "נכתב איפה שהיה הסמן",
+        "titleCopied": "הועתק ללוח",
+        "hint": "נמצא גם בהיסטוריה."
+      },
+      "live": {
+        "title": "תמלול חי",
+        "hint": "הטקסט מופיע תוך כדי דיבור."
+      }
+    },
+    "dictated": {
+      "title": "מה שהכתבת",
+      "words": "מילים בקול",
+      "wordsSince": "מילים בקול, מאז {{month}}",
+      "streakHint": "ברצף · השיא שלך, {{count}}",
+      "streakHintNone": "ברצף"
+    },
+    "engine": {
+      "title": "המנוע",
+      "model": "מודל",
+      "noModel": "לא נבחר",
+      "memory": "בזיכרון",
+      "loaded": "טעון",
+      "loadedSize": "{{mb}} MB",
+      "unloaded": "לא טעון",
+      "unloadsAfter": "שחרור אוטומטי",
+      "lastRun": "התמלול האחרון",
+      "seconds": "{{seconds}} שנ'",
+      "noneYet": "עדיין כלום"
+    },
+    "latest": {
+      "title": "הדבר האחרון שהכתבת",
+      "empty": "עדיין כלום. מה שתכתיב יופיע כאן.",
+      "seeAll": "להציג את כל ההיסטוריה"
+    }
   },
   "onboarding": {
     "subtitle": "כדי להתחיל, בחר מודל תמלול",
@@ -869,6 +930,17 @@
       "note": "אנו קוראים כל הודעה כדי לשפר את VoCript.",
       "sent": "נשלח בהצלחה!",
       "sendBtn": "שליחת משוב"
+    },
+    "summary": {
+      "active": "{{on}} מתוך {{total}} פעילים"
+    },
+    "index": {
+      "title": "בדף הזה"
+    },
+    "filter": {
+      "inSection": "סינון בתוך {{section}}",
+      "generic": "סינון הגדרות",
+      "empty": "כאן אין התאמות. נסה את זכוכית המגדלת למעלה כדי לחפש בכל האפליקציה."
     }
   },
   "footer": {
@@ -1011,6 +1083,10 @@
       "chooseSystemFont": "בחר גופן…",
       "searchFonts": "חיפוש גופנים",
       "noFonts": "אין גופן תואם."
+    },
+    "tint": {
+      "label": "לצבוע גם את הרקעים",
+      "description": "נגיעה של צבע ההדגשה בלוחות ובגבולות"
     }
   },
   "activity": {
@@ -1074,5 +1150,10 @@
   "dictation": {
     "copiedNoField": "הועתק ללוח",
     "copiedNoFieldHint": "הסמן לא היה בשום תיבת טקסט, אז הדבק את זה איפה שצריך."
+  },
+  "palette": {
+    "title": "חיפוש",
+    "placeholder": "מעבר למקטע…",
+    "empty": "אין מקטע תואם."
   }
 }

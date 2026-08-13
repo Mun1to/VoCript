@@ -23,7 +23,68 @@
     "fileTranscription": "Chép lời",
     "feedback": "Phản hồi",
     "activity": "Hoạt động",
-    "translation": "Dịch"
+    "translation": "Dịch",
+    "groups": {
+      "dictation": "Đọc chính tả",
+      "content": "Nội dung",
+      "system": "Hệ thống"
+    },
+    "collapse": "Thu gọn menu",
+    "expand": "Mở rộng menu",
+    "today": "Hôm nay"
+  },
+  "today": {
+    "status": {
+      "idle": {
+        "title": "Sẵn sàng để đọc",
+        "hintHold": "Giữ {{shortcut}} và nói. Mô hình tải trong lúc bạn nói, không phải trước đó.",
+        "hintToggle": "Nhấn {{shortcut}}, nói, rồi nhấn lại. Mô hình tải trong lúc bạn nói."
+      },
+      "listening": {
+        "title": "Tôi đang nghe",
+        "hintHold": "Thả phím khi bạn xong. {{cancel}} bỏ tất cả.",
+        "hintToggle": "Nhấn {{shortcut}} lần nữa khi bạn xong. {{cancel}} bỏ tất cả."
+      },
+      "working": {
+        "title": "Đang chuyển thành chữ",
+        "hint": "{{model}}, trên máy của bạn. Không gửi gì lên mạng.",
+        "hintNoModel": "Trên máy của bạn. Không gửi gì lên mạng."
+      },
+      "done": {
+        "title": "Đã viết vào chỗ con trỏ",
+        "titleCopied": "Đã sao chép vào clipboard",
+        "hint": "Cũng nằm trong lịch sử."
+      },
+      "live": {
+        "title": "Phiên âm trực tiếp",
+        "hint": "Chữ hiện ra trong lúc bạn nói."
+      }
+    },
+    "dictated": {
+      "title": "Bạn đã đọc được bao nhiêu",
+      "words": "từ bằng giọng nói",
+      "wordsSince": "từ bằng giọng nói, từ {{month}}",
+      "streakHint": "liên tiếp · kỷ lục của bạn, {{count}}",
+      "streakHintNone": "liên tiếp"
+    },
+    "engine": {
+      "title": "Động cơ",
+      "model": "Mô hình",
+      "noModel": "Chưa chọn",
+      "memory": "Trong bộ nhớ",
+      "loaded": "Đã tải",
+      "loadedSize": "{{mb}} MB",
+      "unloaded": "Chưa tải",
+      "unloadsAfter": "Tự động giải phóng",
+      "lastRun": "Lần phiên âm cuối",
+      "seconds": "{{seconds}} giây",
+      "noneYet": "Chưa có gì"
+    },
+    "latest": {
+      "title": "Điều bạn đọc gần đây nhất",
+      "empty": "Chưa có gì. Những gì bạn đọc sẽ hiện ở đây.",
+      "seeAll": "Xem toàn bộ lịch sử"
+    }
   },
   "onboarding": {
     "subtitle": "Để bắt đầu, hãy chọn một mô hình chuyển đổi giọng nói",
@@ -869,6 +930,17 @@
       "note": "Chúng tôi đọc mọi tin nhắn để cải thiện VoCript.",
       "sent": "Đã gửi thành công!",
       "sendBtn": "Gửi phản hồi"
+    },
+    "summary": {
+      "active": "{{on}} trên {{total}} đang bật"
+    },
+    "index": {
+      "title": "Trong trang này"
+    },
+    "filter": {
+      "inSection": "Lọc trong {{section}}",
+      "generic": "Lọc cài đặt",
+      "empty": "Ở đây không có gì khớp. Thử kính lúp phía trên để tìm trong toàn bộ ứng dụng."
     }
   },
   "footer": {
@@ -1011,6 +1083,10 @@
       "chooseSystemFont": "Chọn phông chữ…",
       "searchFonts": "Tìm phông chữ",
       "noFonts": "Không có phông chữ phù hợp."
+    },
+    "tint": {
+      "label": "Nhuộm màu cả nền",
+      "description": "Một chút màu nhấn trên bảng và viền"
     }
   },
   "activity": {
@@ -1074,5 +1150,10 @@
   "dictation": {
     "copiedNoField": "Đã sao chép vào bảng nhớ tạm",
     "copiedNoFieldHint": "Con trỏ không ở trong ô văn bản nào, hãy dán vào nơi bạn cần."
+  },
+  "palette": {
+    "title": "Tìm kiếm",
+    "placeholder": "Đi tới một mục…",
+    "empty": "Không có mục nào khớp."
   }
 }

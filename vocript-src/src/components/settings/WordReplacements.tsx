@@ -282,7 +282,7 @@ export const WordReplacements: React.FC<WordReplacementsProps> = React.memo(
             </Button>
           </div>
           <details className="mt-2 text-xs text-mid-gray">
-            <summary className="cursor-pointer select-none w-fit font-medium hover:text-logo-primary transition-colors">
+            <summary className="cursor-pointer select-none w-fit font-medium hover:text-accent transition-colors">
               {t("settings.advanced.wordReplacements.csvHelp.title")}
             </summary>
             <div className="mt-2 space-y-1.5">

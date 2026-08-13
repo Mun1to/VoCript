@@ -23,7 +23,68 @@
     "fileTranscription": "文字起こし",
     "feedback": "フィードバック",
     "activity": "アクティビティ",
-    "translation": "翻訳"
+    "translation": "翻訳",
+    "groups": {
+      "dictation": "音声入力",
+      "content": "コンテンツ",
+      "system": "システム"
+    },
+    "collapse": "メニューを畳む",
+    "expand": "メニューを開く",
+    "today": "今日"
+  },
+  "today": {
+    "status": {
+      "idle": {
+        "title": "口述の準備完了",
+        "hintHold": "{{shortcut}} を押しながら話してください。モデルは話している間に読み込まれます。",
+        "hintToggle": "{{shortcut}} を押して話し、もう一度押してください。モデルは話している間に読み込まれます。"
+      },
+      "listening": {
+        "title": "聞いています",
+        "hintHold": "終わったらキーを離してください。{{cancel}} で破棄します。",
+        "hintToggle": "終わったら {{shortcut}} をもう一度押してください。{{cancel}} で破棄します。"
+      },
+      "working": {
+        "title": "テキストに変換中",
+        "hint": "{{model}}、あなたのパソコン内で処理。何も送信されません。",
+        "hintNoModel": "あなたのパソコン内で処理。何も送信されません。"
+      },
+      "done": {
+        "title": "カーソル位置に書き込みました",
+        "titleCopied": "クリップボードにコピーしました",
+        "hint": "履歴にも残っています。"
+      },
+      "live": {
+        "title": "ライブ文字起こし",
+        "hint": "話しながらテキストが出てきます。"
+      }
+    },
+    "dictated": {
+      "title": "これまでの口述",
+      "words": "語を声で入力",
+      "wordsSince": "語を声で入力（{{month}}以降）",
+      "streakHint": "連続 · 最高記録は {{count}}",
+      "streakHintNone": "連続"
+    },
+    "engine": {
+      "title": "エンジン",
+      "model": "モデル",
+      "noModel": "未選択",
+      "memory": "メモリ上",
+      "loaded": "読み込み済み",
+      "loadedSize": "{{mb}} MB",
+      "unloaded": "未読み込み",
+      "unloadsAfter": "自動解放",
+      "lastRun": "前回の文字起こし",
+      "seconds": "{{seconds}} 秒",
+      "noneYet": "まだありません"
+    },
+    "latest": {
+      "title": "最近口述したもの",
+      "empty": "まだありません。口述するとここに出ます。",
+      "seeAll": "履歴をすべて見る"
+    }
   },
   "onboarding": {
     "subtitle": "開始するには、文字起こしモデルを選択してください",
@@ -869,6 +930,17 @@
       "note": "いただいたすべてのメッセージを確認し、VoCript の改善に役立てます。",
       "sent": "送信しました！",
       "sendBtn": "フィードバックを送信"
+    },
+    "summary": {
+      "active": "{{total}} 件中 {{on}} 件オン"
+    },
+    "index": {
+      "title": "このページの内容"
+    },
+    "filter": {
+      "inSection": "{{section}} 内を絞り込む",
+      "generic": "設定を絞り込む",
+      "empty": "ここには一致するものがありません。上の虫めがねでアプリ全体を検索してみてください。"
     }
   },
   "footer": {
@@ -1011,6 +1083,10 @@
       "chooseSystemFont": "書体を選ぶ…",
       "searchFonts": "書体を検索",
       "noFonts": "一致する書体はありません。"
+    },
+    "tint": {
+      "label": "背景にも色を付ける",
+      "description": "パネルと枠線にアクセント色をほんのり"
     }
   },
   "activity": {
@@ -1074,5 +1150,10 @@
   "dictation": {
     "copiedNoField": "クリップボードにコピーしました",
     "copiedNoFieldHint": "テキスト入力欄にカーソルがなかったので、必要な場所に貼り付けてください。"
+  },
+  "palette": {
+    "title": "検索",
+    "placeholder": "セクションへ移動…",
+    "empty": "一致するセクションがありません。"
   }
 }

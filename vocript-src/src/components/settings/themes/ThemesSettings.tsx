@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { SettingsGroup } from "../../ui/SettingsGroup";
+import { ToggleSwitch } from "../../ui/ToggleSwitch";
 import { AccentColorPicker } from "../../AccentColorPicker";
 import { SystemFontPicker } from "./SystemFontPicker";
 import { useSettings } from "../../../hooks/useSettings";
@@ -18,7 +19,7 @@ import {
  */
 export const ThemesSettings: React.FC = () => {
   const { t } = useTranslation();
-  const { getSetting, updateSetting } = useSettings();
+  const { getSetting, updateSetting, isUpdating } = useSettings();
 
   const currentFont = getSetting("ui_font") ?? DEFAULT_UI_FONT;
   const currentSize = getSetting("ui_font_size") ?? DEFAULT_UI_FONT_SIZE;
@@ -26,9 +27,22 @@ export const ThemesSettings: React.FC = () => {
   return (
     <div className="vc-settings-column space-y-6">
       <SettingsGroup title={t("themes.title")}>
-        <div className="p-5 flex flex-col gap-4">
-          <p className="text-sm text-text/70">{t("themes.subtitle")}</p>
-          <AccentColorPicker size="md" allowCustom />
+        <div className="flex flex-col">
+          <div className="p-5 flex flex-col gap-4">
+            <p className="text-sm text-text/70">{t("themes.subtitle")}</p>
+            <AccentColorPicker size="md" allowCustom />
+          </div>
+          <ToggleSwitch
+            checked={getSetting("accent_tint_surfaces") ?? true}
+            onChange={(enabled) =>
+              updateSetting("accent_tint_surfaces", enabled)
+            }
+            isUpdating={isUpdating("accent_tint_surfaces")}
+            label={t("themes.tint.label")}
+            description={t("themes.tint.description")}
+            descriptionMode="inline"
+            grouped
+          />
         </div>
       </SettingsGroup>
 

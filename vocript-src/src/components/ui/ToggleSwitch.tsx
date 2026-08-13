@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useId } from "react";
 import { useTranslation } from "react-i18next";
 import { SettingContainer } from "./SettingContainer";
 import { useResolvedTheme } from "../../hooks/useResolvedTheme";
+import { useSettingsGroup } from "./SettingsGroup";
 
 interface ToggleSwitchProps {
   checked: boolean;
@@ -29,6 +30,16 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
   const { t } = useTranslation();
   const isLight = useResolvedTheme() === "light";
 
+  // Tell the enclosing block whether we're on, so its header can summarise
+  // "1 of 2 on". Does nothing when there's no group around us.
+  const grupo = useSettingsGroup();
+  const idInterruptor = useId();
+  useEffect(() => {
+    if (!grupo) return;
+    grupo.informar(idInterruptor, checked);
+    return () => grupo.olvidar(idInterruptor);
+  }, [grupo, idInterruptor, checked]);
+
   return (
     <SettingContainer
       title={label}
@@ -49,8 +60,8 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
           className={`text-[11px] font-bold uppercase tracking-wider transition-colors ${
             checked
               ? isLight
-                ? "text-logo-primary font-mono"
-                : "text-logo-primary font-mono"
+                ? "text-accent font-mono"
+                : "text-accent font-mono"
               : isLight
                 ? "text-slate-400 font-mono"
                 : "text-slate-500 font-mono opacity-60"

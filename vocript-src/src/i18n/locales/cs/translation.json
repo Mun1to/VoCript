@@ -23,7 +23,68 @@
     "fileTranscription": "Přepsat",
     "feedback": "Zpětná vazba",
     "activity": "Aktivita",
-    "translation": "Překlad"
+    "translation": "Překlad",
+    "groups": {
+      "dictation": "Diktování",
+      "content": "Obsah",
+      "system": "Systém"
+    },
+    "collapse": "Sbalit nabídku",
+    "expand": "Rozbalit nabídku",
+    "today": "Dnes"
+  },
+  "today": {
+    "status": {
+      "idle": {
+        "title": "Připraveno k diktování",
+        "hintHold": "Podrž {{shortcut}} a mluv. Model se načítá během mluvení, ne předem.",
+        "hintToggle": "Stiskni {{shortcut}}, mluv a stiskni znovu. Model se načítá během mluvení."
+      },
+      "listening": {
+        "title": "Poslouchám",
+        "hintHold": "Pust' zkratku, až skončíš. {{cancel}} všechno zahodí.",
+        "hintToggle": "Až skončíš, stiskni {{shortcut}} znovu. {{cancel}} všechno zahodí."
+      },
+      "working": {
+        "title": "Převádím na text",
+        "hint": "{{model}}, na tvoém počítači. Nic se nikam neposlá.",
+        "hintNoModel": "Na tvoém počítači. Nic se nikam neposlá."
+      },
+      "done": {
+        "title": "Zapsáno tam, kde byl kurzor",
+        "titleCopied": "Zkopírováno do schránky",
+        "hint": "Je to i v historii."
+      },
+      "live": {
+        "title": "Přepis živě",
+        "hint": "Text se objevuje, jak mluvíš."
+      }
+    },
+    "dictated": {
+      "title": "Kolik už jsi nadiktoval",
+      "words": "slov hlasem",
+      "wordsSince": "slov hlasem, od {{month}}",
+      "streakHint": "v řadě · nejlepší série, {{count}}",
+      "streakHintNone": "v řadě"
+    },
+    "engine": {
+      "title": "Motor",
+      "model": "Model",
+      "noModel": "Nevybrán",
+      "memory": "V paměti",
+      "loaded": "Načtený",
+      "loadedSize": "{{mb}} MB",
+      "unloaded": "Nenačtený",
+      "unloadsAfter": "Automatické uvolnění",
+      "lastRun": "Poslední přepis",
+      "seconds": "{{seconds}} s",
+      "noneYet": "Zatím nic"
+    },
+    "latest": {
+      "title": "Naposledy nadiktované",
+      "empty": "Zatím nic. Co nadiktuješ, objeví se tady.",
+      "seeAll": "Zobrazit celou historii"
+    }
   },
   "onboarding": {
     "subtitle": "Pro začátek vyberte model pro přepis",
@@ -869,6 +930,17 @@
       "note": "Čteme každou zprávu, abychom vylepšili VoCript.",
       "sent": "Úspěšně odesláno!",
       "sendBtn": "Odeslat zpětnou vazbu"
+    },
+    "summary": {
+      "active": "{{on}} z {{total}} zapnuto"
+    },
+    "index": {
+      "title": "Na této stránce"
+    },
+    "filter": {
+      "inSection": "Filtrovat v sekci {{section}}",
+      "generic": "Filtrovat nastavení",
+      "empty": "Tady nic neodpovídá. Zkus lupu nahoře a prohledej celou aplikaci."
     }
   },
   "footer": {
@@ -1011,6 +1083,10 @@
       "chooseSystemFont": "Vyber písmo…",
       "searchFonts": "Hledat písma",
       "noFonts": "Žádné písmo neodpovídá."
+    },
+    "tint": {
+      "label": "Obarvit i pozadí",
+      "description": "Špetka akcentní barvy na panelech a okrajích"
     }
   },
   "activity": {
@@ -1074,5 +1150,10 @@
   "dictation": {
     "copiedNoField": "Zkopírováno do schránky",
     "copiedNoFieldHint": "Kurzor nebyl v žádném textovém poli, tak si text vlož tam, kde ho potřebuješ."
+  },
+  "palette": {
+    "title": "Hledat",
+    "placeholder": "Přejít na sekci…",
+    "empty": "Žádná sekce neodpovídá."
   }
 }

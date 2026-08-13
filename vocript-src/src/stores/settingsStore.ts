@@ -126,6 +126,7 @@ const MOCK_FALLBACK_SETTINGS: Settings = {
   app_language: "es",
   theme: "dark",
   accent_color: "#3b82f6",
+  accent_tint_surfaces: true,
   live_mode: false,
   live_mode_system: false,
   tour_completed: true,
@@ -220,6 +221,8 @@ const settingUpdaters: {
   app_language: (value) => commands.changeAppLanguageSetting(value as string),
   theme: (value) => commands.changeThemeSetting(value as AppTheme),
   accent_color: (value) => commands.changeAccentColorSetting(value as string),
+  accent_tint_surfaces: (value) =>
+    commands.changeAccentTintSurfacesSetting(value as boolean),
   source_attribution: (value) =>
     commands.changeSourceAttributionSetting(value as boolean),
   live_mode: (value) => commands.changeLiveModeSetting(value as boolean),

@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Sun, Moon, Monitor } from "lucide-react";
+import { Sun, Moon, Monitor, Search } from "lucide-react";
 import { useSettings } from "../hooks/useSettings";
 import { useResolvedTheme } from "../hooks/useResolvedTheme";
 import { TranscriptionModeSwitch } from "./TranscriptionModeSwitch";
@@ -9,7 +9,12 @@ import { LanguageQuickSwitch } from "./LanguageQuickSwitch";
 import { AccentThemeSwitch } from "./AccentThemeSwitch";
 import type { AppTheme } from "@/bindings";
 
-export const Header: React.FC = () => {
+interface HeaderProps {
+  /** Opens the command palette. Omitted, the magnifier isn't drawn at all. */
+  onSearch?: () => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   const { t } = useTranslation();
   const { settings, updateSetting } = useSettings();
 
@@ -25,7 +30,7 @@ export const Header: React.FC = () => {
   };
   const themeMeta = {
     system: {
-      icon: <Monitor className="w-3.5 h-3.5 text-logo-primary" />,
+      icon: <Monitor className="w-3.5 h-3.5 text-accent" />,
       label: t("header.systemMode"),
     },
     light: {
@@ -33,7 +38,7 @@ export const Header: React.FC = () => {
       label: t("header.lightMode"),
     },
     dark: {
-      icon: <Moon className="w-3.5 h-3.5 text-logo-primary" />,
+      icon: <Moon className="w-3.5 h-3.5 text-accent" />,
       label: t("header.darkMode"),
     },
   }[theme];
@@ -58,8 +63,23 @@ export const Header: React.FC = () => {
         <LanguageQuickSwitch />
       </div>
 
-      {/* Right: theme (flex-1, pushed to the end) */}
+      {/* Right: search + theme (flex-1, pushed to the end) */}
       <div className="flex-1 min-w-0 flex items-center justify-end gap-3">
+        {onSearch && (
+          <button
+            type="button"
+            onClick={onSearch}
+            title={`${t("palette.title")} (Ctrl+K)`}
+            aria-label={t("palette.title")}
+            className={`p-1.5 rounded-lg transition-colors active:scale-95 ${
+              isLight
+                ? "text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+                : "text-slate-400 hover:bg-white/[0.06] hover:text-slate-200"
+            }`}
+          >
+            <Search size={16} />
+          </button>
+        )}
         <button
           type="button"
           data-tour="header-theme"

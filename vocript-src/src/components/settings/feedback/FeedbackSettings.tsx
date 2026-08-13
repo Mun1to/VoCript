@@ -75,7 +75,7 @@ export const FeedbackSettings: React.FC = () => {
               onClick={() => setCategory("idea")}
               className={`flex items-center gap-3 p-3.5 rounded-xl border text-start transition-all ${
                 category === "idea"
-                  ? "bg-logo-primary/10 border-logo-primary text-logo-primary font-semibold"
+                  ? "bg-logo-primary/10 border-logo-primary text-accent font-semibold"
                   : isLight
                     ? "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100"
                     : "bg-white/[0.02] border-white/10 text-slate-300 hover:bg-white/[0.05]"
@@ -101,7 +101,7 @@ export const FeedbackSettings: React.FC = () => {
               onClick={() => setCategory("bug")}
               className={`flex items-center gap-3 p-3.5 rounded-xl border text-start transition-all ${
                 category === "bug"
-                  ? "bg-logo-primary/10 border-logo-primary text-logo-primary font-semibold"
+                  ? "bg-logo-primary/10 border-logo-primary text-accent font-semibold"
                   : isLight
                     ? "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100"
                     : "bg-white/[0.02] border-white/10 text-slate-300 hover:bg-white/[0.05]"
@@ -127,7 +127,7 @@ export const FeedbackSettings: React.FC = () => {
               onClick={() => setCategory("general")}
               className={`flex items-center gap-3 p-3.5 rounded-xl border text-start transition-all ${
                 category === "general"
-                  ? "bg-logo-primary/10 border-logo-primary text-logo-primary font-semibold"
+                  ? "bg-logo-primary/10 border-logo-primary text-accent font-semibold"
                   : isLight
                     ? "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100"
                     : "bg-white/[0.02] border-white/10 text-slate-300 hover:bg-white/[0.05]"
@@ -179,7 +179,7 @@ export const FeedbackSettings: React.FC = () => {
               <span
                 className={`text-[11px] flex items-center gap-1.5 ${isLight ? "text-slate-500" : "text-slate-400"}`}
               >
-                <Sparkles className="w-3.5 h-3.5 text-logo-primary" />
+                <Sparkles className="w-3.5 h-3.5 text-accent" />
                 {t("settings.feedback.note", {
                   defaultValue:
                     "Revisamos cada mensaje para mejorar la suite de apps.",

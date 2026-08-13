@@ -23,7 +23,68 @@
     "fileTranscription": "Transcrire",
     "feedback": "Retours",
     "activity": "Activité",
-    "translation": "Traduction"
+    "translation": "Traduction",
+    "groups": {
+      "dictation": "Dictée",
+      "content": "Contenu",
+      "system": "Système"
+    },
+    "collapse": "Réduire le menu",
+    "expand": "Déployer le menu",
+    "today": "Aujourd'hui"
+  },
+  "today": {
+    "status": {
+      "idle": {
+        "title": "Prêt à dicter",
+        "hintHold": "Maintiens {{shortcut}} et parle. Le modèle se charge pendant que tu parles, pas avant.",
+        "hintToggle": "Appuie sur {{shortcut}}, parle, puis appuie de nouveau. Le modèle se charge pendant que tu parles, pas avant."
+      },
+      "listening": {
+        "title": "Je t'écoute",
+        "hintHold": "Relâche le raccourci quand tu as fini. {{cancel}} annule tout.",
+        "hintToggle": "Appuie de nouveau sur {{shortcut}} quand tu as fini. {{cancel}} annule tout."
+      },
+      "working": {
+        "title": "Passage au texte",
+        "hint": "{{model}}, sur ton ordinateur. Rien n'est envoyé.",
+        "hintNoModel": "Sur ton ordinateur. Rien n'est envoyé."
+      },
+      "done": {
+        "title": "Écrit là où était ton curseur",
+        "titleCopied": "Copié dans le presse-papiers",
+        "hint": "C'est aussi dans l'historique."
+      },
+      "live": {
+        "title": "Transcription en direct",
+        "hint": "Le texte apparaît pendant que tu parles."
+      }
+    },
+    "dictated": {
+      "title": "Ce que tu as dicté",
+      "words": "mots à la voix",
+      "wordsSince": "mots à la voix, depuis {{month}}",
+      "streakHint": "d'affilée · meilleure série, {{count}}",
+      "streakHintNone": "d'affilée"
+    },
+    "engine": {
+      "title": "Le moteur",
+      "model": "Modèle",
+      "noModel": "Aucun choisi",
+      "memory": "En mémoire",
+      "loaded": "Chargé",
+      "loadedSize": "{{mb}} Mo",
+      "unloaded": "Non chargé",
+      "unloadsAfter": "Déchargement auto",
+      "lastRun": "Dernière transcription",
+      "seconds": "{{seconds}} s",
+      "noneYet": "Rien encore"
+    },
+    "latest": {
+      "title": "Ta dernière dictée",
+      "empty": "Rien encore. Ce que tu dictes apparaît ici.",
+      "seeAll": "Voir tout l'historique"
+    }
   },
   "onboarding": {
     "subtitle": "Pour commencer, choisissez un modèle de transcription",
@@ -869,6 +930,17 @@
       "note": "Nous lisons chaque message pour améliorer VoCript.",
       "sent": "Envoyé avec succès !",
       "sendBtn": "Envoyer un retour"
+    },
+    "summary": {
+      "active": "{{on}} sur {{total}} activés"
+    },
+    "index": {
+      "title": "Sur cette page"
+    },
+    "filter": {
+      "inSection": "Filtrer dans {{section}}",
+      "generic": "Filtrer les réglages",
+      "empty": "Rien ne correspond ici. Essaie la loupe en haut pour chercher dans toute l'app."
     }
   },
   "footer": {
@@ -1011,6 +1083,10 @@
       "chooseSystemFont": "Choisir une police…",
       "searchFonts": "Rechercher des polices",
       "noFonts": "Aucune police ne correspond."
+    },
+    "tint": {
+      "label": "Teinter aussi les fonds",
+      "description": "Une touche de la couleur d'accent sur les panneaux et les bordures"
     }
   },
   "activity": {
@@ -1074,5 +1150,10 @@
   "dictation": {
     "copiedNoField": "Copié dans le presse-papiers",
     "copiedNoFieldHint": "Aucun champ de texte n'avait le curseur : collez-le où vous en avez besoin."
+  },
+  "palette": {
+    "title": "Rechercher",
+    "placeholder": "Aller à une section…",
+    "empty": "Aucune section ne correspond."
   }
 }

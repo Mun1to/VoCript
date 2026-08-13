@@ -23,7 +23,68 @@
     "fileTranscription": "Transkrybuj",
     "feedback": "Opinie",
     "activity": "Aktywność",
-    "translation": "Tłumaczenie"
+    "translation": "Tłumaczenie",
+    "groups": {
+      "dictation": "Dyktowanie",
+      "content": "Treść",
+      "system": "System"
+    },
+    "collapse": "Zwiń menu",
+    "expand": "Rozwiń menu",
+    "today": "Dzisiaj"
+  },
+  "today": {
+    "status": {
+      "idle": {
+        "title": "Gotowe do dyktowania",
+        "hintHold": "Przytrzymaj {{shortcut}} i mów. Model wczytuje się w trakcie mówienia, nie wcześniej.",
+        "hintToggle": "Naciśnij {{shortcut}}, mów i naciśnij ponownie. Model wczytuje się w trakcie mówienia."
+      },
+      "listening": {
+        "title": "Słucham",
+        "hintHold": "Puść skrót, gdy skończysz. {{cancel}} wszystko odrzuca.",
+        "hintToggle": "Naciśnij {{shortcut}} ponownie, gdy skończysz. {{cancel}} wszystko odrzuca."
+      },
+      "working": {
+        "title": "Zamieniam na tekst",
+        "hint": "{{model}}, na twoim komputerze. Nic nie jest wysyłane.",
+        "hintNoModel": "Na twoim komputerze. Nic nie jest wysyłane."
+      },
+      "done": {
+        "title": "Zapisane tam, gdzie był kursor",
+        "titleCopied": "Skopiowane do schowka",
+        "hint": "Jest też w historii."
+      },
+      "live": {
+        "title": "Transkrypcja na żywo",
+        "hint": "Tekst pojawia się, gdy mówisz."
+      }
+    },
+    "dictated": {
+      "title": "Ile już podyktowałeś",
+      "words": "słów głosem",
+      "wordsSince": "słów głosem, od {{month}}",
+      "streakHint": "z rzędu · najlepsza seria, {{count}}",
+      "streakHintNone": "z rzędu"
+    },
+    "engine": {
+      "title": "Silnik",
+      "model": "Model",
+      "noModel": "Nie wybrano",
+      "memory": "W pamięci",
+      "loaded": "Wczytany",
+      "loadedSize": "{{mb}} MB",
+      "unloaded": "Niewczytany",
+      "unloadsAfter": "Automatyczne zwalnianie",
+      "lastRun": "Ostatnia transkrypcja",
+      "seconds": "{{seconds}} s",
+      "noneYet": "Jeszcze nic"
+    },
+    "latest": {
+      "title": "Ostatnio podyktowane",
+      "empty": "Jeszcze nic. To, co podyktujesz, pojawi się tutaj.",
+      "seeAll": "Zobacz całą historię"
+    }
   },
   "onboarding": {
     "subtitle": "Aby rozpocząć, wybierz model transkrypcji",
@@ -869,6 +930,17 @@
       "note": "Czytamy każdą wiadomość, aby ulepszać VoCript.",
       "sent": "Wysłano pomyślnie!",
       "sendBtn": "Wyślij opinię"
+    },
+    "summary": {
+      "active": "{{on}} z {{total}} włączonych"
+    },
+    "index": {
+      "title": "Na tej stronie"
+    },
+    "filter": {
+      "inSection": "Filtruj w sekcji {{section}}",
+      "generic": "Filtruj ustawienia",
+      "empty": "Nic tu nie pasuje. Spróbuj lupy u góry, żeby przeszukać całą aplikację."
     }
   },
   "footer": {
@@ -1011,6 +1083,10 @@
       "chooseSystemFont": "Wybierz czcionkę…",
       "searchFonts": "Szukaj czcionek",
       "noFonts": "Żadna czcionka nie pasuje."
+    },
+    "tint": {
+      "label": "Zabarw także tła",
+      "description": "Odrobina koloru akcentu na panelach i obramowaniach"
     }
   },
   "activity": {
@@ -1074,5 +1150,10 @@
   "dictation": {
     "copiedNoField": "Skopiowano do schowka",
     "copiedNoFieldHint": "Kursor nie był w żadnym polu tekstowym, więc wklej tekst tam, gdzie go potrzebujesz."
+  },
+  "palette": {
+    "title": "Szukaj",
+    "placeholder": "Przejdź do sekcji…",
+    "empty": "Żadna sekcja nie pasuje."
   }
 }

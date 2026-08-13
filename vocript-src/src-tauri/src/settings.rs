@@ -476,6 +476,11 @@ pub struct AppSettings {
     /// Color de acento de la interfaz (hex, p. ej. "#3b82f6"). Tema de color.
     #[serde(default = "default_accent_color")]
     pub accent_color: String,
+    /// Si el acento tiñe además los fondos, paneles y separadores, en vez de
+    /// pintar solo botones e interruptores. Activado por defecto: es lo que da
+    /// al tema elegido presencia en toda la ventana.
+    #[serde(default = "default_accent_tint_surfaces")]
+    pub accent_tint_surfaces: bool,
     /// Al transcribir audio del sistema, añade al final una línea de «Fuente»
     /// con lo que sonaba (título, artista/canal, app y minuto), vía SMTC.
     #[serde(default)]
@@ -733,6 +738,12 @@ fn default_app_language() -> String {
 /// presets and a future free-color picker share the same field.
 fn default_accent_color() -> String {
     "#3b82f6".to_string()
+}
+
+/// El acento tiñe las superficies por defecto. Quien lo quiera neutro puede
+/// apagarlo en Apariencia y la interfaz vuelve a los grises de siempre.
+fn default_accent_tint_surfaces() -> bool {
+    true
 }
 
 fn default_show_tray_icon() -> bool {
@@ -1078,6 +1089,7 @@ pub fn get_default_settings() -> AppSettings {
         app_language: default_app_language(),
         theme: AppTheme::System,
         accent_color: default_accent_color(),
+        accent_tint_surfaces: default_accent_tint_surfaces(),
         source_attribution: false,
         live_mode: false,
         live_mode_system: false,

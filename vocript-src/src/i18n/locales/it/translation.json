@@ -23,7 +23,68 @@
     "fileTranscription": "Trascrivi",
     "feedback": "Feedback",
     "activity": "Attività",
-    "translation": "Traduzione"
+    "translation": "Traduzione",
+    "groups": {
+      "dictation": "Dettatura",
+      "content": "Contenuti",
+      "system": "Sistema"
+    },
+    "collapse": "Riduci il menu",
+    "expand": "Espandi il menu",
+    "today": "Oggi"
+  },
+  "today": {
+    "status": {
+      "idle": {
+        "title": "Pronto a dettare",
+        "hintHold": "Tieni premuto {{shortcut}} e parla. Il modello si carica mentre parli, non prima.",
+        "hintToggle": "Premi {{shortcut}}, parla e premi di nuovo. Il modello si carica mentre parli, non prima."
+      },
+      "listening": {
+        "title": "Ti sto ascoltando",
+        "hintHold": "Rilascia la scorciatoia quando hai finito. {{cancel}} butta via tutto.",
+        "hintToggle": "Premi di nuovo {{shortcut}} quando hai finito. {{cancel}} butta via tutto."
+      },
+      "working": {
+        "title": "Lo sto trasformando in testo",
+        "hint": "{{model}}, sul tuo computer. Non viene caricato nulla.",
+        "hintNoModel": "Sul tuo computer. Non viene caricato nulla."
+      },
+      "done": {
+        "title": "Scritto dove avevi il cursore",
+        "titleCopied": "Copiato negli appunti",
+        "hint": "È anche nella cronologia."
+      },
+      "live": {
+        "title": "Trascrizione dal vivo",
+        "hint": "Il testo compare mentre parli."
+      }
+    },
+    "dictated": {
+      "title": "Quello che hai dettato",
+      "words": "parole con la voce",
+      "wordsSince": "parole con la voce, da {{month}}",
+      "streakHint": "di fila · la tua serie migliore, {{count}}",
+      "streakHintNone": "di fila"
+    },
+    "engine": {
+      "title": "Il motore",
+      "model": "Modello",
+      "noModel": "Nessuno scelto",
+      "memory": "In memoria",
+      "loaded": "Caricato",
+      "loadedSize": "{{mb}} MB",
+      "unloaded": "Non caricato",
+      "unloadsAfter": "Scarico automatico",
+      "lastRun": "Ultima trascrizione",
+      "seconds": "{{seconds}} s",
+      "noneYet": "Ancora niente"
+    },
+    "latest": {
+      "title": "L'ultima cosa che hai dettato",
+      "empty": "Ancora niente. Quello che detti compare qui.",
+      "seeAll": "Vedi tutta la cronologia"
+    }
   },
   "onboarding": {
     "subtitle": "Per cominciare, scegli un modello di riconoscimento vocale",
@@ -869,6 +930,17 @@
       "note": "Leggiamo ogni messaggio per migliorare VoCript.",
       "sent": "Inviato con successo!",
       "sendBtn": "Invia feedback"
+    },
+    "summary": {
+      "active": "{{on}} di {{total}} attivi"
+    },
+    "index": {
+      "title": "In questa pagina"
+    },
+    "filter": {
+      "inSection": "Filtra in {{section}}",
+      "generic": "Filtra le impostazioni",
+      "empty": "Qui non corrisponde nulla. Prova la lente in alto per cercare in tutta l'app."
     }
   },
   "footer": {
@@ -1011,6 +1083,10 @@
       "chooseSystemFont": "Scegli un carattere…",
       "searchFonts": "Cerca caratteri",
       "noFonts": "Nessun carattere corrisponde."
+    },
+    "tint": {
+      "label": "Colora anche gli sfondi",
+      "description": "Un tocco del colore d'accento su pannelli e bordi"
     }
   },
   "activity": {
@@ -1074,5 +1150,10 @@
   "dictation": {
     "copiedNoField": "Copiato negli appunti",
     "copiedNoFieldHint": "Nessun campo di testo aveva il cursore, quindi incollalo dove ti serve."
+  },
+  "palette": {
+    "title": "Cerca",
+    "placeholder": "Vai a una sezione…",
+    "empty": "Nessuna sezione corrisponde."
   }
 }

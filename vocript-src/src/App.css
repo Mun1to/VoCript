@@ -31,6 +31,11 @@
   --color-logo-glow-soft: rgba(59, 130, 246, 0.16);
   --color-text-stroke: #f8fafc;
   --color-mid-gray: #64748b;
+  /* The accent AS TEXT. Never use --color-logo-primary for type: it's the raw
+     picked color and light hues (yellow, lime, green) fail contrast against
+     the panel. `text-accent` resolves to the mixed, legible version defined
+     per theme below. */
+  --color-accent: var(--vc-accent-text);
 }
 
 :root {
@@ -48,42 +53,152 @@
   --scrollbar-thumb-hover: var(--color-logo-glow);
 
   color: #f8fafc;
-  background-color: #090a0f;
+  background-color: var(--color-background);
 }
 
-/* Theme variables */
+/* ---------------------------------------------------------------------------
+   Theme variables.
+
+   The accent doesn't just paint buttons any more: it TINTS the surfaces too
+   (background, panels, hairlines), which is what makes a chosen theme show up
+   across the whole window instead of in a few controls. Each surface is a
+   `color-mix` of the accent into the neutral it used to be, by the percentage
+   in --vc-tint-*, so turning the tint off (see [data-tint="off"] below) puts
+   every surface back to exactly the greys it had before.
+
+   --vc-accent-text is the accent as TEXT, and it is not the raw accent. VoCript
+   lets people pick any color, and measuring the eight presets plus yellow and
+   lime on the light panel, yellow came out at 3.7 and green at 4.3 against the
+   4.5 the standard asks for. Mixing the accent into the opposite ground first
+   takes the worst case to 5.5 without dulling the hue enough to confuse purple
+   with blue. The 65/78 split comes from a measured sweep (78/70/62/55/48), not
+   from eyeballing it; dark needs far less help, since indigo at 78% was already
+   at 5.7.
+   --------------------------------------------------------------------------- */
 :root[data-theme="dark"],
 :root {
   --color-text: #f8fafc;
-  --color-background: #090a0f;
   --color-logo-primary: #3b82f6;
   --color-logo-stroke: #1d4ed8;
 
-  --vc-header-bg: #0c0d12;
-  --vc-sidebar-bg: #0c0d12;
-  --vc-card-bg: #12131a;
-  --vc-border: rgba(255, 255, 255, 0.08);
+  --vc-tint-bg: 7%;
+  --vc-tint-panel: 5%;
+  --vc-tint-line: 14%;
+
+  --vc-accent-text: color-mix(
+    in oklab,
+    var(--color-logo-primary) 78%,
+    #ffffff 22%
+  );
+
+  --color-background: color-mix(
+    in srgb,
+    var(--color-logo-primary) var(--vc-tint-bg),
+    #090a0f
+  );
+  --vc-header-bg: color-mix(
+    in srgb,
+    var(--color-logo-primary) var(--vc-tint-panel),
+    #0c0d12
+  );
+  --vc-sidebar-bg: color-mix(
+    in srgb,
+    var(--color-logo-primary) var(--vc-tint-panel),
+    #0c0d12
+  );
+  --vc-card-bg: color-mix(
+    in srgb,
+    var(--color-logo-primary) var(--vc-tint-panel),
+    #12131a
+  );
+  --vc-border: color-mix(
+    in srgb,
+    var(--color-logo-primary) var(--vc-tint-line),
+    rgba(255, 255, 255, 0.08)
+  );
   --vc-text-main: #f8fafc;
   --vc-text-muted: #94a3b8;
-  --vc-pill-bg: #181924;
+  --vc-pill-bg: color-mix(
+    in srgb,
+    var(--color-logo-primary) var(--vc-tint-panel),
+    #181924
+  );
+
+  /* The four states dictation can be in, on the "Today" screen. Deliberately
+     NOT derived from the accent: what the app is doing right now has to read
+     the same whatever colour the user picked, and idle/listening/working/done
+     is exactly the kind of thing an accent-tinted ring would flatten. */
+  --vc-state-idle: #74777c;
+  --vc-state-listening: #d9584a;
+  --vc-state-working: #cf9a3c;
+  --vc-state-done: #5fb491;
 }
 
 :root[data-theme="light"] {
   --color-text: #0f172a;
-  --color-background: #f8fafc;
   --color-logo-primary: #2563eb;
   --color-logo-stroke: #1d4ed8;
 
-  --vc-header-bg: #ffffff;
-  --vc-sidebar-bg: #f1f5f9;
-  --vc-card-bg: #ffffff;
-  --vc-border: #e2e8f0;
+  --vc-tint-bg: 6%;
+  --vc-tint-panel: 3%;
+  --vc-tint-line: 16%;
+
+  --vc-accent-text: color-mix(
+    in oklab,
+    var(--color-logo-primary) 65%,
+    #000000 35%
+  );
+
+  --color-background: color-mix(
+    in srgb,
+    var(--color-logo-primary) var(--vc-tint-bg),
+    #f8fafc
+  );
+  --vc-header-bg: color-mix(
+    in srgb,
+    var(--color-logo-primary) var(--vc-tint-panel),
+    #ffffff
+  );
+  --vc-sidebar-bg: color-mix(
+    in srgb,
+    var(--color-logo-primary) var(--vc-tint-panel),
+    #f1f5f9
+  );
+  --vc-card-bg: color-mix(
+    in srgb,
+    var(--color-logo-primary) var(--vc-tint-panel),
+    #ffffff
+  );
+  --vc-border: color-mix(
+    in srgb,
+    var(--color-logo-primary) var(--vc-tint-line),
+    #e2e8f0
+  );
   --vc-text-main: #0f172a;
   --vc-text-muted: #64748b;
-  --vc-pill-bg: #e2e8f0;
+  --vc-pill-bg: color-mix(
+    in srgb,
+    var(--color-logo-primary) var(--vc-tint-panel),
+    #e2e8f0
+  );
+
+  /* Darker on white: the dark theme's mint and amber wash out completely on a
+     light panel, so each state gets its own value rather than one shared hex. */
+  --vc-state-idle: #8a8f96;
+  --vc-state-listening: #c0503f;
+  --vc-state-working: #b8862c;
+  --vc-state-done: #1f5c46;
 
   color: #0f172a;
-  background-color: #f8fafc;
+  background-color: var(--color-background);
+}
+
+/* "Tint the backgrounds too" turned off: only the percentages change, so every
+   surface falls back to its original neutral and nothing else has to know. */
+:root[data-tint="off"] {
+  --vc-tint-bg: 0%;
+  --vc-tint-panel: 0%;
+  --vc-tint-line: 0%;
 }
 
 /* Custom Scrollbar */
@@ -160,6 +275,193 @@
   width: 100%;
   max-width: 700px;
   margin-inline: auto;
+}
+
+/*
+ * Settings page = the column, plus an "on this page" index in the margin.
+ *
+ * The index is a second column only when the window can spare it. Below
+ * 1100px it disappears entirely rather than squeezing the settings column,
+ * which is the part people actually came for. The column keeps its own 700px
+ * cap, so the pair sits centred with the index hanging in the gutter.
+ */
+.vc-settings-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px;
+  width: 100%;
+}
+
+.vc-settings-index {
+  display: none;
+}
+
+@media (min-width: 1100px) {
+  .vc-settings-grid {
+    grid-template-columns: minmax(0, 1fr) 190px;
+  }
+  .vc-settings-index {
+    display: block;
+    position: sticky;
+    top: 8px;
+    align-self: start;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+  }
+}
+
+/* "Filter within X": narrows the section you're already in. The magnifier in
+   the header is the other one, which searches the whole app. */
+.vc-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border-radius: 10px;
+  background: var(--vc-card-bg);
+  border: 1px solid var(--vc-border);
+  color: var(--vc-text-muted);
+  transition: border-color 0.15s ease;
+}
+
+.vc-filter:focus-within {
+  border-color: color-mix(in srgb, var(--color-logo-primary) 55%, transparent);
+}
+
+.vc-filter input {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: 0;
+  outline: none;
+  font-size: 12.5px;
+  color: var(--vc-text-main);
+}
+
+.vc-filter input::placeholder {
+  color: var(--vc-text-muted);
+  opacity: 0.8;
+}
+
+.vc-settings-index-title {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vc-text-muted);
+  opacity: 0.75;
+  padding: 0 10px 8px;
+}
+
+.vc-settings-index button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  color: var(--vc-text-muted);
+  text-align: start;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.vc-settings-index button:hover {
+  background: color-mix(in srgb, var(--color-logo-primary) 10%, transparent);
+  color: var(--vc-accent-text);
+}
+
+.vc-settings-index button em {
+  margin-inline-start: auto;
+  font-style: normal;
+  font-size: 11px;
+  opacity: 0.6;
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * "Today": the home screen. Two columns of panels, collapsing to one when the
+ * window can't hold them side by side. The breakpoint is a container query,
+ * not a media query, because the sidebar can be collapsed or expanded and it
+ * is the space *left over* that decides whether two columns still fit.
+ */
+.vc-today {
+  container-type: inline-size;
+  width: 100%;
+  max-width: 940px;
+  margin-inline: auto;
+}
+
+.vc-today-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 14px;
+  /* Each panel is as tall as what's in it. Stretched to match its neighbour,
+     the engine panel (four short rows) ended with 100px of empty card under
+     the last one. */
+  align-items: start;
+}
+
+@container (max-width: 780px) {
+  .vc-today-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.vc-panel {
+  background: var(--vc-card-bg);
+  border: 1px solid var(--vc-border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  min-width: 0;
+}
+
+.vc-panel-title {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--vc-accent-text);
+  margin-bottom: 11px;
+}
+
+.vc-panel-wide {
+  grid-column: 1 / -1;
+}
+
+/* The status ring and the meter both paint themselves from --vc-state, which
+   the panel sets to whichever of the four state colours applies right now. */
+.vc-state-ring {
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  flex: none;
+  border: 2px solid var(--vc-state);
+  color: var(--vc-state);
+  transition:
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.vc-meter {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 40px;
+  width: 168px;
+  flex: none;
+}
+
+.vc-meter i {
+  flex: 1;
+  border-radius: 2px;
+  background: var(--vc-state);
+  opacity: 0.7;
+  transition: height 0.12s linear;
 }
 
 /* Premium Visual Utility Classes */

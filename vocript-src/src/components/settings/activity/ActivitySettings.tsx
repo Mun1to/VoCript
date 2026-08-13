@@ -24,7 +24,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
 }) => (
   <div className="flex flex-col gap-1 rounded-xl border-2 border-mid-gray/20 px-4 py-3">
     <span className="flex items-center gap-1.5 text-xs font-medium text-text/60">
-      <span className="text-logo-primary">{icon}</span>
+      <span className="text-accent">{icon}</span>
       {label}
     </span>
     <span className="text-xl font-bold text-text tabular-nums">{value}</span>

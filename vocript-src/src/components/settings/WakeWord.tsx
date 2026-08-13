@@ -92,7 +92,7 @@ export const WakeWord: React.FC<WakeWordProps> = React.memo(
             <div className="flex flex-col gap-3 rounded-lg border border-mid-gray/20 bg-mid-gray/5 px-3 py-3">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-start gap-2.5">
-                  <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-logo-primary" />
+                  <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent" />
                   <p className="text-xs leading-relaxed text-text/60">
                     {recordings === 0
                       ? t("settings.general.wakeWord.teachPrompt")
@@ -135,7 +135,7 @@ export const WakeWord: React.FC<WakeWordProps> = React.memo(
                       key={index}
                       className="flex items-center gap-1 rounded-md bg-logo-primary/10 px-2 py-0.5 text-[11px] text-text/70"
                     >
-                      <Check className="h-3 w-3 text-logo-primary" />
+                      <Check className="h-3 w-3 text-accent" />
                       {index + 1}
                     </span>
                   ))}
@@ -152,7 +152,7 @@ export const WakeWord: React.FC<WakeWordProps> = React.memo(
                 people started dictating by voice and then sat there talking,
                 with no idea what ends it. */}
             <div className="flex items-start gap-2.5 rounded-lg border border-mid-gray/20 bg-mid-gray/5 px-3 py-2.5">
-              <Square className="mt-0.5 h-3.5 w-3.5 shrink-0 text-logo-primary" />
+              <Square className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent" />
               <p className="text-xs leading-relaxed text-text/60">
                 {t("settings.general.wakeWord.stopHint")}
               </p>

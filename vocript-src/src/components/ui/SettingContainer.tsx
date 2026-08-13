@@ -58,17 +58,31 @@ export const SettingContainer: React.FC<SettingContainerProps> = ({
           : "bg-white/[0.01] border-white/10 hover:border-logo-primary/30"
       }`;
 
+  // Plain-text version of the row, for the in-section filter to match against
+  // (see SettingsLayout). Titles can be JSX — a label plus a BETA badge, say —
+  // so the text has to be dug out of the tree rather than assumed to be a string.
+  const textoPlano = (nodo: React.ReactNode): string => {
+    if (nodo === null || nodo === undefined || typeof nodo === "boolean") return "";
+    if (typeof nodo === "string" || typeof nodo === "number") return String(nodo);
+    if (Array.isArray(nodo)) return nodo.map(textoPlano).join(" ");
+    if (React.isValidElement(nodo)) {
+      return textoPlano((nodo.props as { children?: React.ReactNode }).children);
+    }
+    return "";
+  };
+  const textoBuscable = `${textoPlano(title)} ${description}`.toLowerCase();
+
   const titleColor = isLight
     ? "text-slate-900 font-semibold"
     : "text-slate-200 font-semibold";
   const descColor = isLight ? "text-slate-500" : "text-slate-400";
   const iconColor = isLight
-    ? "text-slate-400 hover:text-logo-primary"
-    : "text-slate-500 hover:text-logo-primary";
+    ? "text-slate-400 hover:text-accent"
+    : "text-slate-500 hover:text-accent";
 
   if (layout === "stacked") {
     return (
-      <div className={containerClasses}>
+      <div className={containerClasses} data-vc-setting={textoBuscable}>
         <div className="flex items-center gap-2 mb-2">
           <h3
             className={`text-xs tracking-wide ${titleColor} ${disabled ? "opacity-50" : ""}`}
@@ -115,7 +129,7 @@ export const SettingContainer: React.FC<SettingContainerProps> = ({
   const horizontalContainerClasses = `${containerClasses} flex items-center justify-between`;
 
   return (
-    <div className={horizontalContainerClasses}>
+    <div className={horizontalContainerClasses} data-vc-setting={textoBuscable}>
       <div className="max-w-[70%] space-y-0.5">
         <div className="flex items-center gap-2">
           <h3

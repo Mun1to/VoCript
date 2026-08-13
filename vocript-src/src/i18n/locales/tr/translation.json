@@ -23,7 +23,68 @@
     "fileTranscription": "Yazıya dök",
     "feedback": "Geri bildirim",
     "activity": "Etkinlik",
-    "translation": "Çeviri"
+    "translation": "Çeviri",
+    "groups": {
+      "dictation": "Dikte",
+      "content": "İçerik",
+      "system": "Sistem"
+    },
+    "collapse": "Menüyü daralt",
+    "expand": "Menüyü genişlet",
+    "today": "Bugün"
+  },
+  "today": {
+    "status": {
+      "idle": {
+        "title": "Dikte etmeye hazır",
+        "hintHold": "{{shortcut}} tuşunu basılı tut ve konuş. Model sen konuşurken yükleniyor, öncesinde değil.",
+        "hintToggle": "{{shortcut}} tuşuna bas, konuş ve tekrar bas. Model sen konuşurken yükleniyor."
+      },
+      "listening": {
+        "title": "Seni dinliyorum",
+        "hintHold": "Bitirince tuşu bırak. {{cancel}} her şeyi iptal eder.",
+        "hintToggle": "Bitirince {{shortcut}} tuşuna tekrar bas. {{cancel}} her şeyi iptal eder."
+      },
+      "working": {
+        "title": "Metne çevriliyor",
+        "hint": "{{model}}, kendi bilgisayarında. Hiçbir şey yüklenmiyor.",
+        "hintNoModel": "Kendi bilgisayarında. Hiçbir şey yüklenmiyor."
+      },
+      "done": {
+        "title": "İmlecin olduğu yere yazıldı",
+        "titleCopied": "Panoya kopyalandı",
+        "hint": "Geçmişte de duruyor."
+      },
+      "live": {
+        "title": "Canlı yazıya döküm",
+        "hint": "Sen konuşurken metin beliriyor."
+      }
+    },
+    "dictated": {
+      "title": "Şu ana kadar dikte ettiğin",
+      "words": "kelime sesle",
+      "wordsSince": "kelime sesle, {{month}} ayından beri",
+      "streakHint": "üst üste · en iyi serin, {{count}}",
+      "streakHintNone": "üst üste"
+    },
+    "engine": {
+      "title": "Motor",
+      "model": "Model",
+      "noModel": "Seçilmedi",
+      "memory": "Bellekte",
+      "loaded": "Yüklü",
+      "loadedSize": "{{mb}} MB",
+      "unloaded": "Yüklü değil",
+      "unloadsAfter": "Otomatik bırakma",
+      "lastRun": "Son döküm",
+      "seconds": "{{seconds}} sn",
+      "noneYet": "Henüz yok"
+    },
+    "latest": {
+      "title": "En son dikte ettiğin",
+      "empty": "Henüz yok. Dikte ettiğin şeyler burada görünür.",
+      "seeAll": "Tüm geçmişi gör"
+    }
   },
   "onboarding": {
     "subtitle": "Başlamak için bir transkripsiyon modeli seçin",
@@ -869,6 +930,17 @@
       "note": "VoCript'i geliştirmek için her mesajı okuyoruz.",
       "sent": "Başarıyla gönderildi!",
       "sendBtn": "Geri bildirim gönder"
+    },
+    "summary": {
+      "active": "{{total}} ayardan {{on}} tanesi açık"
+    },
+    "index": {
+      "title": "Bu sayfada"
+    },
+    "filter": {
+      "inSection": "{{section}} içinde filtrele",
+      "generic": "Ayarları filtrele",
+      "empty": "Burada eşleşen bir şey yok. Tüm uygulamada aramak için yukarıdaki büyüteci dene."
     }
   },
   "footer": {
@@ -1011,6 +1083,10 @@
       "chooseSystemFont": "Bir yazı tipi seç…",
       "searchFonts": "Yazı tipi ara",
       "noFonts": "Eşleşen yazı tipi yok."
+    },
+    "tint": {
+      "label": "Arka planları da renklendir",
+      "description": "Panellerde ve kenarlarda bir tutam vurgu rengi"
     }
   },
   "activity": {
@@ -1074,5 +1150,10 @@
   "dictation": {
     "copiedNoField": "Panoya kopyalandı",
     "copiedNoFieldHint": "İmleç hiçbir metin kutusunda değildi, metni ihtiyacın olan yere yapıştır."
+  },
+  "palette": {
+    "title": "Ara",
+    "placeholder": "Bir bölüme git…",
+    "empty": "Eşleşen bölüm yok."
   }
 }

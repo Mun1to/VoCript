@@ -23,7 +23,68 @@
     "fileTranscription": "文件转录",
     "feedback": "反馈",
     "activity": "活动",
-    "translation": "翻译"
+    "translation": "翻译",
+    "groups": {
+      "dictation": "语音输入",
+      "content": "内容",
+      "system": "系统"
+    },
+    "collapse": "收起菜单",
+    "expand": "展开菜单",
+    "today": "今天"
+  },
+  "today": {
+    "status": {
+      "idle": {
+        "title": "可以开始口述",
+        "hintHold": "按住 {{shortcut}} 开口说。模型会在你说话时加载，而不是提前加载。",
+        "hintToggle": "按 {{shortcut}} 开始说，说完再按一次。模型会在你说话时加载。"
+      },
+      "listening": {
+        "title": "我在听",
+        "hintHold": "说完松开快捷键。{{cancel}} 会丢弃录音。",
+        "hintToggle": "说完再按一次 {{shortcut}}。{{cancel}} 会丢弃录音。"
+      },
+      "working": {
+        "title": "正在转成文字",
+        "hint": "{{model}}，在你自己的电脑上。不会上传任何内容。",
+        "hintNoModel": "在你自己的电脑上。不会上传任何内容。"
+      },
+      "done": {
+        "title": "已写到光标所在的位置",
+        "titleCopied": "已复制到剪贴板",
+        "hint": "历史记录里也有。"
+      },
+      "live": {
+        "title": "实时转写",
+        "hint": "你说话时文字会逐步出现。"
+      }
+    },
+    "dictated": {
+      "title": "你口述的量",
+      "words": "个字用声音输入",
+      "wordsSince": "个字用声音输入，自 {{month}} 起",
+      "streakHint": "连续 · 最佳记录 {{count}}",
+      "streakHintNone": "连续"
+    },
+    "engine": {
+      "title": "引擎",
+      "model": "模型",
+      "noModel": "尚未选择",
+      "memory": "内存中",
+      "loaded": "已加载",
+      "loadedSize": "{{mb}} MB",
+      "unloaded": "未加载",
+      "unloadsAfter": "自动释放",
+      "lastRun": "上次转写",
+      "seconds": "{{seconds}} 秒",
+      "noneYet": "还没有"
+    },
+    "latest": {
+      "title": "你最近口述的",
+      "empty": "还没有。你口述的内容会出现在这里。",
+      "seeAll": "查看全部历史"
+    }
   },
   "onboarding": {
     "subtitle": "请选择一个转录模型以开始使用",
@@ -869,6 +930,17 @@
       "note": "我们会查看每一条留言，以改进 VoCript。",
       "sent": "发送成功！",
       "sendBtn": "发送反馈"
+    },
+    "summary": {
+      "active": "{{total}} 项中 {{on}} 项已开启"
+    },
+    "index": {
+      "title": "本页内容"
+    },
+    "filter": {
+      "inSection": "在“{{section}}”中筛选",
+      "generic": "筛选设置",
+      "empty": "这里没有匹配项。试试上方的放大镜，搜索整个应用。"
     }
   },
   "footer": {
@@ -1011,6 +1083,10 @@
       "chooseSystemFont": "选择字体…",
       "searchFonts": "搜索字体",
       "noFonts": "没有匹配的字体。"
+    },
+    "tint": {
+      "label": "背景也上色",
+      "description": "在面板和边框上加一点强调色"
     }
   },
   "activity": {
@@ -1074,5 +1150,10 @@
   "dictation": {
     "copiedNoField": "已复制到剪贴板",
     "copiedNoFieldHint": "光标不在任何文本框里，请粘贴到你需要的地方。"
+  },
+  "palette": {
+    "title": "搜索",
+    "placeholder": "跳转到某个部分…",
+    "empty": "没有匹配的部分。"
   }
 }

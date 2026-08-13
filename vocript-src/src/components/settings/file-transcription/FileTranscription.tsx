@@ -196,7 +196,7 @@ export const FileTranscription: React.FC = () => {
           >
             {filePath ? (
               <>
-                <FileAudio className="w-7 h-7 text-logo-primary" />
+                <FileAudio className="w-7 h-7 text-accent" />
                 <span className="text-sm font-medium break-all text-center">
                   {getFileName(filePath)}
                 </span>

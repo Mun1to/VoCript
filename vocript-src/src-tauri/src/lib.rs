@@ -552,6 +552,7 @@ pub fn run(cli_args: CliArgs) {
             shortcut::change_app_language_setting,
             shortcut::change_theme_setting,
             shortcut::change_accent_color_setting,
+            shortcut::change_accent_tint_surfaces_setting,
             shortcut::change_source_attribution_setting,
             shortcut::change_live_mode_setting,
             shortcut::change_live_mode_system_setting,
