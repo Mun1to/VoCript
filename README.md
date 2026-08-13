@@ -20,10 +20,13 @@
 
 <p align="center">
   <a href="https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-Setup.exe">
-    <img src="brand/download-button-en.svg" alt="Download VoCript for Windows" width="320" height="72" />
+    <img src="brand/download-button-en.svg" alt="Download VoCript for Windows" width="260" height="59" />
   </a>
   <a href="https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-x86_64.AppImage">
-    <img src="brand/download-button-linux-en.svg" alt="Download VoCript for Linux" width="320" height="72" />
+    <img src="brand/download-button-linux-en.svg" alt="Download VoCript for Linux" width="260" height="59" />
+  </a>
+  <a href="https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-arm64.dmg">
+    <img src="brand/download-button-mac-en.svg" alt="Download VoCript for macOS" width="260" height="59" />
   </a>
 </p>
 
@@ -77,6 +80,31 @@ There is also a `.deb` on the [Releases page](https://github.com/Mun1to/VoCript/
 > Two things work differently on Linux: **system-audio capture is Windows-only**
 > for now (dictating with the microphone works normally), and on **Wayland**
 > global shortcuts and auto-typing are limited — X11 is the smoother ride.
+
+### macOS
+
+Download **[VoCript-arm64.dmg](https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-arm64.dmg)**, open it and drag VoCript into Applications.
+
+> **Apple Silicon only** (M1 and newer). Intel Macs are not supported.
+
+> **The first launch needs one extra step.** VoCript isn't signed with an Apple
+> developer account yet, so macOS won't open it straight away. Go to **System
+> Settings → Privacy & Security**, scroll down and click **Open Anyway**. If
+> that button isn't there, run this once in Terminal:
+>
+> ```bash
+> xattr -dr com.apple.quarantine /Applications/VoCript.app
+> ```
+>
+> Only the first launch needs it. Updates after that install normally.
+
+> Two things work differently on macOS: **system-audio capture is Windows-only**
+> for now (dictating with the microphone works normally), and macOS will ask for
+> **Accessibility** permission — without it the app cannot type into other apps.
+
+> ⚠️ **macOS support is new and has not been tested on real hardware yet.** It
+> builds, launches and passes its tests on Apple's own machines, but if
+> something misbehaves, please [open an issue](https://github.com/Mun1to/VoCript/issues/new).
 
 > 💡 Prefer to see all versions and files? They're on the [Releases page](https://github.com/Mun1to/VoCript/releases/latest).
 

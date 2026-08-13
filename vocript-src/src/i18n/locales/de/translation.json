@@ -245,7 +245,7 @@
       },
       "shortcut": {
         "title": "Richte deinen Diktat-Shortcut ein",
-        "body": "Zuerst: Stelle den Shortcut nach deinem Geschmack ein. Empfohlen wird Strg + Leertaste.\n\nÄndere ihn gleich hier: Klicke unten auf den Shortcut und drücke die gewünschte Kombination. Du kannst ihn später unter Einstellungen → Allgemein wieder ändern."
+        "body": "Zuerst: Stelle den Shortcut nach deinem Geschmack ein. Empfohlen wird {{shortcut}}.\n\nÄndere ihn gleich hier: Klicke unten auf den Shortcut und drücke die gewünschte Kombination. Du kannst ihn später unter Einstellungen → Allgemein wieder ändern."
       },
       "systemAudio": {
         "title": "Systemton",

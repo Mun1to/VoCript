@@ -245,7 +245,7 @@
       },
       "shortcut": {
         "title": "Nastavte si zkratku pro diktování",
-        "body": "Nejprve: nastavte si zkratku podle sebe. Doporučená je Ctrl + Mezerník.\n\nZměňte ji hned tady: klikněte na zkratku níže a stiskněte požadovanou kombinaci. Později ji můžete znovu změnit v Nastavení → Obecné."
+        "body": "Nejprve: nastavte si zkratku podle sebe. Doporučená je {{shortcut}}.\n\nZměňte ji hned tady: klikněte na zkratku níže a stiskněte požadovanou kombinaci. Později ji můžete znovu změnit v Nastavení → Obecné."
       },
       "systemAudio": {
         "title": "Zvuk systému",

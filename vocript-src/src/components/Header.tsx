@@ -7,6 +7,8 @@ import { TranscriptionModeSwitch } from "./TranscriptionModeSwitch";
 import { ProfileSelect } from "./ProfileSelect";
 import { LanguageQuickSwitch } from "./LanguageQuickSwitch";
 import type { AppTheme } from "@/bindings";
+import { useOsType } from "../hooks/useOsType";
+import { modLabel } from "../lib/utils/keyboard";
 
 interface HeaderProps {
   /** Opens the command palette. Omitted, the magnifier isn't drawn at all. */
@@ -25,6 +27,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   const { t } = useTranslation();
   const { settings, updateSetting } = useSettings();
+  const osType = useOsType();
 
   // Header toggle cycles through the three real settings (system → light →
   // dark) so "system" stays reachable; the button shows the current mode.
@@ -62,7 +65,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
         <button
           type="button"
           onClick={onSearch}
-          title={`${t("palette.title")} (Ctrl+K)`}
+          title={`${t("palette.title")} (${modLabel(osType)}K)`}
           aria-label={t("palette.title")}
           className="vc-iconbtn active:scale-95"
         >

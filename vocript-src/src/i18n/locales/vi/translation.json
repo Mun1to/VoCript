@@ -245,7 +245,7 @@
       },
       "shortcut": {
         "title": "Thiết lập phím tắt đọc chính tả của bạn",
-        "body": "Trước tiên: đặt phím tắt theo ý bạn. Phím tắt được khuyến nghị là Ctrl + Phím cách.\n\nThay đổi ngay tại đây: nhấp vào phím tắt bên dưới và nhấn tổ hợp bạn muốn. Sau này bạn có thể đổi lại trong Cài đặt → Chung."
+        "body": "Trước tiên: đặt phím tắt theo ý bạn. Phím tắt được khuyến nghị là {{shortcut}}.\n\nThay đổi ngay tại đây: nhấp vào phím tắt bên dưới và nhấn tổ hợp bạn muốn. Sau này bạn có thể đổi lại trong Cài đặt → Chung."
       },
       "systemAudio": {
         "title": "Âm thanh hệ thống",

@@ -165,7 +165,7 @@
       },
       "shortcut": {
         "title": "Configura tu atajo de dictado",
-        "body": "Lo primero: deja el atajo a tu gusto. El recomendado es Ctrl + Espacio.\n\nCámbialo aquí mismo: haz clic en el atajo de abajo y pulsa la combinación que quieras. Podrás volver a cambiarlo en Ajustes → General."
+        "body": "Lo primero: deja el atajo a tu gusto. El recomendado es {{shortcut}}.\n\nCámbialo aquí mismo: haz clic en el atajo de abajo y pulsa la combinación que quieras. Podrás volver a cambiarlo en Ajustes → General."
       },
       "systemAudio": {
         "title": "Audio del sistema",

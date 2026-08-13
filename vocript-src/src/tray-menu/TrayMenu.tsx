@@ -22,6 +22,8 @@ import {
   darkenHex,
   hexToRgba,
 } from "../lib/constants/accentColors";
+import { useOsType } from "../hooks/useOsType";
+import { modLabel } from "../lib/utils/keyboard";
 
 /**
  * Custom tray menu, shown instead of the native OS menu (which cannot be
@@ -191,6 +193,11 @@ const Divider = () => (
 
 export const TrayMenu: React.FC = () => {
   const { t } = useTranslation();
+  // These two hints have to match what tray.rs actually registers on the
+  // native menu, and that is already per-platform there (Cmd on macOS, Ctrl
+  // elsewhere). Hardcoding "Ctrl" here promised a Mac user a key combination
+  // the app never bound.
+  const mod = modLabel(useOsType());
   const [state, setState] = useState<TrayMenuState | null>(null);
   const [view, setView] = useState<View>("main");
   const cardRef = useRef<HTMLDivElement>(null);
@@ -410,7 +417,7 @@ export const TrayMenu: React.FC = () => {
               <Row
                 icon={<SettingsIcon className="h-4 w-4" />}
                 label={t("tray.settings")}
-                hint="Ctrl+,"
+                hint={`${mod},`}
                 onClick={() => act("settings")}
               />
               {/* The version number is the whole notice: the daily background
@@ -433,7 +440,7 @@ export const TrayMenu: React.FC = () => {
               <Row
                 icon={<Power className="h-4 w-4" />}
                 label={t("tray.quit")}
-                hint="Ctrl+Q"
+                hint={`${mod}Q`}
                 onClick={() => act("quit")}
               />
             </>

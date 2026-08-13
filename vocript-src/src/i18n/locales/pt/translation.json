@@ -245,7 +245,7 @@
       },
       "shortcut": {
         "title": "Configure seu atalho de ditado",
-        "body": "Primeiro: deixe o atalho do seu jeito. O recomendado é Ctrl + Espaço.\n\nMude-o aqui mesmo: clique no atalho abaixo e pressione a combinação que quiser. Você poderá mudá-lo de novo em Configurações → Geral."
+        "body": "Primeiro: deixe o atalho do seu jeito. O recomendado é {{shortcut}}.\n\nMude-o aqui mesmo: clique no atalho abaixo e pressione a combinação que quiser. Você poderá mudá-lo de novo em Configurações → Geral."
       },
       "systemAudio": {
         "title": "Áudio do sistema",

@@ -125,6 +125,19 @@ const TourCardBody = React.memo<TourCardBodyProps>(
     onFinish,
   }) => {
     const { t } = useTranslation();
+    // The shortcut step used to name one fixed combination, the same in every
+    // language and on every platform. On a Mac the default is Option + Space,
+    // and Ctrl + Space is the system input switcher, so the tour was telling
+    // Mac users to press something that does another thing entirely. Reading
+    // the real binding also keeps the sentence true for anyone who already
+    // changed it. The fallback matters: with an undefined value i18next leaves
+    // the sentence as "The recommended one is .", and default_binding is the
+    // same text until somebody changes it.
+    const atajoActual = useSettingsStore(
+      (s) =>
+        s.settings?.bindings?.transcribe?.current_binding ??
+        s.settings?.bindings?.transcribe?.default_binding,
+    );
     return (
       // Card content re-animates on every step (keyed by step index).
       <div key={stepIndex} className="vc-step-in flex flex-col gap-3">
@@ -143,7 +156,7 @@ const TourCardBody = React.memo<TourCardBodyProps>(
         </div>
 
         <p className="text-[15px] leading-relaxed text-text/85 whitespace-pre-line">
-          {t(`onboarding.tour.${step.id}.body`)}
+          {t(`onboarding.tour.${step.id}.body`, { shortcut: atajoActual })}
         </p>
 
         {step.practice === "shortcut" && (

@@ -245,7 +245,7 @@
       },
       "shortcut": {
         "title": "Ställ in din dikteringsgenväg",
-        "body": "Först: ställ in genvägen som du vill ha den. Den rekommenderade är Ctrl + Mellanslag.\n\nÄndra den direkt här: klicka på genvägen nedan och tryck på önskad kombination. Du kan ändra den igen senare under Inställningar → Allmänt."
+        "body": "Först: ställ in genvägen som du vill ha den. Den rekommenderade är {{shortcut}}.\n\nÄndra den direkt här: klicka på genvägen nedan och tryck på önskad kombination. Du kan ändra den igen senare under Inställningar → Allmänt."
       },
       "systemAudio": {
         "title": "Systemljud",

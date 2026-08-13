@@ -245,7 +245,7 @@
       },
       "shortcut": {
         "title": "Dikte kısayolunuzu ayarlayın",
-        "body": "Önce: kısayolu istediğiniz gibi ayarlayın. Önerilen Ctrl + Boşluk'tur.\n\nHemen burada değiştirin: aşağıdaki kısayola tıklayın ve istediğiniz kombinasyona basın. Daha sonra Ayarlar → Genel'den tekrar değiştirebilirsiniz."
+        "body": "Önce: kısayolu istediğiniz gibi ayarlayın. Önerilen {{shortcut}}'tur.\n\nHemen burada değiştirin: aşağıdaki kısayola tıklayın ve istediğiniz kombinasyona basın. Daha sonra Ayarlar → Genel'den tekrar değiştirebilirsiniz."
       },
       "systemAudio": {
         "title": "Sistem sesi",

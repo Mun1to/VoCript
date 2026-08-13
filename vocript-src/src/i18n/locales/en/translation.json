@@ -165,7 +165,7 @@
       },
       "shortcut": {
         "title": "Set up your dictation shortcut",
-        "body": "First things first: make the shortcut yours. The recommended one is Ctrl + Space.\n\nChange it right here: click the shortcut below and press the combo you want. You can change it again later in Settings → General."
+        "body": "First things first: make the shortcut yours. The recommended one is {{shortcut}}.\n\nChange it right here: click the shortcut below and press the combo you want. You can change it again later in Settings → General."
       },
       "systemAudio": {
         "title": "System audio",

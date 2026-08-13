@@ -100,7 +100,20 @@ jobs:
           projectPath: vocript-src
           tagName: ${{ github.ref_name }}
           releaseName: "VoCript ${{ github.ref_name }}"
-          releaseBody: "Descarga el instalador (`.exe`) más abajo. Si ya tienes VoCript instalado, se actualizará solo."
+          # El cuerpo lo fija el primer job que crea la Release, o sea este.
+          # Los de Linux y macOS solo añaden sus archivos, así que las tres
+          # plataformas se nombran aquí.
+          releaseBody: |
+            Descarga el archivo de tu sistema más abajo. Si ya tienes VoCript instalado, se actualizará solo.
+
+            - **Windows**: `VoCript-Setup.exe`
+            - **Linux**: `VoCript-x86_64.AppImage` o el `.deb`
+            - **macOS** (Apple Silicon): `VoCript-arm64.dmg`
+
+            > **macOS**: la app todavía no está firmada con una cuenta de desarrollador de Apple, así que la primera vez el sistema no te dejará abrirla. Arrástrala a Aplicaciones y ábrela desde **Ajustes del Sistema → Privacidad y Seguridad → Abrir de todos modos**. Si aun así no arranca, ejecuta esto una vez en el Terminal:
+            > ```
+            > xattr -dr com.apple.quarantine /Applications/VoCript.app
+            > ```
           releaseDraft: false
           prerelease: false
           includeUpdaterJson: true
@@ -231,3 +244,76 @@ jobs:
           appimage=$(find vocript-src/src-tauri/target/release/bundle/appimage -maxdepth 1 -name "*.AppImage" | head -n1)
           cp "$appimage" VoCript-x86_64.AppImage
           gh release upload "${{ github.ref_name }}" VoCript-x86_64.AppImage --clobber --repo ${{ github.repository }}
+
+  build-macos:
+    permissions:
+      contents: write
+    # En serie después de Linux, por el mismo motivo por el que Linux va
+    # después de Windows: `latest.json` se genera por plataforma, y corriendo
+    # uno detrás de otro tauri-action lee el que ya está publicado y le añade
+    # el suyo en vez de sobrescribirlo.
+    needs: build-linux
+    # macos-14 es Apple Silicon. Solo arm64, a propósito: los Mac con Intel se
+    # quedan fuera. Aquí NO hay que instalar Vulkan ni LLVM aparte, como en las
+    # otras dos plataformas: whisper.cpp usa Metal y libclang viene con Xcode.
+    runs-on: macos-14
+
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Instalar Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Instalar Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache de Rust
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "vocript-src/src-tauri -> target"
+
+      - name: Instalar dependencias del frontend
+        working-directory: vocript-src
+        run: bun install
+
+      - name: Descargar modelo Silero VAD (recurso requerido)
+        working-directory: vocript-src
+        run: |
+          mkdir -p src-tauri/resources/models
+          curl -L -o src-tauri/resources/models/silero_vad_v4.onnx https://blob.handy.computer/silero_vad_v4.onnx
+
+      - name: Compilar y añadir a la Release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # El mismo cuidado que en Windows y Linux, por otra vía: aquí el
+          # peligro no es AVX-512 sino que el runner cambie de chip. Hoy
+          # macos-14 es un M1; si GitHub lo sube a un M2 o M3, un binario
+          # compilado con -mcpu=native usaría instrucciones que un M1 no tiene
+          # y crashearía en las máquinas más viejas, que son justo las que más
+          # gente conserva. NEON entra igual, es parte del baseline de ARMv8.
+          GGML_NATIVE: "OFF"
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          projectPath: vocript-src
+          tagName: ${{ github.ref_name }}
+          releaseName: "VoCript ${{ github.ref_name }}"
+          releaseDraft: false
+          prerelease: false
+          includeUpdaterJson: true
+          # `app` es lo que consume el auto-updater (.app.tar.gz), `dmg` es lo
+          # que descarga la gente. Sin firma de Apple: tauri.conf.json usa
+          # signingIdentity "-" (ad-hoc), que basta para que el binario corra
+          # pero NO evita la cuarentena al bajarlo de internet.
+          args: --bundles app,dmg
+
+      # Copia con nombre fijo, igual que el .exe y el AppImage.
+      - name: Subir copia del DMG con nombre fijo
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          dmg=$(find vocript-src/src-tauri/target/release/bundle/dmg -maxdepth 1 -name "*.dmg" | head -n1)
+          cp "$dmg" VoCript-arm64.dmg
+          gh release upload "${{ github.ref_name }}" VoCript-arm64.dmg --clobber --repo ${{ github.repository }}

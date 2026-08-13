@@ -245,7 +245,7 @@
       },
       "shortcut": {
         "title": "Skonfiguruj swój skrót dyktowania",
-        "body": "Najpierw: ustaw skrót po swojemu. Zalecany to Ctrl + Spacja.\n\nZmień go od razu tutaj: kliknij skrót poniżej i naciśnij wybraną kombinację. Później możesz go ponownie zmienić w Ustawienia → Ogólne."
+        "body": "Najpierw: ustaw skrót po swojemu. Zalecany to {{shortcut}}.\n\nZmień go od razu tutaj: kliknij skrót poniżej i naciśnij wybraną kombinację. Później możesz go ponownie zmienić w Ustawienia → Ogólne."
       },
       "systemAudio": {
         "title": "Dźwięk systemowy",

@@ -203,6 +203,15 @@ export const formatKeyCombination = (
 };
 
 /**
+ * The modifier to *show* next to a menu entry or a button, for shortcuts the
+ * app binds to "ctrl or cmd, whichever this machine uses". The binding already
+ * accepts both (see the Ctrl+K handler in App.tsx); this is only about not
+ * telling a Mac user to press a key their keyboard doesn't have.
+ */
+export const modLabel = (osType: OSType): string =>
+  osType === "macos" ? "⌘" : "Ctrl+";
+
+/**
  * Normalize modifier keys to handle left/right variants
  */
 export const normalizeKey = (key: string): string => {

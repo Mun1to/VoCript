@@ -245,7 +245,7 @@
       },
       "shortcut": {
         "title": "Configura la tua scorciatoia di dettatura",
-        "body": "Per prima cosa: imposta la scorciatoia come preferisci. Quella consigliata è Ctrl + Spazio.\n\nCambiala proprio qui: fai clic sulla scorciatoia qui sotto e premi la combinazione che vuoi. Potrai cambiarla di nuovo in Impostazioni → Generali."
+        "body": "Per prima cosa: imposta la scorciatoia come preferisci. Quella consigliata è {{shortcut}}.\n\nCambiala proprio qui: fai clic sulla scorciatoia qui sotto e premi la combinazione che vuoi. Potrai cambiarla di nuovo in Impostazioni → Generali."
       },
       "systemAudio": {
         "title": "Audio di sistema",

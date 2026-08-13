@@ -20,10 +20,13 @@
 
 <p align="center">
   <a href="https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-Setup.exe">
-    <img src="brand/download-button.svg" alt="Descargar VoCript para Windows" width="320" height="72" />
+    <img src="brand/download-button.svg" alt="Descargar VoCript para Windows" width="260" height="59" />
   </a>
   <a href="https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-x86_64.AppImage">
-    <img src="brand/download-button-linux.svg" alt="Descargar VoCript para Linux" width="320" height="72" />
+    <img src="brand/download-button-linux.svg" alt="Descargar VoCript para Linux" width="260" height="59" />
+  </a>
+  <a href="https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-arm64.dmg">
+    <img src="brand/download-button-mac.svg" alt="Descargar VoCript para macOS" width="260" height="59" />
   </a>
 </p>
 
@@ -79,6 +82,33 @@ En la [página de Releases](https://github.com/Mun1to/VoCript/releases/latest) t
 > solo de Windows** por ahora (dictar con el micrófono funciona igual), y en
 > **Wayland** los atajos globales y el pegado automático están limitados; con
 > X11 va todo más fino.
+
+### macOS
+
+Descarga **[VoCript-arm64.dmg](https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-arm64.dmg)**, ábrelo y arrastra VoCript a Aplicaciones.
+
+> **Solo Apple Silicon** (M1 en adelante). Los Mac con Intel no están soportados.
+
+> **La primera vez hace falta un paso más.** VoCript todavía no está firmada con
+> una cuenta de desarrollador de Apple, así que macOS no la abrirá a la primera.
+> Ve a **Ajustes del Sistema → Privacidad y Seguridad**, baja del todo y pulsa
+> **Abrir de todos modos**. Si ese botón no aparece, ejecuta esto una vez en el
+> Terminal:
+>
+> ```bash
+> xattr -dr com.apple.quarantine /Applications/VoCript.app
+> ```
+>
+> Solo hace falta la primera vez. Las actualizaciones ya se instalan solas.
+
+> Dos cosas funcionan distinto en macOS: la **captura del audio del sistema es
+> solo de Windows** por ahora (dictar con el micrófono funciona igual), y macOS
+> te pedirá permiso de **Accesibilidad**; sin él la app no puede escribir en
+> otros programas.
+
+> ⚠️ **El soporte de macOS es nuevo y aún no se ha probado en un Mac real.**
+> Compila, arranca y pasa sus pruebas en las máquinas de Apple, pero si algo se
+> comporta raro, [abre una incidencia](https://github.com/Mun1to/VoCript/issues/new).
 
 > 💡 ¿Prefieres ver todas las versiones y archivos? Están en la [página de Releases](https://github.com/Mun1to/VoCript/releases/latest).
 
