@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { DayStat } from "@/bindings";
 
@@ -13,6 +13,20 @@ const WEEKS_GAP = 3;
 const RAIL_WIDTH = 14;
 /** The legend is outside the fluid grid, so its swatches keep a fixed size. */
 const LEGEND_CELL = 10;
+
+/**
+ * Smallest a square is allowed to get before the grid starts showing fewer
+ * weeks instead of shrinking further.
+ *
+ * The columns stretch to fill whatever width they are given, so on the Today
+ * screen (904px of panel) a year came out at 13.8px a square while the same
+ * component in the settings column, which shares its width with a 176px index,
+ * got 8px. At that size the empty squares blur into stripes and the calendar
+ * stops reading as a calendar.
+ */
+const MIN_CELL = 12;
+/** Never collapse past a quarter, however narrow the window gets. */
+const MIN_WEEKS = 13;
 
 /** `YYYY-MM-DD` in local time. `toISOString()` would shift the day in any
  *  timezone behind UTC, landing dictations on the wrong square. */
@@ -33,6 +47,35 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({
 }) => {
   const { t, i18n } = useTranslation();
 
+  // Measured rather than guessed from a media query: the same component sits in
+  // a 904px panel on one screen and in a column that shares its width with an
+  // index on another, and the sidebar next to both can be collapsed.
+  const shell = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    const element = shell.current;
+    if (!element) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setWidth(entry.contentRect.width);
+    });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  // How far back the grid can go before the squares drop under MIN_CELL. The
+  // first render has no measurement yet, so it draws the full span and settles
+  // on the next frame rather than flashing a stub.
+  const visibleSpan = useMemo(() => {
+    if (width <= 0) return span;
+    const forGrid = width - RAIL_WIDTH - WEEKS_GAP;
+    const fit = Math.floor((forGrid + WEEKS_GAP) / (MIN_CELL + WEEKS_GAP));
+    const weeks = Math.max(MIN_WEEKS, fit);
+    // `span` counts days back from today, so a whole number of weeks keeps
+    // every column full and the weekday rows aligned.
+    return Math.min(span, weeks * 7 - 1);
+  }, [width, span]);
+
   const { columns, monthLabels, max } = useMemo(() => {
     const byDay = new Map(days.map((d) => [d.day, d]));
 
@@ -42,7 +85,7 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({
     // Start on the Monday of the week containing the oldest day shown, so every
     // column is a full week and the weekday rows line up.
     const start = new Date(today);
-    start.setDate(start.getDate() - span);
+    start.setDate(start.getDate() - visibleSpan);
     const weekdayFromMonday = (start.getDay() + 6) % 7;
     start.setDate(start.getDate() - weekdayFromMonday);
 
@@ -82,7 +125,7 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({
     });
 
     return { columns: cols, monthLabels: spaced, max: peak };
-  }, [days, span, i18n.language]);
+  }, [days, visibleSpan, i18n.language]);
 
   // Five steps: empty, then quartiles of the best day.
   const levelOf = (words: number): number => {
@@ -142,7 +185,7 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({
   };
 
   return (
-    <div className="flex w-full flex-col gap-1">
+    <div ref={shell} className="flex w-full flex-col gap-1">
       {/* Month ruler. Positioned in percentages so it tracks the fluid columns. */}
       <div
         className="relative h-4 text-[10px] text-text/45"

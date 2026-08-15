@@ -418,6 +418,17 @@
 }
 
 /*
+ * Activity is the exception, and for the reason the 700px exists in the first
+ * place: that number is right for a label paired with a control, and Activity
+ * has none. It is four summary cards and a calendar of 53 columns of squares,
+ * which at 700px come out at 8px each while the same calendar on the Today
+ * screen gets 13.8px. Same width as .vc-today so the two match.
+ */
+.vc-settings-column-wide {
+  max-width: 940px;
+}
+
+/*
  * Settings page = the column, plus an "on this page" index in the margin.
  *
  * The index is a second column only when the window can spare it. Below

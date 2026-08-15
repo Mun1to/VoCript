@@ -91,7 +91,7 @@ export const ActivitySettings: React.FC = () => {
   const averageWpm = totalSeconds > 0 ? totalWords / (totalSeconds / 60) : 0;
 
   return (
-    <div className="vc-settings-column space-y-6">
+    <div className="vc-settings-column vc-settings-column-wide space-y-6">
       <SettingsGroup title={t("activity.title")}>
         {/* The explanation is the page subtitle now (see SECTION_SUBTITLE), so
             it isn't repeated inside the block. */}
