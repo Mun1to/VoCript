@@ -47,20 +47,30 @@ docker run --rm \
 La familia es `debian`, `fedora` o `arch`, y decide con qué gestor se instalan
 las dependencias de escritorio.
 
-## Distribuciones de la matriz
+## Resultado medido (v3.7.1, 2026-08-15)
 
-| Distribución | glibc | Se espera |
-| --- | --- | --- |
-| Ubuntu 22.04 LTS | 2.35 | Falla: por debajo del mínimo |
-| Ubuntu 24.04 LTS | 2.39 | Funciona |
-| Debian 12 Bookworm | 2.36 | Falla: por debajo del mínimo |
-| Debian 13 Trixie | 2.41 | Funciona |
-| Fedora 41 | 2.40 | Funciona |
-| Arch Linux | reciente | Funciona |
+| Distribución | glibc | `.deb` | AppImage |
+| --- | --- | --- | --- |
+| Ubuntu 22.04 LTS | 2.35 | Se instala pero **no arranca** | **No arranca** |
+| Ubuntu 24.04 LTS | 2.39 | Funciona | Funciona |
+| Debian 12 Bookworm | 2.36 | Se instala pero **no arranca** | **No arranca** |
+| Debian 13 Trixie | 2.41 | Funciona | Funciona |
+| Fedora 41 | 2.40 | (no aplica) | Funciona |
+| Arch Linux | 2.44 | (no aplica) | Funciona |
 
-El mínimo viene de los motores de reconocimiento, que se distribuyen ya
-compilados y exigen glibc 2.38 o superior. Es la misma razón por la que el job
-de release se construye en `ubuntu-24.04` y no en `22.04`.
+El mínimo real es **glibc 2.39**, que es lo que pide el ejecutable; las
+bibliotecas que lleva dentro se conforman con 2.38. Por eso el job de release se
+construye en `ubuntu-24.04` y no en `22.04`.
 
-Si alguna fila no coincide con la realidad, la que se corrige es la tabla del
-README principal, no la prueba.
+Dos cosas que salieron de la primera ejecución y ya están corregidas:
+
+1. El README prometía **Fedora 39+**, y Fedora 39 lleva glibc 2.38, o sea que se
+   quedaba fuera. Ahora dice Fedora 40+.
+2. En Ubuntu 22.04 y Debian 12 **apt instalaba el `.deb` sin una sola queja** y
+   luego el programa no arrancaba, sin que el usuario tuviera forma de saber por
+   qué. El paquete declara ahora `libc6 (>= 2.39)`, así que apt lo rechaza con un
+   motivo legible en vez de dejar algo roto instalado. Pendiente de comprobar en
+   la próxima release, porque hace falta un `.deb` construido de nuevo.
+
+El AppImage no tiene forma de declarar un mínimo, así que ahí solo cabe
+documentarlo.

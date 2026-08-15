@@ -46,7 +46,7 @@
     },
     "linux": {
       "deb": {
-        "depends": ["libgtk-layer-shell0"],
+        "depends": ["libgtk-layer-shell0", "libc6 (>= 2.39)"],
         "files": {
           "/usr/lib/VoCript": "transcribe-libs"
         }
