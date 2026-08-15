@@ -1,0 +1,97 @@
+name: Compatibilidad de Linux
+
+# Comprueba en qué distribuciones arranca DE VERDAD el paquete de Linux, en vez
+# de deducirlo de la versión de glibc con la que se compiló. Cada distribución
+# es un contenedor limpio: nada de lo que hay instalado en el runner cuenta.
+#
+# Es manual a propósito. Los tres jobs de release ya tardan lo suyo y esto no
+# tiene por qué correr en cada etiqueta: interesa cuando cambia algo del
+# empaquetado de Linux, cuando sale una distribución nueva, o cuando alguien
+# reporta que no le arranca.
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Etiqueta a probar (vacío = la última publicada)"
+        required: false
+        default: ""
+
+jobs:
+  probar:
+    name: ${{ matrix.nombre }}
+    runs-on: ubuntu-24.04
+    strategy:
+      # Sin fail-fast: si falla en Ubuntu 22.04 queremos ver igualmente el
+      # resultado de las otras cinco, que es justo la información que se busca.
+      fail-fast: false
+      matrix:
+        include:
+          # Las dos LTS de Ubuntu con más gente. La 22.04 lleva glibc 2.35 y
+          # debería quedarse fuera: es el motivo por el que el job de release
+          # se construye en ubuntu-24.04.
+          - nombre: Ubuntu 22.04 LTS
+            imagen: ubuntu:22.04
+            familia: debian
+          - nombre: Ubuntu 24.04 LTS
+            imagen: ubuntu:24.04
+            familia: debian
+          - nombre: Debian 12 Bookworm
+            imagen: debian:12
+            familia: debian
+          - nombre: Debian 13 Trixie
+            imagen: debian:13
+            familia: debian
+          - nombre: Fedora 41
+            imagen: fedora:41
+            familia: fedora
+          - nombre: Arch Linux
+            imagen: archlinux:latest
+            familia: arch
+
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Descargar los paquetes de Linux de la release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ inputs.tag }}"
+          if [ -z "$TAG" ]; then
+            TAG=$(gh release view --json tagName -q .tagName)
+          fi
+          echo "Probando $TAG"
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+          mkdir -p dist
+          # Solo las copias de nombre fijo y el .deb: bajar además los archivos
+          # versionados duplicaría 121 MB por cada distribución de la matriz.
+          gh release download "$TAG" \
+            --pattern "VoCript-x86_64.AppImage" \
+            --pattern "*_amd64.deb" \
+            --dir dist --clobber
+          ls -lh dist
+
+      # `shell: bash` en lugar del shell por defecto: trae `-o pipefail`, sin el
+      # cual el código de salida del pipe es el de `tee` (siempre 0) y una
+      # distribución donde VoCript no arranca se reportaría en verde.
+      - name: Probar en ${{ matrix.nombre }}
+        shell: bash
+        run: |
+          docker run --rm \
+            -v "$PWD/dist:/dist:ro" \
+            -v "$PWD/tools/linux-compat:/tools:ro" \
+            ${{ matrix.imagen }} \
+            bash /tools/probar.sh ${{ matrix.familia }} 2>&1 | tee salida.txt
+
+      # Se escribe pase o falle: un fallo sin la salida delante obliga a abrir
+      # el log del job para saber si fue la glibc o una biblioteca que falta.
+      - name: Resumen
+        if: always()
+        run: |
+          {
+            echo "## ${{ matrix.nombre }} (\`${{ matrix.imagen }}\`)"
+            echo ""
+            echo '```'
+            cat salida.txt 2>/dev/null || echo "(sin salida: el contenedor no llegó a arrancar)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
