@@ -9,6 +9,13 @@ name: Compatibilidad de Linux
 # empaquetado de Linux, cuando sale una distribución nueva, o cuando alguien
 # reporta que no le arranca.
 on:
+  # Encadenado al build de Linux: si se construyen los paquetes, se prueban,
+  # sin que nadie tenga que acordarse. No va colgado de la release porque los
+  # tres jobs de publicación ya tardan lo suyo y esto solo importa cuando el
+  # empaquetado de Linux cambia.
+  workflow_run:
+    workflows: ["Linux build check"]
+    types: [completed]
   workflow_dispatch:
     inputs:
       tag:
@@ -23,6 +30,11 @@ on:
 jobs:
   probar:
     name: ${{ matrix.nombre }}
+    # Un build que ha fallado no deja paquetes que probar, y la matriz entera
+    # se caería descargando un artefacto que no existe.
+    if: >-
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-24.04
     strategy:
       # Sin fail-fast: si falla en Ubuntu 22.04 queremos ver igualmente el
@@ -70,9 +82,15 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p dist
-          if [ -n "${{ inputs.run_id }}" ]; then
-            echo "Probando los paquetes del run ${{ inputs.run_id }} (sin publicar)"
-            gh run download "${{ inputs.run_id }}" --name vocript-linux-bundles --dir dist
+          # Lanzado a mano con run_id, o encadenado detrás del build, que trae
+          # el suyo en el propio evento.
+          RUN_ID="${{ inputs.run_id }}"
+          if [ -z "$RUN_ID" ] && [ "${{ github.event_name }}" = "workflow_run" ]; then
+            RUN_ID="${{ github.event.workflow_run.id }}"
+          fi
+          if [ -n "$RUN_ID" ]; then
+            echo "Probando los paquetes del run $RUN_ID (sin publicar)"
+            gh run download "$RUN_ID" --name vocript-linux-bundles --dir dist
             # El artefacto conserva el árbol de carpetas del bundler, y el
             # script busca por nombre en cualquier nivel, pero se aplana para
             # que el log se lea de un vistazo.
