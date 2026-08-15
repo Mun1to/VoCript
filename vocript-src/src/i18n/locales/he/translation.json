@@ -997,6 +997,13 @@
     "portableUpdateTitle": "נדרש עדכון ידני",
     "portableUpdateMessage": "התקנות ניידות אינן מתעדכנות אוטומטית. כדי לעדכן, הורד את מתקין ה-NSIS האחרון מ-GitHub Releases, התקן לאותה תיקייה, ואז העתק את תיקיית Data/ (הגדרות, מודלים, הקלטות) מהגרסה הישנה לחדשה.",
     "portableUpdateButton": "פתח את GitHub Releases",
+    "installMismatchTitle": "העדכון הזה לא יגיע לעותק שבו אתה משתמש",
+    "installMismatchMessage": "VoCript פועל מתיקייה אחת, אבל תוכנית ההתקנה תניח את הגרסה החדשה בתיקייה אחרת. אם תמשיך, העדכון יותקן במקום שאתה לעולם לא פותח, ובהפעלה הבאה של המחשב תחזור לגרסה הזאת עם אותו עדכון ממתין.",
+    "installMismatchRunningFrom": "אתה מפעיל את VoCript מתוך",
+    "installMismatchUpdatesGoTo": "העדכונים יותקנו אל",
+    "installMismatchFix": "כדי לתקן את זה לתמיד, הורד את תוכנית ההתקנה ובחר את התיקייה שאתה באמת משתמש בה. כל מה ששמרת (מודלים, היסטוריה והגדרות) נשאר במקומו.",
+    "installMismatchUpdateAnyway": "לעדכן בכל זאת",
+    "installMismatchDownload": "הורדת תוכנית ההתקנה",
     "updateNow": "עדכון",
     "later": "מאוחר יותר",
     "updateAvailableDescription": "ההתקנה תתבצע והאפליקציה תופעל מחדש מעצמה."

@@ -21,6 +21,14 @@ pub fn is_portable() -> bool {
     crate::portable::is_portable()
 }
 
+/// `None` when this copy and the installer agree on where the app lives, which
+/// is the normal case. See install_check.rs for what a mismatch means.
+#[tauri::command]
+#[specta::specta]
+pub fn install_location_mismatch() -> Option<crate::install_check::InstallMismatch> {
+    crate::install_check::detect()
+}
+
 #[tauri::command]
 #[specta::specta]
 pub fn get_app_dir_path(app: AppHandle) -> Result<String, String> {

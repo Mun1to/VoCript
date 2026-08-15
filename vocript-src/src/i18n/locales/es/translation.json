@@ -161,7 +161,7 @@
       },
       "microphone": {
         "title": "Elige tu micrófono",
-        "body": "Antes de nada, elige el micrófono con el que vas a dictar. Si tienes varios —auriculares, webcam o el integrado—, selecciona aquí el correcto para que VoCript te oiga bien."
+        "body": "Antes de nada, elige el micrófono con el que vas a dictar. Si tienes varios (auriculares, webcam o el integrado), selecciona aquí el correcto para que VoCript te oiga bien."
       },
       "shortcut": {
         "title": "Configura tu atajo de dictado",
@@ -218,7 +218,7 @@
       },
       "headerSystem": {
         "title": "Audio del sistema",
-        "body": "El mismo interruptor, pero para el audio del PC —un vídeo o una llamada— en vez de tu voz."
+        "body": "El mismo interruptor, pero para el audio del PC (un vídeo o una llamada) en vez de tu voz."
       },
       "headerOutput": {
         "title": "Salida",
@@ -561,11 +561,11 @@
       },
       "liveMode": {
         "voice": {
-          "label": "Modo en vivo — voz",
+          "label": "Modo en vivo: voz",
           "description": "Cuando está activo, tu atajo de dictado muestra la cápsula en vivo (el texto aparece mientras hablas) en vez de pegarlo al final. No hace falta un atajo aparte; también puedes arrancarlo desde la bandeja."
         },
         "system": {
-          "label": "Modo en vivo — audio del sistema",
+          "label": "Modo en vivo: audio del sistema",
           "description": "Cuando está activo, tu atajo de audio del sistema transcribe en vivo lo que suena (YouTube, Spotify…) en la cápsula flotante. Independiente del modo en vivo de voz; también desde la bandeja."
         }
       },
@@ -1028,9 +1028,16 @@
     "updateNow": "Actualizar",
     "later": "Más tarde",
     "updateAvailableDescription": "Se instalará y la app se reiniciará sola.",
-    "portableUpdateTitle": "Manual update required",
-    "portableUpdateMessage": "Portable installs cannot be updated automatically. To update: download the latest NSIS installer from GitHub Releases, install it to the same folder, then copy your Data/ folder (settings, models, recordings) from the old version to the new one.",
-    "portableUpdateButton": "Open GitHub Releases"
+    "portableUpdateTitle": "Hay que actualizar a mano",
+    "portableUpdateMessage": "Las instalaciones portables no se actualizan solas. Para actualizar: descarga el instalador más reciente de GitHub Releases, instálalo en la misma carpeta y copia tu carpeta Data/ (ajustes, modelos y grabaciones) de la versión antigua a la nueva.",
+    "portableUpdateButton": "Abrir GitHub Releases",
+    "installMismatchTitle": "Esta actualización no llegaría a la copia que usas",
+    "installMismatchMessage": "VoCript se está ejecutando desde una carpeta, pero el instalador dejaría la versión nueva en otra distinta. Si continúas, la actualización se instalará donde nunca la abres, y al encender el ordenador volverás a esta versión con la misma actualización esperando.",
+    "installMismatchRunningFrom": "Estás usando VoCript desde",
+    "installMismatchUpdatesGoTo": "Las actualizaciones irían a",
+    "installMismatchFix": "Para dejarlo arreglado, descarga el instalador y elige la carpeta que usas de verdad. Todo lo que tienes guardado (modelos, historial y ajustes) se queda donde está.",
+    "installMismatchUpdateAnyway": "Actualizar de todos modos",
+    "installMismatchDownload": "Descargar el instalador"
   },
   "common": {
     "loading": "Cargando...",

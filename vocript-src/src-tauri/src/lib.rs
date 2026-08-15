@@ -9,6 +9,7 @@ mod commands;
 mod fonts;
 mod helpers;
 mod input;
+mod install_check;
 mod live;
 mod llm_client;
 mod managers;
@@ -431,6 +432,19 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     // Ask about new versions from the backend, once a day, with or without a
     // window open. See update_watch.rs for why the frontend check was not enough.
     update_watch::start(app_handle);
+
+    // Leave a trace when updates would install somewhere other than the folder
+    // this copy runs from. The user gets stopped with an explanation before any
+    // update is applied (see install_check.rs); this line is so a log sent in
+    // for support answers the question without anyone having to ask for it.
+    if let Some(mismatch) = install_check::detect() {
+        log::warn!(
+            "Running from {} but updates would install into {}. \
+             Every update will appear to work and change nothing.",
+            mismatch.running_from,
+            mismatch.updates_go_to
+        );
+    }
 }
 
 #[tauri::command]
@@ -582,6 +596,7 @@ pub fn run(cli_args: CliArgs) {
             show_main_window_command,
             commands::cancel_operation,
             commands::is_portable,
+            commands::install_location_mismatch,
             commands::get_app_dir_path,
             commands::get_app_settings,
             commands::get_default_settings,

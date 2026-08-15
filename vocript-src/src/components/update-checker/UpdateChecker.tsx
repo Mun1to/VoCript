@@ -7,7 +7,9 @@ import { listen } from "@tauri-apps/api/event";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { ProgressBar } from "../shared";
 import { useSettings } from "../../hooks/useSettings";
-import { commands } from "../../bindings";
+import { commands, InstallMismatch } from "../../bindings";
+
+const RELEASES_URL = "https://github.com/Mun1to/VoCript/releases/latest";
 
 interface UpdateCheckerProps {
   className?: string;
@@ -23,6 +25,11 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
   const [showUpToDate, setShowUpToDate] = useState(false);
   const [showPortableUpdateDialog, setShowPortableUpdateDialog] =
     useState(false);
+  // Set when this copy runs from a different folder than the one the installer
+  // would update. Holds the two paths so the dialog can name them.
+  const [installMismatch, setInstallMismatch] = useState<InstallMismatch | null>(
+    null,
+  );
 
   const { settings, isLoading } = useSettings();
   const settingsLoaded = !isLoading && settings !== null;
@@ -114,13 +121,27 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
     checkForUpdates();
   };
 
-  const installUpdate = async () => {
+  // `ignoreMismatch` is only ever true when the user has already been shown the
+  // warning below and chose to go ahead anyway.
+  const installUpdate = async (ignoreMismatch = false) => {
     if (!updateChecksEnabled) return;
 
     const portable = await commands.isPortable();
     if (portable) {
       setShowPortableUpdateDialog(true);
       return;
+    }
+
+    // Updating a copy whose installer points at another folder looks like it
+    // worked and changes nothing: the new version lands where nobody opens it
+    // and the next launch offers the same update again. Stop and explain
+    // instead of letting the user loop. See src-tauri/src/install_check.rs.
+    if (!ignoreMismatch) {
+      const mismatch = await commands.installLocationMismatch();
+      if (mismatch) {
+        setInstallMismatch(mismatch);
+        return;
+      }
     }
 
     try {
@@ -187,7 +208,10 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
 
   const getUpdateStatusAction = () => {
     if (!updateChecksEnabled) return undefined;
-    if (updateAvailable && !isInstalling) return installUpdate;
+    // Wrapped rather than passed straight through: as an onClick handler it
+    // would receive the mouse event as its first argument, and a truthy event
+    // is exactly what tells installUpdate to skip the mismatch warning.
+    if (updateAvailable && !isInstalling) return () => installUpdate();
     if (!isChecking && !isInstalling && !updateAvailable)
       return handleManualUpdateCheck;
     return undefined;
@@ -218,11 +242,70 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
               <button
                 className="px-3 py-1.5 text-sm rounded bg-logo-primary text-white hover:bg-logo-primary/80 transition-colors"
                 onClick={() => {
-                  openUrl("https://github.com/Mun1to/VoCript/releases/latest");
+                  openUrl(RELEASES_URL);
                   setShowPortableUpdateDialog(false);
                 }}
               >
                 {t("footer.portableUpdateButton")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {installMismatch && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-bg border border-border rounded-lg p-6 max-w-lg w-full mx-4 space-y-4">
+            <h2 className="text-base font-semibold">
+              {t("footer.installMismatchTitle")}
+            </h2>
+            <p className="text-sm text-text/70">
+              {t("footer.installMismatchMessage")}
+            </p>
+            <div className="space-y-2 rounded border border-border bg-mid-gray/20 p-3 text-xs">
+              <div className="space-y-0.5">
+                <div className="text-text/50">
+                  {t("footer.installMismatchRunningFrom")}
+                </div>
+                <div className="break-all font-mono">
+                  {installMismatch.running_from}
+                </div>
+              </div>
+              <div className="space-y-0.5">
+                <div className="text-text/50">
+                  {t("footer.installMismatchUpdatesGoTo")}
+                </div>
+                <div className="break-all font-mono">
+                  {installMismatch.updates_go_to}
+                </div>
+              </div>
+            </div>
+            <p className="text-sm text-text/70">
+              {t("footer.installMismatchFix")}
+            </p>
+            <div className="flex flex-wrap gap-2 justify-end">
+              <button
+                className="px-3 py-1.5 text-sm rounded border border-border hover:bg-border/50 transition-colors"
+                onClick={() => setInstallMismatch(null)}
+              >
+                {t("common.close")}
+              </button>
+              <button
+                className="px-3 py-1.5 text-sm rounded border border-border hover:bg-border/50 transition-colors"
+                onClick={() => {
+                  setInstallMismatch(null);
+                  installUpdate(true);
+                }}
+              >
+                {t("footer.installMismatchUpdateAnyway")}
+              </button>
+              <button
+                className="px-3 py-1.5 text-sm rounded bg-logo-primary text-white hover:bg-logo-primary/80 transition-colors"
+                onClick={() => {
+                  openUrl(RELEASES_URL);
+                  setInstallMismatch(null);
+                }}
+              >
+                {t("footer.installMismatchDownload")}
               </button>
             </div>
           </div>

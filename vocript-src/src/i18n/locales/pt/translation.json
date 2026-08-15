@@ -997,6 +997,13 @@
     "portableUpdateTitle": "Atualização manual necessária",
     "portableUpdateMessage": "Instalações portáteis não podem ser atualizadas automaticamente. Para atualizar: baixe o instalador NSIS mais recente do GitHub Releases, instale-o na mesma pasta e, em seguida, copie sua pasta Data/ (configurações, modelos, gravações) da versão antiga para a nova.",
     "portableUpdateButton": "Abrir GitHub Releases",
+    "installMismatchTitle": "Esta atualização não chegaria à cópia que você usa",
+    "installMismatchMessage": "O VoCript está sendo executado a partir de uma pasta, mas o instalador colocaria a nova versão em outra. Se continuar, a atualização será instalada onde você nunca a abre e, na próxima vez que ligar o computador, você voltará a esta versão com a mesma atualização esperando.",
+    "installMismatchRunningFrom": "Você está usando o VoCript de",
+    "installMismatchUpdatesGoTo": "As atualizações seriam instaladas em",
+    "installMismatchFix": "Para resolver de vez, baixe o instalador e escolha a pasta que você realmente usa. Tudo o que você tem salvo (modelos, histórico e configurações) permanece onde está.",
+    "installMismatchUpdateAnyway": "Atualizar mesmo assim",
+    "installMismatchDownload": "Baixar o instalador",
     "updateNow": "Atualizar",
     "later": "Mais tarde",
     "updateAvailableDescription": "Será instalado e o app se reiniciará sozinho."

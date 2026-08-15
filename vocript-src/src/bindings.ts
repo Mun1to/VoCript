@@ -642,6 +642,13 @@ async cancelOperation() : Promise<void> {
 async isPortable() : Promise<boolean> {
     return await TAURI_INVOKE("is_portable");
 },
+/**
+ * `None` when this copy and the installer agree on where the app lives, which
+ * is the normal case. See install_check.rs for what a mismatch means.
+ */
+async installLocationMismatch() : Promise<InstallMismatch | null> {
+    return await TAURI_INVOKE("install_location_mismatch");
+},
 async getAppDirPath() : Promise<Result<string, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_app_dir_path") };
@@ -1379,6 +1386,18 @@ export type ImplementationChangeResult = { success: boolean;
  * List of binding IDs that were reset to defaults due to incompatibility
  */
 reset_bindings: string[] }
+/**
+ * A running copy and an update target that are not the same folder.
+ */
+export type InstallMismatch = { 
+/**
+ * Folder the running executable lives in.
+ */
+running_from: string; 
+/**
+ * Folder the installer would write the update to.
+ */
+updates_go_to: string }
 export type KeyboardImplementation = "tauri" | "handy_keys"
 export type LLMPrompt = { id: string; name: string; prompt: string }
 export type LogLevel = "trace" | "debug" | "info" | "warn" | "error"

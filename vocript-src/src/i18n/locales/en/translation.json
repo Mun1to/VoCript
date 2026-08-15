@@ -161,7 +161,7 @@
       },
       "microphone": {
         "title": "Pick your microphone",
-        "body": "First, choose the mic you'll dictate with. If you have more than one — a headset, webcam or built-in mic — pick the right one here so VoCript hears you clearly."
+        "body": "First, choose the mic you'll dictate with. If you have more than one (a headset, webcam or built-in mic), pick the right one here so VoCript hears you clearly."
       },
       "shortcut": {
         "title": "Set up your dictation shortcut",
@@ -189,7 +189,7 @@
       },
       "dictation": {
         "title": "Voice dictation",
-        "body": "Place your cursor where you want to type, press your dictation shortcut, speak and release — the text appears on its own.\n\nTry it right here: click the box below and dictate something with your shortcut.",
+        "body": "Place your cursor where you want to type, press your dictation shortcut, speak and release, and the text appears on its own.\n\nTry it right here: click the box below and dictate something with your shortcut.",
         "placeholder": "Click here and dictate with your shortcut…",
         "success": "✓ It works! That easy.",
         "tooShort": "That was too short. Hold the shortcut and say a whole sentence.",
@@ -202,11 +202,11 @@
       },
       "customWords": {
         "title": "Custom words",
-        "body": "Are there names or terms VoCript keeps getting wrong? Add them here and similar-sounding words are nudged to match your list automatically — great for proper names and jargon."
+        "body": "Are there names or terms VoCript keeps getting wrong? Add them here and similar-sounding words are nudged to match your list automatically, which is great for proper names and jargon."
       },
       "audioSource": {
         "title": "Tag the audio source",
-        "body": "When you transcribe system audio, VoCript can add where it came from — the song, app or video title (and a YouTube link when it detects one). Turn it on to add that note automatically."
+        "body": "When you transcribe system audio, VoCript can add where it came from: the song, app or video title (and a YouTube link when it detects one). Turn it on to add that note automatically."
       },
       "headerProfile": {
         "title": "Profile",
@@ -218,7 +218,7 @@
       },
       "headerSystem": {
         "title": "System audio",
-        "body": "The same toggle, but for your PC's audio — a video or a call — instead of your voice."
+        "body": "The same toggle, but for your PC's audio (a video or a call) instead of your voice."
       },
       "headerOutput": {
         "title": "Output",
@@ -340,7 +340,7 @@
       "grant": "Grant Permission",
       "granted": "Granted",
       "waiting": "Waiting...",
-      "stillWaitingHint": "Windows sometimes keeps reporting the old setting. You can continue — if the microphone really is blocked, VoCript will tell you when you first record.",
+      "stillWaitingHint": "Windows sometimes keeps reporting the old setting. You can continue: if the microphone really is blocked, VoCript will tell you when you first record.",
       "recheck": "Check again",
       "continueAnyway": "Continue anyway",
       "allGranted": "All set!",
@@ -530,11 +530,11 @@
       },
       "liveMode": {
         "voice": {
-          "label": "Live mode — voice",
+          "label": "Live mode: voice",
           "description": "When on, your dictation shortcut shows the live capsule (text appears as you speak) instead of pasting at the end. No separate shortcut needed; you can also start it from the tray."
         },
         "system": {
-          "label": "Live mode — system audio",
+          "label": "Live mode: system audio",
           "description": "When on, your system-audio shortcut transcribes what's playing (YouTube, Spotify…) live in the floating capsule. Independent from voice live mode; also available from the tray."
         }
       },
@@ -766,7 +766,7 @@
         "csvHelp": {
           "title": "What should the CSV look like?",
           "cols": "Two comma-separated columns: the original word and what to replace it with. One row per replacement.",
-          "header": "The header row (de,a) is optional — include it or not.",
+          "header": "The header row (de,a) is optional: include it or not.",
           "exampleLabel": "Example:",
           "quotes": "If a value contains commas, wrap it in double quotes: \"hello, there\",greeting",
           "encoding": "Save it as UTF-8. From Excel or Google Sheets: two columns and \"Save as → CSV\".",
@@ -909,7 +909,7 @@
       "postProcessingToggle": {
         "label": "Post Processing",
         "description": "Enable AI-powered text refinement after transcription",
-        "usingOllama": "Local model found — using Ollama for post-processing",
+        "usingOllama": "Local model found: using Ollama for post-processing",
         "noLocalProvider": "No local model found. Install and start Ollama, or pick and configure a provider below."
       },
       "muteWhileRecording": {
@@ -1030,7 +1030,14 @@
     "updateAvailableDescription": "It will install and the app will restart itself.",
     "portableUpdateTitle": "Manual update required",
     "portableUpdateMessage": "Portable installs cannot be updated automatically. To update: download the latest NSIS installer from GitHub Releases, install it to the same folder, then copy your Data/ folder (settings, models, recordings) from the old version to the new one.",
-    "portableUpdateButton": "Open GitHub Releases"
+    "portableUpdateButton": "Open GitHub Releases",
+    "installMismatchTitle": "This update would not reach the copy you are using",
+    "installMismatchMessage": "VoCript is running from one folder, but the installer would put the new version in a different one. If you continue, the update will install where you never open it, and the next time you start your computer you will be back on this version with the same update waiting.",
+    "installMismatchRunningFrom": "You are running VoCript from",
+    "installMismatchUpdatesGoTo": "Updates would install into",
+    "installMismatchFix": "To fix it for good, download the installer and choose the folder you actually use. Everything you have saved (models, history and settings) stays where it is.",
+    "installMismatchUpdateAnyway": "Update anyway",
+    "installMismatchDownload": "Download the installer"
   },
   "common": {
     "loading": "Loading...",
