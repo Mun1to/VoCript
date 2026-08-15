@@ -77,7 +77,13 @@ if [ "$familia" = "debian" ]; then
     falla ".deb: no hay ninguno en $dist_dir"
   else
     titulo "Paquete .deb ($(basename "$deb"))"
-    if apt-get install -y -qq "$deb" >/tmp/apt.log 2>&1; then
+    # Lo que el paquete declara, siempre a la vista. Es el dato que convierte
+    # un "apt lo rechaza" en una respuesta: sin esto no se sabe si lo rechazó
+    # por el mínimo de libc o porque el archivo llegó corrupto.
+    nota "Depends: $(dpkg-deb -f "$deb" Depends 2>/dev/null || echo '(no se pudo leer)')"
+    # Sin -qq en esta llamada: con él apt se calla justo el motivo del rechazo,
+    # que es lo único que hace falta leer cuando falla.
+    if apt-get install -y "$deb" >/tmp/apt.log 2>&1; then
       instalado="si"
     else
       instalado="no"
@@ -99,14 +105,16 @@ if [ "$familia" = "debian" ]; then
         nota "el paquete debería declarar el mínimo de libc6 para que apt lo rechace"
       fi
     else
-      motivo=$(grep -iE 'libc6|depend|no instalable|not installable' /tmp/apt.log | head -n 2)
+      # El grep primero, por si acierta con la línea exacta, y si no las
+      # últimas del log tal cual. Nunca se queda sin explicación.
+      motivo=$(grep -iE 'Depends:|libc6|not installable|unmet dependencies' /tmp/apt.log | head -n 3)
+      [ -z "$motivo" ] && motivo=$(tail -n 4 /tmp/apt.log)
       if [ "$soportada" = "no" ]; then
         esperado "apt lo rechaza antes de instalar nada, que es lo correcto aquí"
-        nota "${motivo:-sin detalle en el log de apt}"
       else
         falla "apt no puede instalarlo en una distribución que sí soportamos"
-        nota "${motivo:-sin detalle en el log de apt}"
       fi
+      echo "$motivo" | sed 's/^/           /'
     fi
   fi
 fi
