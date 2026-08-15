@@ -863,6 +863,12 @@
         "bindingsReset": "Le scorciatoie da tastiera erano incompatibili e sono state ripristinate ai valori predefiniti"
       },
       "paths": {
+        "title": "Posizione dei file",
+        "description": "Dove VoCript conserva i tuoi dati e dov'è installata questa copia",
+        "logs": "Registri:",
+        "runningFrom": "In esecuzione da:",
+        "updatesGoTo": "Gli aggiornamenti si installano in:",
+        "mismatch": "Questi due percorsi non coincidono: un aggiornamento verrebbe installato in una cartella che non apri mai, e questa copia resterebbe esattamente com'è.",
         "appData": "Dati App:",
         "models": "Modelli:",
         "settings": "Impostazioni:"

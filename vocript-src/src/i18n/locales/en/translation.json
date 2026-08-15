@@ -926,6 +926,12 @@
         "bindingsReset": "Keyboard shortcuts were incompatible and reset to defaults"
       },
       "paths": {
+        "title": "File locations",
+        "description": "Where VoCript keeps your data and where this copy is installed",
+        "logs": "Logs:",
+        "runningFrom": "Running from:",
+        "updatesGoTo": "Updates install into:",
+        "mismatch": "These two do not match: an update would install into a folder you never open, and this copy would stay exactly as it is.",
         "appData": "App Data:",
         "models": "Models:",
         "settings": "Settings:"

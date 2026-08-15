@@ -863,6 +863,12 @@
         "bindingsReset": "Raccourcis clavier étaient incompatibles et ont été réinitialisés aux valeurs par défaut"
       },
       "paths": {
+        "title": "Emplacement des fichiers",
+        "description": "Où VoCript conserve vos données et où cette copie est installée",
+        "logs": "Journaux :",
+        "runningFrom": "Exécuté depuis :",
+        "updatesGoTo": "Les mises à jour s'installent dans :",
+        "mismatch": "Ces deux chemins ne correspondent pas : une mise à jour s'installerait dans un dossier que vous n'ouvrez jamais, et cette copie resterait exactement telle quelle.",
         "appData": "Données de l'application :",
         "models": "Modèles :",
         "settings": "Paramètres :"

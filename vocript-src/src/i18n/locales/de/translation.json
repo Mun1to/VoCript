@@ -863,6 +863,12 @@
         "bindingsReset": "Tastaturkürzel waren inkompatibel und wurden auf die Standardwerte zurückgesetzt"
       },
       "paths": {
+        "title": "Speicherorte",
+        "description": "Wo VoCript Ihre Daten ablegt und wo diese Kopie installiert ist",
+        "logs": "Protokolle:",
+        "runningFrom": "Läuft aus:",
+        "updatesGoTo": "Updates werden installiert nach:",
+        "mismatch": "Diese beiden stimmen nicht überein: ein Update würde in einen Ordner installiert, den Sie nie öffnen, und diese Kopie bliebe genau so, wie sie ist.",
         "appData": "App-Daten:",
         "models": "Modelle:",
         "settings": "Einstellungen:"

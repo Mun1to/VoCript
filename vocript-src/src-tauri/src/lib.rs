@@ -597,6 +597,7 @@ pub fn run(cli_args: CliArgs) {
             commands::cancel_operation,
             commands::is_portable,
             commands::install_location_mismatch,
+            commands::install_paths,
             commands::get_app_dir_path,
             commands::get_app_settings,
             commands::get_default_settings,

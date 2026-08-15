@@ -863,6 +863,12 @@
         "bindingsReset": "Skróty klawiaturowe były niekompatybilne i zostały zresetowane do wartości domyślnych"
       },
       "paths": {
+        "title": "Lokalizacja plików",
+        "description": "Gdzie VoCript trzyma twoje dane i gdzie jest zainstalowana ta kopia",
+        "logs": "Dzienniki:",
+        "runningFrom": "Uruchomiono z:",
+        "updatesGoTo": "Aktualizacje instalują się w:",
+        "mismatch": "Te dwie ścieżki się nie zgadzają: aktualizacja zainstalowałaby się w folderze, którego nigdy nie otwierasz, a ta kopia zostałaby dokładnie taka sama.",
         "appData": "Dane aplikacji:",
         "models": "Modele:",
         "settings": "Ustawienia:"

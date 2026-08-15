@@ -649,6 +649,13 @@ async isPortable() : Promise<boolean> {
 async installLocationMismatch() : Promise<InstallMismatch | null> {
     return await TAURI_INVOKE("install_location_mismatch");
 },
+/**
+ * Both folders for the debug panel, agreeing or not. Answers in dev builds
+ * too, where `install_location_mismatch` deliberately stays quiet.
+ */
+async installPaths() : Promise<InstallPaths> {
+    return await TAURI_INVOKE("install_paths");
+},
 async getAppDirPath() : Promise<Result<string, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_app_dir_path") };
@@ -1398,6 +1405,19 @@ running_from: string;
  * Folder the installer would write the update to.
  */
 updates_go_to: string }
+/**
+ * The two folders, whether or not they agree, for the debug panel to show.
+ */
+export type InstallPaths = { 
+/**
+ * Folder the running executable lives in.
+ */
+running_from: string; 
+/**
+ * Folder the installer would write to, or `None` when nothing claims one
+ * (portable copies, Scoop, a dev build, anything but Windows).
+ */
+updates_go_to: string | null }
 export type KeyboardImplementation = "tauri" | "handy_keys"
 export type LLMPrompt = { id: string; name: string; prompt: string }
 export type LogLevel = "trace" | "debug" | "info" | "warn" | "error"

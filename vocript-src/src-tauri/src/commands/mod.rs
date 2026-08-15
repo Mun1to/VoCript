@@ -29,6 +29,14 @@ pub fn install_location_mismatch() -> Option<crate::install_check::InstallMismat
     crate::install_check::detect()
 }
 
+/// Both folders for the debug panel, agreeing or not. Answers in dev builds
+/// too, where `install_location_mismatch` deliberately stays quiet.
+#[tauri::command]
+#[specta::specta]
+pub fn install_paths() -> crate::install_check::InstallPaths {
+    crate::install_check::paths()
+}
+
 #[tauri::command]
 #[specta::specta]
 pub fn get_app_dir_path(app: AppHandle) -> Result<String, String> {

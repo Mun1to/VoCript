@@ -863,6 +863,12 @@
         "bindingsReset": "Kortkommandona var inkompatibla och återställdes till standardvärden"
       },
       "paths": {
+        "title": "Filernas plats",
+        "description": "Var VoCript sparar dina data och var den här kopian är installerad",
+        "logs": "Loggar:",
+        "runningFrom": "Körs från:",
+        "updatesGoTo": "Uppdateringar installeras i:",
+        "mismatch": "De här två stämmer inte överens: en uppdatering skulle installeras i en mapp du aldrig öppnar, och den här kopian skulle förbli precis som den är.",
         "appData": "Appdata:",
         "models": "Modeller:",
         "settings": "Inställningar:"

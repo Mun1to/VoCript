@@ -926,6 +926,12 @@
         "bindingsReset": "Los atajos de teclado eran incompatibles y se restablecieron a los valores predeterminados"
       },
       "paths": {
+        "title": "Ubicación de los archivos",
+        "description": "Dónde guarda VoCript tus datos y dónde está instalada esta copia",
+        "logs": "Registros:",
+        "runningFrom": "Se ejecuta desde:",
+        "updatesGoTo": "Las actualizaciones se instalan en:",
+        "mismatch": "Estas dos no coinciden: una actualización se instalaría en una carpeta que nunca abres y esta copia se quedaría exactamente igual.",
         "appData": "Datos de la Aplicación:",
         "models": "Modelos:",
         "settings": "Configuración:"

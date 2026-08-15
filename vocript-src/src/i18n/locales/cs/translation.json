@@ -863,6 +863,12 @@
         "bindingsReset": "Klávesové zkratky byly nekompatibilní a byly obnoveny na výchozí hodnoty"
       },
       "paths": {
+        "title": "Umístění souborů",
+        "description": "Kde VoCript uchovává vaše data a kde je nainstalována tato kopie",
+        "logs": "Protokoly:",
+        "runningFrom": "Spuštěno z:",
+        "updatesGoTo": "Aktualizace se instalují do:",
+        "mismatch": "Tyto dvě cesty se neshodují: aktualizace by se nainstalovala do složky, kterou nikdy neotvíráte, a tato kopie by zůstala přesně stejná.",
         "appData": "Data aplikace:",
         "models": "Modely:",
         "settings": "Nastavení:"

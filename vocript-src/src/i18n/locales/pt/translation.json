@@ -863,6 +863,12 @@
         "bindingsReset": "Os atalhos de teclado eram incompatíveis e foram redefinidos para os padrões"
       },
       "paths": {
+        "title": "Localização dos arquivos",
+        "description": "Onde o VoCript guarda seus dados e onde esta cópia está instalada",
+        "logs": "Registros:",
+        "runningFrom": "Executando de:",
+        "updatesGoTo": "As atualizações são instaladas em:",
+        "mismatch": "Estes dois não coincidem: uma atualização seria instalada em uma pasta que você nunca abre, e esta cópia ficaria exatamente igual.",
         "appData": "Dados do App:",
         "models": "Modelos:",
         "settings": "Configurações:"

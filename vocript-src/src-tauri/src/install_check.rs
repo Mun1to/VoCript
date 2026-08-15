@@ -25,6 +25,36 @@ pub struct InstallMismatch {
     pub updates_go_to: String,
 }
 
+/// The two folders, whether or not they agree, for the debug panel to show.
+#[derive(Debug, Clone, Serialize, Type)]
+pub struct InstallPaths {
+    /// Folder the running executable lives in.
+    pub running_from: String,
+    /// Folder the installer would write to, or `None` when nothing claims one
+    /// (portable copies, Scoop, a dev build, anything but Windows).
+    pub updates_go_to: Option<String>,
+}
+
+/// Always answers, unlike `detect`. A support log or a screenshot of the debug
+/// panel should show the real state of the machine even when it is fine, and
+/// especially in a dev build, where `detect` stays quiet on purpose.
+pub fn paths() -> InstallPaths {
+    let running_from = std::env::current_exe()
+        .ok()
+        .and_then(|exe| exe.parent().map(|p| p.to_string_lossy().into_owned()))
+        .unwrap_or_default();
+
+    #[cfg(target_os = "windows")]
+    let updates_go_to = install_location_from_registry();
+    #[cfg(not(target_os = "windows"))]
+    let updates_go_to = None;
+
+    InstallPaths {
+        running_from,
+        updates_go_to,
+    }
+}
+
 /// Returns the mismatch when there is one, `None` when everything lines up.
 ///
 /// Biased hard towards silence: a warning that fires when nothing is wrong
@@ -185,6 +215,16 @@ mod tests {
         // path for real: current_exe, the registry read and the comparison.
         // The test binary lives under the target directory, so unless that is
         // where the app is installed the answer here should be a mismatch.
+        // `paths` es lo que enseña el panel de depuración: tiene que responder
+        // siempre, también en una build de desarrollo como esta.
+        let p = paths();
+        println!("paths() -> running_from: {}", p.running_from);
+        println!("paths() -> updates_go_to: {:?}", p.updates_go_to);
+        assert!(
+            !p.running_from.is_empty(),
+            "running_from nunca puede ir vacío"
+        );
+
         println!("running from: {:?}", std::env::current_exe());
         match detect_inner() {
             Some(m) => println!(

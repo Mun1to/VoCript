@@ -863,6 +863,12 @@
         "bindingsReset": "Các phím tắt không tương thích và đã được đặt lại về mặc định"
       },
       "paths": {
+        "title": "Vị trí tệp",
+        "description": "Nơi VoCript lưu dữ liệu của bạn và nơi bản này được cài đặt",
+        "logs": "Nhật ký:",
+        "runningFrom": "Đang chạy từ:",
+        "updatesGoTo": "Bản cập nhật được cài vào:",
+        "mismatch": "Hai đường dẫn này không khớp: bản cập nhật sẽ được cài vào thư mục bạn không bao giờ mở, còn bản này vẫn y nguyên.",
         "appData": "Dữ liệu ứng dụng:",
         "models": "Mô hình:",
         "settings": "Cài đặt:"

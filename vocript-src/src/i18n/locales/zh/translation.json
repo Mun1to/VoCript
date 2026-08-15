@@ -863,6 +863,12 @@
         "bindingsReset": "键盘快捷键不兼容，已重置为默认值"
       },
       "paths": {
+        "title": "文件位置",
+        "description": "VoCript 把你的数据放在哪里，以及这一份装在哪里",
+        "logs": "日志：",
+        "runningFrom": "运行位置：",
+        "updatesGoTo": "更新安装到：",
+        "mismatch": "这两个位置不一致：更新会装到你从来不打开的文件夹，而你正在用的这一份原封不动。",
         "appData": "应用数据:",
         "models": "模型:",
         "settings": "设置:"

@@ -863,6 +863,12 @@
         "bindingsReset": "Klavye kısayolları uyumsuzdu ve varsayılan ayarlara sıfırlandı"
       },
       "paths": {
+        "title": "Dosyaların konumu",
+        "description": "VoCript verilerinizi nerede tutuyor ve bu kopya nereye kurulu",
+        "logs": "Günlükler:",
+        "runningFrom": "Şuradan çalışıyor:",
+        "updatesGoTo": "Güncellemeler şuraya kurulur:",
+        "mismatch": "Bu ikisi uyuşmuyor: güncelleme hiç açmadığınız bir klasöre kurulur ve bu kopya olduğu gibi kalır.",
         "appData": "Uygulama Verileri:",
         "models": "Modeller:",
         "settings": "Ayarlar:"
