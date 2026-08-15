@@ -73,30 +73,47 @@ gestor se instalan las dependencias de escritorio. El segundo dice si la
 distribución está dentro del soporte (`si` o `no`), y cambia qué se considera un
 fallo, según la tabla de arriba.
 
-## Resultado medido (v3.7.1, 2026-08-15)
+## Resultado medido (2026-08-15)
+
+El mínimo lo dice ahora la propia prueba, leyendo la tabla de símbolos en vez de
+deducirlo de en qué distribución peta:
+
+```
+glibc que exige el ejecutable: 2.39
+glibc que exigen sus bibliotecas: 2.38
+mínimo real de esta compilación: 2.39
+```
+
+Así que **glibc 2.39**, y por eso el job de release se construye en
+`ubuntu-24.04` y no en `22.04`.
 
 | Distribución | glibc | `.deb` | AppImage |
 | --- | --- | --- | --- |
-| Ubuntu 22.04 LTS | 2.35 | Se instala pero **no arranca** | **No arranca** |
+| Ubuntu 22.04 LTS | 2.35 | apt lo rechaza citando `libc6 (>= 2.39)` | No arranca (esperado) |
 | Ubuntu 24.04 LTS | 2.39 | Funciona | Funciona |
-| Debian 12 Bookworm | 2.36 | Se instala pero **no arranca** | **No arranca** |
+| Debian 12 Bookworm | 2.36 | apt lo rechaza citando `libc6 (>= 2.39)` | No arranca (esperado) |
 | Debian 13 Trixie | 2.41 | Funciona | Funciona |
 | Fedora 41 | 2.40 | (no aplica) | Funciona |
 | Arch Linux | 2.44 | (no aplica) | Funciona |
 
-El mínimo real es **glibc 2.39**, que es lo que pide el ejecutable; las
-bibliotecas que lleva dentro se conforman con 2.38. Por eso el job de release se
-construye en `ubuntu-24.04` y no en `22.04`.
+### Lo que encontró la primera ejecución, ya corregido
 
-Dos cosas que salieron de la primera ejecución y ya están corregidas:
-
-1. El README prometía **Fedora 39+**, y Fedora 39 lleva glibc 2.38, o sea que se
-   quedaba fuera. Ahora dice Fedora 40+.
+1. El README prometía **Fedora 39+**, y Fedora 39 lleva glibc 2.38, o sea que
+   nunca iba a funcionar. Ahora dice Fedora 40+.
 2. En Ubuntu 22.04 y Debian 12 **apt instalaba el `.deb` sin una sola queja** y
    luego el programa no arrancaba, sin que el usuario tuviera forma de saber por
-   qué. El paquete declara ahora `libc6 (>= 2.39)`, así que apt lo rechaza con un
-   motivo legible en vez de dejar algo roto instalado. Pendiente de comprobar en
-   la próxima release, porque hace falta un `.deb` construido de nuevo.
+   qué. El paquete declara ahora `libc6 (>= 2.39)` y apt lo rechaza con el
+   motivo delante. Verificado contra un `.deb` construido de nuevo, sin publicar
+   nada, con la opción `run_id`.
 
-El AppImage no tiene forma de declarar un mínimo, así que ahí solo cabe
-documentarlo.
+El AppImage no puede declarar un mínimo, así que ahí solo cabe documentarlo.
+
+### Y lo que encontró la propia prueba sobre sí misma
+
+- El mensaje del cargador enseña el **primer** símbolo que no resuelve, no el
+  más alto que hace falta: el mismo binario decía "2.39" en un sitio y "2.38" en
+  otro. De ahí que el mínimo se mida con `objdump` y no se lea de un error.
+- Cuando apt empezó a rechazar el paquete, el contenedor se quedaba sin webkit
+  ni alsa, y entonces el AppImage fallaba por `libasound.so.2` en vez de por la
+  glibc: resultado correcto por el motivo equivocado. Las bibliotecas de
+  escritorio se instalan ahora antes de tocar el paquete.
