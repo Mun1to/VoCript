@@ -36,18 +36,18 @@ https://github.com/user-attachments/assets/b98eb03e-de11-45ea-8825-645253d8ad12
 
 ## ✨ What it does
 
-VoCript listens to your **voice** —or the **audio playing on your PC**— and turns it into text **right where your cursor is**, in any app. All recognition happens **on your device**: no accounts, no cloud, no waiting.
+VoCript listens to your **voice** (or the **audio playing on your PC**) and turns it into text **right where your cursor is**, in any app. All recognition happens **on your device**: no accounts, no cloud, no waiting.
 
-- 🎤 **Voice dictation** — press a shortcut, speak, and the text types itself into whatever app you're using.
-- 🔊 **System audio** — transcribe what's playing on your PC (a video, a call, a meeting) or a specific app, and optionally tag where it came from.
-- ⚡ **Live transcription** — watch the text appear word by word in a floating bubble as you speak or play audio.
-- 📁 **Files to text or subtitles** — drop in an audio or video file and get plain text or `.srt` subtitles.
-- 🎯 **Accuracy your way** — a **personal dictionary** of exact replacements plus **custom words** that fix names or jargon by how they sound (with CSV import/export).
-- 💼 **Work profiles** — *Normal*, *Coding* (dictate symbols: "at sign" → `@`, "semicolon" → `;`) or *Custom* with your own commands.
-- 🌍 **Multi-language** — interface in 20 languages and transcription in dozens, with a **quick language switch** (app and model at once). Tuned for Spanish accents and punctuation.
-- 🕑 **History** — keeps your transcriptions and lets you replay the original audio anytime.
-- 🎨 **Make it yours** — light, dark or **automatic (follows your system)** theme. On first launch it picks up your device's **language and theme**, then a quick guided tour shows you the basics.
-- 🔒 **100% local** — no telemetry, with automatic, signed updates.
+- 🎤 **Voice dictation**: press a shortcut, speak, and the text types itself into whatever app you're using.
+- 🔊 **System audio**: transcribe what's playing on your PC (a video, a call, a meeting) or a specific app, and optionally tag where it came from.
+- ⚡ **Live transcription**: watch the text appear word by word in a floating bubble as you speak or play audio.
+- 📁 **Files to text or subtitles**: drop in an audio or video file and get plain text or `.srt` subtitles.
+- 🎯 **Accuracy your way**: a **personal dictionary** of exact replacements plus **custom words** that fix names or jargon by how they sound (with CSV import/export).
+- 💼 **Work profiles**: *Normal*, *Coding* (dictate symbols: "at sign" → `@`, "semicolon" → `;`) or *Custom* with your own commands.
+- 🌍 **Multi-language**: interface in 20 languages and transcription in dozens, with a **quick language switch** (app and model at once). Tuned for Spanish accents and punctuation.
+- 🕑 **History**: keeps your transcriptions and lets you replay the original audio anytime.
+- 🎨 **Make it yours**: light, dark or **automatic (follows your system)** theme. On first launch it picks up your device's **language and theme**, then a quick guided tour shows you the basics.
+- 🔒 **100% local**: no telemetry, with automatic, signed updates.
 
 ---
 
@@ -55,7 +55,7 @@ VoCript listens to your **voice** —or the **audio playing on your PC**— and 
 
 ### Windows
 
-1. Click the **Download** button above — or this direct link: **[download VoCript](https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-Setup.exe)**. The installer downloads instantly.
+1. Click the **Download** button above, or use this direct link: **[download VoCript](https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-Setup.exe)**. The installer downloads instantly.
 2. Open the downloaded file (`VoCript-Setup.exe`).
 3. Follow the steps. Done!
 
@@ -64,7 +64,7 @@ VoCript listens to your **voice** —or the **audio playing on your PC**— and 
 
 ### Linux
 
-Download **[VoCript-x86_64.AppImage](https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-x86_64.AppImage)**, make it executable and run it — no installation needed:
+Download **[VoCript-x86_64.AppImage](https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-x86_64.AppImage)**, make it executable and run it. No installation needed:
 
 ```bash
 chmod +x VoCript-x86_64.AppImage
@@ -73,13 +73,13 @@ chmod +x VoCript-x86_64.AppImage
 
 There is also a `.deb` on the [Releases page](https://github.com/Mun1to/VoCript/releases/latest) for Debian and Ubuntu (`sudo apt install ./VoCript_*.deb`).
 
-> **Needs a reasonably current distro** — glibc 2.39 or newer (Ubuntu 24.04+,
+> **Needs a reasonably current distro**: glibc 2.39 or newer (Ubuntu 24.04+,
 > Debian 13, Fedora 39+, Arch). The speech engines ship as prebuilt binaries
 > that require it.
 
 > Two things work differently on Linux: **system-audio capture is Windows-only**
 > for now (dictating with the microphone works normally), and on **Wayland**
-> global shortcuts and auto-typing are limited — X11 is the smoother ride.
+> global shortcuts and auto-typing are limited; X11 is the smoother ride.
 
 ### macOS
 
@@ -100,7 +100,7 @@ Download **[VoCript-arm64.dmg](https://github.com/Mun1to/VoCript/releases/latest
 
 > Two things work differently on macOS: **system-audio capture is Windows-only**
 > for now (dictating with the microphone works normally), and macOS will ask for
-> **Accessibility** permission — without it the app cannot type into other apps.
+> **Accessibility** permission; without it the app cannot type into other apps.
 
 > ⚠️ **macOS support is new and has not been tested on real hardware yet.** It
 > builds, launches and passes its tests on Apple's own machines, but if
@@ -168,7 +168,7 @@ bun run tauri build    # production installer
 VoCript is free software under the [MIT](LICENSE) license.
 
 It is a **fork of [Handy](https://github.com/cjpais/Handy)** by
-[CJ Pais](https://github.com/cjpais) (also MIT) — thanks for the great
+[CJ Pais](https://github.com/cjpais) (also MIT). Thanks for the great
 foundation. The transcription engine is
 [Whisper.cpp](https://github.com/ggerganov/whisper.cpp) by Georgi Gerganov.
 

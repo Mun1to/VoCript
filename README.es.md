@@ -36,18 +36,18 @@ https://github.com/user-attachments/assets/b98eb03e-de11-45ea-8825-645253d8ad12
 
 ## ✨ Qué hace
 
-VoCript escucha tu **voz** —o el **audio que suena en tu PC**— y lo convierte en texto **justo donde tienes el cursor**, en cualquier aplicación. Todo el reconocimiento ocurre **en tu equipo**: ni cuentas, ni nube, ni esperas.
+VoCript escucha tu **voz** (o el **audio que suena en tu PC**) y lo convierte en texto **justo donde tienes el cursor**, en cualquier aplicación. Todo el reconocimiento ocurre **en tu equipo**: ni cuentas, ni nube, ni esperas.
 
-- 🎤 **Dictado por voz** — pulsa un atajo, habla, y el texto se escribe solo en la app que estés usando.
-- 🔊 **Audio del sistema** — transcribe lo que suena en el PC (un vídeo, una llamada, una reunión) o una app concreta, y opcionalmente añade de dónde viene.
-- ⚡ **Transcripción en vivo** — el texto aparece palabra a palabra en una cápsula flotante mientras hablas o reproduces audio.
-- 📁 **Archivos a texto o subtítulos** — arrastra un audio o vídeo y obtén texto plano o subtítulos `.srt`.
-- 🎯 **Precisión a tu medida** — un **diccionario personal** de reemplazos exactos y **palabras personalizadas** que corrigen nombres o jerga por su sonido (con importar/exportar CSV).
-- 💼 **Perfiles profesionales** — *Normal*, *Programación* (dicta símbolos: «arroba» → `@`, «punto y coma» → `;`) o *Personalizado* con tus propios comandos.
-- 🌍 **Multi-idioma** — interfaz en 20 idiomas y transcripción en decenas, con **cambio rápido de idioma** (app y modelo a la vez). Optimizado para español (acentos y puntuación).
-- 🕑 **Historial** — guarda tus transcripciones y vuelve a escuchar el audio original cuando quieras.
-- 🎨 **A tu gusto** — tema claro, oscuro o **automático según tu sistema**. La primera vez detecta el **idioma y el tema de tu equipo** y te enseña lo básico con un breve tour.
-- 🔒 **100 % local** — sin telemetría, con actualizaciones automáticas y firmadas.
+- 🎤 **Dictado por voz**: pulsa un atajo, habla, y el texto se escribe solo en la app que estés usando.
+- 🔊 **Audio del sistema**: transcribe lo que suena en el PC (un vídeo, una llamada, una reunión) o una app concreta, y opcionalmente añade de dónde viene.
+- ⚡ **Transcripción en vivo**: el texto aparece palabra a palabra en una cápsula flotante mientras hablas o reproduces audio.
+- 📁 **Archivos a texto o subtítulos**: arrastra un audio o vídeo y obtén texto plano o subtítulos `.srt`.
+- 🎯 **Precisión a tu medida**: un **diccionario personal** de reemplazos exactos y **palabras personalizadas** que corrigen nombres o jerga por su sonido (con importar/exportar CSV).
+- 💼 **Perfiles profesionales**: *Normal*, *Programación* (dicta símbolos: «arroba» → `@`, «punto y coma» → `;`) o *Personalizado* con tus propios comandos.
+- 🌍 **Multi-idioma**: interfaz en 20 idiomas y transcripción en decenas, con **cambio rápido de idioma** (app y modelo a la vez). Optimizado para español (acentos y puntuación).
+- 🕑 **Historial**: guarda tus transcripciones y vuelve a escuchar el audio original cuando quieras.
+- 🎨 **A tu gusto**: tema claro, oscuro o **automático según tu sistema**. La primera vez detecta el **idioma y el tema de tu equipo** y te enseña lo básico con un breve tour.
+- 🔒 **100 % local**: sin telemetría, con actualizaciones automáticas y firmadas.
 
 ---
 
@@ -55,7 +55,7 @@ VoCript escucha tu **voz** —o el **audio que suena en tu PC**— y lo conviert
 
 ### Windows
 
-1. Pulsa el botón **Descargar** de arriba — o este enlace directo: **[descargar VoCript](https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-Setup.exe)**. Se baja el instalador al instante.
+1. Pulsa el botón **Descargar** de arriba, o este enlace directo: **[descargar VoCript](https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-Setup.exe)**. Se baja el instalador al instante.
 2. Abre el archivo descargado (`VoCript-Setup.exe`).
 3. Sigue los pasos. ¡Listo!
 
@@ -160,7 +160,7 @@ bun run tauri build    # instalador de producción
 VoCript es software libre bajo licencia [MIT](LICENSE).
 
 Es un **fork de [Handy](https://github.com/cjpais/Handy)**, creado por
-[CJ Pais](https://github.com/cjpais) (también MIT) — gracias por el excelente
+[CJ Pais](https://github.com/cjpais) (también MIT). Gracias por el excelente
 trabajo base. El motor de transcripción es
 [Whisper.cpp](https://github.com/ggerganov/whisper.cpp), de Georgi Gerganov.
 
