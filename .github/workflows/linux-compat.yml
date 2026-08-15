@@ -15,6 +15,10 @@ on:
         description: "Etiqueta a probar (vacío = la última publicada)"
         required: false
         default: ""
+      run_id:
+        description: "ID de un run de «Linux build check» para probar sus paquetes SIN publicar (tiene prioridad sobre la etiqueta)"
+        required: false
+        default: ""
 
 jobs:
   probar:
@@ -26,50 +30,67 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Las dos LTS de Ubuntu con más gente. La 22.04 lleva glibc 2.35 y
-          # debería quedarse fuera: es el motivo por el que el job de release
-          # se construye en ubuntu-24.04.
+          # `soportada: no` no significa "esta no la probamos". Significa que
+          # se comprueba que falle BIEN: que apt rechace el paquete en vez de
+          # instalar algo que no abre. Un rojo aquí es un usuario engañado.
           - nombre: Ubuntu 22.04 LTS
             imagen: ubuntu:22.04
             familia: debian
+            soportada: "no" # glibc 2.35, por debajo del mínimo
           - nombre: Ubuntu 24.04 LTS
             imagen: ubuntu:24.04
             familia: debian
+            soportada: "si"
           - nombre: Debian 12 Bookworm
             imagen: debian:12
             familia: debian
+            soportada: "no" # glibc 2.36, por debajo del mínimo
           - nombre: Debian 13 Trixie
             imagen: debian:13
             familia: debian
+            soportada: "si"
           - nombre: Fedora 41
             imagen: fedora:41
             familia: fedora
+            soportada: "si"
           - nombre: Arch Linux
             imagen: archlinux:latest
             familia: arch
+            soportada: "si"
 
     steps:
       - name: Descargar el código
         uses: actions/checkout@v4
 
-      - name: Descargar los paquetes de Linux de la release
+      # Con `run_id` se prueban los paquetes de un build de CI, es decir ANTES
+      # de publicar nada. Es la forma de comprobar un cambio de empaquetado sin
+      # tener que sacar una release para verlo.
+      - name: Descargar los paquetes de Linux
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          TAG="${{ inputs.tag }}"
-          if [ -z "$TAG" ]; then
-            TAG=$(gh release view --json tagName -q .tagName)
-          fi
-          echo "Probando $TAG"
-          echo "TAG=$TAG" >> "$GITHUB_ENV"
           mkdir -p dist
-          # Solo las copias de nombre fijo y el .deb: bajar además los archivos
-          # versionados duplicaría 121 MB por cada distribución de la matriz.
-          gh release download "$TAG" \
-            --pattern "VoCript-x86_64.AppImage" \
-            --pattern "*_amd64.deb" \
-            --dir dist --clobber
-          ls -lh dist
+          if [ -n "${{ inputs.run_id }}" ]; then
+            echo "Probando los paquetes del run ${{ inputs.run_id }} (sin publicar)"
+            gh run download "${{ inputs.run_id }}" --name vocript-linux-bundles --dir dist
+            # El artefacto conserva el árbol de carpetas del bundler, y el
+            # script busca por nombre en cualquier nivel, pero se aplana para
+            # que el log se lea de un vistazo.
+            find dist -type f \( -name '*.deb' -o -name '*.AppImage' \) -exec mv -t dist {} +
+          else
+            TAG="${{ inputs.tag }}"
+            if [ -z "$TAG" ]; then
+              TAG=$(gh release view --json tagName -q .tagName)
+            fi
+            echo "Probando $TAG"
+            # Solo las copias de nombre fijo y el .deb: bajar además los archivos
+            # versionados duplicaría 121 MB por cada distribución de la matriz.
+            gh release download "$TAG" \
+              --pattern "VoCript-x86_64.AppImage" \
+              --pattern "*_amd64.deb" \
+              --dir dist --clobber
+          fi
+          ls -lh dist/*.deb dist/*.AppImage
 
       # `shell: bash` en lugar del shell por defecto: trae `-o pipefail`, sin el
       # cual el código de salida del pipe es el de `tee` (siempre 0) y una
@@ -81,7 +102,7 @@ jobs:
             -v "$PWD/dist:/dist:ro" \
             -v "$PWD/tools/linux-compat:/tools:ro" \
             ${{ matrix.imagen }} \
-            bash /tools/probar.sh ${{ matrix.familia }} 2>&1 | tee salida.txt
+            bash /tools/probar.sh ${{ matrix.familia }} ${{ matrix.soportada }} 2>&1 | tee salida.txt
 
       # Se escribe pase o falle: un fallo sin la salida delante obliga a abrir
       # el log del job para saber si fue la glibc o una biblioteca que falta.

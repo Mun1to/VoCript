@@ -19,6 +19,20 @@ No hace falta pantalla. El binario resuelve sus bibliotecas al cargarse, así qu
 si falta webkit, falta gtk o la glibc es demasiado antigua, ni siquiera llega a
 imprimir la ayuda.
 
+### Las distribuciones viejas también se prueban, y no para ver si funcionan
+
+Cada fila de la matriz lleva `soportada: si` o `soportada: no`. En las de fuera
+del soporte no se comprueba que VoCript arranque, sino que **falle bien**:
+
+| Lo que pasa en una distribución vieja | Veredicto |
+| --- | --- |
+| apt rechaza el paquete por el mínimo de `libc6` | Correcto, el usuario sabe por qué |
+| apt lo instala y luego el programa no abre | **Fallo**, se está engañando al usuario |
+| El AppImage no arranca | Esperado, no puede declarar un mínimo |
+
+Un rojo en Ubuntu 22.04 no significa "es vieja", significa que alguien va a
+instalar algo que no le va a funcionar sin que nada se lo advierta.
+
 ## Cómo se lanza
 
 **En GitHub Actions** (recomendado, no necesita nada instalado):
@@ -27,8 +41,18 @@ Pestaña *Actions* → *Compatibilidad de Linux* → *Run workflow*. Opcionalmen
 le pasa una etiqueta; si se deja vacío, prueba la última publicada.
 
 ```bash
-gh workflow run linux-compat.yml
+gh workflow run linux-compat.yml                      # la última publicada
+gh workflow run linux-compat.yml -f tag=v3.7.1        # una versión concreta
 gh run watch
+```
+
+**Antes de publicar**, contra los paquetes de un build de CI. Así se comprueba
+un cambio de empaquetado sin tener que sacar una release para verlo:
+
+```bash
+gh workflow run linux-ci.yml                          # construye deb + AppImage
+gh run list --workflow=linux-ci.yml --limit 1         # copia el ID del run
+gh workflow run linux-compat.yml -f run_id=<ID>
 ```
 
 **En local con Docker**, con los paquetes ya descargados en una carpeta:
@@ -41,11 +65,13 @@ docker run --rm \
   -v "$PWD/dist:/dist:ro" \
   -v "$PWD/tools/linux-compat:/tools:ro" \
   ubuntu:24.04 \
-  bash /tools/probar.sh debian
+  bash /tools/probar.sh debian si
 ```
 
-La familia es `debian`, `fedora` o `arch`, y decide con qué gestor se instalan
-las dependencias de escritorio.
+El primer argumento es la familia (`debian`, `fedora` o `arch`) y decide con qué
+gestor se instalan las dependencias de escritorio. El segundo dice si la
+distribución está dentro del soporte (`si` o `no`), y cambia qué se considera un
+fallo, según la tabla de arriba.
 
 ## Resultado medido (v3.7.1, 2026-08-15)
 

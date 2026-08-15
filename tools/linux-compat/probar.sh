@@ -3,46 +3,55 @@
 # Prueba de humo de los paquetes de Linux DENTRO de un contenedor limpio.
 #
 # Responde a una pregunta que hasta ahora se contestaba de oído: ¿en qué
-# distribuciones arranca de verdad VoCript? El README promete «glibc 2.39 o
-# superior (Ubuntu 24.04+, Debian 13, Fedora 39+, Arch)» y nadie lo había
-# comprobado en ninguna de ellas.
+# distribuciones arranca de verdad VoCript? El README prometía «Fedora 39+»
+# cuando Fedora 39 lleva una glibc por debajo del mínimo, y nadie lo había
+# comprobado en ninguna distribución.
 #
 # No hace falta pantalla. El binario resuelve sus bibliotecas al cargarse, así
 # que si falta webkit, gtk o la glibc es demasiado antigua, ni siquiera llega a
 # imprimir la ayuda de la línea de comandos. Un `--help` que responde es prueba
 # de que el enlazado entero está resuelto en esa distribución.
 #
+# El segundo argumento dice si la distribución está DENTRO de lo soportado. Las
+# de fuera no se prueban para ver si funcionan, sino para ver si **fallan
+# bien**: lo que no puede pasar es que apt instale el paquete sin una queja y
+# luego el programa no arranque, que fue justo lo que hacía hasta hoy.
+#
 # Uso (desde el contenedor, con /dist montado con los artefactos dentro):
-#   probar.sh debian|fedora|arch
+#   probar.sh debian|fedora|arch  si|no
 #
 set -uo pipefail
 
 familia="${1:?Falta la familia: debian, fedora o arch}"
+soportada="${2:-si}"
 dist_dir="${DIST_DIR:-/dist}"
 fallos=0
 
-titulo() { printf '\n\033[1m== %s ==\033[0m\n' "$1"; }
-ok()     { printf '  \033[32mOK\033[0m   %s\n' "$1"; }
-falla()  { printf '  \033[31mFALLA\033[0m %s\n' "$1"; fallos=$((fallos + 1)); }
-nota()   { printf '       %s\n' "$1"; }
+titulo()   { printf '\n\033[1m== %s ==\033[0m\n' "$1"; }
+ok()       { printf '  \033[32mOK\033[0m       %s\n' "$1"; }
+falla()    { printf '  \033[31mFALLA\033[0m    %s\n' "$1"; fallos=$((fallos + 1)); }
+esperado() { printf '  \033[33mESPERADO\033[0m %s\n' "$1"; }
+nota()     { printf '           %s\n' "$1"; }
 
 titulo "Sistema"
-# La versión de glibc es la razón por la que el job de release se construye en
-# ubuntu-24.04 y no en 22.04: los motores de reconocimiento vienen compilados
-# y exigen una glibc reciente.
 if command -v ldd >/dev/null 2>&1; then
   nota "glibc: $(ldd --version | head -n1)"
 fi
 nota "distribución: $(. /etc/os-release 2>/dev/null && echo "$PRETTY_NAME")"
+if [ "$soportada" = "si" ]; then
+  nota "dentro de lo soportado: todo tiene que funcionar"
+else
+  nota "FUERA de lo soportado: se comprueba que falle de forma limpia"
+fi
 
 titulo "Instalando lo que tendría un escritorio normal"
 case "$familia" in
   debian)
     export DEBIAN_FRONTEND=noninteractive
     apt-get update -qq
-    # Sin los paquetes uno a uno: se instala el propio .deb y que apt resuelva
-    # las dependencias que VoCript declara. Así esto también comprueba que esas
-    # dependencias están bien declaradas y existen en la distribución.
+    # No se instalan las dependencias una a una a propósito: se instala el
+    # propio .deb y que apt resuelva lo que VoCript declara. Así esto comprueba
+    # de paso que esas dependencias están bien declaradas y existen.
     apt-get install -y -qq --no-install-recommends ca-certificates file >/dev/null
     ;;
   fedora)
@@ -69,22 +78,42 @@ if [ "$familia" = "debian" ]; then
   else
     titulo "Paquete .deb ($(basename "$deb"))"
     if apt-get install -y -qq "$deb" >/tmp/apt.log 2>&1; then
-      ok "se instala y apt resuelve sus dependencias"
+      instalado="si"
+    else
+      instalado="no"
+    fi
+
+    if [ "$instalado" = "si" ]; then
+      arranca="no"
       if timeout 60 vocript --help >/tmp/help.log 2>&1; then
-        ok "el binario instalado arranca (--help responde)"
+        arranca="si"
+      fi
+      if [ "$arranca" = "si" ]; then
+        ok "se instala, apt resuelve sus dependencias y el programa arranca"
+        [ "$soportada" = "no" ] && nota "funciona en una distribución que damos por fuera, se puede ampliar el soporte"
       else
-        falla "el binario instalado NO arranca"
-        nota "$(tail -n 3 /tmp/help.log)"
+        # El caso peor y el motivo de esta prueba: apt no protesta y el
+        # usuario se queda con algo instalado que no abre.
+        falla "apt lo instala sin quejarse y luego el programa NO arranca"
+        nota "$(tail -n 2 /tmp/help.log)"
+        nota "el paquete debería declarar el mínimo de libc6 para que apt lo rechace"
       fi
     else
-      falla "apt no puede instalarlo en esta distribución"
-      nota "$(grep -iE 'depend|no instalable|not installable|E:' /tmp/apt.log | head -n 4)"
+      motivo=$(grep -iE 'libc6|depend|no instalable|not installable' /tmp/apt.log | head -n 2)
+      if [ "$soportada" = "no" ]; then
+        esperado "apt lo rechaza antes de instalar nada, que es lo correcto aquí"
+        nota "${motivo:-sin detalle en el log de apt}"
+      else
+        falla "apt no puede instalarlo en una distribución que sí soportamos"
+        nota "${motivo:-sin detalle en el log de apt}"
+      fi
     fi
   fi
 fi
 
 # ---------------------------------------------------------------------------
-# 2. El AppImage, en todas
+# 2. El AppImage, en todas. No puede declarar un mínimo de glibc, así que en
+#    las distribuciones viejas lo único posible es documentar que no arranca.
 # ---------------------------------------------------------------------------
 appimage=$(find "$dist_dir" -name '*.AppImage' | head -n1)
 if [ -z "$appimage" ]; then
@@ -105,17 +134,18 @@ else
       falla "no encuentro el ejecutable dentro del AppImage"
     else
       faltan=$(ldd "$binario" 2>/dev/null | grep 'not found' | awk '{print $1}')
-      if [ -n "$faltan" ]; then
+      if [ -n "$faltan" ] && [ "$soportada" = "si" ]; then
         falla "faltan bibliotecas del sistema"
-        echo "$faltan" | sed 's/^/       /'
-      else
-        ok "todas las bibliotecas que necesita están presentes"
+        echo "$faltan" | sed 's/^/           /'
       fi
       if timeout 60 "$binario" --help >/tmp/help2.log 2>&1; then
         ok "el binario del AppImage arranca (--help responde)"
+      elif [ "$soportada" = "no" ]; then
+        esperado "no arranca, como corresponde a una distribución por debajo del mínimo"
+        nota "$(grep -m1 GLIBC /tmp/help2.log || tail -n 1 /tmp/help2.log)"
       else
         falla "el binario del AppImage NO arranca"
-        nota "$(tail -n 3 /tmp/help2.log)"
+        nota "$(tail -n 2 /tmp/help2.log)"
       fi
     fi
   else
@@ -125,7 +155,11 @@ fi
 
 titulo "Resultado"
 if [ "$fallos" -eq 0 ]; then
-  ok "VoCript funciona en esta distribución"
+  if [ "$soportada" = "si" ]; then
+    ok "VoCript funciona en esta distribución"
+  else
+    ok "queda fuera del soporte y falla de forma limpia, sin engañar a nadie"
+  fi
   exit 0
 fi
 falla "$fallos comprobación(es) han fallado"
