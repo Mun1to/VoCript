@@ -28,6 +28,14 @@ dist_dir="${DIST_DIR:-/dist}"
 fallos=0
 
 titulo()   { printf '\n\033[1m== %s ==\033[0m\n' "$1"; }
+# Versión de glibc más alta que exige un binario. El mensaje del cargador no
+# sirve para esto: enseña el PRIMER símbolo que no encuentra, no el más alto,
+# así que el mismo ejecutable "pide 2.38" en una distribución y "2.39" en otra
+# según el orden en que resuelva. Esto lee la tabla y se queda con el máximo.
+glibc_que_exige() {
+  objdump -T "$1" 2>/dev/null |
+    grep -oE 'GLIBC_[0-9]+\.[0-9]+' | sed 's/GLIBC_//' | sort -V | tail -n1
+}
 ok()       { printf '  \033[32mOK\033[0m       %s\n' "$1"; }
 falla()    { printf '  \033[31mFALLA\033[0m    %s\n' "$1"; fallos=$((fallos + 1)); }
 esperado() { printf '  \033[33mESPERADO\033[0m %s\n' "$1"; }
@@ -58,16 +66,16 @@ case "$familia" in
     alsa=libasound2t64 # en Ubuntu 24.04 y Debian 13 el paquete cambió de nombre
     apt-cache show "$alsa" >/dev/null 2>&1 || alsa=libasound2
     apt-get install -y -qq --no-install-recommends \
-      ca-certificates file libwebkit2gtk-4.1-0 libgtk-3-0 \
+      ca-certificates file binutils libwebkit2gtk-4.1-0 libgtk-3-0 \
       libayatana-appindicator3-1 librsvg2-2 "$alsa" >/dev/null
     ;;
   fedora)
     dnf install -y -q webkit2gtk4.1 gtk3 libappindicator-gtk3 alsa-lib \
-      librsvg2 file >/dev/null
+      librsvg2 file binutils >/dev/null
     ;;
   arch)
     pacman -Sy --noconfirm --quiet webkit2gtk-4.1 gtk3 libayatana-appindicator \
-      alsa-lib librsvg file >/dev/null
+      alsa-lib librsvg file binutils >/dev/null
     ;;
   *)
     echo "Familia desconocida: $familia" >&2
@@ -148,6 +156,16 @@ else
     if [ -z "$binario" ]; then
       falla "no encuentro el ejecutable dentro del AppImage"
     else
+      # El dato que decide el mínimo del README y el libc6 del .deb, medido
+      # sobre el propio archivo en vez de deducido de en qué distro peta.
+      exige_exe=$(glibc_que_exige "$binario")
+      exige_libs=$(for l in /tmp/squashfs-root/usr/lib/*.so*; do
+        [ -f "$l" ] && glibc_que_exige "$l"
+      done | sort -V | tail -n1)
+      mayor=$(printf '%s\n%s\n' "$exige_exe" "$exige_libs" | grep -v '^$' | sort -V | tail -n1)
+      nota "glibc que exige el ejecutable: ${exige_exe:-?}"
+      nota "glibc que exigen sus bibliotecas: ${exige_libs:-?}"
+      nota "mínimo real de esta compilación: ${mayor:-?}"
       faltan=$(ldd "$binario" 2>/dev/null | grep 'not found' | awk '{print $1}')
       if [ -n "$faltan" ] && [ "$soportada" = "si" ]; then
         falla "faltan bibliotecas del sistema"
