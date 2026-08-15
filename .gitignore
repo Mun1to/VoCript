@@ -73,3 +73,8 @@ prototipo-vocript.html
 
 # Staged by build.rs from transcribe-cpp's install dirs; never checked in.
 vocript-src/src-tauri/transcribe-libs/
+CLAUDE.md
+GEMINI.md
+.github/copilot-instructions.md
+.cursor/rules/contexto.mdc
+AGENTS.md
