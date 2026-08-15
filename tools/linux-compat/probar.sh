@@ -49,10 +49,17 @@ case "$familia" in
   debian)
     export DEBIAN_FRONTEND=noninteractive
     apt-get update -qq
-    # No se instalan las dependencias una a una a propósito: se instala el
-    # propio .deb y que apt resuelva lo que VoCript declara. Así esto comprueba
-    # de paso que esas dependencias están bien declaradas y existen.
-    apt-get install -y -qq --no-install-recommends ca-certificates file >/dev/null
+    # Las bibliotecas de escritorio se instalan aquí, no se dejan al .deb.
+    # Cuando apt rechaza el paquete (una distribución por debajo del mínimo) el
+    # contenedor se quedaba pelado, y entonces el AppImage fallaba por falta de
+    # libasound en vez de por la glibc: un resultado correcto por el motivo
+    # equivocado, que es la peor clase de resultado. Instalar el .deb después
+    # sigue comprobando que sus dependencias declaradas se cumplen.
+    alsa=libasound2t64 # en Ubuntu 24.04 y Debian 13 el paquete cambió de nombre
+    apt-cache show "$alsa" >/dev/null 2>&1 || alsa=libasound2
+    apt-get install -y -qq --no-install-recommends \
+      ca-certificates file libwebkit2gtk-4.1-0 libgtk-3-0 \
+      libayatana-appindicator3-1 librsvg2-2 "$alsa" >/dev/null
     ;;
   fedora)
     dnf install -y -q webkit2gtk4.1 gtk3 libappindicator-gtk3 alsa-lib \
