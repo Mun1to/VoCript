@@ -108,7 +108,12 @@ export const Dropdown: React.FC<DropdownProps> = ({
         // and its height has to come off, or the box as a whole overshoots the
         // window edge by exactly that much.
         const hueco = (arriba ? encima : debajo) - ALTO_BUSCADOR;
-        setPanel({ arriba, alto: Math.max(120, Math.min(300, hueco)) });
+        // No floor under this. A minimum of 120 asked for more room than the
+        // side had whenever the window was short, and the difference came off
+        // the bottom of the list, where it was cut away rather than scrolled
+        // to. A cramped list you can scroll beats a taller one with its last
+        // option outside the window.
+        setPanel({ arriba, alto: Math.max(0, Math.min(300, hueco)) });
       }
       setConsulta("");
       window.setTimeout(() => campo.current?.focus(), 20);
