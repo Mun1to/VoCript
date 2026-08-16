@@ -18,6 +18,26 @@ interface DropdownProps {
   onRefresh?: () => void;
 }
 
+/**
+ * The edges that actually clip the list. Not the window: the settings area
+ * scrolls inside a panel that stops above the footer, so measuring against
+ * `window.innerHeight` handed the list the footer's height as free space and
+ * it opened that much too tall, spilling the bottom of a long list past the
+ * edge it could not cross.
+ */
+function marcoVisible(el: HTMLElement): { top: number; bottom: number } {
+  let top = 0;
+  let bottom = window.innerHeight;
+  for (let e = el.parentElement; e; e = e.parentElement) {
+    if (getComputedStyle(e).overflow !== "visible") {
+      const r = e.getBoundingClientRect();
+      top = Math.max(top, r.top);
+      bottom = Math.min(bottom, r.bottom);
+    }
+  }
+  return { top, bottom };
+}
+
 export const Dropdown: React.FC<DropdownProps> = ({
   options,
   selectedValue,
@@ -74,11 +94,12 @@ export const Dropdown: React.FC<DropdownProps> = ({
     if (!isOpen && onRefresh) onRefresh();
     if (!isOpen) {
       const r = dropdownRef.current?.getBoundingClientRect();
-      if (r) {
+      if (r && dropdownRef.current) {
         const MARGEN = 16;
         const ALTO_BUSCADOR = conBuscador ? 38 : 0;
-        const debajo = window.innerHeight - r.bottom - MARGEN;
-        const encima = r.top - MARGEN;
+        const marco = marcoVisible(dropdownRef.current);
+        const debajo = marco.bottom - r.bottom - MARGEN;
+        const encima = r.top - marco.top - MARGEN;
         // What the list would like, so the decision is about this list and not
         // about a number picked in the abstract.
         const quiere = Math.min(300, options.length * 28) + ALTO_BUSCADOR;
