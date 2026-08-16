@@ -288,7 +288,12 @@
   border: 1px solid var(--vc-border);
   border-radius: 12px;
   margin-bottom: 14px;
-  overflow: hidden;
+  /* NOT overflow:hidden, for the same reason as `.vc-chips` above. The rows in
+     here open dropdowns positioned against the block, so hiding the overflow
+     clipped the list rather than the corners. Worst in a block holding a single
+     row: Appearance lost 81px of a 98px panel, leaving none of its three
+     options reachable. Nothing inside paints to the edge, so the corners stay
+     clean without it. */
   scroll-margin-top: 6px;
 }
 
