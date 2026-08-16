@@ -42,7 +42,7 @@ The process is entirely local — silence is filtered with Silero VAD, and trans
 
 ### Installation
 
-1. Download the latest release from the [releases page](https://github.com/Mun1to/VoCript/releases) or [vocript.munito.dev](https://vocript.munito.dev)
+1. Download the latest release from the [releases page](https://github.com/Mun1to/VoCript/releases) or [vocript.app](https://vocript.app)
    - **Windows**: the `_x64-setup.exe` installer
    - **Linux**: `.deb` (Debian/Ubuntu) or `.AppImage` (any distro)
 2. Install the application

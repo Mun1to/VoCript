@@ -7,6 +7,9 @@
 🌍 Español · [English](README.md)
 
 <p>
+  <a href="https://vocript.app">
+    <img src="https://img.shields.io/badge/web-vocript.app-3b82f6?style=for-the-badge" alt="vocript.app" />
+  </a>
   <a href="https://github.com/Mun1to/VoCript/releases/latest">
     <img src="https://img.shields.io/github/v/release/Mun1to/VoCript?label=versi%C3%B3n&style=for-the-badge&color=3b82f6" alt="Última versión" />
   </a>
