@@ -1,11 +1,15 @@
 //! Catches an installation whose updates would land in a folder nobody opens.
 //!
 //! Not hypothetical. On 2026-08-15 a machine turned up with its shortcuts
-//! pointing at one folder while `InstallLocation` in the registry pointed at
-//! another. Every update installed perfectly, into the folder nobody launched,
-//! so each reboot brought back the old version and offered the same update
-//! again. From the outside that is indistinguishable from a broken updater, and
-//! there is no way for a user to diagnose it without a registry editor.
+//! pointing at one folder while the registry pointed the installer at another.
+//! Every update installed perfectly, into the folder nobody launched, so each
+//! reboot brought back the old version and offered the same update again. From
+//! the outside that is indistinguishable from a broken updater, and there is no
+//! way for a user to diagnose it without a registry editor.
+//!
+//! The first version of this check read `InstallLocation`, which is the wrong
+//! value and let the same machine pass as healthy for another day. See
+//! `install_location_from_registry` for which value actually decides.
 //!
 //! Windows only. It is the one platform where the installer decides its target
 //! folder by reading a registry value that can drift out of sync with the
@@ -101,20 +105,41 @@ fn detect_inner() -> Option<InstallMismatch> {
 }
 
 /// Where the NSIS installer would put the next update.
+///
+/// This reads `Software\<Publisher>\<ProductName>` and NOT the `InstallLocation`
+/// under the uninstall key, which is the obvious-looking one and the wrong one.
+/// In Tauri's `installer.nsi` the target folder comes from
+/// `RestorePreviousInstallLocation`, which reads only this value:
+///
+/// ```nsi
+/// Function RestorePreviousInstallLocation
+///   ReadRegStr $4 SHCTX "${MANUPRODUCTKEY}" ""
+///   StrCmp $4 "" +2 0
+///     StrCpy $INSTDIR $4
+/// ```
+///
+/// `InstallLocation` is written beside it for the Windows "Installed apps" list
+/// and is never read back. The two can disagree, and on the machine that
+/// prompted this check they did: reading the harmless one found it matching and
+/// reported the install healthy while every update went somewhere else.
 #[cfg(target_os = "windows")]
 fn install_location_from_registry() -> Option<String> {
     use winreg::enums::{HKEY_CURRENT_USER, HKEY_LOCAL_MACHINE};
     use winreg::RegKey;
 
-    const UNINSTALL_KEY: &str = r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\VoCript";
+    // MANUPRODUCTKEY in installer.nsi is Software\${MANUFACTURER}\${PRODUCTNAME},
+    // so this pair has to keep matching `publisher` and `productName` in
+    // tauri.conf.json. Renaming either one silently blinds this check.
+    const INSTALL_DIR_KEY: &str = r"Software\VoCript\VoCript";
 
-    // Per-user first: that is what `installMode: currentUser` writes, and what
-    // the installer itself reads first when it runs again.
+    // Per-user first: that is the hive `installMode: currentUser` writes to, and
+    // the one SHCTX resolves to when the installer runs again.
     for hive in [HKEY_CURRENT_USER, HKEY_LOCAL_MACHINE] {
-        let Ok(key) = RegKey::predef(hive).open_subkey(UNINSTALL_KEY) else {
+        let Ok(key) = RegKey::predef(hive).open_subkey(INSTALL_DIR_KEY) else {
             continue;
         };
-        let Ok(raw) = key.get_value::<String, _>("InstallLocation") else {
+        // The default value of the key, written bare by `WriteRegStr ... "" $INSTDIR`.
+        let Ok(raw) = key.get_value::<String, _>("") else {
             continue;
         };
         let cleaned = unquote(&raw);
@@ -125,9 +150,10 @@ fn install_location_from_registry() -> Option<String> {
     None
 }
 
-/// Tauri's NSIS installer stores this value with the quotes *inside* the data,
-/// so the raw string reads `"C:\Program Files\VoCript"`, quote characters and
-/// all. Comparing that against a real path would never match.
+/// The install folder is written bare, but `InstallLocation` beside it carries
+/// its quotes *inside* the data (`"C:\Program Files\VoCript"`, quote characters
+/// and all). Stripping them costs nothing and keeps an entry written by an older
+/// installer, or read from the other key, from failing every comparison.
 fn unquote(raw: &str) -> &str {
     raw.trim().trim_matches('"')
 }
@@ -204,11 +230,23 @@ mod tests {
     fn manual_what_does_this_machine_say() {
         match install_location_from_registry() {
             Some(dir) => {
-                println!("InstallLocation reads: {dir}");
+                println!("Software\\VoCript\\VoCript (decides) reads: {dir}");
                 assert!(!dir.starts_with('"'), "quotes were not stripped");
                 assert!(!dir.is_empty());
             }
             None => println!("No install entry on this machine (portable, Scoop, or a dev box)"),
+        }
+
+        // Printed alongside because the two disagreeing is the whole failure,
+        // and a support log that shows only one of them cannot say so.
+        {
+            use winreg::enums::HKEY_CURRENT_USER;
+            use winreg::RegKey;
+            let shown = RegKey::predef(HKEY_CURRENT_USER)
+                .open_subkey(r"Software\Microsoft\Windows\CurrentVersion\Uninstall\VoCript")
+                .ok()
+                .and_then(|k| k.get_value::<String, _>("InstallLocation").ok());
+            println!("InstallLocation (display only) reads: {shown:?}");
         }
 
         // `detect_inner` skips the debug guard, so this exercises the whole
