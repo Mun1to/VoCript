@@ -233,6 +233,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         onClick={() => onSectionChange(section.id)}
         title={t(section.labelKey)}
         aria-current={isActive ? "page" : undefined}
+        // Lets a test reach a page without going through its translated name.
+        data-section={section.id}
         // The selected item is a tint of the accent with normal text, not a
         // solid accent pill with white on top: with a bold accent the solid
         // version was the loudest thing on screen, louder than the content.
