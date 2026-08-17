@@ -7,15 +7,28 @@
 # cuando Fedora 39 lleva una glibc por debajo del mínimo, y nadie lo había
 # comprobado en ninguna distribución.
 #
-# No hace falta pantalla. El binario resuelve sus bibliotecas al cargarse, así
-# que si falta webkit, gtk o la glibc es demasiado antigua, ni siquiera llega a
-# imprimir la ayuda de la línea de comandos. Un `--help` que responde es prueba
-# de que el enlazado entero está resuelto en esa distribución.
+# Hay DOS pruebas por paquete, y hacen falta las dos:
+#
+#   1. `--help`. El binario resuelve sus bibliotecas al cargarse, así que si
+#      falta gtk o la glibc es demasiado antigua, ni siquiera llega a imprimir
+#      la ayuda. Barata y detecta todo lo que es enlazado.
+#
+#   2. La ventana, con una pantalla virtual. `--help` NO crea ninguna ventana
+#      ni carga WebKit, y por eso esta prueba daba Fedora en verde mientras un
+#      usuario la abría y le salía en blanco (issue #7): el AppImage se lleva
+#      dentro su propio WebKitGTK con las rutas de Debian, que en Fedora están
+#      en otro sitio, y el proceso que dibuja se cae al arrancar. Un fallo que
+#      solo aparece cuando hay algo que dibujar no se ve sin dibujar.
 #
 # El segundo argumento dice si la distribución está DENTRO de lo soportado. Las
 # de fuera no se prueban para ver si funcionan, sino para ver si **fallan
 # bien**: lo que no puede pasar es que apt instale el paquete sin una queja y
 # luego el programa no arranque, que fue justo lo que hacía hasta hoy.
+#
+# La regla de aprobado en una distribución soportada es: al menos UN paquete
+# tiene que llegar a pintar la ventana. Que el AppImage no valga en Fedora es
+# aceptable mientras el rpm sí valga y sea el que se ofrece ahí; lo que no es
+# aceptable es que no valga ninguno.
 #
 # Uso (desde el contenedor, con /dist montado con los artefactos dentro):
 #   probar.sh debian|fedora|arch  si|no
@@ -26,6 +39,10 @@ familia="${1:?Falta la familia: debian, fedora o arch}"
 soportada="${2:-si}"
 dist_dir="${DIST_DIR:-/dist}"
 fallos=0
+# Cuántos paquetes han conseguido pintar la ventana en esta distribución.
+ventanas_ok=0
+# Cuántos lo han intentado, para no exigir una ventana donde no se probó nada.
+ventanas_probadas=0
 
 titulo()   { printf '\n\033[1m== %s ==\033[0m\n' "$1"; }
 # Versión de glibc más alta que exige un binario. El mensaje del cargador no
@@ -39,7 +56,84 @@ glibc_que_exige() {
 ok()       { printf '  \033[32mOK\033[0m       %s\n' "$1"; }
 falla()    { printf '  \033[31mFALLA\033[0m    %s\n' "$1"; fallos=$((fallos + 1)); }
 esperado() { printf '  \033[33mESPERADO\033[0m %s\n' "$1"; }
+aviso()    { printf '  \033[33mAVISO\033[0m    %s\n' "$1"; }
 nota()     { printf '           %s\n' "$1"; }
+
+# ---------------------------------------------------------------------------
+# ¿Llega a pintarse la ventana?
+#
+# Se arranca de verdad contra una pantalla virtual y se mira, pasados unos
+# segundos, si el proceso que dibuja el contenido sigue vivo. Esa es la
+# diferencia entre "el programa abre" y "el programa se ve": en el fallo del
+# issue #7 el proceso principal sobrevive y lo que muere es WebKitWebProcess,
+# dejando el marco vacío.
+#
+# El log se guarda entero y se busca en él la firma del fallo, para no
+# confundirlo con un contenedor sin tarjeta de sonido, que es otra cosa y da
+# otro error.
+# ---------------------------------------------------------------------------
+prueba_de_ventana() {
+  local etiqueta="$1"
+  shift
+  local log=/tmp/ventana.log
+
+  ventanas_probadas=$((ventanas_probadas + 1))
+  : >"$log"
+  # HOME propio: un primer arranque escribe configuración y no queremos que un
+  # paquete se encuentre lo que dejó el anterior. Se guarda el de antes porque
+  # esta función se llama varias veces y el directorio se borra al salir: dejar
+  # HOME apuntando a algo que ya no existe rompería la llamada siguiente.
+  local home_previo="${HOME:-/root}"
+  export HOME=/tmp/casa-$$-$ventanas_probadas
+  mkdir -p "$HOME"
+
+  xvfb-run -a --server-args="-screen 0 1280x800x24" "$@" >"$log" 2>&1 &
+  local pid=$!
+  local vivo_web="no"
+  # Hasta 40 s. Arrancar carga modelos y monta la interfaz; menos tiempo daba
+  # falsos negativos en los contenedores más lentos.
+  for _ in $(seq 1 40); do
+    sleep 1
+    if pgrep -f 'WebKitWebProcess' >/dev/null 2>&1; then
+      vivo_web="si"
+      break
+    fi
+    kill -0 "$pid" 2>/dev/null || break
+  done
+
+  # Un respiro más: lo que falla en Fedora arranca el proceso y se cae acto
+  # seguido, así que verlo nacer no basta, hay que verlo seguir vivo.
+  if [ "$vivo_web" = "si" ]; then
+    sleep 8
+    pgrep -f 'WebKitWebProcess' >/dev/null 2>&1 || vivo_web="murio"
+  fi
+
+  local firma
+  firma=$(grep -miE 'EGL_BAD_PARAMETER|Could not create default EGL|WebKitWebProcess|injectedbundle|Failed to create GBM' "$log" | head -n2)
+
+  pkill -f 'WebKitWebProcess' >/dev/null 2>&1
+  kill "$pid" >/dev/null 2>&1
+  wait "$pid" 2>/dev/null
+  rm -rf "$HOME"
+  export HOME="$home_previo"
+
+  case "$vivo_web" in
+    si)
+      ok "$etiqueta: la ventana se pinta (el proceso de WebKit sigue vivo)"
+      ventanas_ok=$((ventanas_ok + 1))
+      return 0
+      ;;
+    murio)
+      aviso "$etiqueta: el proceso de WebKit arranca y se cae, la ventana queda en blanco"
+      ;;
+    *)
+      aviso "$etiqueta: el proceso de WebKit no llega a arrancar"
+      ;;
+  esac
+  [ -n "$firma" ] && echo "$firma" | sed 's/^/           /'
+  [ -z "$firma" ] && nota "$(tail -n 2 "$log")"
+  return 1
+}
 
 titulo "Sistema"
 if command -v ldd >/dev/null 2>&1; then
@@ -67,15 +161,16 @@ case "$familia" in
     apt-cache show "$alsa" >/dev/null 2>&1 || alsa=libasound2
     apt-get install -y -qq --no-install-recommends \
       ca-certificates file binutils libwebkit2gtk-4.1-0 libgtk-3-0 \
-      libayatana-appindicator3-1 librsvg2-2 "$alsa" >/dev/null
+      libayatana-appindicator3-1 librsvg2-2 "$alsa" \
+      xvfb procps >/dev/null
     ;;
   fedora)
     dnf install -y -q webkit2gtk4.1 gtk3 libappindicator-gtk3 alsa-lib \
-      librsvg2 file binutils >/dev/null
+      librsvg2 file binutils xorg-x11-server-Xvfb procps-ng >/dev/null
     ;;
   arch)
     pacman -Sy --noconfirm --quiet webkit2gtk-4.1 gtk3 libayatana-appindicator \
-      alsa-lib librsvg file binutils >/dev/null
+      alsa-lib librsvg file binutils xorg-server-xvfb procps-ng >/dev/null
     ;;
   *)
     echo "Familia desconocida: $familia" >&2
@@ -84,7 +179,10 @@ case "$familia" in
 esac
 
 # ---------------------------------------------------------------------------
-# 1. El paquete .deb, solo donde tiene sentido
+# 1. El paquete nativo de cada familia: .deb en Debian, .rpm en Fedora.
+#
+# Los dos hacen lo mismo y por eso son los buenos: no empaquetan WebKit, lo
+# piden al sistema, así que no puede haber choque de rutas.
 # ---------------------------------------------------------------------------
 if [ "$familia" = "debian" ]; then
   deb=$(find "$dist_dir" -name '*.deb' | head -n1)
@@ -112,6 +210,7 @@ if [ "$familia" = "debian" ]; then
       if [ "$arranca" = "si" ]; then
         ok "se instala, apt resuelve sus dependencias y el programa arranca"
         [ "$soportada" = "no" ] && nota "funciona en una distribución que damos por fuera, se puede ampliar el soporte"
+        prueba_de_ventana ".deb" vocript
       else
         # El caso peor y el motivo de esta prueba: apt no protesta y el
         # usuario se queda con algo instalado que no abre.
@@ -130,6 +229,36 @@ if [ "$familia" = "debian" ]; then
         falla "apt no puede instalarlo en una distribución que sí soportamos"
       fi
       echo "$motivo" | sed 's/^/           /'
+    fi
+  fi
+fi
+
+if [ "$familia" = "fedora" ]; then
+  rpm_file=$(find "$dist_dir" -name '*.rpm' | head -n1)
+  if [ -z "$rpm_file" ]; then
+    falla ".rpm: no hay ninguno en $dist_dir"
+    nota "es el paquete que le toca a Fedora, ver el issue #7"
+  else
+    titulo "Paquete .rpm ($(basename "$rpm_file"))"
+    # Igual que con el .deb: lo que declara decide si dnf se trae webkit o si
+    # el usuario acaba con la ventana en blanco.
+    nota "Requires: $(rpm -qp --requires "$rpm_file" 2>/dev/null | tr '\n' ' ' | cut -c1-300)"
+    if dnf install -y "$rpm_file" >/tmp/dnf.log 2>&1; then
+      arranca="no"
+      timeout 60 vocript --help >/tmp/help_rpm.log 2>&1 && arranca="si"
+      if [ "$arranca" = "si" ]; then
+        ok "se instala, dnf resuelve sus dependencias y el programa arranca"
+        prueba_de_ventana ".rpm" vocript
+      else
+        falla "dnf lo instala sin quejarse y luego el programa NO arranca"
+        nota "$(tail -n 2 /tmp/help_rpm.log)"
+      fi
+    elif [ "$soportada" = "no" ]; then
+      esperado "dnf lo rechaza antes de instalar nada, que es lo correcto aquí"
+      nota "$(tail -n 3 /tmp/dnf.log)"
+    else
+      falla "dnf no puede instalarlo en una distribución que sí soportamos"
+      nota "$(tail -n 3 /tmp/dnf.log)"
     fi
   fi
 fi
@@ -173,6 +302,13 @@ else
       fi
       if timeout 60 "$binario" --help >/tmp/help2.log 2>&1; then
         ok "el binario del AppImage arranca (--help responde)"
+        # La ventana se prueba por el AppRun, no por el binario suelto: es el
+        # AppRun el que coloca las rutas del WebKit empaquetado, que es justo
+        # lo que se rompe en Fedora.
+        if [ "$soportada" = "si" ]; then
+          prueba_de_ventana "AppImage" /tmp/squashfs-root/AppRun ||
+            nota "en esta distribución el paquete recomendado es el nativo, no el AppImage"
+        fi
       elif [ "$soportada" = "no" ]; then
         esperado "no arranca, como corresponde a una distribución por debajo del mínimo"
         nota "$(grep -m1 GLIBC /tmp/help2.log || tail -n 1 /tmp/help2.log)"
@@ -186,10 +322,18 @@ else
   fi
 fi
 
+# ---------------------------------------------------------------------------
+# 3. El veredicto sobre la ventana, que es lo que ve el usuario.
+# ---------------------------------------------------------------------------
+if [ "$soportada" = "si" ] && [ "$ventanas_probadas" -gt 0 ] && [ "$ventanas_ok" -eq 0 ]; then
+  falla "ningún paquete llega a pintar la ventana en esta distribución"
+  nota "el programa arranca pero el usuario ve el marco vacío, que es el issue #7"
+fi
+
 titulo "Resultado"
 if [ "$fallos" -eq 0 ]; then
   if [ "$soportada" = "si" ]; then
-    ok "VoCript funciona en esta distribución"
+    ok "VoCript funciona en esta distribución ($ventanas_ok de $ventanas_probadas paquetes pintan la ventana)"
   else
     ok "queda fuera del soporte y falla de forma limpia, sin engañar a nadie"
   fi

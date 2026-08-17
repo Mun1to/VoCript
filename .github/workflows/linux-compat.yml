@@ -94,21 +94,26 @@ jobs:
             # El artefacto conserva el árbol de carpetas del bundler, y el
             # script busca por nombre en cualquier nivel, pero se aplana para
             # que el log se lea de un vistazo.
-            find dist -type f \( -name '*.deb' -o -name '*.AppImage' \) -exec mv -t dist {} +
+            find dist -type f \( -name '*.deb' -o -name '*.AppImage' -o -name '*.rpm' \) -exec mv -t dist {} +
           else
             TAG="${{ inputs.tag }}"
             if [ -z "$TAG" ]; then
               TAG=$(gh release view --json tagName -q .tagName)
             fi
             echo "Probando $TAG"
-            # Solo las copias de nombre fijo y el .deb: bajar además los archivos
-            # versionados duplicaría 121 MB por cada distribución de la matriz.
+            # Solo las copias de nombre fijo, el .deb y el .rpm: bajar además
+            # los archivos versionados duplicaría 121 MB por cada distribución.
+            # El rpm puede no existir en releases anteriores a la 3.7.4, y su
+            # ausencia la reporta el script en la fila de Fedora, que es donde
+            # importa, en vez de tumbar la descarga entera aquí.
             gh release download "$TAG" \
               --pattern "VoCript-x86_64.AppImage" \
               --pattern "*_amd64.deb" \
               --dir dist --clobber
+            gh release download "$TAG" --pattern "*.x86_64.rpm" --dir dist --clobber ||
+              echo "esta versión no publicó ningún .rpm"
           fi
-          ls -lh dist/*.deb dist/*.AppImage
+          ls -lh dist/
 
       # `shell: bash` en lugar del shell por defecto: trae `-o pipefail`, sin el
       # cual el código de salida del pipe es el de `tee` (siempre 0) y una
