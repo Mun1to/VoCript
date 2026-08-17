@@ -65,6 +65,14 @@ jobs:
             imagen: fedora:41
             familia: fedora
             soportada: "si"
+          # La 44 entró por el issue #7: quien lo reportó va en esa, y probar
+          # solo la 41 no dice nada sobre ella. Fedora lleva años empujando de
+          # webkit2gtk4.1 (GTK3) a webkitgtk6.0 (GTK4), y el día que retire el
+          # viejo, el rpm dejará de instalarse sin que nadie lo note.
+          - nombre: Fedora 44
+            imagen: fedora:44
+            familia: fedora
+            soportada: "si"
           - nombre: Arch Linux
             imagen: archlinux:latest
             familia: arch
