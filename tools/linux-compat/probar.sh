@@ -109,7 +109,7 @@ prueba_de_ventana() {
   fi
 
   local firma
-  firma=$(grep -miE 'EGL_BAD_PARAMETER|Could not create default EGL|WebKitWebProcess|injectedbundle|Failed to create GBM' "$log" | head -n2)
+  firma=$(grep -iE 'EGL_BAD_PARAMETER|Could not create default EGL|WebKitWebProcess|injectedbundle|Failed to create GBM' "$log" | head -n2)
 
   pkill -f 'WebKitWebProcess' >/dev/null 2>&1
   kill "$pid" >/dev/null 2>&1
@@ -162,7 +162,11 @@ case "$familia" in
     apt-get install -y -qq --no-install-recommends \
       ca-certificates file binutils libwebkit2gtk-4.1-0 libgtk-3-0 \
       libayatana-appindicator3-1 librsvg2-2 "$alsa" \
-      xvfb procps >/dev/null
+      xvfb xauth procps >/dev/null
+    # xauth va explícito: en Debian 13 dejó de ser dependencia dura de xvfb y
+    # pasó a recomendación, así que con --no-install-recommends no entraba y
+    # `xvfb-run` moría con "xauth command not found" antes de abrir pantalla.
+    # Se leía como que la app no pintaba la ventana, y era la prueba la rota.
     ;;
   fedora)
     # Aquí SOLO las herramientas de la prueba, ni una biblioteca de escritorio.
