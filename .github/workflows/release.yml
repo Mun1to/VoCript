@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Descargar el código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Instalar Bun
         uses: oven-sh/setup-bun@v2
@@ -162,7 +162,7 @@ jobs:
 
     steps:
       - name: Descargar el código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Instalar Bun
         uses: oven-sh/setup-bun@v2
@@ -260,7 +260,7 @@ jobs:
 
     steps:
       - name: Descargar el código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Instalar Bun
         uses: oven-sh/setup-bun@v2
