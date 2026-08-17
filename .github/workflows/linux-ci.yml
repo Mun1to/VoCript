@@ -78,7 +78,18 @@ jobs:
           # updater (createUpdaterArtifacts está activo en tauri.conf.json).
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-        run: bun run tauri build --bundles deb,appimage
+        run: bun run tauri build --bundles deb,appimage,rpm
+
+      # Lo que el rpm declara necesitar, a la vista en el log. En Fedora los
+      # paquetes no se llaman como en Debian, así que esta lista es la que dice
+      # si dnf va a traerse webkit al instalarlo o si el usuario se va a quedar
+      # con la ventana en blanco del issue #7.
+      - name: Qué exige el rpm
+        run: |
+          sudo apt-get install -y -qq rpm
+          rpm_file=$(find vocript-src/src-tauri/target/release/bundle/rpm -name '*.rpm' | head -n1)
+          echo "paquete: $(basename "$rpm_file")"
+          rpm -qp --requires "$rpm_file"
 
       - name: Ejecutar los tests de Rust
         working-directory: vocript-src/src-tauri
@@ -91,4 +102,5 @@ jobs:
           path: |
             vocript-src/src-tauri/target/release/bundle/deb/*.deb
             vocript-src/src-tauri/target/release/bundle/appimage/*.AppImage
+            vocript-src/src-tauri/target/release/bundle/rpm/*.rpm
           if-no-files-found: error
