@@ -56,7 +56,7 @@
           "type": "none"
         },
         "depends": [
-          "glibc >= 2.39",
+          "libc.so.6(GLIBC_2.39)(64bit)",
           "libasound.so.2()(64bit)",
           "libgtk-layer-shell.so.0()(64bit)"
         ],
