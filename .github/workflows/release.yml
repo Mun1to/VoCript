@@ -230,10 +230,12 @@ jobs:
           releaseDraft: false
           prerelease: false
           includeUpdaterJson: true
-          # deb y AppImage, no rpm: son los dos formatos que cubren
-          # prácticamente cualquier distribución, y el AppImage es además el
-          # que usa el auto-updater en Linux.
-          args: --bundles deb,appimage
+          # El AppImage es el que usa el auto-updater en Linux, y los dos
+          # nativos son los que instalan bien en su familia. El rpm entró en la
+          # 3.7.4 por el issue #7: en Fedora, el AppImage se lleva dentro su
+          # propio WebKit y el nativo usa el del sistema, que es lo que hay que
+          # ofrecerle a quien usa esa familia.
+          args: --bundles deb,appimage,rpm
 
       # Copia con nombre fijo, igual que el .exe de Windows, para que el enlace
       # de descarga del README no dependa del número de versión.
@@ -244,6 +246,14 @@ jobs:
           appimage=$(find vocript-src/src-tauri/target/release/bundle/appimage -maxdepth 1 -name "*.AppImage" | head -n1)
           cp "$appimage" VoCript-x86_64.AppImage
           gh release upload "${{ github.ref_name }}" VoCript-x86_64.AppImage --clobber --repo ${{ github.repository }}
+
+      - name: Subir copia del rpm con nombre fijo
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rpm=$(find vocript-src/src-tauri/target/release/bundle/rpm -maxdepth 1 -name "*.rpm" | head -n1)
+          cp "$rpm" VoCript-x86_64.rpm
+          gh release upload "${{ github.ref_name }}" VoCript-x86_64.rpm --clobber --repo ${{ github.repository }}
 
   build-macos:
     permissions:
