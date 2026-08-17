@@ -74,7 +74,14 @@ chmod +x VoCript-x86_64.AppImage
 ./VoCript-x86_64.AppImage
 ```
 
-There is also a `.deb` on the [Releases page](https://github.com/Mun1to/VoCript/releases/latest) for Debian and Ubuntu (`sudo apt install ./VoCript_*.deb`).
+There are also native packages: a `.deb` for Debian and Ubuntu on the
+[Releases page](https://github.com/Mun1to/VoCript/releases/latest)
+(`sudo apt install ./VoCript_*.deb`), and an
+**[.rpm](https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-x86_64.rpm)**
+for Fedora (`sudo dnf install ./VoCript-x86_64.rpm`).
+
+On Fedora, pick the `.rpm`: it uses the WebKit your system already has instead
+of carrying its own, which is where the AppImage runs into trouble there.
 
 > **Needs a reasonably current distro**: glibc 2.39 or newer (Ubuntu 24.04+,
 > Debian 13, Fedora 40+, Arch). The speech engines ship as prebuilt binaries

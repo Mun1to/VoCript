@@ -75,7 +75,14 @@ chmod +x VoCript-x86_64.AppImage
 ./VoCript-x86_64.AppImage
 ```
 
-En la [página de Releases](https://github.com/Mun1to/VoCript/releases/latest) también hay un `.deb` para Debian y Ubuntu (`sudo apt install ./VoCript_*.deb`).
+También hay paquetes nativos: un `.deb` para Debian y Ubuntu en la
+[página de Releases](https://github.com/Mun1to/VoCript/releases/latest)
+(`sudo apt install ./VoCript_*.deb`), y un
+**[.rpm](https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-x86_64.rpm)**
+para Fedora (`sudo dnf install ./VoCript-x86_64.rpm`).
+
+En Fedora, elige el `.rpm`: usa el WebKit que ya tiene tu sistema en vez de
+traer el suyo, que es donde el AppImage se complica ahí.
 
 > **Necesita una distribución razonablemente actual**: glibc 2.39 o superior
 > (Ubuntu 24.04+, Debian 13, Fedora 40+, Arch). Los motores de reconocimiento
