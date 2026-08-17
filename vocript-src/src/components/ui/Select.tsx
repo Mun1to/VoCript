@@ -160,6 +160,12 @@ export const Select: React.FC<SelectProps> = React.memo(
       onBlur,
       isClearable,
       styles: selectStyles,
+      // Settings scroll inside a panel, so a control sitting near its bottom
+      // had its list open downwards into the edge and lose the options past
+      // it. `auto` flips the list above the control when that is where the
+      // room is, the way every other dropdown in the app already works.
+      menuPlacement: "auto",
+      menuShouldScrollIntoView: false,
     };
 
     if (isCreatable) {
