@@ -72,7 +72,7 @@ jobs:
 
     steps:
       - name: Descargar el código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # Con `run_id` se prueban los paquetes de un build de CI, es decir ANTES
       # de publicar nada. Es la forma de comprobar un cambio de empaquetado sin
