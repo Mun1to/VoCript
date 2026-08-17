@@ -55,6 +55,11 @@
         "compression": {
           "type": "none"
         },
+        "depends": [
+          "glibc >= 2.39",
+          "libasound.so.2()(64bit)",
+          "libgtk-layer-shell.so.0()(64bit)"
+        ],
         "files": {
           "/usr/lib/VoCript": "transcribe-libs"
         }

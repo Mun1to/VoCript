@@ -165,8 +165,13 @@ case "$familia" in
       xvfb procps >/dev/null
     ;;
   fedora)
-    dnf install -y -q webkit2gtk4.1 gtk3 libappindicator-gtk3 alsa-lib \
-      librsvg2 file binutils xorg-x11-server-Xvfb procps-ng >/dev/null
+    # Aquí SOLO las herramientas de la prueba, ni una biblioteca de escritorio.
+    # Es a propósito y es la única forma de que el rpm demuestre algo: en un
+    # contenedor donde webkit ya está puesto a mano, un rpm que no declarase
+    # nada se instalaría y arrancaría igual, y pasaría por bueno hasta que
+    # alguien lo instalase en su Fedora de verdad. Las bibliotecas se instalan
+    # más abajo, después del rpm y antes del AppImage.
+    dnf install -y -q file binutils xorg-x11-server-Xvfb procps-ng >/dev/null
     ;;
   arch)
     pacman -Sy --noconfirm --quiet webkit2gtk-4.1 gtk3 libayatana-appindicator \
@@ -261,6 +266,15 @@ if [ "$familia" = "fedora" ]; then
       nota "$(tail -n 3 /tmp/dnf.log)"
     fi
   fi
+fi
+
+# En Fedora el contenedor llegó pelado para que el rpm se examinara solo. El
+# AppImage no declara nada a nadie, así que a partir de aquí se le da el
+# escritorio que tendría cualquiera, o fallaría por falta de bibliotecas en
+# vez de por lo que se quiere medir.
+if [ "$familia" = "fedora" ]; then
+  dnf install -y -q webkit2gtk4.1 gtk3 libappindicator-gtk3 alsa-lib \
+    librsvg2 gtk-layer-shell >/dev/null 2>&1
 fi
 
 # ---------------------------------------------------------------------------
