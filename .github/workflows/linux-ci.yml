@@ -85,7 +85,7 @@ jobs:
         run: cargo test --lib
 
       - name: Guardar los bundles como artefactos
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: vocript-linux-bundles
           path: |
