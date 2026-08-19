@@ -165,11 +165,13 @@ pub fn update_tray_menu(app: &AppHandle, state: &TrayIconState, locale: Option<&
         settings_accelerator,
     )
     .expect("failed to create settings item");
+    // Greyed out for a Store install: that copy is updated by the Store and must
+    // not go looking for installers of its own (see packaged.rs).
     let check_updates_i = MenuItem::with_id(
         app,
         "check_updates",
         &strings.check_updates,
-        settings.update_checks_enabled,
+        settings.update_checks_enabled && !crate::packaged::is_packaged(),
         None::<&str>,
     )
     .expect("failed to create check updates item");
@@ -488,7 +490,8 @@ pub fn handle_tray_action(app: &AppHandle, id: &str) {
             crate::show_main_window(app);
         }
         "check_updates" => {
-            if settings::get_settings(app).update_checks_enabled {
+            if settings::get_settings(app).update_checks_enabled && !crate::packaged::is_packaged()
+            {
                 crate::show_main_window(app);
                 let _ = app.emit("check-for-updates", ());
             }

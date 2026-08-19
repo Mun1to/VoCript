@@ -4,6 +4,7 @@ import { getVersion } from "@tauri-apps/api/app";
 import { useTranslation } from "react-i18next";
 import { HelpCircle } from "lucide-react";
 
+import { commands } from "@/bindings";
 import ModelSelector from "../model-selector";
 import UpdateChecker from "../update-checker";
 import { useTourStore } from "../../stores/tourStore";
@@ -15,6 +16,16 @@ const Footer: React.FC = () => {
   const isLight = useResolvedTheme() === "light";
   const startTour = useTourStore((state) => state.start);
   const [version, setVersion] = useState("");
+  // A Store install is updated by the Store, so it must not offer a check of
+  // its own; the whole control goes away rather than sitting there greyed out.
+  const [packaged, setPackaged] = useState(false);
+
+  useEffect(() => {
+    commands
+      .isPackaged()
+      .then(setPackaged)
+      .catch(() => setPackaged(false));
+  }, []);
 
   useEffect(() => {
     const fetchVersion = async () => {
@@ -59,8 +70,12 @@ const Footer: React.FC = () => {
             </button>
           </HoverTooltip>
           <span className="opacity-40">•</span>
-          <UpdateChecker />
-          <span className="opacity-40">•</span>
+          {!packaged && (
+            <>
+              <UpdateChecker />
+              <span className="opacity-40">•</span>
+            </>
+          )}
           <span
             className={`font-mono text-[11px] px-2 py-0.5 rounded-md border ${
               isLight

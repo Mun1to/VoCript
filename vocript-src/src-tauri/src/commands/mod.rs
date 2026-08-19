@@ -21,6 +21,14 @@ pub fn is_portable() -> bool {
     crate::portable::is_portable()
 }
 
+/// True when this copy came from the Microsoft Store. The Store manages its
+/// own updates, so the app must not offer or perform any of its own.
+#[tauri::command]
+#[specta::specta]
+pub fn is_packaged() -> bool {
+    crate::packaged::is_packaged()
+}
+
 /// `None` when this copy and the installer agree on where the app lives, which
 /// is the normal case. See install_check.rs for what a mismatch means.
 #[tauri::command]

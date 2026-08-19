@@ -86,6 +86,13 @@ fn detect_inner() -> Option<InstallMismatch> {
         return None;
     }
 
+    // A Store install never updates through this path, and a leftover registry
+    // key from an older plain install would otherwise make it warn that updates
+    // go somewhere else - true, and completely irrelevant to this copy.
+    if crate::packaged::is_packaged() {
+        return None;
+    }
+
     let exe = std::env::current_exe().ok()?;
     let running_from = exe.parent()?.to_path_buf();
 

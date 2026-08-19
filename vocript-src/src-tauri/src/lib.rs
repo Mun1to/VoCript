@@ -15,6 +15,7 @@ mod llm_client;
 mod managers;
 mod media_source;
 mod overlay;
+pub mod packaged;
 pub mod portable;
 mod settings;
 mod shortcut;
@@ -596,6 +597,7 @@ pub fn run(cli_args: CliArgs) {
             show_main_window_command,
             commands::cancel_operation,
             commands::is_portable,
+            commands::is_packaged,
             commands::install_location_mismatch,
             commands::install_paths,
             commands::get_app_dir_path,

@@ -57,6 +57,15 @@ fn remember(found: Option<String>) -> bool {
 /// the alternative needs tokio's `time` feature, and a sleeping OS thread costs
 /// nothing measurable next to the WebView2 processes this app already runs.
 pub fn start(app: &AppHandle) {
+    // A Store install updates through the Store. Its own folder is read-only,
+    // so an update applied from here would land a second, unmanaged copy
+    // somewhere else on the machine, and fetching an installer from outside the
+    // Store is not something a packaged app is allowed to do either.
+    if crate::packaged::is_packaged() {
+        log::info!("Daily update check: skipped, this copy is managed by the Store");
+        return;
+    }
+
     let app = app.clone();
     std::thread::spawn(move || {
         std::thread::sleep(FIRST_CHECK_DELAY);

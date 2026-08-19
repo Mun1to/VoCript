@@ -643,6 +643,13 @@ async isPortable() : Promise<boolean> {
     return await TAURI_INVOKE("is_portable");
 },
 /**
+ * True when this copy came from the Microsoft Store. The Store manages its
+ * own updates, so the app must not offer or perform any of its own.
+ */
+async isPackaged() : Promise<boolean> {
+    return await TAURI_INVOKE("is_packaged");
+},
+/**
  * `None` when this copy and the installer agree on where the app lives, which
  * is the normal case. See install_check.rs for what a mismatch means.
  */
