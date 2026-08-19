@@ -26,6 +26,10 @@ fn main() {
     // the static macOS `metal` build, where there is nothing to ship.
     stage_transcribe_runtime_libs();
 
+    // Those DLLs import the dynamic MSVC runtime, which is not part of a clean
+    // Windows. Ship it next to them.
+    stage_msvc_runtime_dlls();
+
     tauri_build::build()
 }
 
@@ -171,6 +175,156 @@ fn split_versioned_so(name: &str) -> Option<(&str, usize)> {
         .iter()
         .all(|c| !c.is_empty() && c.bytes().all(|b| b.is_ascii_digit()))
         .then_some((stem, comps.len()))
+}
+
+/// Windows only: stage the MSVC runtime DLLs next to the transcribe-cpp ones.
+///
+/// Every `transcribe.dll` / `ggml*.dll` staged above imports `MSVCP140.dll`,
+/// `VCRUNTIME140.dll` and `VCRUNTIME140_1.dll` (checked with
+/// `dumpbin /dependents`). Those ship in the Visual C++ Redistributable, which
+/// a clean Windows does NOT have, so the installed app died at startup with
+/// "The code execution cannot proceed because MSVCP140.dll was not found"
+/// before drawing a single window. Store certification caught it on a stock
+/// Surface (policy 10.2.4.1 "undisclosed dependency"), and the plain NSIS
+/// installer carried the same hole since the transcribe-cpp engine landed in
+/// v3.5.5 — it only ever worked because most machines already have the
+/// redistributable from some other program.
+///
+/// App-local deployment is the supported fix: the loader searches the
+/// executable's own directory before the system one, so a copy sitting beside
+/// the exe wins and nothing has to be installed alongside. Redistributing
+/// these files is covered by the Visual Studio distributable-code terms.
+fn stage_msvc_runtime_dlls() {
+    use std::path::PathBuf;
+
+    if std::env::var("CARGO_CFG_TARGET_OS").as_deref() != Ok("windows") {
+        return;
+    }
+
+    // Exactly what the staged DLLs import: msvcp140 pulls in the two vcruntime
+    // ones, and everything else they need is the UCRT, which every supported
+    // Windows already carries in System32.
+    const NEEDED: &[&str] = &["msvcp140.dll", "vcruntime140.dll", "vcruntime140_1.dll"];
+
+    println!("cargo:rerun-if-env-changed=VOCRIPT_ALLOW_MISSING_MSVC_RUNTIME");
+    let allow_missing = std::env::var_os("VOCRIPT_ALLOW_MISSING_MSVC_RUNTIME").is_some();
+
+    let arch = match std::env::var("CARGO_CFG_TARGET_ARCH").as_deref() {
+        Ok("aarch64") => "arm64",
+        _ => "x64",
+    };
+
+    let Some(crt_dir) = find_msvc_redist_dir(arch) else {
+        // A missing runtime only becomes a broken package when that package is
+        // the one users install, so a release build stops here and a dev build
+        // just says so: the developer's own machine has the redistributable.
+        let msg = format!(
+            "cannot find the Visual C++ redistributable DLLs for {arch} (looked at \
+             VCToolsRedistDir and at the install vswhere reports). Without them the \
+             packaged app dies at startup with \"MSVCP140.dll was not found\" on any \
+             Windows that does not already carry the redistributable."
+        );
+        if std::env::var("PROFILE").as_deref() == Ok("release") && !allow_missing {
+            panic!(
+                "{msg} Install the \"MSVC v143 build tools\" component of Visual Studio, \
+                 or set VOCRIPT_ALLOW_MISSING_MSVC_RUNTIME=1 to build a package that only \
+                 runs where the redistributable is already present."
+            );
+        }
+        println!("cargo:warning={msg}");
+        return;
+    };
+
+    println!("cargo:rerun-if-changed={}", crt_dir.display());
+    let dest = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").unwrap()).join("transcribe-libs");
+    std::fs::create_dir_all(&dest).expect("create transcribe-libs staging dir");
+    for name in NEEDED {
+        let src = crt_dir.join(name);
+        std::fs::copy(&src, dest.join(name))
+            .unwrap_or_else(|e| panic!("copy {}: {e}", src.display()));
+    }
+    println!(
+        "cargo:warning=Staged {} MSVC runtime DLL(s) from {}",
+        NEEDED.len(),
+        crt_dir.display()
+    );
+}
+
+/// Locate the `Microsoft.VC<toolset>.CRT` directory of the newest Visual C++
+/// redistributable on this machine, for the given architecture directory name
+/// (`x64` / `arm64`).
+fn find_msvc_redist_dir(arch: &str) -> Option<std::path::PathBuf> {
+    use std::path::{Path, PathBuf};
+
+    // A developer command prompt exports the redist root directly.
+    if let Some(dir) = std::env::var_os("VCToolsRedistDir") {
+        if let Some(found) = msvc_crt_subdir(&PathBuf::from(dir).join(arch)) {
+            return Some(found);
+        }
+    }
+
+    // Otherwise ask vswhere, which every Visual Studio since 2017 installs at a
+    // fixed path regardless of where VS itself went.
+    let program_files = std::env::var("ProgramFiles(x86)")
+        .unwrap_or_else(|_| r"C:\Program Files (x86)".to_string());
+    let vswhere = Path::new(&program_files).join(r"Microsoft Visual Studio\Installer\vswhere.exe");
+    let output = std::process::Command::new(vswhere)
+        .args([
+            "-latest",
+            "-products",
+            "*",
+            "-property",
+            "installationPath",
+            "-utf8",
+        ])
+        .output()
+        .ok()?;
+    let install = String::from_utf8_lossy(&output.stdout).trim().to_string();
+    if install.is_empty() {
+        return None;
+    }
+    let redist_root = Path::new(&install).join(r"VC\Redist\MSVC");
+
+    // VS names a default redist version in a text file, but that file and the
+    // directories on disk drift apart after some updates, so the highest
+    // version actually present is kept as a fallback.
+    let mut candidates: Vec<PathBuf> = Vec::new();
+    let default_version =
+        Path::new(&install).join(r"VC\Auxiliary\Build\Microsoft.VCRedistVersion.default.txt");
+    if let Ok(version) = std::fs::read_to_string(&default_version) {
+        candidates.push(redist_root.join(version.trim()));
+    }
+    if let Ok(entries) = std::fs::read_dir(&redist_root) {
+        let mut versions: Vec<PathBuf> = entries
+            .flatten()
+            .map(|e| e.path())
+            .filter(|p| p.is_dir())
+            .collect();
+        versions.sort();
+        candidates.extend(versions.into_iter().rev());
+    }
+    candidates
+        .into_iter()
+        .find_map(|c| msvc_crt_subdir(&c.join(arch)))
+}
+
+/// The CRT sits in a toolset-stamped subdirectory (`Microsoft.VC143.CRT` today,
+/// a higher number after the next toolset), so match the shape of the name
+/// rather than hardcoding the number, and take the highest one present.
+fn msvc_crt_subdir(arch_dir: &std::path::Path) -> Option<std::path::PathBuf> {
+    let mut hits: Vec<std::path::PathBuf> = std::fs::read_dir(arch_dir)
+        .ok()?
+        .flatten()
+        .map(|e| e.path())
+        .filter(|p| {
+            p.is_dir()
+                && p.file_name()
+                    .and_then(|n| n.to_str())
+                    .is_some_and(|n| n.starts_with("Microsoft.VC") && n.ends_with(".CRT"))
+        })
+        .collect();
+    hits.sort();
+    hits.pop()
 }
 
 /// Generate tray menu translations from frontend locale files.
