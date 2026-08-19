@@ -82,7 +82,8 @@
     "latest": {
       "title": "Điều bạn đọc gần đây nhất",
       "empty": "Chưa có gì. Những gì bạn đọc sẽ hiện ở đây.",
-      "seeAll": "Xem toàn bộ lịch sử"
+      "seeAll": "Xem toàn bộ lịch sử",
+      "report": "Báo lỗi với văn bản này"
     }
   },
   "onboarding": {
@@ -790,6 +791,7 @@
       "copyToClipboard": "Sao chép bản ghi vào clipboard",
       "save": "Lưu bản ghi",
       "unsave": "Xóa khỏi đã lưu",
+      "reportOutput": "Báo lỗi văn bản này",
       "delete": "Xóa mục",
       "deleteError": "Không thể xóa mục. Vui lòng thử lại.",
       "retranscribe": "Phiên âm lại",

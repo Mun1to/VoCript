@@ -82,7 +82,8 @@
     "latest": {
       "title": "En son dikte ettiğin",
       "empty": "Henüz yok. Dikte ettiğin şeyler burada görünür.",
-      "seeAll": "Tüm geçmişi gör"
+      "seeAll": "Tüm geçmişi gör",
+      "report": "Bu metinle ilgili sorun bildir"
     }
   },
   "onboarding": {
@@ -790,6 +791,7 @@
       "copyToClipboard": "Transkripsiyonu panoya kopyala",
       "save": "Transkripsiyonu kaydet",
       "unsave": "Kaydedilenlerden kaldır",
+      "reportOutput": "Bu metni bildir",
       "delete": "Kaydı sil",
       "deleteError": "Kayıt silinemedi. Lütfen tekrar deneyin.",
       "retranscribe": "Yeniden yazıya dök",

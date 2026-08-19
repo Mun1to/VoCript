@@ -82,7 +82,8 @@
     "latest": {
       "title": "Zuletzt diktiert",
       "empty": "Noch nichts. Was du diktierst, erscheint hier.",
-      "seeAll": "Ganzen Verlauf ansehen"
+      "seeAll": "Ganzen Verlauf ansehen",
+      "report": "Problem mit diesem Text melden"
     }
   },
   "onboarding": {
@@ -790,6 +791,7 @@
       "copyToClipboard": "Transkription in Zwischenablage kopieren",
       "save": "Transkription speichern",
       "unsave": "Aus Gespeicherten entfernen",
+      "reportOutput": "Diesen Text melden",
       "delete": "Eintrag löschen",
       "deleteError": "Eintrag konnte nicht gelöscht werden. Bitte versuche es erneut.",
       "retranscribe": "Erneut transkribieren",

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Flame, Mic } from "lucide-react";
+import { Flag, Flame, Mic } from "lucide-react";
 import {
   commands,
   events,
@@ -18,6 +18,7 @@ import {
 import { formatKeyCombination } from "../../lib/utils/keyboard";
 import { formatRelativeTime } from "../../utils/dateFormat";
 import { countWords } from "../../lib/utils/text";
+import { reportAiOutput } from "../../lib/utils/reportAiOutput";
 import { ActivityHeatmap } from "../settings/activity/ActivityHeatmap";
 import type { SidebarSection } from "../Sidebar";
 
@@ -366,13 +367,25 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
                   );
                 })}
               </ul>
-              <button
-                type="button"
-                onClick={() => onNavigate?.("history")}
-                className="mt-3 text-[12px] font-medium text-accent hover:underline"
-              >
-                {t("today.latest.seeAll")}
-              </button>
+              <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
+                <button
+                  type="button"
+                  onClick={() => onNavigate?.("history")}
+                  className="text-[12px] font-medium text-accent hover:underline"
+                >
+                  {t("today.latest.seeAll")}
+                </button>
+                {/* Reporting text a model got wrong belongs next to that text,
+                    not buried in Settings (Microsoft Store policy 11.16). */}
+                <button
+                  type="button"
+                  onClick={reportAiOutput}
+                  className="flex items-center gap-1.5 text-[12px] font-medium text-[var(--vc-text-muted)] hover:text-accent hover:underline"
+                >
+                  <Flag className="h-3 w-3" />
+                  {t("today.latest.report")}
+                </button>
+              </div>
             </>
           )}
         </div>

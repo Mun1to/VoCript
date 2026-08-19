@@ -82,7 +82,8 @@
     "latest": {
       "title": "Det senaste du dikterade",
       "empty": "Inget än. Det du dikterar dyker upp här.",
-      "seeAll": "Visa hela historiken"
+      "seeAll": "Visa hela historiken",
+      "report": "Rapportera ett problem med den här texten"
     }
   },
   "onboarding": {
@@ -790,6 +791,7 @@
       "copyToClipboard": "Kopiera transkription till urklipp",
       "save": "Spara transkription",
       "unsave": "Ta bort från sparade",
+      "reportOutput": "Rapportera den här texten",
       "delete": "Ta bort post",
       "deleteError": "Misslyckades med att ta bort post. Försök igen.",
       "retranscribe": "Transkribera igen",

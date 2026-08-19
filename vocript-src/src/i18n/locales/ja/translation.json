@@ -82,7 +82,8 @@
     "latest": {
       "title": "最近口述したもの",
       "empty": "まだありません。口述するとここに出ます。",
-      "seeAll": "履歴をすべて見る"
+      "seeAll": "履歴をすべて見る",
+      "report": "このテキストの問題を報告"
     }
   },
   "onboarding": {
@@ -790,6 +791,7 @@
       "copyToClipboard": "文字起こしをクリップボードにコピー",
       "save": "文字起こしを保存",
       "unsave": "保存から削除",
+      "reportOutput": "このテキストを報告",
       "delete": "エントリーを削除",
       "deleteError": "エントリーの削除に失敗しました。もう一度お試しください。",
       "retranscribe": "再文字起こし",

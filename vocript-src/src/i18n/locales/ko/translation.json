@@ -82,7 +82,8 @@
     "latest": {
       "title": "마지막으로 받아쓴 것",
       "empty": "아직 없어요. 받아쓰면 여기에 나타납니다.",
-      "seeAll": "기록 전체 보기"
+      "seeAll": "기록 전체 보기",
+      "report": "이 텍스트의 문제 알리기"
     }
   },
   "onboarding": {
@@ -790,6 +791,7 @@
       "copyToClipboard": "녹음 내용을 클립보드에 복사",
       "save": "변환된 텍스트 저장",
       "unsave": "저장에서 제거",
+      "reportOutput": "이 텍스트 알리기",
       "delete": "항목 삭제",
       "deleteError": "항목 삭제에 실패했습니다. 다시 시도해주세요.",
       "retranscribe": "다시 전사",

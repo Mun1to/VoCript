@@ -1,5 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Check, Copy, FolderOpen, RotateCcw, Star, Trash2 } from "lucide-react";
+import {
+  Check,
+  Copy,
+  Flag,
+  FolderOpen,
+  RotateCcw,
+  Star,
+  Trash2,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import {
@@ -9,6 +17,7 @@ import {
   type HistoryUpdatePayload,
 } from "@/bindings";
 import { formatDateTime } from "@/utils/dateFormat";
+import { reportAiOutput } from "@/lib/utils/reportAiOutput";
 import { AudioPlayer } from "../../ui/AudioPlayer";
 import { Button } from "../../ui/Button";
 
@@ -403,6 +412,13 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
                   : undefined
               }
             />
+          </IconButton>
+          <IconButton
+            onClick={reportAiOutput}
+            disabled={!hasTranscription || retrying}
+            title={t("settings.history.reportOutput")}
+          >
+            <Flag width={16} height={16} />
           </IconButton>
           <IconButton
             onClick={handleDeleteEntry}

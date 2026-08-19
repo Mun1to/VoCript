@@ -113,7 +113,8 @@
     "latest": {
       "title": "The last thing you dictated",
       "empty": "Nothing yet. What you dictate shows up here.",
-      "seeAll": "See the whole history"
+      "seeAll": "See the whole history",
+      "report": "Report a problem with this text"
     }
   },
   "onboarding": {
@@ -854,6 +855,7 @@
       "copyToClipboard": "Copy transcription to clipboard",
       "save": "Save transcription",
       "unsave": "Remove from saved",
+      "reportOutput": "Report this text",
       "delete": "Delete entry",
       "deleteError": "Failed to delete entry. Please try again.",
       "retranscribe": "Re-transcribe",

@@ -82,7 +82,8 @@
     "latest": {
       "title": "A última coisa que ditaste",
       "empty": "Ainda nada. O que ditares aparece aqui.",
-      "seeAll": "Ver todo o histórico"
+      "seeAll": "Ver todo o histórico",
+      "report": "Comunicar um problema com este texto"
     }
   },
   "onboarding": {
@@ -790,6 +791,7 @@
       "copyToClipboard": "Copiar transcrição para área de transferência",
       "save": "Salvar transcrição",
       "unsave": "Remover dos salvos",
+      "reportOutput": "Comunicar este texto",
       "delete": "Excluir entrada",
       "deleteError": "Falha ao excluir entrada. Por favor, tente novamente.",
       "retranscribe": "Re-transcrever",

@@ -82,7 +82,8 @@
     "latest": {
       "title": "你最近口述的",
       "empty": "還沒有。你口述的內容會出現在這裡。",
-      "seeAll": "查看全部歷史"
+      "seeAll": "查看全部歷史",
+      "report": "回報這段文字的問題"
     }
   },
   "onboarding": {
@@ -790,6 +791,7 @@
       "copyToClipboard": "複製轉錄到剪貼簿",
       "save": "儲存轉錄",
       "unsave": "從已儲存中移除",
+      "reportOutput": "回報這段文字",
       "delete": "刪除條目",
       "deleteError": "刪除條目失敗，請重試",
       "retranscribe": "重新轉錄",

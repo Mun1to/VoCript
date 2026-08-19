@@ -82,7 +82,8 @@
     "latest": {
       "title": "Ostatnio podyktowane",
       "empty": "Jeszcze nic. To, co podyktujesz, pojawi się tutaj.",
-      "seeAll": "Zobacz całą historię"
+      "seeAll": "Zobacz całą historię",
+      "report": "Zgłoś problem z tym tekstem"
     }
   },
   "onboarding": {
@@ -790,6 +791,7 @@
       "copyToClipboard": "Kopiuj transkrypcję do schowka",
       "save": "Zapisz transkrypcję",
       "unsave": "Usuń z zapisanych",
+      "reportOutput": "Zgłoś ten tekst",
       "delete": "Usuń wpis",
       "deleteError": "Nie udało się usunąć wpisu. Spróbuj ponownie.",
       "retranscribe": "Transkrybuj ponownie",

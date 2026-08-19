@@ -82,7 +82,8 @@
     "latest": {
       "title": "L'ultima cosa che hai dettato",
       "empty": "Ancora niente. Quello che detti compare qui.",
-      "seeAll": "Vedi tutta la cronologia"
+      "seeAll": "Vedi tutta la cronologia",
+      "report": "Segnala un problema con questo testo"
     }
   },
   "onboarding": {
@@ -790,6 +791,7 @@
       "copyToClipboard": "Copia la trascrizione negli appunti",
       "save": "Salva la trascrizione",
       "unsave": "Rimuovi dai salvataggi",
+      "reportOutput": "Segnala questo testo",
       "delete": "Elimina elemento",
       "deleteError": "Errore nell'eliminazione dell'elemento. Riprova.",
       "retranscribe": "Ri-trascrivere",

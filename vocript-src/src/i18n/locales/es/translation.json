@@ -113,7 +113,8 @@
     "latest": {
       "title": "Lo último que dictaste",
       "empty": "Todavía nada. Lo que dictes aparece aquí.",
-      "seeAll": "Ver todo el historial"
+      "seeAll": "Ver todo el historial",
+      "report": "Informar de un problema con este texto"
     }
   },
   "onboarding": {
@@ -854,6 +855,7 @@
       "copyToClipboard": "Copiar transcripción al portapapeles",
       "save": "Guardar transcripción",
       "unsave": "Eliminar de guardados",
+      "reportOutput": "Informar de este texto",
       "delete": "Eliminar entrada",
       "deleteError": "Error al eliminar la entrada. Por favor, intenta de nuevo.",
       "retranscribe": "Re-transcribir",

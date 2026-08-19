@@ -82,7 +82,8 @@
     "latest": {
       "title": "Naposledy nadiktované",
       "empty": "Zatím nic. Co nadiktuješ, objeví se tady.",
-      "seeAll": "Zobrazit celou historii"
+      "seeAll": "Zobrazit celou historii",
+      "report": "Nahlásit problém s tímto textem"
     }
   },
   "onboarding": {
@@ -790,6 +791,7 @@
       "copyToClipboard": "Kopírovat přepis do schránky",
       "save": "Uložit přepis",
       "unsave": "Odebrat z uložených",
+      "reportOutput": "Nahlásit tento text",
       "delete": "Smazat záznam",
       "deleteError": "Nepodařilo se smazat záznam. Zkuste to prosím znovu.",
       "retranscribe": "Přepsat znovu",

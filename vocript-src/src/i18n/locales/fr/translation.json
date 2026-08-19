@@ -82,7 +82,8 @@
     "latest": {
       "title": "Ta dernière dictée",
       "empty": "Rien encore. Ce que tu dictes apparaît ici.",
-      "seeAll": "Voir tout l'historique"
+      "seeAll": "Voir tout l'historique",
+      "report": "Signaler un problème avec ce texte"
     }
   },
   "onboarding": {
@@ -790,6 +791,7 @@
       "copyToClipboard": "Copier la transcription dans le presse-papiers",
       "save": "Enregistrer la transcription",
       "unsave": "Retirer des favoris",
+      "reportOutput": "Signaler ce texte",
       "delete": "Supprimer l'entrée",
       "deleteError": "Échec de la suppression de l'entrée. Veuillez réessayer.",
       "retranscribe": "Re-transcrire",
