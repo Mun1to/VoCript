@@ -179,9 +179,9 @@ fn split_versioned_so(name: &str) -> Option<(&str, usize)> {
 
 /// Windows only: stage the MSVC runtime DLLs next to the transcribe-cpp ones.
 ///
-/// Every `transcribe.dll` / `ggml*.dll` staged above imports `MSVCP140.dll`,
-/// `VCRUNTIME140.dll` and `VCRUNTIME140_1.dll` (checked with
-/// `dumpbin /dependents`). Those ship in the Visual C++ Redistributable, which
+/// Every `transcribe.dll` / `ggml*.dll` staged above imports `MSVCP140.dll` and
+/// the two `VCRUNTIME140` ones, and `vocript.exe` itself also imports
+/// `MSVCP140_1.dll`. Those ship in the Visual C++ Redistributable, which
 /// a clean Windows does NOT have, so the installed app died at startup with
 /// "The code execution cannot proceed because MSVCP140.dll was not found"
 /// before drawing a single window. Store certification caught it on a stock
@@ -201,10 +201,16 @@ fn stage_msvc_runtime_dlls() {
         return;
     }
 
-    // Exactly what the staged DLLs import: msvcp140 pulls in the two vcruntime
-    // ones, and everything else they need is the UCRT, which every supported
-    // Windows already carries in System32.
-    const NEEDED: &[&str] = &["msvcp140.dll", "vcruntime140.dll", "vcruntime140_1.dll"];
+    // The whole CRT directory, not a hand-picked list. A curated list was tried
+    // first and was already wrong: `dumpbin` on the native libraries named three
+    // DLLs, and the running process then pulled a fourth (`MSVCP140_1.dll`, from
+    // the exe's own imports) out of System32, which is exactly the copy a clean
+    // machine does not have. Import tables also miss anything loaded at runtime.
+    // The whole set is ~1.7 MB in a 47 MB package, far less than another round
+    // of certification.
+    //
+    // Sanity anchors: if these two are missing, the directory found is not a CRT.
+    const ANCHORS: &[&str] = &["msvcp140.dll", "vcruntime140.dll"];
 
     println!("cargo:rerun-if-env-changed=VOCRIPT_ALLOW_MISSING_MSVC_RUNTIME");
     let allow_missing = std::env::var_os("VOCRIPT_ALLOW_MISSING_MSVC_RUNTIME").is_some();
@@ -238,14 +244,32 @@ fn stage_msvc_runtime_dlls() {
     println!("cargo:rerun-if-changed={}", crt_dir.display());
     let dest = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").unwrap()).join("transcribe-libs");
     std::fs::create_dir_all(&dest).expect("create transcribe-libs staging dir");
-    for name in NEEDED {
-        let src = crt_dir.join(name);
+    let mut staged: Vec<String> = Vec::new();
+    for entry in std::fs::read_dir(&crt_dir)
+        .unwrap_or_else(|e| panic!("read {}: {e}", crt_dir.display()))
+        .flatten()
+    {
+        let src = entry.path();
+        let Some(name) = src.file_name().and_then(|n| n.to_str()) else {
+            continue;
+        };
+        if !name.to_ascii_lowercase().ends_with(".dll") {
+            continue;
+        }
         std::fs::copy(&src, dest.join(name))
             .unwrap_or_else(|e| panic!("copy {}: {e}", src.display()));
+        staged.push(name.to_ascii_lowercase());
+    }
+    for anchor in ANCHORS {
+        assert!(
+            staged.iter().any(|s| s == anchor),
+            "{} holds no {anchor}, so it is not the Visual C++ CRT directory it              looked like; the package would ship without the runtime",
+            crt_dir.display()
+        );
     }
     println!(
         "cargo:warning=Staged {} MSVC runtime DLL(s) from {}",
-        NEEDED.len(),
+        staged.len(),
         crt_dir.display()
     );
 }
