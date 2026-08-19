@@ -209,15 +209,29 @@ fn stage_msvc_runtime_dlls() {
     // The whole set is ~1.7 MB in a 47 MB package, far less than another round
     // of certification.
     //
-    // Sanity anchors: if these two are missing, the directory found is not a CRT.
-    const ANCHORS: &[&str] = &["msvcp140.dll", "vcruntime140.dll"];
+    // Sanity anchors: every DLL the running app was seen to resolve out of this
+    // directory. `msvcp140_1.dll` is in the list precisely because it is the one
+    // that slipped through the previous check, and `vcruntime140_1.dll` because
+    // it is the file that tells an x64 CRT apart from an x86 one.
+    const ANCHORS: &[&str] = &[
+        "msvcp140.dll",
+        "msvcp140_1.dll",
+        "vcruntime140.dll",
+        "vcruntime140_1.dll",
+    ];
 
     println!("cargo:rerun-if-env-changed=VOCRIPT_ALLOW_MISSING_MSVC_RUNTIME");
     let allow_missing = std::env::var_os("VOCRIPT_ALLOW_MISSING_MSVC_RUNTIME").is_some();
 
+    // No catch-all: an unrecognised arch silently falling back to x64 would ship
+    // 64-bit DLLs beside a 32-bit exe, and both anchors exist in the x86 CRT too,
+    // so nothing downstream would notice.
     let arch = match std::env::var("CARGO_CFG_TARGET_ARCH").as_deref() {
+        Ok("x86_64") => "x64",
         Ok("aarch64") => "arm64",
-        _ => "x64",
+        other => panic!(
+            "no MSVC redistributable directory is mapped for target arch {other:?}; add one rather than letting the build pick the wrong architecture"
+        ),
     };
 
     let Some(crt_dir) = find_msvc_redist_dir(arch) else {
@@ -241,10 +255,20 @@ fn stage_msvc_runtime_dlls() {
         return;
     };
 
+    // Checked before a single file is written: a directory that is not a CRT must
+    // not leave its contents sitting next to the executable.
+    for anchor in ANCHORS {
+        assert!(
+            crt_dir.join(anchor).is_file(),
+            "{} holds no {anchor}, so it is not the Visual C++ CRT directory it looked like; the package would ship without the runtime it needs to start",
+            crt_dir.display()
+        );
+    }
+
     println!("cargo:rerun-if-changed={}", crt_dir.display());
     let dest = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").unwrap()).join("transcribe-libs");
     std::fs::create_dir_all(&dest).expect("create transcribe-libs staging dir");
-    let mut staged: Vec<String> = Vec::new();
+    let mut staged = 0usize;
     for entry in std::fs::read_dir(&crt_dir)
         .unwrap_or_else(|e| panic!("read {}: {e}", crt_dir.display()))
         .flatten()
@@ -258,18 +282,11 @@ fn stage_msvc_runtime_dlls() {
         }
         std::fs::copy(&src, dest.join(name))
             .unwrap_or_else(|e| panic!("copy {}: {e}", src.display()));
-        staged.push(name.to_ascii_lowercase());
-    }
-    for anchor in ANCHORS {
-        assert!(
-            staged.iter().any(|s| s == anchor),
-            "{} holds no {anchor}, so it is not the Visual C++ CRT directory it              looked like; the package would ship without the runtime",
-            crt_dir.display()
-        );
+        staged += 1;
     }
     println!(
         "cargo:warning=Staged {} MSVC runtime DLL(s) from {}",
-        staged.len(),
+        staged,
         crt_dir.display()
     );
 }
@@ -324,7 +341,9 @@ fn find_msvc_redist_dir(arch: &str) -> Option<std::path::PathBuf> {
             .map(|e| e.path())
             .filter(|p| p.is_dir())
             .collect();
-        versions.sort();
+        // By version number, not alphabetically: as strings "14.9" sorts above
+        // "14.44" and the build would pick the older toolset.
+        versions.sort_by_key(|p| numeric_name_key(p));
         candidates.extend(versions.into_iter().rev());
     }
     candidates
@@ -347,8 +366,28 @@ fn msvc_crt_subdir(arch_dir: &std::path::Path) -> Option<std::path::PathBuf> {
                     .is_some_and(|n| n.starts_with("Microsoft.VC") && n.ends_with(".CRT"))
         })
         .collect();
-    hits.sort();
+    // Same reason as the redist versions: `Microsoft.VC9.CRT` must not beat
+    // `Microsoft.VC143.CRT` just because "9" is a higher character than "1".
+    hits.sort_by_key(|p| numeric_name_key(p));
     hits.pop()
+}
+
+/// Sort key that reads the runs of digits in a directory name as numbers, so
+/// `14.44.35112` ranks above `14.9.x` and `Microsoft.VC143.CRT` above
+/// `Microsoft.VC9.CRT`. Non-digit characters are kept as separators so names
+/// with a different shape still order deterministically.
+fn numeric_name_key(path: &std::path::Path) -> (Vec<u64>, String) {
+    let name = path
+        .file_name()
+        .and_then(|n| n.to_str())
+        .unwrap_or_default()
+        .to_string();
+    let numbers = name
+        .split(|c: char| !c.is_ascii_digit())
+        .filter(|part| !part.is_empty())
+        .filter_map(|part| part.parse::<u64>().ok())
+        .collect();
+    (numbers, name)
 }
 
 /// Generate tray menu translations from frontend locale files.
