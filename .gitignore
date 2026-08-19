@@ -74,6 +74,19 @@ prototipo-vocript.html
 
 # Staged by build.rs from transcribe-cpp's install dirs; never checked in.
 vocript-src/src-tauri/transcribe-libs/
+
+# The MSIX for the Store is assembled by copying the release build in here, so
+# this folder holds ~180 MB of binaries: the exe, every native DLL and the
+# packed .msix itself. None of it is source and none of it may reach a public
+# repo, where a pushed 47 MB blob cannot be taken back. The manifest IS source
+# (its version has to be bumped per release), so that one file stays tracked.
+vocript-src/src-tauri/windows/**
+!vocript-src/src-tauri/windows/msix/
+!vocript-src/src-tauri/windows/msix/AppxManifest.xml
+
+# Store listing artwork: marketing, not product, so it does not belong in the
+# public repo (regla P). Keep it in VoCript-Core if it needs versioning.
+vocript-src/store-assets/
 CLAUDE.md
 GEMINI.md
 .github/copilot-instructions.md
