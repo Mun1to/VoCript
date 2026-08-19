@@ -8,7 +8,7 @@
   <Identity
     Name="Munito.Vocript"
     Publisher="CN=AF5AFDE8-6E9C-4644-9F84-DC0C5CAF743A"
-    Version="3.7.5.0" />
+    Version="3.7.6.0" />
 
   <Properties>
     <DisplayName>VoCript</DisplayName>
@@ -18,11 +18,35 @@
   </Properties>
 
   <Dependencies>
-    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.22621.0" />
+    <!-- 18362 = Windows 10 1903, the first release that ships DirectML.dll in
+         the system. vocript.exe imports it directly (ONNX runs its models
+         through DirectML), so on 1809 the app would not start at all. -->
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.18362.0" MaxVersionTested="10.0.22621.0" />
   </Dependencies>
 
+  <!-- The interface is translated into all of these; without them the Store
+       lists the app as English-only. First entry is the fallback. -->
   <Resources>
     <Resource Language="en-us" />
+    <Resource Language="ar" />
+    <Resource Language="bg" />
+    <Resource Language="cs" />
+    <Resource Language="de" />
+    <Resource Language="es" />
+    <Resource Language="fr" />
+    <Resource Language="he" />
+    <Resource Language="it" />
+    <Resource Language="ja" />
+    <Resource Language="ko" />
+    <Resource Language="pl" />
+    <Resource Language="pt" />
+    <Resource Language="ru" />
+    <Resource Language="sv" />
+    <Resource Language="tr" />
+    <Resource Language="uk" />
+    <Resource Language="vi" />
+    <Resource Language="zh-Hans" />
+    <Resource Language="zh-Hant" />
   </Resources>
 
   <Applications>
@@ -32,13 +56,18 @@
         Description="Local, private voice dictation. Press a shortcut, speak, and the text types itself into whatever app you're using."
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
-        Square44x44Logo="Assets\Square44x44Logo.png" />
-
+        Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Square71x71Logo="Assets\Square71x71Logo.png" />
+      </uap:VisualElements>
     </Application>
   </Applications>
 
+  <!-- The app records the microphone and nothing else. Declaring it is what
+       gives a packaged app its entry in Windows microphone privacy settings;
+       without it the capture can be denied with no way for the user to allow it. -->
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
+    <DeviceCapability Name="microphone" />
   </Capabilities>
 
 </Package>
