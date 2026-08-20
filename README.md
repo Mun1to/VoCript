@@ -179,9 +179,12 @@ bun run tauri build    # production installer
 
 VoCript is free software under the [MIT](LICENSE) license.
 
-It is a **fork of [Handy](https://github.com/cjpais/Handy)** by
-[CJ Pais](https://github.com/cjpais) (also MIT). Thanks for the great
-foundation. The transcription engine is
+Copyright (c) 2025-2026 Munir Torres, for everything VoCript adds.
+Copyright (c) 2025 [CJ Pais](https://github.com/cjpais), for
+[Handy](https://github.com/cjpais/Handy), the project this one was forked from
+and which is MIT too. Thanks for the great foundation.
+
+The transcription engine is
 [Whisper.cpp](https://github.com/ggerganov/whisper.cpp) by Georgi Gerganov.
 
 Found a security issue? See the [security policy](SECURITY.md).

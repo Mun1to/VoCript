@@ -171,9 +171,12 @@ bun run tauri build    # instalador de producción
 
 VoCript es software libre bajo licencia [MIT](LICENSE).
 
-Es un **fork de [Handy](https://github.com/cjpais/Handy)**, creado por
-[CJ Pais](https://github.com/cjpais) (también MIT). Gracias por el excelente
-trabajo base. El motor de transcripción es
+Copyright (c) 2025-2026 Munir Torres, por todo lo que añade VoCript.
+Copyright (c) 2025 [CJ Pais](https://github.com/cjpais), por
+[Handy](https://github.com/cjpais/Handy), el proyecto del que se hizo este fork
+y que también es MIT. Gracias por el excelente trabajo base.
+
+El motor de transcripción es
 [Whisper.cpp](https://github.com/ggerganov/whisper.cpp), de Georgi Gerganov.
 
 ¿Encuentras un fallo de seguridad? Consulta la [política de seguridad](SECURITY.md).
