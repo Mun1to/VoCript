@@ -92,3 +92,7 @@ GEMINI.md
 .github/copilot-instructions.md
 .cursor/rules/contexto.mdc
 AGENTS.md
+
+# Snapshots and console logs the playwright MCP server drops in the working
+# directory while driving a browser. Session scratch, never source.
+.playwright-mcp/
