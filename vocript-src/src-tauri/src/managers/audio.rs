@@ -118,6 +118,28 @@ fn normalize_peak(mut samples: Vec<f32>, target_peak: f32) -> Vec<f32> {
 
 /* ──────────────────────────────────────────────────────────────── */
 
+/// Whether a capture device looks like it arrived over Bluetooth.
+///
+/// Bluetooth headsets have two profiles: a high quality one for listening and a
+/// call-quality one that also carries the microphone. Opening the microphone
+/// switches the headset to the second, and the music playing through it audibly
+/// degrades. A stream left prepared could hold that switch for as long as the
+/// app is running, so on these devices the stream is not kept: they go back to
+/// opening on the keypress, first word and all.
+///
+/// This is a guess by name, because cpal exposes no transport information. It
+/// covers what Windows calls these endpoints in English and Spanish; a device
+/// it fails to recognise simply keeps the prepared stream, which is the
+/// behaviour everything else gets. Reading PKEY_Device_EnumeratorName off the
+/// WASAPI endpoint would answer this exactly, and is where to go if the guess
+/// ever proves too rough.
+fn looks_like_bluetooth(name: &str) -> bool {
+    let name = name.to_lowercase();
+    ["bluetooth", "hands-free", "handsfree", "manos libres"]
+        .iter()
+        .any(|marker| name.contains(marker))
+}
+
 #[derive(Clone, Debug)]
 pub enum RecordingState {
     Idle,
@@ -255,7 +277,7 @@ impl AudioRecordingManager {
                 // stream reads the mode again further down, and holding it
                 // across that call would deadlock the app during startup.
                 let on_demand = matches!(*manager.mode.lock().unwrap(), MicrophoneMode::OnDemand);
-                if on_demand {
+                if on_demand && manager.stream_may_stay_prepared() {
                     if let Err(e) = manager.start_microphone_stream() {
                         debug!("Could not prepare the microphone at startup: {e}");
                     }
@@ -345,11 +367,40 @@ impl AudioRecordingManager {
     /// nothing, registers no microphone use with the OS and costs no measurable
     /// CPU, yet is ready to capture again in single-digit milliseconds.
     fn release_after_recording(&self) {
-        let mut did_mute = self.did_mute.lock().unwrap();
-        if *did_mute {
-            set_mute(false);
+        {
+            let mut did_mute = self.did_mute.lock().unwrap();
+            if *did_mute {
+                set_mute(false);
+            }
+            *did_mute = false;
         }
-        *did_mute = false;
+
+        if !self.stream_may_stay_prepared() {
+            debug!("Bluetooth capture device; closing the stream instead of keeping it prepared");
+            self.stop_microphone_stream();
+        }
+    }
+
+    /// Whether the stream may be left prepared between recordings, or has to be
+    /// closed after each one. See [`looks_like_bluetooth`].
+    fn stream_may_stay_prepared(&self) -> bool {
+        use cpal::traits::DeviceTrait;
+
+        let settings = get_settings(&self.app_handle);
+        let name = self
+            .get_effective_microphone_device(&settings)
+            .or_else(|| {
+                use cpal::traits::HostTrait;
+                get_cpal_host().default_input_device()
+            })
+            .and_then(|device| device.name().ok());
+
+        match name {
+            Some(name) => !looks_like_bluetooth(&name),
+            // Unknown device: keep the fast path rather than punishing everyone
+            // for a name we could not read.
+            None => true,
+        }
     }
 
     /// Applies mute if mute_while_recording is enabled and stream is open
@@ -777,5 +828,35 @@ impl AudioRecordingManager {
                 self.release_after_recording();
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::looks_like_bluetooth;
+
+    #[test]
+    fn bluetooth_headsets_are_recognised_by_name() {
+        // How Windows names these endpoints, in English and in Spanish.
+        assert!(looks_like_bluetooth(
+            "Headset (Jabra Evolve2 Hands-Free AG Audio)"
+        ));
+        assert!(looks_like_bluetooth(
+            "Micrófono (Auriculares manos libres AG Audio)"
+        ));
+        assert!(looks_like_bluetooth("Bluetooth Audio Renderer"));
+    }
+
+    #[test]
+    fn wired_and_built_in_microphones_are_not() {
+        // The last one matters: a wired headset is not a Bluetooth one, and
+        // matching on "headset" alone would have taken the slow path for it.
+        assert!(!looks_like_bluetooth(
+            "Varios micrófonos (Intel® Smart Sound Technology for Digital Microphones)"
+        ));
+        assert!(!looks_like_bluetooth("Micrófono (fifine SC3)"));
+        assert!(!looks_like_bluetooth(
+            "Headset Microphone (USB Audio Device)"
+        ));
     }
 }
