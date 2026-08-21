@@ -808,6 +808,17 @@ pub fn emit_live_finished(app_handle: &AppHandle, text: &str, copied: bool) {
     }
 }
 
+/// Tell the UI that the capture device is now feeding us audio, so it can stop
+/// implying it was listening during the ~220 ms WASAPI spends opening the
+/// stream. Fires once per recording, before the VAD judges anything.
+pub fn emit_mic_ready(app_handle: &AppHandle) {
+    let _ = app_handle.emit("mic-ready", ());
+
+    if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
+        let _ = overlay_window.emit("mic-ready", ());
+    }
+}
+
 pub fn emit_levels(app_handle: &AppHandle, levels: &Vec<f32>) {
     // emit levels to main app
     let _ = app_handle.emit("mic-level", levels);

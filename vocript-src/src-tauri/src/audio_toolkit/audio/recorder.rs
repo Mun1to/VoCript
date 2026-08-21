@@ -50,12 +50,19 @@ fn config_cache() -> &'static Mutex<HashMap<ConfigKey, cpal::SupportedStreamConf
 /// failing forever.
 fn forget_cached_config(device: &Device) {
     if let Ok(name) = device.name() {
-        config_cache().lock().unwrap().retain(|k, _| k.device != name);
+        config_cache()
+            .lock()
+            .unwrap()
+            .retain(|k, _| k.device != name);
     }
 }
 
 enum Cmd {
-    Start,
+    /// Turn the capture device on and begin collecting. Answers on the channel
+    /// so the caller knows the microphone is really live before it tells the
+    /// user to talk: turning a prepared stream on takes single-digit
+    /// milliseconds, so waiting for that answer costs nothing.
+    Start(mpsc::Sender<Result<(), String>>),
     Stop(mpsc::Sender<Vec<f32>>),
     Shutdown,
 }
@@ -71,10 +78,23 @@ pub struct AudioRecorder {
     worker_handle: Option<std::thread::JoinHandle<()>>,
     vad: Option<Arc<Mutex<Box<dyn vad::VoiceActivityDetector>>>>,
     level_cb: Option<Arc<dyn Fn(Vec<f32>) + Send + Sync + 'static>>,
+    /// Called once per recording, as soon as captured audio actually reaches
+    /// the pipeline. Opening a capture device costs around 220 ms on WASAPI
+    /// even with everything cached, and the UI used to claim it was recording
+    /// from the instant the key went down - so anyone who started talking
+    /// straight away lost their first word without the app ever showing it.
+    ready_cb: Option<Arc<dyn Fn() + Send + Sync + 'static>>,
     /// Live snapshot of the audio captured so far in the current recording
     /// (16 kHz mono, post-VAD). The consumer thread appends to it; live
     /// transcription reads it via `current_samples()`.
     live_buffer: Arc<Mutex<Vec<f32>>>,
+    /// Keep the device capturing between recordings instead of stopping it
+    /// after each one. Only the always-on microphone mode wants this: it
+    /// drives the level meter while idle. Everything else leaves the stream
+    /// prepared but stopped, which captures nothing and costs no measurable
+    /// CPU, yet turns on in about 7 ms instead of the ~250 ms a cold open
+    /// costs on WASAPI.
+    always_capturing: Arc<AtomicBool>,
     /// Whether to mirror captured audio into `live_buffer`. Off by default:
     /// mirroring unconditionally kept a second full copy of every recording in
     /// memory even with live mode disabled (~230 MB each for an hour of system
@@ -96,6 +116,8 @@ impl AudioRecorder {
             worker_handle: None,
             vad: None,
             level_cb: None,
+            ready_cb: None,
+            always_capturing: Arc::new(AtomicBool::new(false)),
             live_buffer: Arc::new(Mutex::new(Vec::new())),
             mirror_live: Arc::new(AtomicBool::new(false)),
             #[cfg(windows)]
@@ -118,11 +140,29 @@ impl AudioRecorder {
         self
     }
 
+    /// Register the callback that fires when the first captured audio of a
+    /// recording reaches the pipeline. Fires before the VAD has its say: it
+    /// reports that the device is live, not that anyone is speaking.
+    pub fn with_ready_callback<F>(mut self, cb: F) -> Self
+    where
+        F: Fn() + Send + Sync + 'static,
+    {
+        self.ready_cb = Some(Arc::new(cb));
+        self
+    }
+
     /// Snapshot of the audio captured so far in the current recording
     /// (16 kHz mono). Used by live transcription to re-transcribe the growing
     /// buffer. Returns an empty vec when not recording.
     pub fn current_samples(&self) -> Vec<f32> {
         self.live_buffer.lock().unwrap().clone()
+    }
+
+    /// Keep the device capturing between recordings (always-on microphone
+    /// mode). Set before `open()`; changing it afterwards only affects what
+    /// happens after the next `stop()`.
+    pub fn set_always_capturing(&self, enabled: bool) {
+        self.always_capturing.store(enabled, Ordering::Relaxed);
     }
 
     /// Turn the live mirror on for recordings that will actually be read back
@@ -152,6 +192,8 @@ impl AudioRecorder {
         let vad = self.vad.clone();
         // Move the optional level callback into the worker thread
         let level_cb = self.level_cb.clone();
+        let ready_cb = self.ready_cb.clone();
+        let always_capturing = self.always_capturing.clone();
         let live_buffer = self.live_buffer.clone();
         let mirror_live = self.mirror_live.clone();
 
@@ -219,9 +261,20 @@ impl AudioRecorder {
                     }
                 };
 
-                stream
-                    .play()
-                    .map_err(|e| format!("Failed to start microphone stream: {e}"))?;
+                // Deliberately NOT started here. Building the stream is the
+                // expensive half (~250 ms on WASAPI) and turning it on is
+                // nearly free, so the device is left prepared and stopped:
+                // it captures nothing, registers no microphone use with the
+                // OS, costs no measurable CPU, and goes live in about 7 ms
+                // when the user actually presses the shortcut.
+                //
+                // Always-on mode is the one exception, and it starts the
+                // stream below rather than waiting for a recording.
+                if always_capturing.load(Ordering::Relaxed) {
+                    stream
+                        .play()
+                        .map_err(|e| format!("Failed to start microphone stream: {e}"))?;
+                }
 
                 Ok((stream, sample_rate))
             })();
@@ -229,20 +282,26 @@ impl AudioRecorder {
             match init_result {
                 Ok((stream, sample_rate)) => {
                     let _ = init_tx.send(Ok(()));
-                    // Keep the stream alive while we process samples.
+                    // The stream moves in: the consumer is what turns the
+                    // device on and off, and cpal streams are not Send, so
+                    // they can only be driven from the thread that built them.
                     run_consumer(
                         sample_rate,
                         vad,
                         sample_rx,
                         cmd_rx,
                         level_cb,
+                        ready_cb,
                         stop_flag,
                         LiveMirror {
                             buffer: live_buffer,
                             enabled: mirror_live,
                         },
+                        Capture {
+                            stream: Some(stream),
+                            always_on: always_capturing,
+                        },
                     );
-                    drop(stream);
                 }
                 Err(error_message) => {
                     log::error!("{error_message}");
@@ -343,6 +402,7 @@ impl AudioRecorder {
         // app is playing (music, quiet/low-volume playback, etc.), not gate it
         // like close-mic speech — the VAD would otherwise discard most of it.
         let level_cb = self.level_cb.clone();
+        let ready_cb = self.ready_cb.clone();
         let live_buffer = self.live_buffer.clone();
         let mirror_live = self.mirror_live.clone();
         let worker = std::thread::spawn(move || {
@@ -352,10 +412,18 @@ impl AudioRecorder {
                 sample_rx,
                 cmd_rx,
                 level_cb,
+                ready_cb,
                 stop_flag,
                 LiveMirror {
                     buffer: live_buffer,
                     enabled: mirror_live,
+                },
+                // The process-loopback path runs its own capture thread rather
+                // than a cpal stream, so there is nothing here to turn on and
+                // off; it is opened only for the length of one capture anyway.
+                Capture {
+                    stream: None,
+                    always_on: Arc::new(AtomicBool::new(true)),
                 },
             );
         });
@@ -368,11 +436,25 @@ impl AudioRecorder {
         Ok(())
     }
 
+    /// Turn the capture device on and start collecting. Returns once the
+    /// device is really live, so a caller that shows a "talking now" cue is
+    /// not showing it to a microphone that has not started yet.
     pub fn start(&self) -> Result<(), Box<dyn std::error::Error>> {
-        if let Some(tx) = &self.cmd_tx {
-            tx.send(Cmd::Start)?;
+        let Some(tx) = &self.cmd_tx else {
+            return Err(Box::new(Error::new(
+                std::io::ErrorKind::NotConnected,
+                "recorder is closed",
+            )));
+        };
+        let (resp_tx, resp_rx) = mpsc::channel();
+        tx.send(Cmd::Start(resp_tx))?;
+        match resp_rx.recv() {
+            Ok(Ok(())) => Ok(()),
+            Ok(Err(message)) => Err(Box::new(Error::other(message))),
+            Err(e) => Err(Box::new(Error::other(format!(
+                "microphone worker did not answer: {e}"
+            )))),
         }
-        Ok(())
     }
 
     pub fn stop(&self) -> Result<Vec<f32>, Box<dyn std::error::Error>> {
@@ -589,6 +671,63 @@ pub fn is_no_input_device_error(error_message: &str) -> bool {
 mod tests {
     use super::{config_cache, is_microphone_access_denied, is_no_input_device_error};
 
+    /// The whole point of preparing the stream instead of opening it on the
+    /// keypress: starting a prepared device has to be immediate, and it has to
+    /// stay immediate for the second dictation and the tenth.
+    ///
+    /// Needs real capture hardware, so it is ignored by default:
+    ///   cargo test --lib starting_a_prepared_device -- --ignored --nocapture
+    #[test]
+    #[ignore = "needs a real capture device"]
+    fn starting_a_prepared_device_is_immediate() {
+        use super::AudioRecorder;
+        use cpal::traits::HostTrait;
+        use std::time::{Duration, Instant};
+
+        let host = crate::audio_toolkit::get_cpal_host();
+        let Some(device) = host.default_input_device() else {
+            eprintln!("no input device; nothing to measure");
+            return;
+        };
+
+        let mut rec = AudioRecorder::new().expect("recorder");
+        let prepare = Instant::now();
+        rec.open(Some(device)).expect("prepare the stream");
+        let prepare = prepare.elapsed();
+
+        // Nothing may be captured before the first start(): that is what keeps
+        // the microphone out of use between dictations.
+        std::thread::sleep(Duration::from_millis(400));
+        assert!(
+            rec.current_samples().is_empty(),
+            "a prepared stream captured audio before anything asked it to"
+        );
+
+        let mut starts = Vec::new();
+        for _ in 0..3 {
+            let t = Instant::now();
+            rec.start().expect("start");
+            starts.push(t.elapsed());
+            std::thread::sleep(Duration::from_millis(250));
+            let captured = rec.stop().expect("stop");
+            assert!(
+                !captured.is_empty(),
+                "a started device produced no audio at all"
+            );
+            // And once stopped it must go quiet again.
+            std::thread::sleep(Duration::from_millis(200));
+        }
+        rec.close().expect("close");
+
+        let worst = starts.iter().max().unwrap();
+        println!("prepare: {prepare:?} | starts: {starts:?} | worst: {worst:?}");
+        assert!(
+            *worst < Duration::from_millis(60),
+            "starting a prepared device took {worst:?}; the point of preparing it \
+             is that this stays in the low milliseconds"
+        );
+    }
+
     /// The reason the config cache exists, measured end to end: opening the
     /// same device twice must be markedly faster the second time, because the
     /// expensive format probe is skipped. Needs real capture hardware, so it is
@@ -675,19 +814,34 @@ struct LiveMirror {
     enabled: Arc<AtomicBool>,
 }
 
+/// The capture device the consumer governs, and whether it may ever be
+/// stopped. `stream` is `None` on the process-loopback path, which runs its own
+/// capture thread instead of a cpal stream.
+struct Capture {
+    stream: Option<cpal::Stream>,
+    always_on: Arc<AtomicBool>,
+}
+
+#[allow(clippy::too_many_arguments)]
 fn run_consumer(
     in_sample_rate: u32,
     vad: Option<Arc<Mutex<Box<dyn vad::VoiceActivityDetector>>>>,
     sample_rx: mpsc::Receiver<AudioChunk>,
     cmd_rx: mpsc::Receiver<Cmd>,
     level_cb: Option<Arc<dyn Fn(Vec<f32>) + Send + Sync + 'static>>,
+    ready_cb: Option<Arc<dyn Fn() + Send + Sync + 'static>>,
     stop_flag: Arc<AtomicBool>,
     live: LiveMirror,
+    capture: Capture,
 ) {
     let LiveMirror {
         buffer: live_buffer,
         enabled: mirror_live,
     } = live;
+    let Capture {
+        stream,
+        always_on: always_capturing,
+    } = capture;
     let mut frame_resampler = FrameResampler::new(
         in_sample_rate as usize,
         constants::WHISPER_SAMPLE_RATE as usize,
@@ -696,6 +850,14 @@ fn run_consumer(
 
     let mut processed_samples = Vec::<f32>::new();
     let mut recording = false;
+    // Whether the device is currently producing audio. It starts stopped
+    // unless always-on mode asked for the opposite (see `open`), and while it
+    // is stopped not a single sample can arrive - so the loop below waits on
+    // commands instead of on audio that is never coming.
+    let mut capturing = stream.is_none() || always_capturing.load(Ordering::Relaxed);
+    // Set by Cmd::Start, cleared by the first chunk that arrives after it: the
+    // moment the capture device is really feeding us audio.
+    let mut announce_ready = false;
 
     // ---------- spectrum visualisation setup ---------------------------- //
     const BUCKETS: usize = 16;
@@ -730,74 +892,125 @@ fn run_consumer(
     }
 
     loop {
-        // Wait for the next audio chunk, but time out periodically so commands
-        // (Stop/Shutdown) are still handled when no audio is arriving. WASAPI
-        // loopback (system-audio capture) delivers no samples while the system
-        // is silent, which would otherwise block this loop forever and hang
-        // stop()/close() — freezing the app when cancelling a silent capture.
-        match sample_rx.recv_timeout(Duration::from_millis(200)) {
-            Ok(AudioChunk::Samples(raw)) => {
-                // ---------- spectrum processing -------------------------- //
-                if let Some(buckets) = visualizer.feed(&raw) {
-                    if let Some(cb) = &level_cb {
-                        cb(buckets);
+        // Where this loop waits depends on whether the device is running.
+        //
+        // While it is stopped nothing can arrive on the sample channel, so
+        // waiting there would have delayed every Start by up to a full timeout
+        // - which is the very latency this design exists to remove. Waiting on
+        // commands instead answers a keypress immediately and, being a blocking
+        // wait, costs no CPU at all while idle.
+        //
+        // While it is running we wait on audio, but still time out: WASAPI
+        // loopback delivers nothing during silence, and a loop stuck there
+        // would hang stop()/close() and freeze the app on a silent capture.
+        let mut next_cmd = if capturing {
+            match sample_rx.recv_timeout(Duration::from_millis(200)) {
+                Ok(AudioChunk::Samples(raw)) => {
+                    // The device is live. Announced before the VAD sees
+                    // anything, because this says "the microphone is
+                    // capturing", not "somebody is talking".
+                    if recording && announce_ready {
+                        announce_ready = false;
+                        if let Some(cb) = &ready_cb {
+                            cb();
+                        }
+                    }
+
+                    // ---------- spectrum processing ---------------------- //
+                    if let Some(buckets) = visualizer.feed(&raw) {
+                        if let Some(cb) = &level_cb {
+                            cb(buckets);
+                        }
+                    }
+
+                    // ---------- existing pipeline ------------------------ //
+                    let before = processed_samples.len();
+                    frame_resampler.push(&raw, &mut |frame: &[f32]| {
+                        handle_frame(frame, recording, &vad, &mut processed_samples)
+                    });
+                    // Mirror newly-appended samples into the live buffer so
+                    // live transcription can read the in-progress audio.
+                    if recording
+                        && mirror_live.load(Ordering::Relaxed)
+                        && processed_samples.len() > before
+                    {
+                        live_buffer
+                            .lock()
+                            .unwrap()
+                            .extend_from_slice(&processed_samples[before..]);
                     }
                 }
-
-                // ---------- existing pipeline ---------------------------- //
-                let before = processed_samples.len();
-                frame_resampler.push(&raw, &mut |frame: &[f32]| {
-                    handle_frame(frame, recording, &vad, &mut processed_samples)
-                });
-                // Mirror newly-appended samples into the live buffer so live
-                // transcription can read the in-progress audio.
-                if recording
-                    && mirror_live.load(Ordering::Relaxed)
-                    && processed_samples.len() > before
-                {
-                    live_buffer
-                        .lock()
-                        .unwrap()
-                        .extend_from_slice(&processed_samples[before..]);
-                }
+                Ok(AudioChunk::EndOfStream) => {}
+                Err(mpsc::RecvTimeoutError::Timeout) => {}
+                Err(mpsc::RecvTimeoutError::Disconnected) => break, // stream closed
             }
-            Ok(AudioChunk::EndOfStream) => {}
-            Err(mpsc::RecvTimeoutError::Timeout) => {}
-            Err(mpsc::RecvTimeoutError::Disconnected) => break, // stream closed
-        }
+            cmd_rx.try_recv().ok()
+        } else {
+            match cmd_rx.recv_timeout(Duration::from_millis(500)) {
+                Ok(cmd) => Some(cmd),
+                Err(mpsc::RecvTimeoutError::Timeout) => None,
+                Err(mpsc::RecvTimeoutError::Disconnected) => break, // recorder closed
+            }
+        };
 
-        // non-blocking check for a command
-        while let Ok(cmd) = cmd_rx.try_recv() {
+        while let Some(cmd) = next_cmd.take() {
             match cmd {
-                Cmd::Start => {
+                Cmd::Start(reply_tx) => {
                     stop_flag.store(false, Ordering::Relaxed);
                     processed_samples.clear();
                     live_buffer.lock().unwrap().clear();
-                    recording = true;
                     visualizer.reset();
                     if let Some(v) = &vad {
                         v.lock().unwrap().reset();
                     }
+
+                    // Turn the device on. On a stream that was already built
+                    // this is the cheap half, single-digit milliseconds, and it
+                    // is the point at which the OS starts counting the
+                    // microphone as in use.
+                    let started = match (&stream, capturing) {
+                        (Some(s), false) => match s.play() {
+                            Ok(()) => {
+                                capturing = true;
+                                Ok(())
+                            }
+                            Err(e) => Err(format!("Failed to start microphone stream: {e}")),
+                        },
+                        _ => Ok(()),
+                    };
+
+                    recording = started.is_ok();
+                    announce_ready = started.is_ok();
+                    if let Err(message) = &started {
+                        log::error!("{message}");
+                    }
+                    let _ = reply_tx.send(started);
                 }
                 Cmd::Stop(reply_tx) => {
                     recording = false;
+                    announce_ready = false;
                     stop_flag.store(true, Ordering::Relaxed);
 
                     // Drain all remaining audio until the producer confirms end-of-stream.
                     // The cpal callback sees the stop flag, sends EndOfStream, and goes
-                    // silent — guaranteeing every captured sample is in the channel
-                    // ahead of the sentinel.
-                    loop {
-                        match sample_rx.recv_timeout(Duration::from_secs(2)) {
-                            Ok(AudioChunk::Samples(remaining)) => {
-                                frame_resampler.push(&remaining, &mut |frame: &[f32]| {
-                                    handle_frame(frame, true, &vad, &mut processed_samples)
-                                });
-                            }
-                            Ok(AudioChunk::EndOfStream) => break,
-                            Err(_) => {
-                                log::warn!("Timed out waiting for EndOfStream from audio callback");
-                                break;
+                    // silent, guaranteeing every captured sample is in the channel
+                    // ahead of the sentinel. A device that never started has no
+                    // callback to answer, so there is nothing to drain.
+                    if capturing {
+                        loop {
+                            match sample_rx.recv_timeout(Duration::from_secs(2)) {
+                                Ok(AudioChunk::Samples(remaining)) => {
+                                    frame_resampler.push(&remaining, &mut |frame: &[f32]| {
+                                        handle_frame(frame, true, &vad, &mut processed_samples)
+                                    });
+                                }
+                                Ok(AudioChunk::EndOfStream) => break,
+                                Err(_) => {
+                                    log::warn!(
+                                        "Timed out waiting for EndOfStream from audio callback"
+                                    );
+                                    break;
+                                }
                             }
                         }
                     }
@@ -808,6 +1021,30 @@ fn run_consumer(
 
                     let _ = reply_tx.send(std::mem::take(&mut processed_samples));
 
+                    // Stop the device now that its audio has been drained, so
+                    // between dictations it stays prepared while capturing
+                    // nothing. Always-on mode keeps it running: it is what
+                    // drives the idle level meter.
+                    //
+                    // A device that refuses to stop is not left running, since
+                    // that would keep the microphone live behind the user's
+                    // back. The consumer returns instead, which drops the
+                    // stream and closes it for real.
+                    if let Some(s) = &stream {
+                        if capturing && !always_capturing.load(Ordering::Relaxed) {
+                            match s.pause() {
+                                Ok(()) => capturing = false,
+                                Err(e) => {
+                                    log::error!(
+                                        "Could not stop the capture device ({e}); closing it rather than leaving the microphone live"
+                                    );
+                                    stop_flag.store(true, Ordering::Relaxed);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+
                     // Resume the audio callback so the consumer loop can continue
                     // receiving chunks (important for always-on microphone mode).
                     stop_flag.store(false, Ordering::Relaxed);
@@ -817,6 +1054,7 @@ fn run_consumer(
                     return;
                 }
             }
+            next_cmd = cmd_rx.try_recv().ok();
         }
     }
 }
