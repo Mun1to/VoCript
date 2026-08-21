@@ -415,6 +415,22 @@ pub(crate) async fn process_transcription_output(
     }
 }
 
+/// Below this much speech a recording is thrown away instead of transcribed.
+///
+/// It used to be 1.5 seconds, on the grounds that Whisper invents text when
+/// handed near-empty audio - which it does: 300 ms of digital silence
+/// transcribes as "Thank you." But the threshold was measuring the wrong
+/// thing. What produces the invention is the absence of speech, not the
+/// shortness of it, and the samples counted here have already been through the
+/// VAD, so what is left is speech by definition.
+///
+/// Measured against both engines, every real one-to-three-word dictation came
+/// out perfectly and every one of them was being discarded: "Undo" (0.48 s),
+/// "Yes" (0.51 s), "Hello there" (0.66 s), "Stop recording" (1.02 s). At 0.2
+/// seconds no intelligible word fits underneath, so what still gets discarded
+/// is what should be: the shortcut brushed by accident.
+const MIN_TRANSCRIPTION_SAMPLES: usize = 3_200; // 0.2 s at 16 kHz
+
 impl ShortcutAction for TranscribeAction {
     fn start(&self, app: &AppHandle, binding_id: &str, _shortcut_str: &str) {
         let start_time = Instant::now();
@@ -597,11 +613,8 @@ impl ShortcutAction for TranscribeAction {
                     samples.len()
                 );
 
-                // Discard very short recordings. Whisper hallucinates random
-                // text on near-empty audio, so require at least ~1.5s of audio
-                // (24k samples at 16 kHz) or cancel silently (this also covers
-                // the empty case).
-                const MIN_TRANSCRIPTION_SAMPLES: usize = 24_000;
+                // Too short to be anything the user meant to say (this also
+                // covers the empty case). See MIN_TRANSCRIPTION_SAMPLES.
                 if samples.len() < MIN_TRANSCRIPTION_SAMPLES {
                     debug!(
                         "Recording too short ({} samples < {}); discarding to avoid hallucinated transcription",
@@ -846,8 +859,7 @@ fn stop_live(app: &AppHandle, binding_id: &str) {
             return;
         };
 
-        // Discard very short recordings (same threshold as normal dictation).
-        const MIN_TRANSCRIPTION_SAMPLES: usize = 24_000;
+        // Same floor as normal dictation.
         if samples.len() < MIN_TRANSCRIPTION_SAMPLES {
             utils::hide_recording_overlay(&ah);
             change_tray_icon(&ah, TrayIconState::Idle);
@@ -1026,3 +1038,26 @@ pub static ACTION_MAP: Lazy<HashMap<String, Arc<dyn ShortcutAction>>> = Lazy::ne
     );
     map
 });
+
+#[cfg(test)]
+mod tests {
+    use super::MIN_TRANSCRIPTION_SAMPLES;
+
+    /// The floor is a compromise between two measured facts, and this pins both
+    /// ends of it. Above: every real one-to-three-word dictation has to get
+    /// through, and the shortest one measured was "Undo" at 0.48 s of speech.
+    /// Below: a shortcut brushed by accident still has to be discarded, since
+    /// Whisper answers near-empty audio with "Thank you."
+    #[test]
+    fn the_short_recording_floor_leaves_room_for_a_single_word() {
+        const SAMPLE_RATE: usize = 16_000;
+        assert!(
+            MIN_TRANSCRIPTION_SAMPLES < SAMPLE_RATE * 40 / 100,
+            "the floor is back up where it swallows one-word dictations"
+        );
+        assert!(
+            MIN_TRANSCRIPTION_SAMPLES >= SAMPLE_RATE / 10,
+            "a floor this low stops discarding accidental keypresses"
+        );
+    }
+}
