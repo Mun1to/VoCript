@@ -171,6 +171,9 @@ bun run tauri build    # instalador de producción
 
 VoCript es software libre bajo licencia [MIT](LICENSE).
 
+Esa licencia cubre el código, no el nombre: **VoCript**, su logo y su identidad
+visual son marcas de Munir Torres. Los forks son bienvenidos con un nombre propio.
+
 Copyright (c) 2025-2026 Munir Torres, por todo lo que añade VoCript.
 Copyright (c) 2025 [CJ Pais](https://github.com/cjpais), por
 [Handy](https://github.com/cjpais/Handy), el proyecto del que se hizo este fork
