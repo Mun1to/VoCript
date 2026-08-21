@@ -1010,7 +1010,9 @@
     "installMismatchDownload": "Stáhnout instalátor",
     "updateNow": "Aktualizovat",
     "later": "Později",
-    "updateAvailableDescription": "Nainstaluje se a aplikace se sama restartuje."
+    "updateAvailableDescription": "Nainstaluje se a aplikace se sama restartuje.",
+    "reportIssue": "Nahlásit problém",
+    "reportIssueTooltip": "Nahlásit problém s textem, který VoCript napsal"
   },
   "common": {
     "loading": "Načítání...",

@@ -1010,7 +1010,9 @@
     "installMismatchDownload": "Télécharger le programme d'installation",
     "updateNow": "Mettre à jour",
     "later": "Plus tard",
-    "updateAvailableDescription": "L'installation se fera et l'application redémarrera toute seule."
+    "updateAvailableDescription": "L'installation se fera et l'application redémarrera toute seule.",
+    "reportIssue": "Signaler un problème",
+    "reportIssueTooltip": "Signaler un problème avec un texte écrit par VoCript"
   },
   "common": {
     "loading": "Chargement...",

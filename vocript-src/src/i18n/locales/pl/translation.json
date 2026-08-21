@@ -1010,7 +1010,9 @@
     "installMismatchDownload": "Pobierz instalator",
     "updateNow": "Aktualizuj",
     "later": "Później",
-    "updateAvailableDescription": "Zostanie zainstalowana, a aplikacja sama się uruchomi ponownie."
+    "updateAvailableDescription": "Zostanie zainstalowana, a aplikacja sama się uruchomi ponownie.",
+    "reportIssue": "Zgłoś problem",
+    "reportIssueTooltip": "Zgłoś problem z tekstem napisanym przez VoCript"
   },
   "common": {
     "loading": "Wczytywanie...",

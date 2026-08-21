@@ -1010,7 +1010,9 @@
     "installMismatchDownload": "インストーラーをダウンロード",
     "updateNow": "更新",
     "later": "後で",
-    "updateAvailableDescription": "インストールされ、アプリが自動的に再起動します。"
+    "updateAvailableDescription": "インストールされ、アプリが自動的に再起動します。",
+    "reportIssue": "問題を報告",
+    "reportIssueTooltip": "VoCript が書いた文章の問題を報告します"
   },
   "common": {
     "loading": "読み込み中...",

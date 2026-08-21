@@ -1010,7 +1010,9 @@
     "installMismatchDownload": "Installer herunterladen",
     "updateNow": "Aktualisieren",
     "later": "Später",
-    "updateAvailableDescription": "Es wird installiert und die App startet sich selbst neu."
+    "updateAvailableDescription": "Es wird installiert und die App startet sich selbst neu.",
+    "reportIssue": "Problem melden",
+    "reportIssueTooltip": "Ein Problem mit einem von VoCript geschriebenen Text melden"
   },
   "common": {
     "loading": "Wird geladen...",

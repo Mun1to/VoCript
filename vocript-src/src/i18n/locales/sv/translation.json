@@ -1010,7 +1010,9 @@
     "installMismatchDownload": "Ladda ner installationsprogrammet",
     "updateNow": "Uppdatera",
     "later": "Senare",
-    "updateAvailableDescription": "Den installeras och appen startar om av sig själv."
+    "updateAvailableDescription": "Den installeras och appen startar om av sig själv.",
+    "reportIssue": "Rapportera ett problem",
+    "reportIssueTooltip": "Rapportera ett problem med något VoCript skrivit"
   },
   "common": {
     "loading": "Laddar...",

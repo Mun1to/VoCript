@@ -1010,7 +1010,9 @@
     "installMismatchDownload": "설치 프로그램 내려받기",
     "updateNow": "업데이트",
     "later": "나중에",
-    "updateAvailableDescription": "설치된 후 앱이 자동으로 다시 시작됩니다."
+    "updateAvailableDescription": "설치된 후 앱이 자동으로 다시 시작됩니다.",
+    "reportIssue": "문제 신고",
+    "reportIssueTooltip": "VoCript가 작성한 텍스트의 문제를 신고합니다"
   },
   "common": {
     "loading": "로딩 중...",

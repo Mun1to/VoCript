@@ -1010,7 +1010,9 @@
     "installMismatchDownload": "Kurulum programını indir",
     "updateNow": "Güncelle",
     "later": "Daha sonra",
-    "updateAvailableDescription": "Yüklenecek ve uygulama kendi kendine yeniden başlayacak."
+    "updateAvailableDescription": "Yüklenecek ve uygulama kendi kendine yeniden başlayacak.",
+    "reportIssue": "Sorun bildir",
+    "reportIssueTooltip": "VoCript'in yazdığı bir metinle ilgili sorun bildirin"
   },
   "common": {
     "loading": "Yükleniyor...",

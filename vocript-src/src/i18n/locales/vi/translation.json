@@ -1010,7 +1010,9 @@
     "installMismatchDownload": "Tải trình cài đặt",
     "updateNow": "Cập nhật",
     "later": "Để sau",
-    "updateAvailableDescription": "Sẽ được cài đặt và ứng dụng tự khởi động lại."
+    "updateAvailableDescription": "Sẽ được cài đặt và ứng dụng tự khởi động lại.",
+    "reportIssue": "Báo cáo sự cố",
+    "reportIssueTooltip": "Báo cáo sự cố với văn bản do VoCript tạo ra"
   },
   "common": {
     "loading": "Đang tải...",

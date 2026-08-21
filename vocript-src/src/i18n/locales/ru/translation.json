@@ -1010,7 +1010,9 @@
     "installMismatchDownload": "Скачать установщик",
     "updateNow": "Обновить",
     "later": "Позже",
-    "updateAvailableDescription": "Будет установлено, и приложение перезапустится само."
+    "updateAvailableDescription": "Будет установлено, и приложение перезапустится само.",
+    "reportIssue": "Сообщить о проблеме",
+    "reportIssueTooltip": "Сообщить о проблеме с текстом, который написал VoCript"
   },
   "common": {
     "loading": "Загрузка...",

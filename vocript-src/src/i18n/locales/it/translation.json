@@ -1010,7 +1010,9 @@
     "installMismatchDownload": "Scarica il programma di installazione",
     "updateNow": "Aggiorna",
     "later": "Più tardi",
-    "updateAvailableDescription": "Verrà installato e l'app si riavvierà da sola."
+    "updateAvailableDescription": "Verrà installato e l'app si riavvierà da sola.",
+    "reportIssue": "Segnala un problema",
+    "reportIssueTooltip": "Segnala un problema con un testo scritto da VoCript"
   },
   "common": {
     "loading": "Caricamento...",

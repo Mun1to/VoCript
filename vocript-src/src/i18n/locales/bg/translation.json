@@ -1010,7 +1010,9 @@
     "installMismatchDownload": "Изтегляне на инсталатора",
     "updateNow": "Обнови",
     "later": "По-късно",
-    "updateAvailableDescription": "Ще се инсталира и приложението ще се рестартира само."
+    "updateAvailableDescription": "Ще се инсталира и приложението ще се рестартира само.",
+    "reportIssue": "Съобщаване на проблем",
+    "reportIssueTooltip": "Съобщете за проблем с текст, написан от VoCript"
   },
   "common": {
     "loading": "Зареждане...",

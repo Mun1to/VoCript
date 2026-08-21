@@ -1041,7 +1041,9 @@
     "installMismatchUpdatesGoTo": "Las actualizaciones irían a",
     "installMismatchFix": "Para dejarlo arreglado, descarga el instalador y elige la carpeta que usas de verdad. Todo lo que tienes guardado (modelos, historial y ajustes) se queda donde está.",
     "installMismatchUpdateAnyway": "Actualizar de todos modos",
-    "installMismatchDownload": "Descargar el instalador"
+    "installMismatchDownload": "Descargar el instalador",
+    "reportIssue": "Informar de un problema",
+    "reportIssueTooltip": "Informar de un problema con algo que ha escrito VoCript"
   },
   "common": {
     "loading": "Cargando...",

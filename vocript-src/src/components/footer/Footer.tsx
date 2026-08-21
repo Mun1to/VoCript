@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { getVersion } from "@tauri-apps/api/app";
 import { useTranslation } from "react-i18next";
-import { HelpCircle } from "lucide-react";
+import { Flag, HelpCircle } from "lucide-react";
 
 import { commands } from "@/bindings";
 import ModelSelector from "../model-selector";
@@ -10,6 +10,7 @@ import UpdateChecker from "../update-checker";
 import { useTourStore } from "../../stores/tourStore";
 import { useResolvedTheme } from "../../hooks/useResolvedTheme";
 import { HoverTooltip } from "../ui/HoverTooltip";
+import { reportAiOutput } from "@/lib/utils/reportAiOutput";
 
 const Footer: React.FC = () => {
   const { t } = useTranslation();
@@ -67,6 +68,25 @@ const Footer: React.FC = () => {
             >
               <HelpCircle className="w-3.5 h-3.5 text-accent" />
               <span>{t("onboarding.tour.guide")}</span>
+            </button>
+          </HoverTooltip>
+          <span className="opacity-40">•</span>
+          {/* Reporting what a model wrote has to be reachable from a fresh
+              install, before anything has been dictated (Microsoft Store policy
+              11.16). The two places next to the generated text are the ones
+              that make sense while using the app, but both only exist once
+              there is text to report, so a reviewer opening the app for the
+              first time found nothing. This one is always here. */}
+          <HoverTooltip label={t("footer.reportIssueTooltip")} position="top">
+            <button
+              type="button"
+              onClick={reportAiOutput}
+              className={`flex items-center gap-1.5 transition-colors ${
+                isLight ? "hover:text-slate-900" : "hover:text-white"
+              }`}
+            >
+              <Flag className="w-3.5 h-3.5" />
+              <span>{t("footer.reportIssue")}</span>
             </button>
           </HoverTooltip>
           <span className="opacity-40">•</span>

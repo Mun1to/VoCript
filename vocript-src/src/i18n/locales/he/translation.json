@@ -1010,7 +1010,9 @@
     "installMismatchDownload": "הורדת תוכנית ההתקנה",
     "updateNow": "עדכון",
     "later": "מאוחר יותר",
-    "updateAvailableDescription": "ההתקנה תתבצע והאפליקציה תופעל מחדש מעצמה."
+    "updateAvailableDescription": "ההתקנה תתבצע והאפליקציה תופעל מחדש מעצמה.",
+    "reportIssue": "דיווח על בעיה",
+    "reportIssueTooltip": "דיווח על בעיה בטקסט ש-VoCript כתב"
   },
   "common": {
     "loading": "טוען...",

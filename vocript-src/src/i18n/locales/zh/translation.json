@@ -1010,7 +1010,9 @@
     "installMismatchDownload": "下载安装程序",
     "updateNow": "更新",
     "later": "稍后",
-    "updateAvailableDescription": "将自动安装，应用会自行重启。"
+    "updateAvailableDescription": "将自动安装，应用会自行重启。",
+    "reportIssue": "报告问题",
+    "reportIssueTooltip": "报告 VoCript 生成文本的问题"
   },
   "common": {
     "loading": "加载中...",

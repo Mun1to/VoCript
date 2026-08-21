@@ -1041,7 +1041,9 @@
     "installMismatchUpdatesGoTo": "Updates would install into",
     "installMismatchFix": "To fix it for good, download the installer and choose the folder you actually use. Everything you have saved (models, history and settings) stays where it is.",
     "installMismatchUpdateAnyway": "Update anyway",
-    "installMismatchDownload": "Download the installer"
+    "installMismatchDownload": "Download the installer",
+    "reportIssue": "Report an issue",
+    "reportIssueTooltip": "Report a problem with something VoCript wrote"
   },
   "common": {
     "loading": "Loading...",

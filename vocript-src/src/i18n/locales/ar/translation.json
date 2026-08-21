@@ -1010,7 +1010,9 @@
     "installMismatchDownload": "تنزيل المثبّت",
     "updateNow": "تحديث",
     "later": "لاحقًا",
-    "updateAvailableDescription": "سيتم التثبيت وسيعيد التطبيق تشغيل نفسه."
+    "updateAvailableDescription": "سيتم التثبيت وسيعيد التطبيق تشغيل نفسه.",
+    "reportIssue": "الإبلاغ عن مشكلة",
+    "reportIssueTooltip": "الإبلاغ عن مشكلة في نص كتبه VoCript"
   },
   "common": {
     "loading": "...جاري التحميل",
