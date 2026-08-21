@@ -376,15 +376,30 @@ impl AudioRecordingManager {
         }
 
         if !self.stream_may_stay_prepared() {
-            debug!("Bluetooth capture device; closing the stream instead of keeping it prepared");
             self.stop_microphone_stream();
         }
     }
 
     /// Whether the stream may be left prepared between recordings, or has to be
-    /// closed after each one. See [`looks_like_bluetooth`].
+    /// closed after each one.
+    ///
+    /// Only microphone capture is ever left prepared. System-audio capture is
+    /// closed for two reasons: the per-application path (WASAPI process
+    /// loopback) runs a capture thread of its own that has no stopped state, so
+    /// leaving it in place would keep recording that application indefinitely;
+    /// and system audio does not suffer the problem this whole design exists to
+    /// solve, since what it records was already playing before the key went
+    /// down.
     fn stream_may_stay_prepared(&self) -> bool {
         use cpal::traits::DeviceTrait;
+
+        if !matches!(
+            *self.current_source.lock().unwrap(),
+            AudioSource::Microphone
+        ) {
+            debug!("System-audio capture; closing the stream rather than keeping it");
+            return false;
+        }
 
         let settings = get_settings(&self.app_handle);
         let name = self
@@ -396,7 +411,13 @@ impl AudioRecordingManager {
             .and_then(|device| device.name().ok());
 
         match name {
-            Some(name) => !looks_like_bluetooth(&name),
+            Some(name) => {
+                let bluetooth = looks_like_bluetooth(&name);
+                if bluetooth {
+                    debug!("Bluetooth capture device; closing the stream rather than keeping it");
+                }
+                !bluetooth
+            }
             // Unknown device: keep the fast path rather than punishing everyone
             // for a name we could not read.
             None => true,
@@ -763,8 +784,12 @@ impl AudioRecordingManager {
                 // System audio (loopback) follows the app/system volume, which
                 // is often low — boost quiet captures so Whisper gets a usable
                 // signal. The microphone path is left untouched.
-                let samples = if matches!(*self.current_source.lock().unwrap(), AudioSource::System)
-                {
+                // Read on its own line: release_after_recording below reads the
+                // same source, and these guards are far too easy to hold by
+                // accident across a call that wants them.
+                let from_system =
+                    matches!(*self.current_source.lock().unwrap(), AudioSource::System);
+                let samples = if from_system {
                     normalize_peak(samples, 0.95)
                 } else {
                     samples
@@ -773,7 +798,8 @@ impl AudioRecordingManager {
                 // On-demand mode keeps the stream, now stopped, for next time.
                 // See release_after_recording for why closing it would be the
                 // expensive choice, not the safe one.
-                if matches!(*self.mode.lock().unwrap(), MicrophoneMode::OnDemand) {
+                let on_demand = matches!(*self.mode.lock().unwrap(), MicrophoneMode::OnDemand);
+                if on_demand {
                     self.release_after_recording();
                 }
 
@@ -824,7 +850,8 @@ impl AudioRecordingManager {
             *self.is_recording.lock().unwrap() = false;
 
             // Same as a finished recording: the device is already stopped.
-            if matches!(*self.mode.lock().unwrap(), MicrophoneMode::OnDemand) {
+            let on_demand = matches!(*self.mode.lock().unwrap(), MicrophoneMode::OnDemand);
+            if on_demand {
                 self.release_after_recording();
             }
         }
