@@ -1023,6 +1023,20 @@ fn run_consumer(
             }
             cmd_rx.try_recv().ok()
         } else {
+            // A stopped device should send nothing, but that is a promise made
+            // by each platform's backend rather than by us. If one ever breaks
+            // it, this channel would grow without bound behind a loop that is
+            // not reading it, so drain and complain instead of leaking.
+            let mut stray = 0usize;
+            while let Ok(AudioChunk::Samples(chunk)) = sample_rx.try_recv() {
+                stray += chunk.len();
+            }
+            if stray > 0 {
+                log::warn!(
+                    "Capture device delivered {stray} samples while stopped;                      this platform does not honour pausing a stream"
+                );
+            }
+
             match cmd_rx.recv_timeout(Duration::from_millis(500)) {
                 Ok(cmd) => Some(cmd),
                 Err(mpsc::RecvTimeoutError::Timeout) => None,
