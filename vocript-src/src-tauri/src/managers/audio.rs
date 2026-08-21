@@ -377,6 +377,12 @@ impl AudioRecordingManager {
 
         if !self.stream_may_stay_prepared() {
             self.stop_microphone_stream();
+            // The microphone is left unprepared, so the next dictation pays the
+            // full open once. Re-preparing it here from a background thread was
+            // tried and dropped: it has to write current_source to do so, which
+            // races the very next keypress over which device to open, and that
+            // is a bad trade for one uncommon case on the app's most critical
+            // path.
         }
     }
 
