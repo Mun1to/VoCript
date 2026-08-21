@@ -143,9 +143,11 @@ const RecordingOverlay: React.FC = () => {
   const unmountTimerRef = useRef<number | null>(null);
   const [state, setState] = useState<OverlayState>("recording");
   // False from the keypress until the capture device actually starts feeding
-  // audio: opening it costs around 220 ms on Windows, and showing a lit-up
-  // "recording" capsule during that window told people to start talking before
-  // anything could hear them, which cost them their first word.
+  // audio. A prepared device answers in single-digit milliseconds, so this is
+  // usually too quick to see - which is the point. It shows when there is
+  // really something to wait for, such as a stream being rebuilt after the mic
+  // was unplugged, where a lit-up capsule would tell people to start talking
+  // before anything could hear them and cost them their first word.
   const [micReady, setMicReady] = useState(false);
   const [levels, setLevels] = useState<number[]>(ZERO_LEVELS);
   const [liveText, setLiveText] = useState("");
