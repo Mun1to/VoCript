@@ -1,8 +1,9 @@
 use std::{
+    collections::HashMap,
     io::Error,
     sync::{
         atomic::{AtomicBool, Ordering},
-        mpsc, Arc, Mutex,
+        mpsc, Arc, Mutex, OnceLock,
     },
     time::Duration,
 };
@@ -18,6 +19,40 @@ use crate::audio_toolkit::{
     vad::{self, VadFrame},
     VoiceActivityDetector,
 };
+
+/// Identifies a cached stream configuration: the same physical device is
+/// probed differently depending on whether we capture it as an input or as a
+/// loopback of its output.
+#[derive(Clone, PartialEq, Eq, Hash)]
+struct ConfigKey {
+    device: String,
+    loopback: bool,
+}
+
+/// Stream configurations already probed, keyed by device.
+///
+/// `supported_input_configs()` is the most expensive call between pressing the
+/// shortcut and a live microphone: measured at 178-353 ms on WASAPI, as much as
+/// opening the stream itself, because cpal probes the endpoint once per
+/// candidate format. Its answer only changes when the device is reconfigured in
+/// the OS, so paying it on every dictation threw away a quarter of a second of
+/// speech each time - enough to lose the first word of a short one.
+static CONFIG_CACHE: OnceLock<Mutex<HashMap<ConfigKey, cpal::SupportedStreamConfig>>> =
+    OnceLock::new();
+
+fn config_cache() -> &'static Mutex<HashMap<ConfigKey, cpal::SupportedStreamConfig>> {
+    CONFIG_CACHE.get_or_init(|| Mutex::new(HashMap::new()))
+}
+
+/// Forget what we know about a device, so the next open probes it again.
+/// Called when building a stream fails: a configuration that no longer matches
+/// the hardware is the likeliest reason, and a cached wrong answer would keep
+/// failing forever.
+fn forget_cached_config(device: &Device) {
+    if let Ok(name) = device.name() {
+        config_cache().lock().unwrap().retain(|k, _| k.device != name);
+    }
+}
 
 enum Cmd {
     Start,
@@ -225,6 +260,10 @@ impl AudioRecorder {
             }
             Ok(Err(error_message)) => {
                 let _ = worker.join();
+                // The stream would not build. If we handed it a cached config,
+                // that config is the prime suspect - drop it so the next
+                // attempt re-probes the device instead of failing identically.
+                forget_cached_config(&device);
                 let kind = if is_microphone_access_denied(&error_message) {
                     std::io::ErrorKind::PermissionDenied
                 } else {
@@ -446,6 +485,22 @@ impl AudioRecorder {
         };
         let target_rate = default_config.sample_rate();
 
+        // A cached answer is reused only while the device still reports the
+        // same default rate. Reading that rate costs under 4 ms, so this also
+        // catches the user changing the format in the OS sound panel, which
+        // would otherwise leave us building a stream on a stale config.
+        let key = device.name().ok().map(|device_name| ConfigKey {
+            device: device_name,
+            loopback: is_loopback,
+        });
+        if let Some(key) = &key {
+            if let Some(cached) = config_cache().lock().unwrap().get(key) {
+                if cached.sample_rate() == target_rate {
+                    return Ok(cached.clone());
+                }
+            }
+        }
+
         // Try to find the best sample format at the device's default rate
         let supported_configs = if is_loopback {
             device
@@ -488,16 +543,30 @@ impl AudioRecorder {
             }
         }
 
-        if let Some(config) = best_config {
-            return Ok(config.with_sample_rate(target_rate));
-        }
+        let chosen = if let Some(config) = best_config {
+            config.with_sample_rate(target_rate)
+        } else {
+            // Fall back to device default if no config matched (exotic/virtual devices)
+            log::warn!(
+                "No supported config matched device default rate {:?}, using default config",
+                target_rate
+            );
+            default_config
+        };
 
-        // Fall back to device default if no config matched (exotic/virtual devices)
-        log::warn!(
-            "No supported config matched device default rate {:?}, using default config",
-            target_rate
-        );
-        Ok(default_config)
+        if let Some(key) = key {
+            config_cache().lock().unwrap().insert(key, chosen.clone());
+        }
+        Ok(chosen)
+    }
+
+    /// Probe and cache a device's configuration ahead of time, so the expensive
+    /// part of opening it does not land on the path a keypress takes. A no-op
+    /// once that device is cached, and safe to call from a background thread.
+    pub fn warm_config_cache(device: &Device) {
+        if let Err(e) = Self::get_preferred_config(device) {
+            log::debug!("Could not pre-probe device config: {e}");
+        }
     }
 }
 
@@ -518,7 +587,47 @@ pub fn is_no_input_device_error(error_message: &str) -> bool {
 #[cfg(test)]
 #[allow(clippy::items_after_test_module)]
 mod tests {
-    use super::{is_microphone_access_denied, is_no_input_device_error};
+    use super::{config_cache, is_microphone_access_denied, is_no_input_device_error};
+
+    /// The reason the config cache exists, measured end to end: opening the
+    /// same device twice must be markedly faster the second time, because the
+    /// expensive format probe is skipped. Needs real capture hardware, so it is
+    /// ignored by default; run it with:
+    ///   cargo test -p vocript --lib probe_cache_makes_opening_faster -- --ignored --nocapture
+    #[test]
+    #[ignore = "needs a real capture device"]
+    fn probe_cache_makes_opening_faster() {
+        use super::AudioRecorder;
+        use cpal::traits::HostTrait;
+        use std::time::Instant;
+
+        let host = crate::audio_toolkit::get_cpal_host();
+        let Some(device) = host.default_input_device() else {
+            eprintln!("no input device; nothing to measure");
+            return;
+        };
+
+        // Cold: nothing cached, so the probe runs.
+        config_cache().lock().unwrap().clear();
+        let mut rec = AudioRecorder::new().expect("recorder");
+        let cold = Instant::now();
+        rec.open(Some(device.clone())).expect("cold open");
+        let cold = cold.elapsed();
+        rec.close().expect("close");
+
+        // Warm: same device, config already known.
+        let mut rec = AudioRecorder::new().expect("recorder");
+        let warm = Instant::now();
+        rec.open(Some(device)).expect("warm open");
+        let warm = warm.elapsed();
+        rec.close().expect("close");
+
+        println!("open cold: {cold:?} | open warm: {warm:?}");
+        assert!(
+            warm < cold,
+            "the cached open ({warm:?}) should beat the cold one ({cold:?})"
+        );
+    }
 
     #[test]
     fn detects_access_is_denied() {

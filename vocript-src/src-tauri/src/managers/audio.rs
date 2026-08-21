@@ -226,10 +226,45 @@ impl AudioRecordingManager {
             }
         }
 
+        // Probe the capture device's stream configuration now, in the
+        // background, so the first dictation does not pay for it. Measured on
+        // WASAPI, that probe costs 178-353 ms, and it used to land squarely
+        // between pressing the shortcut and the microphone going live - long
+        // enough to swallow the first word of a short dictation.
+        //
+        // This does NOT open the microphone: it only asks the device which
+        // formats it supports. Verified against Windows' own privacy ledger
+        // (CapabilityAccessManager\ConsentStore\microphone) - a build that
+        // only probes never appears there, while one that captures does.
+        {
+            let manager = manager.clone();
+            std::thread::spawn(move || {
+                manager.preload_device_config();
+            });
+        }
+
         Ok(manager)
     }
 
     /* ---------- helper methods --------------------------------------------- */
+
+    /// Warm the cached stream configuration for the microphone we would use
+    /// right now, off the path a keypress takes. Safe to call repeatedly and
+    /// from any thread; it never opens a capture stream.
+    pub fn preload_device_config(&self) {
+        use cpal::traits::HostTrait;
+
+        let settings = get_settings(&self.app_handle);
+        let device = self
+            .get_effective_microphone_device(&settings)
+            .or_else(|| get_cpal_host().default_input_device());
+
+        if let Some(device) = device {
+            let start = Instant::now();
+            AudioRecorder::warm_config_cache(&device);
+            debug!("Device config pre-probed in {:?}", start.elapsed());
+        }
+    }
 
     fn get_effective_microphone_device(&self, settings: &AppSettings) -> Option<cpal::Device> {
         // Check if we're in clamshell mode and have a clamshell microphone configured
@@ -589,6 +624,15 @@ impl AudioRecordingManager {
             self.close_generation.fetch_add(1, Ordering::SeqCst);
             self.stop_microphone_stream();
             self.start_microphone_stream()?;
+        }
+
+        // The config cache is per device, so the new one has never been probed.
+        // Do it now in the background rather than on the user's next keypress.
+        {
+            let manager = self.clone();
+            std::thread::spawn(move || {
+                manager.preload_device_config();
+            });
         }
         Ok(())
     }
