@@ -1416,6 +1416,162 @@ mod short_clip_tests {
         samples[cut..].to_vec()
     }
 
+    /// What the 1.5 second floor in actions.rs is actually protecting against.
+    ///
+    /// Recordings shorter than 24_000 samples of post-VAD speech are thrown
+    /// away rather than transcribed, on the grounds that Whisper invents text
+    /// when handed near-empty audio. This measures both halves of that trade:
+    /// what real one-to-three-word dictations look like, and what silence and
+    /// room noise actually produce.
+    #[test]
+    #[ignore = "needs a downloaded model and sample clips"]
+    fn what_the_short_recording_floor_costs() {
+        let (Some(model_dir), Some(audio_dir)) = (model_dir(), audio_dir()) else {
+            eprintln!("set VOCRIPT_TEST_MODEL_DIR and VOCRIPT_TEST_AUDIO_DIR to run this");
+            return;
+        };
+        const FLOOR: usize = 24_000; // the threshold actions.rs applies
+
+        let mut engine =
+            ParakeetModel::load(&model_dir, &Quantization::Int8).expect("could not load the model");
+
+        // Half of the question: does near-empty audio really invent words?
+        println!("\n=== what silence and noise transcribe as ===");
+        let mut invented = 0;
+        for (label, audio) in [
+            (
+                "300 ms of digital silence",
+                vec![0.0f32; SAMPLE_RATE * 3 / 10],
+            ),
+            ("1 s of digital silence", vec![0.0f32; SAMPLE_RATE]),
+            (
+                "1 s of faint noise",
+                (0..SAMPLE_RATE)
+                    .map(|i| ((i * 2654435761usize) % 2003) as f32 / 2003.0 * 0.002 - 0.001)
+                    .collect(),
+            ),
+        ] {
+            let text = engine
+                .transcribe_with(&audio, &ParakeetParams::default())
+                .map(|r| r.text.trim().to_string())
+                .unwrap_or_else(|e| format!("<failed: {e}>"));
+            if !text.is_empty() {
+                invented += 1;
+            }
+            println!("  {label:26} -> {text:?}");
+        }
+
+        // The other half: real short dictations, and whether the floor eats them.
+        println!("\n=== real short dictations, against the {FLOOR} sample floor ===");
+        let mut clips: Vec<PathBuf> = std::fs::read_dir(&audio_dir)
+            .expect("could not read the clip folder")
+            .filter_map(|e| e.ok().map(|e| e.path()))
+            .filter(|p| p.extension().is_some_and(|e| e == "wav"))
+            .collect();
+        clips.sort();
+
+        let mut discarded = 0;
+        for clip in &clips {
+            let decoded = crate::audio_toolkit::audio::decode_audio_file_16k_mono(clip)
+                .expect("could not decode the clip");
+            // Approximate what the VAD hands over: speech with the quiet parts
+            // gone, which is what the floor is actually measured against.
+            let speech: Vec<f32> = decoded
+                .chunks(480)
+                .filter(|f| f.iter().fold(0f32, |m, &s| m.max(s.abs())) > 0.01)
+                .flatten()
+                .copied()
+                .collect();
+            let text = engine
+                .transcribe_with(&speech, &ParakeetParams::default())
+                .map(|r| r.text.trim().to_string())
+                .unwrap_or_else(|e| format!("<failed: {e}>"));
+            let verdict = if speech.len() < FLOOR {
+                discarded += 1;
+                "THROWN AWAY"
+            } else {
+                "kept"
+            };
+            println!(
+                "  {:14} {:6} samples ({:.2} s) {verdict:12} -> {text:?}",
+                clip.file_name().unwrap().to_string_lossy(),
+                speech.len(),
+                speech.len() as f32 / SAMPLE_RATE as f32,
+            );
+        }
+
+        println!(
+            "\n{invented}/3 near-empty clips invented text; {discarded}/{} real dictations thrown away",
+            clips.len()
+        );
+    }
+
+    /// The same question asked of Whisper, which is the model the floor was
+    /// written for and the one that actually invents text on empty audio.
+    /// Point VOCRIPT_TEST_WHISPER at a .bin or .gguf to run it.
+    #[test]
+    #[ignore = "needs a downloaded whisper model and sample clips"]
+    fn what_whisper_does_with_short_audio() {
+        use transcribe_cpp::{Model, ModelOptions, RunOptions};
+
+        let (Ok(path), Some(audio_dir)) = (std::env::var("VOCRIPT_TEST_WHISPER"), audio_dir())
+        else {
+            eprintln!("set VOCRIPT_TEST_WHISPER and VOCRIPT_TEST_AUDIO_DIR to run this");
+            return;
+        };
+        super::init_transcribe_backend();
+
+        let model = Model::load_with(&path, &ModelOptions::default()).expect("could not load");
+        let mut session = model.session().expect("could not open a session");
+        let run = |session: &mut Session, audio: &[f32]| {
+            session
+                .run(audio, &RunOptions::default())
+                .map(|t| t.text.trim().to_string())
+                .unwrap_or_else(|e| format!("<failed: {e}>"))
+        };
+
+        println!("\n=== whisper on near-empty audio ===");
+        for (label, audio) in [
+            (
+                "300 ms of digital silence",
+                vec![0.0f32; SAMPLE_RATE * 3 / 10],
+            ),
+            ("1 s of digital silence", vec![0.0f32; SAMPLE_RATE]),
+            (
+                "1 s of faint noise",
+                (0..SAMPLE_RATE)
+                    .map(|i| ((i * 2654435761usize) % 2003) as f32 / 2003.0 * 0.002 - 0.001)
+                    .collect(),
+            ),
+        ] {
+            println!("  {label:26} -> {:?}", run(&mut session, &audio));
+        }
+
+        println!("\n=== whisper on real short dictations ===");
+        let mut clips: Vec<PathBuf> = std::fs::read_dir(&audio_dir)
+            .expect("could not read the clip folder")
+            .filter_map(|e| e.ok().map(|e| e.path()))
+            .filter(|p| p.extension().is_some_and(|e| e == "wav"))
+            .collect();
+        clips.sort();
+        for clip in &clips {
+            let decoded = crate::audio_toolkit::audio::decode_audio_file_16k_mono(clip)
+                .expect("could not decode the clip");
+            let speech: Vec<f32> = decoded
+                .chunks(480)
+                .filter(|f| f.iter().fold(0f32, |m, &s| m.max(s.abs())) > 0.01)
+                .flatten()
+                .copied()
+                .collect();
+            println!(
+                "  {:14} {:.2} s -> {:?}",
+                clip.file_name().unwrap().to_string_lossy(),
+                speech.len() as f32 / SAMPLE_RATE as f32,
+                run(&mut session, &speech)
+            );
+        }
+    }
+
     #[test]
     #[ignore = "needs a downloaded model and sample clips"]
     fn short_clip_first_word_survives() {

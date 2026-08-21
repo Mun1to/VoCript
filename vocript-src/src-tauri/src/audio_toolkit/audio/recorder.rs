@@ -728,6 +728,79 @@ mod tests {
         );
     }
 
+    /// Splits "the app recorded nothing" into its two possible causes: the
+    /// stream not delivering audio, or the VAD discarding all of it. Runs both
+    /// paths over the same moment of sound, so whatever is playing in the room
+    /// reaches both.
+    ///
+    ///   VOCRIPT_TEST_VAD=path/to/silero_vad_v4.onnx \
+    ///   cargo test --lib with_and_without_the_vad -- --ignored --nocapture
+    #[test]
+    #[ignore = "needs a real capture device and something making noise"]
+    fn with_and_without_the_vad() {
+        use super::AudioRecorder;
+        use crate::audio_toolkit::vad::{SileroVad, SmoothedVad};
+        use cpal::traits::HostTrait;
+        use std::time::Duration;
+
+        let Ok(vad_path) = std::env::var("VOCRIPT_TEST_VAD") else {
+            eprintln!("set VOCRIPT_TEST_VAD to the silero model");
+            return;
+        };
+        let host = crate::audio_toolkit::get_cpal_host();
+        let Some(device) = host.default_input_device() else {
+            eprintln!("no input device");
+            return;
+        };
+
+        // Same VAD the app builds: silero at 0.2, 20 frames of pre-roll, 15 of
+        // hangover, speech confirmed on the first voiced frame.
+        let silero = SileroVad::new(&vad_path, 0.2).expect("silero");
+        let smoothed = SmoothedVad::new(Box::new(silero), 20, 15, 1);
+        let mut with_vad = AudioRecorder::new()
+            .expect("recorder")
+            .with_vad(Box::new(smoothed));
+        let mut without_vad = AudioRecorder::new().expect("recorder");
+
+        with_vad.open(Some(device.clone())).expect("open");
+        without_vad.open(Some(device)).expect("open");
+
+        with_vad.start().expect("start");
+        without_vad.start().expect("start");
+        println!("recording for 4 s - make some noise now");
+        std::thread::sleep(Duration::from_secs(4));
+        let gated = with_vad.stop().expect("stop");
+        let raw = without_vad.stop().expect("stop");
+        with_vad.close().ok();
+        without_vad.close().ok();
+
+        let peak = raw.iter().fold(0f32, |m, &s| m.max(s.abs()));
+        println!(
+            "without the VAD: {} samples ({:.2} s), peak {peak:.4}",
+            raw.len(),
+            raw.len() as f32 / 16_000.0
+        );
+        println!(
+            "through the VAD: {} samples ({:.2} s)",
+            gated.len(),
+            gated.len() as f32 / 16_000.0
+        );
+        println!(
+            "verdict: {}",
+            if raw.is_empty() {
+                "the STREAM delivered nothing"
+            } else if gated.is_empty() {
+                "the stream delivered audio and the VAD discarded all of it"
+            } else {
+                "both paths produced audio"
+            }
+        );
+        assert!(
+            !raw.is_empty(),
+            "a started stream delivered no audio at all"
+        );
+    }
+
     /// The reason the config cache exists, measured end to end: opening the
     /// same device twice must be markedly faster the second time, because the
     /// expensive format probe is skipped. Needs real capture hardware, so it is
@@ -849,6 +922,7 @@ fn run_consumer(
     );
 
     let mut processed_samples = Vec::<f32>::new();
+    let mut raw_samples_seen = 0usize;
     let mut recording = false;
     // Whether the device is currently producing audio. It starts stopped
     // unless always-on mode asked for the opposite (see `open`), and while it
@@ -906,6 +980,9 @@ fn run_consumer(
         let mut next_cmd = if capturing {
             match sample_rx.recv_timeout(Duration::from_millis(200)) {
                 Ok(AudioChunk::Samples(raw)) => {
+                    if recording {
+                        raw_samples_seen += raw.len();
+                    }
                     // The device is live. Announced before the VAD sees
                     // anything, because this says "the microphone is
                     // capturing", not "somebody is talking".
@@ -959,6 +1036,7 @@ fn run_consumer(
                     stop_flag.store(false, Ordering::Relaxed);
                     processed_samples.clear();
                     live_buffer.lock().unwrap().clear();
+                    raw_samples_seen = 0;
                     visualizer.reset();
                     if let Some(v) = &vad {
                         v.lock().unwrap().reset();
@@ -1019,6 +1097,11 @@ fn run_consumer(
                         handle_frame(frame, true, &vad, &mut processed_samples)
                     });
 
+                    log::debug!(
+                        "Recording captured {raw_samples_seen} raw samples from the device, \
+                         {} left after the VAD",
+                        processed_samples.len()
+                    );
                     let _ = reply_tx.send(std::mem::take(&mut processed_samples));
 
                     // Stop the device now that its audio has been drained, so
