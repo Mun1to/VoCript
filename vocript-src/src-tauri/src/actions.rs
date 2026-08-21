@@ -431,6 +431,20 @@ pub(crate) async fn process_transcription_output(
 /// is what should be: the shortcut brushed by accident.
 const MIN_TRANSCRIPTION_SAMPLES: usize = 3_200; // 0.2 s at 16 kHz
 
+// Both ends of that compromise, checked by the compiler rather than by a test,
+// so moving the floor back to where it swallowed one-word dictations fails the
+// build instead of a test run.
+const _: () = assert!(
+    MIN_TRANSCRIPTION_SAMPLES < 16_000 * 40 / 100,
+    "the floor is back up where it swallows one-word dictations: the shortest \
+     real one measured was 'Undo' at 0.48 s of speech"
+);
+const _: () = assert!(
+    MIN_TRANSCRIPTION_SAMPLES >= 16_000 / 10,
+    "a floor this low stops discarding accidental keypresses, which Whisper \
+     answers with 'Thank you.'"
+);
+
 impl ShortcutAction for TranscribeAction {
     fn start(&self, app: &AppHandle, binding_id: &str, _shortcut_str: &str) {
         let start_time = Instant::now();
@@ -1038,26 +1052,3 @@ pub static ACTION_MAP: Lazy<HashMap<String, Arc<dyn ShortcutAction>>> = Lazy::ne
     );
     map
 });
-
-#[cfg(test)]
-mod tests {
-    use super::MIN_TRANSCRIPTION_SAMPLES;
-
-    /// The floor is a compromise between two measured facts, and this pins both
-    /// ends of it. Above: every real one-to-three-word dictation has to get
-    /// through, and the shortest one measured was "Undo" at 0.48 s of speech.
-    /// Below: a shortcut brushed by accident still has to be discarded, since
-    /// Whisper answers near-empty audio with "Thank you."
-    #[test]
-    fn the_short_recording_floor_leaves_room_for_a_single_word() {
-        const SAMPLE_RATE: usize = 16_000;
-        assert!(
-            MIN_TRANSCRIPTION_SAMPLES < SAMPLE_RATE * 40 / 100,
-            "the floor is back up where it swallows one-word dictations"
-        );
-        assert!(
-            MIN_TRANSCRIPTION_SAMPLES >= SAMPLE_RATE / 10,
-            "a floor this low stops discarding accidental keypresses"
-        );
-    }
-}
