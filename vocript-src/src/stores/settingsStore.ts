@@ -234,8 +234,6 @@ const settingUpdaters: {
     commands.changeWorkProfileSetting((value as string | null) ?? null),
   experimental_enabled: (value) =>
     commands.changeExperimentalEnabledSetting(value as boolean),
-  lazy_stream_close: (value) =>
-    commands.changeLazyStreamCloseSetting(value as boolean),
   show_tray_icon: (value) =>
     commands.changeShowTrayIconSetting(value as boolean),
   whisper_accelerator: (value) =>

@@ -580,10 +580,6 @@
         "label": "Experimentella funktioner",
         "description": "Aktivera experimentella funktioner som fortfarande är under utveckling."
       },
-      "lazyStreamClose": {
-        "label": "Håll mikrofonen öppen mellan transkriptioner",
-        "description": "Håller mikrofonströmmen öppen i 30 sekunder efter att inspelningen avslutats, vilket minskar latensen för transkriptioner efter varandra. Kan försämra Bluetooth-ljudkvaliteten medan den är aktiv."
-      },
       "acceleration": {
         "whisper": {
           "title": "Whisper-acceleration",

@@ -504,8 +504,6 @@ pub struct AppSettings {
     #[serde(default)]
     pub experimental_enabled: bool,
     #[serde(default)]
-    pub lazy_stream_close: bool,
-    #[serde(default)]
     pub keyboard_implementation: KeyboardImplementation,
     #[serde(default = "default_show_tray_icon")]
     pub show_tray_icon: bool,
@@ -1096,7 +1094,6 @@ pub fn get_default_settings() -> AppSettings {
         tour_completed: false,
         work_profile: None,
         experimental_enabled: false,
-        lazy_stream_close: false,
         keyboard_implementation: KeyboardImplementation::default(),
         show_tray_icon: default_show_tray_icon(),
         paste_delay_ms: default_paste_delay_ms(),
