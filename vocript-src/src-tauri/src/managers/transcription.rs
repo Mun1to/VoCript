@@ -1364,3 +1364,141 @@ mod tests {
         );
     }
 }
+
+/// What a very short dictation actually looks like to the model.
+///
+/// These need a downloaded Parakeet model and a folder of 16 kHz mono clips, so
+/// they are ignored by default. Point them at your own material with:
+///   VOCRIPT_TEST_MODEL_DIR=... VOCRIPT_TEST_AUDIO_DIR=... ///   cargo test --lib short_clip -- --ignored --nocapture
+#[cfg(test)]
+mod short_clip_tests {
+    use super::*;
+    use std::path::PathBuf;
+
+    const SAMPLE_RATE: usize = 16_000;
+
+    fn model_dir() -> Option<PathBuf> {
+        std::env::var("VOCRIPT_TEST_MODEL_DIR")
+            .ok()
+            .map(PathBuf::from)
+    }
+
+    fn audio_dir() -> Option<PathBuf> {
+        std::env::var("VOCRIPT_TEST_AUDIO_DIR")
+            .ok()
+            .map(PathBuf::from)
+    }
+
+    /// Where the first sample above the noise floor sits. Stands in for what the
+    /// VAD does to a real dictation: it hands the model audio that starts on the
+    /// speech itself, with no run-up.
+    fn trim_leading_silence(samples: &[f32]) -> &[f32] {
+        let floor = 0.01;
+        let first = samples.iter().position(|s| s.abs() > floor).unwrap_or(0);
+        &samples[first..]
+    }
+
+    /// Measured and discarded: padding the front of a short clip with 100 ms or
+    /// 300 ms of silence changed none of the five test transcriptions. The
+    /// model does not need a run-up; it needs the audio that was never
+    /// captured. Kept so nobody re-derives the idea and ships it untested.
+    #[allow(dead_code)]
+    fn with_leading_silence(samples: &[f32], ms: usize) -> Vec<f32> {
+        let mut out = vec![0.0; SAMPLE_RATE * ms / 1000];
+        out.extend_from_slice(samples);
+        out
+    }
+
+    /// Drop the first `ms` of audio: what the user loses while the capture
+    /// device is still opening.
+    fn drop_leading(samples: &[f32], ms: usize) -> Vec<f32> {
+        let cut = (SAMPLE_RATE * ms / 1000).min(samples.len());
+        samples[cut..].to_vec()
+    }
+
+    #[test]
+    #[ignore = "needs a downloaded model and sample clips"]
+    fn short_clip_first_word_survives() {
+        let (Some(model_dir), Some(audio_dir)) = (model_dir(), audio_dir()) else {
+            eprintln!("set VOCRIPT_TEST_MODEL_DIR and VOCRIPT_TEST_AUDIO_DIR to run this");
+            return;
+        };
+
+        let mut engine =
+            ParakeetModel::load(&model_dir, &Quantization::Int8).expect("could not load the model");
+
+        let mut clips: Vec<PathBuf> = std::fs::read_dir(&audio_dir)
+            .expect("could not read the clip folder")
+            .filter_map(|e| e.ok().map(|e| e.path()))
+            .filter(|p| p.extension().is_some_and(|e| e == "wav"))
+            .collect();
+        clips.sort();
+
+        for clip in clips {
+            let decoded = crate::audio_toolkit::audio::decode_audio_file_16k_mono(&clip)
+                .expect("could not decode the clip");
+            let trimmed = trim_leading_silence(&decoded).to_vec();
+            let secs = trimmed.len() as f32 / SAMPLE_RATE as f32;
+
+            // How much speech the user loses while the capture device is
+            // still opening. The numbers are the ones measured on a real
+            // machine: 456 ms was the median and 691 ms the 90th percentile
+            // back when the stream was opened on the keypress; 220 ms is what
+            // caching its configuration left; 10 ms is what a device prepared
+            // in advance costs, and is the one this test holds the line on.
+            let variants: [(&str, Vec<f32>); 5] = [
+                ("everything the user said", trimmed.clone()),
+                ("-10 ms (prepared device)", drop_leading(&trimmed, 10)),
+                ("-220 ms (cached config only)", drop_leading(&trimmed, 220)),
+                ("-456 ms (median, before)", drop_leading(&trimmed, 456)),
+                ("-691 ms (p90, before)", drop_leading(&trimmed, 691)),
+            ];
+
+            println!(
+                "\n=== {} ({secs:.2} s of speech) ===",
+                clip.file_name().unwrap().to_string_lossy()
+            );
+
+            let mut whole = None;
+            let mut prepared = None;
+            for (label, audio) in variants {
+                let params = ParakeetParams::default();
+                let text = engine
+                    .transcribe_with(&audio, &params)
+                    .map(|r| r.text.trim().to_string())
+                    .unwrap_or_else(|e| format!("<failed: {e}>"));
+                println!("  {label:32} -> {text:?}");
+                match label {
+                    "everything the user said" => whole = Some(spoken_words(&text)),
+                    "-10 ms (prepared device)" => prepared = Some(spoken_words(&text)),
+                    _ => {}
+                }
+            }
+
+            // The claim this test defends: with the device prepared in advance,
+            // a short dictation transcribes exactly as it would have with
+            // nothing missing. Compared on words, since punctuation and casing
+            // wobble between runs and none of that is what went wrong.
+            assert_eq!(
+                prepared,
+                whole,
+                "{} lost words to the time the device takes to start",
+                clip.file_name().unwrap().to_string_lossy()
+            );
+        }
+    }
+
+    /// The words of a transcription, lowercased and stripped of punctuation:
+    /// what the user actually said, without the model's typographic opinions.
+    fn spoken_words(text: &str) -> Vec<String> {
+        text.split_whitespace()
+            .map(|w| {
+                w.chars()
+                    .filter(|c| c.is_alphanumeric())
+                    .flat_map(|c| c.to_lowercase())
+                    .collect::<String>()
+            })
+            .filter(|w| !w.is_empty())
+            .collect()
+    }
+}
