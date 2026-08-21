@@ -142,6 +142,11 @@ const RecordingOverlay: React.FC = () => {
   const [isMounted, setIsMounted] = useState(false);
   const unmountTimerRef = useRef<number | null>(null);
   const [state, setState] = useState<OverlayState>("recording");
+  // False from the keypress until the capture device actually starts feeding
+  // audio: opening it costs around 220 ms on Windows, and showing a lit-up
+  // "recording" capsule during that window told people to start talking before
+  // anything could hear them, which cost them their first word.
+  const [micReady, setMicReady] = useState(false);
   const [levels, setLevels] = useState<number[]>(ZERO_LEVELS);
   const [liveText, setLiveText] = useState("");
   // Live session finished: the bubble becomes editable and shows the copy button.
@@ -234,6 +239,11 @@ const RecordingOverlay: React.FC = () => {
           setCopyFeedback(false);
         }
         setState(overlayState);
+        // Only the states that actually capture start out dimmed; the
+        // transcribing/processing/copied capsules are not waiting on a mic.
+        if (overlayState === "recording" || overlayState === "live") {
+          setMicReady(false);
+        }
         setIsVisible(true);
         // Rust just (re)positioned the window (see overlay.rs); refresh our
         // cached position so the next drag starts from the real spot instead
@@ -269,6 +279,12 @@ const RecordingOverlay: React.FC = () => {
           // label behind either.
           setState("recording");
         }, UNMOUNT_AFTER_HIDE_MS);
+      });
+
+      // The capture device is live: light the capsule up, so the change from
+      // dimmed to lit is the real "talk now" signal.
+      const unlistenReady = await listen("mic-ready", () => {
+        setMicReady(true);
       });
 
       // Listen for mic-level updates
@@ -329,6 +345,7 @@ const RecordingOverlay: React.FC = () => {
         }
         unlistenShow();
         unlistenHide();
+        unlistenReady();
         unlistenLevel();
         unlistenLive();
         unlistenLiveFinished();
@@ -500,7 +517,11 @@ const RecordingOverlay: React.FC = () => {
         state === "transcribing" || state === "processing" || state === "copied"
           ? "status"
           : ""
-      } ${liveFinished ? "live-finished" : ""} ${isVisible ? "fade-in" : ""}`}
+      } ${liveFinished ? "live-finished" : ""} ${isVisible ? "fade-in" : ""} ${
+        (state === "recording" || state === "live") && !micReady
+          ? "warming"
+          : ""
+      }`}
     >
       <div
         className="overlay-left overlay-logo"
