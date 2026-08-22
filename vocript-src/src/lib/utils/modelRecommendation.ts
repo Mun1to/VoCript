@@ -81,8 +81,30 @@ export const getRecommendedModelId = (
   langCode: string,
 ): string | null => {
   if (models.length === 0) return null;
+  // "I switch often" is a language answer too, and it used to be treated as no
+  // answer at all: it took the catalogue's recommended model without looking at
+  // what that model speaks. That model is Parakeet V3, which NVIDIA trained on
+  // 25 European languages, so anyone who switched between, say, Turkish and
+  // English was handed a model that cannot hear one of them, with nothing on
+  // screen saying so. A Turkish user reported exactly that on 2026-08-23.
+  //
+  // Somebody who says they switch languages is asking for coverage, so that is
+  // what decides: the widest catalogue there is, and the best balance within
+  // it. Models with no declared languages (imported ones) are out of this,
+  // because an empty list means unknown, not universal.
   if (!langCode || langCode === "auto") {
-    return models.find((m) => m.is_recommended)?.id ?? null;
+    const declaran = models.filter((m) => m.supported_languages.length > 0);
+    if (declaran.length === 0) {
+      return models.find((m) => m.is_recommended)?.id ?? null;
+    }
+    const masAmplio = Math.max(
+      ...declaran.map((m) => m.supported_languages.length),
+    );
+    return [...declaran]
+      .filter((m) => m.supported_languages.length === masAmplio)
+      .sort(
+        (a, b) => balanceScore(b) - balanceScore(a) || a.id.localeCompare(b.id),
+      )[0].id;
   }
 
   const specialist = LANGUAGE_SPECIALISTS[langCode];
