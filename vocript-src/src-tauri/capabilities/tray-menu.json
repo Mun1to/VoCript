@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "tray-menu",
+  "description": "The custom tray menu window. It was left out of every capability, so it could invoke the app's own commands (those need no permission) but never received a single event: listen() and onFocusChanged() were silently inert. That is why picking a language from the menu changed it everywhere except in the menu itself, which went on showing whatever it had rendered when the window was first created. Only what this window actually calls is granted: events, so it learns it has been opened, and hide, for the Escape key.",
+  "windows": ["tray_menu"],
+  "permissions": ["core:event:default", "core:window:allow-hide"]
+}

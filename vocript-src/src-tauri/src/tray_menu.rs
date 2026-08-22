@@ -164,7 +164,10 @@ pub fn show_tray_menu_at(app: &AppHandle, cursor: PhysicalPosition<f64>) {
     let _ = window.set_focus();
     // The window is reused, so tell the UI to reload state and reset any
     // submenu left open from last time.
-    let _ = window.emit("tray-menu-opened", ());
+    match window.emit("tray-menu-opened", ()) {
+        Ok(()) => debug!("Tray menu shown, asked the UI to reload"),
+        Err(e) => debug!("Tray menu shown but the reload event failed: {e}"),
+    }
 }
 
 /// Right-clicking the tray again while the menu is open should close it.

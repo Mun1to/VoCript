@@ -24,6 +24,7 @@ import {
 } from "../lib/constants/accentColors";
 import { useOsType } from "../hooks/useOsType";
 import { modLabel } from "../lib/utils/keyboard";
+import { syncLanguageFromSettings } from "@/i18n";
 
 /**
  * Custom tray menu, shown instead of the native OS menu (which cannot be
@@ -239,20 +240,36 @@ export const TrayMenu: React.FC = () => {
     }
   }, []);
 
-  useEffect(() => {
+  // Everything this window shows has to be re-read every time it opens: it is
+  // created once at startup and then shown and hidden for the rest of the run,
+  // so whatever it rendered the first time would otherwise stay forever. That
+  // includes the language, which is why picking one from here used to leave
+  // the menu speaking the old one until the app was restarted.
+  const refresh = useCallback(() => {
+    setView("main");
     load();
     applyAppearance();
-    // Rust emits this every time the window is shown; the window is reused, so
-    // without it we would render stale state and a leftover submenu.
-    const un = listen("tray-menu-opened", () => {
-      setView("main");
-      load();
-      applyAppearance();
-    });
+    void syncLanguageFromSettings();
+  }, [load, applyAppearance]);
+
+  useEffect(() => {
+    refresh();
+    // Two ways in, because one of them is not enough. Rust emits this when it
+    // shows the window...
+    const un = listen("tray-menu-opened", refresh);
+    // ...and this fires when the window actually takes focus, which is what
+    // show_tray_menu_at does right before emitting. Belt and braces: a menu
+    // showing yesterday's state is the bug this window keeps coming back with.
+    const unFocus = getCurrentWindow().onFocusChanged(
+      ({ payload: focused }) => {
+        if (focused) refresh();
+      },
+    );
     return () => {
       un.then((f) => f());
+      unFocus.then((f) => f());
     };
-  }, [load, applyAppearance]);
+  }, [refresh]);
 
   // Size the window to the content: a fixed height would leave dead space
   // below short menus. The wrapper's 8px padding (for the shadow) is added on
