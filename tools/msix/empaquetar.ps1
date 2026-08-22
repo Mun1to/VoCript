@@ -150,8 +150,20 @@ if (-not $SinProbar) {
         exit 1
     }
     Bien "sigue viva a los 20 s"
+    # Esperar a que MUERA, no dos segundos a ojo: la app tarda en soltar el
+    # exe y sus DLL, y con el archivo aún abierto makeappx falla con un 255
+    # que no dice de qué se queja, dejando el .msix ANTERIOR en su sitio.
     Stop-Process -Id $proc.Id -Force
+    $limite = (Get-Date).AddSeconds(30)
+    while ((Get-Process -Name vocript -ErrorAction SilentlyContinue) -and (Get-Date) -lt $limite) {
+        Start-Sleep -Milliseconds 500
+    }
+    if (Get-Process -Name vocript -ErrorAction SilentlyContinue) {
+        Mal "La app de prueba no termina de cerrarse; empaquetar ahora dejaría el paquete viejo."
+        exit 1
+    }
     Start-Sleep -Seconds 2
+    Bien "cerrada, el ejecutable ya está libre"
 } else {
     Write-Host "[4] Arranque de prueba SALTADO (-SinProbar)" -ForegroundColor Yellow
 }
@@ -165,9 +177,14 @@ if (-not $makeappx) {
     Mal "No encuentro makeappx.exe. Hace falta el Windows SDK."
     exit 1
 }
+# El paquete anterior se borra ANTES de empaquetar. Si makeappx falla, aquí no
+# queda un .msix viejo con buena pinta esperando a que alguien lo suba: mejor
+# no tener paquete que tener el de la versión pasada.
+Remove-Item $salida -Force -ErrorAction SilentlyContinue
 & $makeappx.FullName pack /d $msix /p $salida /o
-if ($LASTEXITCODE -ne 0) {
-    Mal "makeappx falló con código $LASTEXITCODE"
+if ($LASTEXITCODE -ne 0 -or -not (Test-Path $salida)) {
+    Mal "makeappx falló con código $LASTEXITCODE y no hay paquete."
+    Mal "Si se queja del ejecutable, es que quedaba un VoCript abierto bloqueándolo."
     exit 1
 }
 
