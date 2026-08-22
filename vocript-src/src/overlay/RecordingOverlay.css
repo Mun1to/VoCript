@@ -359,37 +359,3 @@
 .copy-button:active {
   transform: scale(0.95);
 }
-
-/* ---------- waiting for the microphone ---------------------------------- */
-
-/* Opening a capture device costs around 220 ms on Windows even with its
-   configuration cached, and the capsule used to appear fully lit the instant
-   the shortcut went down. That told people to start talking before anything
-   could hear them, and a short dictation lost its first word to it.
-
-   While waiting, the contents sit dimmed; the jump to full opacity when the
-   backend reports the first captured samples ("mic-ready") is the real
-   "talk now" signal. The capsule itself keeps its shape and position, so this
-   reads as the capsule waking up rather than as a second animation. */
-.overlay-left,
-.overlay-middle,
-.overlay-right,
-.overlay-divider {
-  transition: opacity 120ms ease-out;
-}
-
-.recording-overlay.warming .overlay-left,
-.recording-overlay.warming .overlay-middle,
-.recording-overlay.warming .overlay-right,
-.recording-overlay.warming .overlay-divider {
-  opacity: 0.32;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .overlay-left,
-  .overlay-middle,
-  .overlay-right,
-  .overlay-divider {
-    transition: none;
-  }
-}

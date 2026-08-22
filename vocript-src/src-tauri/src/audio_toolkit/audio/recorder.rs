@@ -78,12 +78,6 @@ pub struct AudioRecorder {
     worker_handle: Option<std::thread::JoinHandle<()>>,
     vad: Option<Arc<Mutex<Box<dyn vad::VoiceActivityDetector>>>>,
     level_cb: Option<Arc<dyn Fn(Vec<f32>) + Send + Sync + 'static>>,
-    /// Called once per recording, as soon as captured audio actually reaches
-    /// the pipeline. Opening a capture device costs around 220 ms on WASAPI
-    /// even with everything cached, and the UI used to claim it was recording
-    /// from the instant the key went down - so anyone who started talking
-    /// straight away lost their first word without the app ever showing it.
-    ready_cb: Option<Arc<dyn Fn() + Send + Sync + 'static>>,
     /// Live snapshot of the audio captured so far in the current recording
     /// (16 kHz mono, post-VAD). The consumer thread appends to it; live
     /// transcription reads it via `current_samples()`.
@@ -116,7 +110,6 @@ impl AudioRecorder {
             worker_handle: None,
             vad: None,
             level_cb: None,
-            ready_cb: None,
             always_capturing: Arc::new(AtomicBool::new(false)),
             live_buffer: Arc::new(Mutex::new(Vec::new())),
             mirror_live: Arc::new(AtomicBool::new(false)),
@@ -137,17 +130,6 @@ impl AudioRecorder {
         F: Fn(Vec<f32>) + Send + Sync + 'static,
     {
         self.level_cb = Some(Arc::new(cb));
-        self
-    }
-
-    /// Register the callback that fires when the first captured audio of a
-    /// recording reaches the pipeline. Fires before the VAD has its say: it
-    /// reports that the device is live, not that anyone is speaking.
-    pub fn with_ready_callback<F>(mut self, cb: F) -> Self
-    where
-        F: Fn() + Send + Sync + 'static,
-    {
-        self.ready_cb = Some(Arc::new(cb));
         self
     }
 
@@ -192,7 +174,6 @@ impl AudioRecorder {
         let vad = self.vad.clone();
         // Move the optional level callback into the worker thread
         let level_cb = self.level_cb.clone();
-        let ready_cb = self.ready_cb.clone();
         let always_capturing = self.always_capturing.clone();
         let live_buffer = self.live_buffer.clone();
         let mirror_live = self.mirror_live.clone();
@@ -291,7 +272,6 @@ impl AudioRecorder {
                         sample_rx,
                         cmd_rx,
                         level_cb,
-                        ready_cb,
                         stop_flag,
                         LiveMirror {
                             buffer: live_buffer,
@@ -402,7 +382,6 @@ impl AudioRecorder {
         // app is playing (music, quiet/low-volume playback, etc.), not gate it
         // like close-mic speech — the VAD would otherwise discard most of it.
         let level_cb = self.level_cb.clone();
-        let ready_cb = self.ready_cb.clone();
         let live_buffer = self.live_buffer.clone();
         let mirror_live = self.mirror_live.clone();
         let worker = std::thread::spawn(move || {
@@ -412,7 +391,6 @@ impl AudioRecorder {
                 sample_rx,
                 cmd_rx,
                 level_cb,
-                ready_cb,
                 stop_flag,
                 LiveMirror {
                     buffer: live_buffer,
@@ -902,7 +880,6 @@ fn run_consumer(
     sample_rx: mpsc::Receiver<AudioChunk>,
     cmd_rx: mpsc::Receiver<Cmd>,
     level_cb: Option<Arc<dyn Fn(Vec<f32>) + Send + Sync + 'static>>,
-    ready_cb: Option<Arc<dyn Fn() + Send + Sync + 'static>>,
     stop_flag: Arc<AtomicBool>,
     live: LiveMirror,
     capture: Capture,
@@ -929,9 +906,6 @@ fn run_consumer(
     // is stopped not a single sample can arrive - so the loop below waits on
     // commands instead of on audio that is never coming.
     let mut capturing = stream.is_none() || always_capturing.load(Ordering::Relaxed);
-    // Set by Cmd::Start, cleared by the first chunk that arrives after it: the
-    // moment the capture device is really feeding us audio.
-    let mut announce_ready = false;
 
     // ---------- spectrum visualisation setup ---------------------------- //
     const BUCKETS: usize = 16;
@@ -983,16 +957,6 @@ fn run_consumer(
                     if recording {
                         raw_samples_seen += raw.len();
                     }
-                    // The device is live. Announced before the VAD sees
-                    // anything, because this says "the microphone is
-                    // capturing", not "somebody is talking".
-                    if recording && announce_ready {
-                        announce_ready = false;
-                        if let Some(cb) = &ready_cb {
-                            cb();
-                        }
-                    }
-
                     // ---------- spectrum processing ---------------------- //
                     if let Some(buckets) = visualizer.feed(&raw) {
                         if let Some(cb) = &level_cb {
@@ -1072,7 +1036,6 @@ fn run_consumer(
                     };
 
                     recording = started.is_ok();
-                    announce_ready = started.is_ok();
                     if let Err(message) = &started {
                         log::error!("{message}");
                     }
@@ -1080,7 +1043,6 @@ fn run_consumer(
                 }
                 Cmd::Stop(reply_tx) => {
                     recording = false;
-                    announce_ready = false;
                     stop_flag.store(true, Ordering::Relaxed);
 
                     // Drain all remaining audio until the producer confirms end-of-stream.

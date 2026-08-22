@@ -173,12 +173,6 @@ fn create_audio_recorder(
             move |levels| {
                 utils::emit_levels(&app_handle, &levels);
             }
-        })
-        .with_ready_callback({
-            let app_handle = app_handle.clone();
-            move || {
-                utils::emit_mic_ready(&app_handle);
-            }
         });
 
     // Always-on mode leaves the device running between recordings, because
