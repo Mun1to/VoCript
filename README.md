@@ -95,20 +95,43 @@ of carrying its own, which is where the AppImage runs into trouble there.
 
 ### macOS
 
-Download **[VoCript-arm64.dmg](https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-arm64.dmg)**, open it and drag VoCript into Applications.
+Paste this in Terminal:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Mun1to/VoCript/main/tools/install-macos.sh | sh
+```
+
+It downloads the latest build and puts VoCript in your Applications folder, and
+the app then opens like any other, with no security dialog.
 
 > **Apple Silicon only** (M1 and newer). Intel Macs are not supported.
 
-> **The first launch needs one extra step.** VoCript isn't signed with an Apple
-> developer account yet, so macOS won't open it straight away. Go to **System
-> Settings → Privacy & Security**, scroll down and click **Open Anyway**. If
-> that button isn't there, run this once in Terminal:
->
-> ```bash
-> xattr -dr com.apple.quarantine /Applications/VoCript.app
-> ```
->
-> Only the first launch needs it. Updates after that install normally.
+<details>
+<summary>Why a command and not just the .dmg?</summary>
+
+The [.dmg](https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-arm64.dmg)
+is still there and works. What it also does is walk you into **"Apple could not
+verify that this app is free of malware"**, because VoCript is not notarized -
+that needs a paid Apple Developer account, and there is no free tier for it.
+
+Your browser tags everything it downloads with `com.apple.quarantine`, and that
+tag is what makes macOS check with Apple before opening an app. `curl` does not
+set it, and Apple has said it never will, so a copy installed this way is never
+sent to Gatekeeper in the first place. The app is still signed - Apple Silicon
+requires that of every binary - just not by an account Apple has charged for.
+
+Nothing on your Mac is weakened by this: no setting is changed, and the script
+only installs one app without the browser's download tag. It is about forty
+lines and worth reading before you pipe anything into a shell, including this.
+
+If you took the .dmg instead, either click **Open Anyway** in **System Settings
+→ Privacy & Security**, or run:
+
+```bash
+xattr -dr com.apple.quarantine /Applications/VoCript.app
+```
+
+</details>
 
 > Two things work differently on macOS: **system-audio capture is Windows-only**
 > for now (dictating with the microphone works normally), and macOS will ask for
