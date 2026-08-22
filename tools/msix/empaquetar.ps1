@@ -38,9 +38,10 @@ function Bien($texto) { Write-Host "  $texto" -ForegroundColor Green }
 Paso 1 "Comprobando versiones"
 $versionApp = (Get-Content $conf -Raw | ConvertFrom-Json).version
 $versionMsix = ([xml](Get-Content $manifiesto -Raw)).Package.Identity.Version
-$esperada = "$versionApp.0"
-if ($versionMsix -ne $esperada) {
-    Mal "AppxManifest.xml dice $versionMsix y la app es $versionApp (esperaba $esperada)."
+# El cuarto numero es la revision DEL PAQUETE: sube cuando hay que reenviar a
+# la Store sin que el codigo cambie, y por eso no tiene que ser cero.
+if ($versionMsix -notmatch "^$([regex]::Escape($versionApp))\.\d+$") {
+    Mal "AppxManifest.xml dice $versionMsix y la app es $versionApp (esperaba $versionApp.N)."
     Mal "Corrige Version= en $manifiesto antes de empaquetar."
     exit 1
 }
@@ -58,6 +59,47 @@ Bien ("vocript.exe de hace {0:N1} h" -f $edad)
 if ($edad -gt 6) {
     Write-Host "  AVISO: ese build tiene más de 6 horas, comprueba que es el de esta versión." -ForegroundColor Yellow
 }
+
+$versionExe = (Get-Item $exeOrigen).VersionInfo.FileVersion
+if ($versionExe -ne $versionApp) {
+    Mal "Ese vocript.exe dice ser la $versionExe y estamos empaquetando la $versionApp."
+    exit 1
+}
+Bien "el exe se declara $versionExe"
+
+# --- 2b. Y tiene que llevar el frontend DENTRO ---------------------------
+# Esto es lo que tumbó el cuarto envío (rechazo 10.1.2.10 del 2026-08-21): la
+# app abría una ventana con "localhost refused to connect" y nada más.
+#
+# Tauri decide en tiempo de COMPILACION de dónde carga la interfaz, y no lo
+# decide por el perfil sino por una feature: en build.rs de tauri 2.10.2,
+# `let dev = !has_feature("custom-protocol")`. `bun run tauri build` la activa
+# y empotra la carpeta dist dentro del binario; `cargo build --release` NO, y
+# produce un exe de release, con su número de versión correcto, que en vez de
+# la interfaz abre el servidor de desarrollo que no existe en la máquina de
+# nadie. Los dos exes se parecen en todo salvo en medio mega de assets.
+#
+# C:\ct\release lo comparten varios proyectos y cualquier comprobación en
+# release reescribe ese exe, así que no basta con haber lanzado el build
+# correcto: hay que mirar el archivo que se va a copiar.
+Paso "2b" "Comprobando que el exe lleva la interfaz dentro"
+$texto = [System.Text.Encoding]::ASCII.GetString([System.IO.File]::ReadAllBytes($exeOrigen))
+$incrustados = ([regex]::Matches($texto, '/assets/[A-Za-z0-9_-]+\.(js|css)') |
+    ForEach-Object { $_.Value } | Sort-Object -Unique).Count
+$texto = $null
+$enDisco = (Get-ChildItem (Join-Path $raiz "vocript-src\dist\assets") -Include *.js, *.css -Recurse).Count
+if ($incrustados -eq 0) {
+    Mal "Ese exe NO lleva la interfaz dentro: es un binario de desarrollo."
+    Mal "Al abrirlo saldrá 'localhost refused to connect', que es justo por lo que"
+    Mal "Microsoft rechazó el envío del 2026-08-21."
+    Mal "Recompila con 'bun run tauri build' (no con 'cargo build --release')."
+    exit 1
+}
+if ($incrustados -lt $enDisco) {
+    Mal "El exe lleva $incrustados assets y en dist hay ${enDisco}: ese build es de otra versión del frontend."
+    exit 1
+}
+Bien "$incrustados assets empotrados en el binario"
 
 # --- 3. Copiar lo que de verdad se distribuye ----------------------------
 # El instalador real incluye, además del exe, todo lo declarado en
