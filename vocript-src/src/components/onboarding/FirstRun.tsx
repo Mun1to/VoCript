@@ -113,6 +113,42 @@ const Paso: React.FC<{
   </div>
 );
 
+// Back lives at the top now, next to the progress bar, so the footer only
+// carries the button that moves forward.
+const Pie: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <div className="relative flex shrink-0 items-center gap-2 px-8 pb-6 pt-4">
+    <div className="ms-auto flex items-center gap-2">{children}</div>
+  </div>
+);
+
+// Out here with the others, and it has to stay out here. Declared inside
+// FirstRun, this was a different function on every render, so React saw a
+// different component type each time and threw the whole subtree away instead
+// of updating it. Anything below it lost its state the instant something above
+// changed - which is what made the language list flicker and refuse to be
+// picked from: it was being unmounted while open.
+const Pregunta: React.FC<{
+  texto: string;
+  ayuda?: string;
+  children: React.ReactNode;
+}> = ({ texto, ayuda, children }) => (
+  <div className="relative grid flex-1 place-items-center overflow-y-auto px-8">
+    <div className="flex w-full max-w-[600px] flex-col gap-5 py-6">
+      <div className="flex flex-col gap-2">
+        <h1 className="text-[30px] font-semibold leading-[1.12] tracking-[-0.03em] text-[var(--vc-text-main)]">
+          {texto}
+        </h1>
+        {ayuda && (
+          <p className="text-sm leading-relaxed text-[var(--vc-text-muted)]">
+            {ayuda}
+          </p>
+        )}
+      </div>
+      {children}
+    </div>
+  </div>
+);
+
 /** One answer card. */
 const Opcion: React.FC<{
   activa?: boolean;
@@ -340,36 +376,6 @@ export const FirstRun: React.FC<FirstRunProps> = ({
       toast.error(t("onboarding.permissions.errors.requestFailed"));
     }
   };
-
-  // Back lives at the top now, next to the progress bar, so the footer only
-  // carries the button that moves forward.
-  const Pie: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-    <div className="relative flex shrink-0 items-center gap-2 px-8 pb-6 pt-4">
-      <div className="ms-auto flex items-center gap-2">{children}</div>
-    </div>
-  );
-
-  const Pregunta: React.FC<{
-    texto: string;
-    ayuda?: string;
-    children: React.ReactNode;
-  }> = ({ texto, ayuda, children }) => (
-    <div className="relative grid flex-1 place-items-center overflow-y-auto px-8">
-      <div className="flex w-full max-w-[600px] flex-col gap-5 py-6">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-[30px] font-semibold leading-[1.12] tracking-[-0.03em] text-[var(--vc-text-main)]">
-            {texto}
-          </h1>
-          {ayuda && (
-            <p className="text-sm leading-relaxed text-[var(--vc-text-muted)]">
-              {ayuda}
-            </p>
-          )}
-        </div>
-        {children}
-      </div>
-    </div>
-  );
 
   // ---- 1. Language ----
   if (paso === 0) {
