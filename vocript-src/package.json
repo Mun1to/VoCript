@@ -17,7 +17,9 @@
     "test:playwright": "playwright test",
     "test:playwright:ui": "playwright test --ui",
     "check:translations": "bun scripts/check-translations.ts",
-    "postinstall": "bun scripts/check-nix-deps.ts"
+    "postinstall": "bun scripts/check-nix-deps.ts",
+    "demo": "node demo/scripts/extraer-modelos.mjs && vite --config vite.config.demo.ts",
+    "build:demo": "node demo/scripts/extraer-modelos.mjs && vite build --config vite.config.demo.ts"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.16",

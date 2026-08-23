@@ -45,3 +45,10 @@ result
 
 # Bundled speech models (.bin son grandes; los descarga el bot, no se commitean)
 src-tauri/resources/models/*.bin
+
+# Build de la demo web (se regenera con pnpm run build:demo)
+dist-demo
+
+# Catalogo de modelos extraido de src-tauri/src/managers/model.rs.
+# Es un derivado: lo regeneran los scripts demo y build:demo.
+demo/src/simulador/modelos.generado.json

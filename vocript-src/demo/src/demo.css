@@ -1,0 +1,10 @@
+/* Hoja de estilo de la demo.
+ *
+ * Es la de la app, sin cambios: lo único que añade es decirle a Tailwind dónde
+ * están las clases. Tailwind 4 busca a partir de la raíz del proyecto de Vite,
+ * y la de la demo es `demo/`, así que sin esta línea no escanearía `src/` y la
+ * app saldría sin maquetar (medido: la hoja pasa de 71 KB a 16 KB, y la ventana
+ * se ve como una lista de texto suelto).
+ */
+@import "../../src/App.css";
+@source "../../src";
