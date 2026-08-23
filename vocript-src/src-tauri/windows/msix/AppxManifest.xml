@@ -8,7 +8,7 @@
   <Identity
     Name="Munito.Vocript"
     Publisher="CN=AF5AFDE8-6E9C-4644-9F84-DC0C5CAF743A"
-    Version="3.7.9.0" />
+    Version="3.7.10.0" />
 
   <Properties>
     <DisplayName>VoCript</DisplayName>
