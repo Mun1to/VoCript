@@ -9,6 +9,8 @@ import "./demo.css";
 
 import App from "../../src/App";
 import { registrarEmisorDeAvisos } from "./simulador/aviso";
+import { dictar } from "./simulador/dictado";
+import { conectarPuente } from "./puente";
 
 import "../../src/i18n";
 
@@ -31,6 +33,17 @@ registrarEmisorDeAvisos((mensaje) => {
 });
 
 useModelStore.getState().initialize();
+
+// El dictado simulado se dispara con el atajo de verdad, el mismo que la
+// pantalla "Hoy" le está pidiendo al visitante que pulse. Así no hay que
+// inventarse un botón que la app no tiene.
+window.addEventListener("keydown", (evento) => {
+  if (!evento.ctrlKey || evento.code !== "Space" || evento.repeat) return;
+  evento.preventDefault();
+  void dictar();
+});
+
+conectarPuente();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
