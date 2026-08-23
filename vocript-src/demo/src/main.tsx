@@ -83,3 +83,37 @@ if (origenDelPadre) {
   // carga y encender los botones.
   window.parent.postMessage({ tipo: "vocript-demo:lista" }, origenDelPadre);
 }
+
+// --- La rueda del ratón no se queda presa en la demo ---
+//
+// Un marco empotrado se traga el scroll: al pasar por encima, la página deja de
+// bajar y el visitante se queda atrapado en la sección. Aquí la rueda mueve la
+// página de fuera, y solo se queda dentro si alguien hace clic en la ventana,
+// que es cuando de verdad la está usando (el mismo trato que dan los mapas
+// empotrados).
+if (origenDelPadre) {
+  let enUso = false;
+
+  const activar = () => {
+    enUso = true;
+  };
+  window.addEventListener("pointerdown", activar);
+  // Al sacar el ratón de la ventana se suelta, para no dejarla presa sin querer.
+  window.addEventListener("mouseleave", () => {
+    enUso = false;
+  });
+
+  window.addEventListener(
+    "wheel",
+    (evento) => {
+      if (enUso) return;
+      evento.preventDefault();
+      window.parent.postMessage(
+        { tipo: "vocript-demo:rueda", deltaY: evento.deltaY, deltaX: evento.deltaX },
+        origenDelPadre,
+      );
+    },
+    // No pasivo: hace falta poder cancelar el scroll de dentro.
+    { passive: false },
+  );
+}

@@ -15,15 +15,25 @@ const FRASE_EN_VIVO =
 
 const esperar = (ms: number) => new Promise((listo) => setTimeout(listo, ms));
 
-/** Barras con forma de voz: sílabas que suben y bajan, no un ruido plano. */
+/**
+ * Barras con forma de voz.
+ *
+ * La primera versión iba a sílabas de 7,5 rad/s y encima le sumaba un temblor
+ * de 20 rad/s: las barras caían a cero varias veces por segundo y el medidor
+ * parecía una alarma, no alguien hablando. Ahora las sílabas van a 3 rad/s
+ * (que es el ritmo real del habla, unas tres por segundo), nunca bajan del
+ * todo, y el temblor es lento y pequeño.
+ */
 function nivelesEnElInstante(t: number): number[] {
-  const silaba = Math.abs(Math.sin(t * 7.5));
-  const respiracion = 0.55 + 0.45 * Math.sin(t * 1.3);
+  // El exponente redondea el pico de la sílaba: sin él, la curva sube y baja
+  // en punta y se nota el seno.
+  const silaba = 0.4 + 0.6 * Math.pow(Math.abs(Math.sin(t * 3.0)), 0.65);
+  const respiracion = 0.75 + 0.25 * Math.sin(t * 0.7);
   const sobre = silaba * respiracion;
   return Array.from({ length: 64 }, (_, i) =>
     Math.max(
-      0,
-      Math.min(1, sobre * (1 - i / 90) * (0.75 + 0.25 * Math.sin(t * 20 + i * 0.7))),
+      0.06,
+      Math.min(1, sobre * (1 - i / 110) * (0.92 + 0.08 * Math.sin(t * 3.4 + i * 0.3))),
     ),
   );
 }
@@ -56,7 +66,7 @@ export async function enseñarCapsula(modo: "normal" | "live"): Promise<void> {
     while (performance.now() - inicio < 3600) {
       if (!sigueSiendoMia()) return;
       emitirLocal("mic-level", nivelesEnElInstante((performance.now() - inicio) / 1000));
-      await esperar(50);
+      await esperar(70);
     }
     if (!sigueSiendoMia()) return;
     emitirLocal("show-overlay", "transcribing");
