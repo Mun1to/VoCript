@@ -8,3 +8,21 @@
  */
 @import "../../src/App.css";
 @source "../../src";
+
+/* La cápsula del overlay.
+ *
+ * En el escritorio es una ventana del sistema que Rust coloca sobre todo lo
+ * demás; aquí es un elemento flotando sobre la ventana de la app, en el mismo
+ * sitio donde aparece de verdad. El componente trae su propio tamaño (36 px de
+ * alto, y más ancho en el modo en vivo), así que aquí solo se coloca.
+ */
+.vc-demo-capsula {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}

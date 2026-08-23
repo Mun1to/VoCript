@@ -1,6 +1,12 @@
-// Arranque de la demo. Monta la MISMA `App` que la aplicación de escritorio;
-// lo único distinto es que antes conecta los avisos de "esto solo va instalado"
-// con los mensajes emergentes que la app ya usa.
+// Arranque de la demo. Monta la MISMA `App` que la aplicación de escritorio, y
+// encima la cápsula del overlay, que allí vive en su propia ventana y aquí
+// flota sobre la ventana como flota sobre la pantalla.
+//
+// La cápsula se monta AQUÍ, dentro de la misma página que la app, y no en un
+// marco aparte: probado el 2026-08-23, en su propia página el componente
+// recibía el evento `show-overlay` (el bus tenía su suscriptor y lo entregaba)
+// pero no llegaba a pintarse. En la misma página funciona a la primera, y de
+// paso hay un marco menos que cargar.
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { toast } from "sonner";
@@ -8,9 +14,9 @@ import { toast } from "sonner";
 import "./demo.css";
 
 import App from "../../src/App";
+import RecordingOverlay from "../../src/overlay/RecordingOverlay";
 import { registrarEmisorDeAvisos } from "./simulador/aviso";
-import { dictar } from "./simulador/dictado";
-import { conectarPuente } from "./puente";
+import { enseñarCapsula } from "./simulador/capsula";
 
 import "../../src/i18n";
 
@@ -34,19 +40,46 @@ registrarEmisorDeAvisos((mensaje) => {
 
 useModelStore.getState().initialize();
 
-// El dictado simulado se dispara con el atajo de verdad, el mismo que la
-// pantalla "Hoy" le está pidiendo al visitante que pulse. Así no hay que
-// inventarse un botón que la app no tiene.
-window.addEventListener("keydown", (evento) => {
-  if (!evento.ctrlKey || evento.code !== "Space" || evento.repeat) return;
-  evento.preventDefault();
-  void dictar();
-});
-
-conectarPuente();
+/** La ventana y, flotando encima, la cápsula del overlay. */
+function Demo() {
+  return (
+    <>
+      <App />
+      <div className="vc-demo-capsula">
+        <RecordingOverlay />
+      </div>
+    </>
+  );
+}
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <App />
+    <Demo />
   </React.StrictMode>,
 );
+
+// --- Puente con la web que enseña la demo dentro de un marco ---
+//
+// Lo que llega de fuera son DATOS, no órdenes: solo se acepta pedir uno de los
+// dos modos de la cápsula, y solo de la página que nos ha abierto.
+const origenDelPadre = (() => {
+  if (window.parent === window) return null;
+  try {
+    return document.referrer ? new URL(document.referrer).origin : null;
+  } catch {
+    return null;
+  }
+})();
+
+if (origenDelPadre) {
+  window.addEventListener("message", (evento) => {
+    if (evento.origin !== origenDelPadre) return;
+    const dato = evento.data as { tipo?: unknown; modo?: unknown } | null;
+    if (!dato || dato.tipo !== "vocript-demo:capsula") return;
+    if (dato.modo === "normal" || dato.modo === "live") void enseñarCapsula(dato.modo);
+  });
+
+  // La ventana ya está montada: la página de fuera puede quitar su velo de
+  // carga y encender los botones.
+  window.parent.postMessage({ tipo: "vocript-demo:lista" }, origenDelPadre);
+}
