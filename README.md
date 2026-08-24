@@ -137,9 +137,41 @@ xattr -dr com.apple.quarantine /Applications/VoCript.app
 > for now (dictating with the microphone works normally), and macOS will ask for
 > **Accessibility** permission; without it the app cannot type into other apps.
 
-> ⚠️ **macOS support is new and has not been tested on real hardware yet.** It
-> builds, launches and passes its tests on Apple's own machines, but if
-> something misbehaves, please [open an issue](https://github.com/Mun1to/VoCript/issues/new).
+<details>
+<summary>Dictation types nothing after an update? Here is the 30 second fix</summary>
+
+macOS decides whether an app still holds a permission by looking at the exact
+fingerprint of the app file. VoCript is signed, but not with a paid Apple
+Developer certificate, so that fingerprint is all macOS has to go on, and every
+update changes it. The result: after updating, the switch next to VoCript under
+**Accessibility** is still there and still **on**, but macOS quietly stops
+honouring it. Dictation records, and then types nothing.
+
+To fix it:
+
+1. Quit VoCript completely (**Cmd+Q**, and check it is gone from the menu bar).
+2. Open **System Settings > Privacy & Security > Accessibility**.
+3. Select **VoCript** in the list and click the **-** button below it to remove
+   the entry.
+4. Open VoCript again and grant the permission when it asks.
+
+If it still says *Waiting*, run this in Terminal and then open VoCript again:
+
+```bash
+tccutil reset Accessibility com.vocript.app
+```
+
+The only real cure is a Developer ID certificate, the same 99 dollars a year
+account that would let us notarize the app. Until VoCript has enough Mac users
+to justify it, this is the workaround, and it is the one every ad-hoc signed Mac
+app lives with. Apple explains the underlying reason in
+[TN3127](https://developer.apple.com/documentation/technotes/tn3127-inside-code-signing-requirements).
+
+</details>
+
+> ⚠️ **macOS support is young.** It has been installed and used on a real Mac,
+> but on far fewer machines than Windows, so if something misbehaves please
+> [open an issue](https://github.com/Mun1to/VoCript/issues/new).
 
 > 💡 Prefer to see all versions and files? They're on the [Releases page](https://github.com/Mun1to/VoCript/releases/latest).
 

@@ -141,9 +141,41 @@ xattr -dr com.apple.quarantine /Applications/VoCript.app
 > te pedirá permiso de **Accesibilidad**; sin él la app no puede escribir en
 > otros programas.
 
-> ⚠️ **El soporte de macOS es nuevo y aún no se ha probado en un Mac real.**
-> Compila, arranca y pasa sus pruebas en las máquinas de Apple, pero si algo se
-> comporta raro, [abre una incidencia](https://github.com/Mun1to/VoCript/issues/new).
+<details>
+<summary>¿El dictado no escribe nada después de una actualización? Se arregla en 30 segundos</summary>
+
+macOS decide si una app conserva un permiso mirando la huella exacta del archivo
+de la app. VoCript está firmado, pero no con un certificado de pago de Apple
+Developer, así que esa huella es lo único que macOS tiene, y cada actualización
+la cambia. El resultado: después de actualizar, el interruptor de VoCript en
+**Accesibilidad** sigue ahí y sigue **encendido**, pero macOS deja de hacerle
+caso sin decir nada. El dictado graba, y luego no escribe.
+
+Para arreglarlo:
+
+1. Cierra VoCript del todo (**Cmd+Q**, y comprueba que no queda en la barra de menús).
+2. Abre **Ajustes del Sistema > Privacidad y seguridad > Accesibilidad**.
+3. Selecciona **VoCript** en la lista y pulsa el botón **-** de debajo para
+   quitar la entrada.
+4. Vuelve a abrir VoCript y concede el permiso cuando te lo pida.
+
+Si sigue diciendo *Esperando*, ejecuta esto en el Terminal y abre VoCript otra vez:
+
+```bash
+tccutil reset Accessibility com.vocript.app
+```
+
+La única cura de verdad es un certificado Developer ID, la misma cuenta de 99
+dólares al año que permitiría notarizar la app. Hasta que VoCript tenga usuarios
+de Mac que lo justifiquen, este es el apaño, y es con el que vive cualquier app
+de Mac firmada ad-hoc. Apple explica el motivo de fondo en
+[TN3127](https://developer.apple.com/documentation/technotes/tn3127-inside-code-signing-requirements).
+
+</details>
+
+> ⚠️ **El soporte de macOS es joven.** Ya se ha instalado y usado en un Mac de
+> verdad, pero en muchas menos máquinas que Windows, así que si algo se comporta
+> raro, [abre una incidencia](https://github.com/Mun1to/VoCript/issues/new).
 
 > 💡 ¿Prefieres ver todas las versiones y archivos? Están en la [página de Releases](https://github.com/Mun1to/VoCript/releases/latest).
 
