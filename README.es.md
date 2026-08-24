@@ -33,6 +33,12 @@
   </a>
 </p>
 
+<p align="center">
+  <a href="https://apps.microsoft.com/detail/9P247C96LC72">
+    <img src="https://get.microsoft.com/images/es%20dark.svg" alt="Consigue VoCript en la Microsoft Store" height="52" />
+  </a>
+</p>
+
 </div>
 
 https://github.com/user-attachments/assets/b98eb03e-de11-45ea-8825-645253d8ad12
@@ -58,13 +64,19 @@ VoCript escucha tu **voz** (o el **audio que suena en tu PC**) y lo convierte en
 
 ### Windows
 
+**Desde la Microsoft Store**, que es lo más fácil y de lo único que Windows no
+avisa: **[consigue VoCript](https://apps.microsoft.com/detail/9P247C96LC72)**. Se instala de un clic y la Store se encarga de
+mantenerlo al día.
+
+**O coge el instalador directamente de aquí:**
+
 1. Pulsa el botón **Descargar** de arriba, o este enlace directo: **[descargar VoCript](https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-Setup.exe)**. Se baja el instalador al instante.
 2. Abre el archivo descargado (`VoCript-Setup.exe`).
 3. Sigue los pasos. ¡Listo!
 
-> Windows puede mostrar un aviso de "editor desconocido" (la app aún no está
-> firmada con un certificado de pago). Pulsa **Más información → Ejecutar de
-> todas formas**.
+> Con este Windows puede mostrar un aviso de "editor desconocido" (la app aún no
+> está firmada con un certificado de pago). Pulsa **Más información → Ejecutar de
+> todas formas**, o coge la versión de la Store, que no lo muestra nunca.
 
 ### Linux
 

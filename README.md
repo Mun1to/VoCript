@@ -33,6 +33,12 @@
   </a>
 </p>
 
+<p align="center">
+  <a href="https://apps.microsoft.com/detail/9P247C96LC72">
+    <img src="https://get.microsoft.com/images/en-us%20dark.svg" alt="Get VoCript from the Microsoft Store" height="52" />
+  </a>
+</p>
+
 </div>
 
 https://github.com/user-attachments/assets/b98eb03e-de11-45ea-8825-645253d8ad12
@@ -58,12 +64,19 @@ VoCript listens to your **voice** (or the **audio playing on your PC**) and turn
 
 ### Windows
 
+**From the Microsoft Store**, the easiest way and the one Windows never warns
+about: **[get VoCript](https://apps.microsoft.com/detail/9P247C96LC72)**. It installs in one click and the Store keeps it up
+to date for you.
+
+**Or take the installer straight from here:**
+
 1. Click the **Download** button above, or use this direct link: **[download VoCript](https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-Setup.exe)**. The installer downloads instantly.
 2. Open the downloaded file (`VoCript-Setup.exe`).
 3. Follow the steps. Done!
 
-> Windows may show an "unknown publisher" warning (the app isn't signed with a
-> paid certificate yet). Click **More info → Run anyway**.
+> Windows may show an "unknown publisher" warning on this one (the app isn't
+> signed with a paid certificate yet). Click **More info → Run anyway**, or take
+> the Store version, which never shows it.
 
 ### Linux
 
