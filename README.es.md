@@ -35,7 +35,7 @@
 
 <p align="center">
   <a href="https://apps.microsoft.com/detail/9P247C96LC72">
-    <img src="https://get.microsoft.com/images/es%20dark.svg" alt="Consigue VoCript en la Microsoft Store" height="52" />
+    <img src="https://get.microsoft.com/images/es%20dark.svg" alt="Consigue VoCript en la Microsoft Store" width="216" height="59" />
   </a>
 </p>
 
