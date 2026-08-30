@@ -30,7 +30,8 @@
     },
     "collapse": "메뉴 접기",
     "expand": "메뉴 펼치기",
-    "today": "오늘"
+    "today": "오늘",
+    "pro": "VoCript Pro"
   },
   "today": {
     "status": {
@@ -1207,5 +1208,30 @@
     "title": "검색",
     "placeholder": "섹션으로 이동…",
     "empty": "일치하는 섹션이 없습니다."
+  },
+  "pro": {
+    "crosshair": {
+      "hint": "음성으로 듣고 싶은 텍스트를 드래그하세요.",
+      "escape": "Esc"
+    },
+    "pageSubtitle": "라이선스와 유료 기능입니다.",
+    "license": {
+      "title": "라이선스",
+      "description": "구독할 때 받은 키를 붙여 넣으세요. 인터넷 없이 이 컴퓨터에서 확인합니다.",
+      "placeholder": "VOCRIPT-PRO....",
+      "activate": "활성화",
+      "remove": "제거",
+      "activated": "VoCript Pro가 활성화되었습니다.",
+      "rejected": "유효하지 않은 키입니다.",
+      "expires": "{{fecha}}까지 유효합니다."
+    },
+    "readAloud": {
+      "title": "소리 내어 읽기",
+      "description": "화면의 아무 텍스트나 상자로 끌어 선택하면 VoCript가 읽어 줍니다.",
+      "pick": "텍스트 선택",
+      "stop": "정지",
+      "lastRead": "마지막으로 읽은 내용:",
+      "noVoice": "Windows에 설치된 음성이 없어 아무 소리도 나지 않습니다. 설정, 시간 및 언어, 음성에서 추가하세요."
+    }
   }
 }

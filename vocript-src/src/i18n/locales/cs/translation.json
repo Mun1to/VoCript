@@ -30,7 +30,8 @@
     },
     "collapse": "Sbalit nabídku",
     "expand": "Rozbalit nabídku",
-    "today": "Dnes"
+    "today": "Dnes",
+    "pro": "VoCript Pro"
   },
   "today": {
     "status": {
@@ -1207,5 +1208,30 @@
     "title": "Hledat",
     "placeholder": "Přejít na sekci…",
     "empty": "Žádná sekce neodpovídá."
+  },
+  "pro": {
+    "crosshair": {
+      "hint": "Označte text, který chcete přečíst nahlas.",
+      "escape": "Esc"
+    },
+    "pageSubtitle": "Vaše licence a placené funkce.",
+    "license": {
+      "title": "Licence",
+      "description": "Vložte klíč, který jste dostali při předplatném. Ověřuje se v tomto počítači, bez internetu.",
+      "placeholder": "VOCRIPT-PRO....",
+      "activate": "Aktivovat",
+      "remove": "Odebrat",
+      "activated": "VoCript Pro je aktivní.",
+      "rejected": "Tento klíč není platný.",
+      "expires": "Platná do {{fecha}}."
+    },
+    "readAloud": {
+      "title": "Čtení nahlas",
+      "description": "Přetažením označte jakýkoli text na obrazovce a VoCript ho přečte nahlas.",
+      "pick": "Vybrat text",
+      "stop": "Zastavit",
+      "lastRead": "Naposledy přečteno:",
+      "noVoice": "Windows nemá nainstalovaný žádný hlas, takže nebude nic slyšet. Přidá se v Nastavení, Čas a jazyk, Řeč."
+    }
   }
 }

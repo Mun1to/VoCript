@@ -52,3 +52,8 @@ dist-demo
 # Catalogo de modelos extraido de src-tauri/src/managers/model.rs.
 # Es un derivado: lo regeneran los scripts demo y build:demo.
 demo/src/simulador/modelos.generado.json
+
+# El motor de VoCript Pro. Vive en su propio repositorio privado y se clona aqui dentro;
+# este repositorio es publico y ese codigo no lo es. Sin la carpeta, la compilacion normal
+# funciona igual: solo se compila con la bandera `pro`.
+/src-tauri/src/pro/

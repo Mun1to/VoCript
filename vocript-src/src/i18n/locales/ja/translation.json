@@ -30,7 +30,8 @@
     },
     "collapse": "メニューを畳む",
     "expand": "メニューを開く",
-    "today": "今日"
+    "today": "今日",
+    "pro": "VoCript Pro"
   },
   "today": {
     "status": {
@@ -1207,5 +1208,30 @@
     "title": "検索",
     "placeholder": "セクションへ移動…",
     "empty": "一致するセクションがありません。"
+  },
+  "pro": {
+    "crosshair": {
+      "hint": "読み上げたいテキストをドラッグしてご覧ください。",
+      "escape": "Esc"
+    },
+    "pageSubtitle": "ライセンスと有料機能です。",
+    "license": {
+      "title": "ライセンス",
+      "description": "申し込み時に届いたキーを貼り付けてください。インターネットなしで、このパソコン上で確認します。",
+      "placeholder": "VOCRIPT-PRO....",
+      "activate": "有効にする",
+      "remove": "削除",
+      "activated": "VoCript Pro が有効になりました。",
+      "rejected": "そのキーは正しくありません。",
+      "expires": "{{fecha}} まで有効です。"
+    },
+    "readAloud": {
+      "title": "読み上げ",
+      "description": "画面上の好きな文字を四角で囲むと、VoCript が読み上げます。",
+      "pick": "文字を選ぶ",
+      "stop": "停止",
+      "lastRead": "最後に読み上げた内容:",
+      "noVoice": "Windows に音声がインストールされていないため、何も聞こえません。設定、時刻と言語、音声認識から追加できます。"
+    }
   }
 }

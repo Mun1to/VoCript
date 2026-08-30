@@ -2,7 +2,11 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
   "description": "Capabilities for the app",
-  "windows": ["main", "recording_overlay"],
+  "windows": [
+    "main",
+    "recording_overlay",
+    "pro_mirilla"
+  ],
   "permissions": [
     "core:default",
     "core:window:allow-start-dragging",
@@ -22,7 +26,14 @@
     "fs:allow-resource-read-recursive",
     {
       "identifier": "fs:scope",
-      "allow": [{ "path": "$APPDATA" }, { "path": "$APPDATA/**/*" }]
+      "allow": [
+        {
+          "path": "$APPDATA"
+        },
+        {
+          "path": "$APPDATA/**/*"
+        }
+      ]
     }
   ]
 }

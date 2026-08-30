@@ -87,6 +87,16 @@ specta-typescript = "0.0.9"
 tauri-specta = { version = "=2.0.0-rc.21", features = ["derive", "typescript"] }
 tauri-plugin-dialog = "2.6"
 
+# --- VoCript Pro -------------------------------------------------------------
+# Las funciones de pago se compilan solo con la bandera `pro`. Sin ella estas
+# dependencias no se descargan siquiera, y el binario que sale es el gratuito.
+ed25519-dalek = { version = "2", optional = true }
+xcap = { version = "0.9", optional = true }
+
+[features]
+# El binario de pago. El gratuito es el de por defecto, sin nada de esto.
+pro = ["dep:ed25519-dalek", "dep:xcap"]
+
 [target.'cfg(unix)'.dependencies]
 signal-hook = "0.3"
 
@@ -121,6 +131,13 @@ windows = { version = "0.61.3", features = [
   "Win32_Storage_Packaging_Appx",
   "Media_Control",
   "Foundation",
+  # Lector de texto y voz del sistema, los dos de serie en Windows 10 y 11.
+  "Media_Ocr",
+  "Graphics_Imaging",
+  "Storage_Streams",
+  "Globalization",
+  "Foundation_Collections",
+  "Win32_Media_Speech",
 ] }
 winreg = "0.55"
 

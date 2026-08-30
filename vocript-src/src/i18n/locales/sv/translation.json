@@ -30,7 +30,8 @@
     },
     "collapse": "Fäll ihop menyn",
     "expand": "Fäll ut menyn",
-    "today": "Idag"
+    "today": "Idag",
+    "pro": "VoCript Pro"
   },
   "today": {
     "status": {
@@ -1207,5 +1208,30 @@
     "title": "Sök",
     "placeholder": "Gå till en sektion…",
     "empty": "Ingen sektion matchar."
+  },
+  "pro": {
+    "crosshair": {
+      "hint": "Dra över texten du vill få uppläst.",
+      "escape": "Esc"
+    },
+    "pageSubtitle": "Din licens och de betalda funktionerna.",
+    "license": {
+      "title": "Licens",
+      "description": "Klistra in nyckeln du fick när du tecknade abonnemanget. Den kontrolleras på den här datorn, utan internet.",
+      "placeholder": "VOCRIPT-PRO....",
+      "activate": "Aktivera",
+      "remove": "Ta bort",
+      "activated": "VoCript Pro är aktivt.",
+      "rejected": "Den nyckeln är inte giltig.",
+      "expires": "Gäller till {{fecha}}."
+    },
+    "readAloud": {
+      "title": "Läs upp",
+      "description": "Dra en ruta över valfri text på skärmen så läser VoCript upp den.",
+      "pick": "Välj text",
+      "stop": "Stoppa",
+      "lastRead": "Senast upplästa:",
+      "noVoice": "Windows har ingen röst installerad, så inget kommer att höras. Lägg till en under Inställningar, Tid och språk, Tal."
+    }
   }
 }

@@ -30,7 +30,8 @@
     },
     "collapse": "כיווץ התפריט",
     "expand": "פתיחת התפריט",
-    "today": "היום"
+    "today": "היום",
+    "pro": "VoCript Pro"
   },
   "today": {
     "status": {
@@ -1207,5 +1208,30 @@
     "title": "חיפוש",
     "placeholder": "מעבר למקטע…",
     "empty": "אין מקטע תואם."
+  },
+  "pro": {
+    "crosshair": {
+      "hint": "גרור על הטקסט שברצונך לשמוע.",
+      "escape": "Esc"
+    },
+    "pageSubtitle": "הרישיון שלך והתכונות בתשלום.",
+    "license": {
+      "title": "רישיון",
+      "description": "הדבק את המפתח שקיבלת בעת ההרשמה. הוא נבדק במחשב הזה, בלי אינטרנט.",
+      "placeholder": "VOCRIPT-PRO....",
+      "activate": "הפעלה",
+      "remove": "הסרה",
+      "activated": "‏VoCript Pro פעיל.",
+      "rejected": "המפתח הזה אינו תקף.",
+      "expires": "בתוקף עד {{fecha}}."
+    },
+    "readAloud": {
+      "title": "הקראה",
+      "description": "גרור מסגרת מעל כל טקסט במסך ו‑VoCript יקריא אותו.",
+      "pick": "בחירת טקסט",
+      "stop": "עצור",
+      "lastRead": "ההקראה האחרונה:",
+      "noVoice": "ל‑Windows אין קול מותקן, ולכן לא יישמע דבר. אפשר להוסיף בהגדרות, שעה ושפה, דיבור."
+    }
   }
 }

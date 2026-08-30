@@ -30,7 +30,8 @@
     },
     "collapse": "Menüyü daralt",
     "expand": "Menüyü genişlet",
-    "today": "Bugün"
+    "today": "Bugün",
+    "pro": "VoCript Pro"
   },
   "today": {
     "status": {
@@ -1207,5 +1208,30 @@
     "title": "Ara",
     "placeholder": "Bir bölüme git…",
     "empty": "Eşleşen bölüm yok."
+  },
+  "pro": {
+    "crosshair": {
+      "hint": "Sesli okunmasını istediğin metnin üzerine sürükle.",
+      "escape": "Esc"
+    },
+    "pageSubtitle": "Lisansınız ve ücretli özellikler.",
+    "license": {
+      "title": "Lisans",
+      "description": "Abone olurken aldığınız anahtarı yapıştırın. Bu bilgisayarda, internetsiz doğrulanır.",
+      "placeholder": "VOCRIPT-PRO....",
+      "activate": "Etkinleştir",
+      "remove": "Kaldır",
+      "activated": "VoCript Pro etkin.",
+      "rejected": "Bu anahtar geçerli değil.",
+      "expires": "{{fecha}} tarihine kadar geçerli."
+    },
+    "readAloud": {
+      "title": "Sesli oku",
+      "description": "Ekrandaki herhangi bir metnin üzerine bir kutu çizin, VoCript onu sesli okusun.",
+      "pick": "Metin seç",
+      "stop": "Durdur",
+      "lastRead": "Son okunan:",
+      "noVoice": "Windows'ta yüklü ses yok, bu yüzden hiçbir şey duyulmaz. Ayarlar, Saat ve dil, Konuşma bölümünden eklenir."
+    }
   }
 }

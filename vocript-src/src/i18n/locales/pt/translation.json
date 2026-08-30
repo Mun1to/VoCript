@@ -30,7 +30,8 @@
     },
     "collapse": "Encolher menu",
     "expand": "Expandir menu",
-    "today": "Hoje"
+    "today": "Hoje",
+    "pro": "VoCript Pro"
   },
   "today": {
     "status": {
@@ -1207,5 +1208,30 @@
     "title": "Procurar",
     "placeholder": "Ir para uma secção…",
     "empty": "Nenhuma secção corresponde a isso."
+  },
+  "pro": {
+    "crosshair": {
+      "hint": "Arraste sobre o texto que quer ouvir.",
+      "escape": "Esc"
+    },
+    "pageSubtitle": "A sua licença e as funções pagas.",
+    "license": {
+      "title": "Licença",
+      "description": "Cole a chave que recebeu ao subscrever. É verificada neste computador, sem internet.",
+      "placeholder": "VOCRIPT-PRO....",
+      "activate": "Ativar",
+      "remove": "Remover",
+      "activated": "O VoCript Pro está ativo.",
+      "rejected": "Essa chave não é válida.",
+      "expires": "Válida até {{fecha}}."
+    },
+    "readAloud": {
+      "title": "Ler em voz alta",
+      "description": "Arraste um retângulo sobre qualquer texto do ecrã e o VoCript lê-o.",
+      "pick": "Selecionar texto",
+      "stop": "Parar",
+      "lastRead": "Último texto lido:",
+      "noVoice": "O Windows não tem nenhuma voz instalada, por isso não se ouvirá nada. Adicione uma em Definições, Hora e idioma, Voz."
+    }
   }
 }

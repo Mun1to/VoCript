@@ -30,7 +30,8 @@
     },
     "collapse": "收起菜单",
     "expand": "展开菜单",
-    "today": "今天"
+    "today": "今天",
+    "pro": "VoCript Pro"
   },
   "today": {
     "status": {
@@ -1207,5 +1208,30 @@
     "title": "搜索",
     "placeholder": "跳转到某个部分…",
     "empty": "没有匹配的部分。"
+  },
+  "pro": {
+    "crosshair": {
+      "hint": "拖选你想听的文字。",
+      "escape": "Esc"
+    },
+    "pageSubtitle": "你的许可证和付费功能。",
+    "license": {
+      "title": "许可证",
+      "description": "粘贴订阅时收到的密钥。在本机校验，不联网。",
+      "placeholder": "VOCRIPT-PRO....",
+      "activate": "激活",
+      "remove": "移除",
+      "activated": "VoCript Pro 已激活。",
+      "rejected": "该密钥无效。",
+      "expires": "有效期至 {{fecha}}。"
+    },
+    "readAloud": {
+      "title": "朗读",
+      "description": "在屏幕上任意文字处拖出一个框，VoCript 就会念给你听。",
+      "pick": "选取文字",
+      "stop": "停止",
+      "lastRead": "最近朗读的内容：",
+      "noVoice": "Windows 未安装任何语音，所以听不到声音。可在设置、时间和语言、语音中添加。"
+    }
   }
 }

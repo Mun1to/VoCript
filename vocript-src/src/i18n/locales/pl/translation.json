@@ -30,7 +30,8 @@
     },
     "collapse": "Zwiń menu",
     "expand": "Rozwiń menu",
-    "today": "Dzisiaj"
+    "today": "Dzisiaj",
+    "pro": "VoCript Pro"
   },
   "today": {
     "status": {
@@ -1207,5 +1208,30 @@
     "title": "Szukaj",
     "placeholder": "Przejdź do sekcji…",
     "empty": "Żadna sekcja nie pasuje."
+  },
+  "pro": {
+    "crosshair": {
+      "hint": "Zaznacz tekst, który ma zostać przeczytany na głos.",
+      "escape": "Esc"
+    },
+    "pageSubtitle": "Twoja licencja i funkcje płatne.",
+    "license": {
+      "title": "Licencja",
+      "description": "Wklej klucz otrzymany przy wykupieniu subskrypcji. Sprawdzany jest na tym komputerze, bez internetu.",
+      "placeholder": "VOCRIPT-PRO....",
+      "activate": "Aktywuj",
+      "remove": "Usuń",
+      "activated": "VoCript Pro jest aktywny.",
+      "rejected": "Ten klucz jest nieprawidłowy.",
+      "expires": "Ważna do {{fecha}}."
+    },
+    "readAloud": {
+      "title": "Czytanie na głos",
+      "description": "Zaznacz ramką dowolny tekst na ekranie, a VoCript przeczyta go na głos.",
+      "pick": "Zaznacz tekst",
+      "stop": "Zatrzymaj",
+      "lastRead": "Ostatnio przeczytane:",
+      "noVoice": "Windows nie ma zainstalowanego żadnego głosu, więc nic nie zabrzmi. Dodaj go w Ustawieniach, Czas i język, Mowa."
+    }
   }
 }

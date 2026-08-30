@@ -30,7 +30,8 @@
     },
     "collapse": "Réduire le menu",
     "expand": "Déployer le menu",
-    "today": "Aujourd'hui"
+    "today": "Aujourd'hui",
+    "pro": "VoCript Pro"
   },
   "today": {
     "status": {
@@ -1207,5 +1208,30 @@
     "title": "Rechercher",
     "placeholder": "Aller à une section…",
     "empty": "Aucune section ne correspond."
+  },
+  "pro": {
+    "crosshair": {
+      "hint": "Faites glisser sur le texte à lire à voix haute.",
+      "escape": "Échap"
+    },
+    "pageSubtitle": "Votre licence et les fonctions payantes.",
+    "license": {
+      "title": "Licence",
+      "description": "Collez la clé reçue lors de votre abonnement. Elle est vérifiée sur cet ordinateur, sans internet.",
+      "placeholder": "VOCRIPT-PRO....",
+      "activate": "Activer",
+      "remove": "Retirer",
+      "activated": "VoCript Pro est actif.",
+      "rejected": "Cette clé n'est pas valide.",
+      "expires": "Valable jusqu'au {{fecha}}."
+    },
+    "readAloud": {
+      "title": "Lecture à voix haute",
+      "description": "Tracez un cadre sur le texte de votre choix à l'écran et VoCript vous le lit.",
+      "pick": "Sélectionner un texte",
+      "stop": "Arrêter",
+      "lastRead": "Dernier texte lu :",
+      "noVoice": "Windows n'a aucune voix installée, rien ne sera audible. Ajoutez-en une dans Paramètres, Heure et langue, Voix."
+    }
   }
 }

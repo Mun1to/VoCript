@@ -30,7 +30,8 @@
     },
     "collapse": "Menü einklappen",
     "expand": "Menü ausklappen",
-    "today": "Heute"
+    "today": "Heute",
+    "pro": "VoCript Pro"
   },
   "today": {
     "status": {
@@ -1207,5 +1208,30 @@
     "title": "Suchen",
     "placeholder": "Zu einem Bereich springen…",
     "empty": "Kein Bereich passt dazu."
+  },
+  "pro": {
+    "crosshair": {
+      "hint": "Ziehe über den Text, der vorgelesen werden soll.",
+      "escape": "Esc"
+    },
+    "pageSubtitle": "Deine Lizenz und die kostenpflichtigen Funktionen.",
+    "license": {
+      "title": "Lizenz",
+      "description": "Füge den Schlüssel ein, den du beim Abo bekommen hast. Er wird auf diesem Rechner geprüft, ohne Internet.",
+      "placeholder": "VOCRIPT-PRO....",
+      "activate": "Aktivieren",
+      "remove": "Entfernen",
+      "activated": "VoCript Pro ist aktiv.",
+      "rejected": "Dieser Schlüssel ist ungültig.",
+      "expires": "Gültig bis {{fecha}}."
+    },
+    "readAloud": {
+      "title": "Vorlesen",
+      "description": "Ziehe einen Rahmen über einen beliebigen Text am Bildschirm, und VoCript liest ihn vor.",
+      "pick": "Text auswählen",
+      "stop": "Stopp",
+      "lastRead": "Zuletzt vorgelesen:",
+      "noVoice": "Windows hat keine Stimme installiert, es wird also nichts zu hören sein. Unter Einstellungen, Zeit und Sprache, Sprachausgabe hinzufügen."
+    }
   }
 }

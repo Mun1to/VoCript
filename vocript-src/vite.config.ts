@@ -24,6 +24,7 @@ export default defineConfig(async () => ({
         main: resolve(__dirname, "index.html"),
         overlay: resolve(__dirname, "src/overlay/index.html"),
         "tray-menu": resolve(__dirname, "src/tray-menu/index.html"),
+        mirilla: resolve(__dirname, "src/mirilla/index.html"),
       },
     },
   },

@@ -61,7 +61,8 @@
     },
     "collapse": "Collapse menu",
     "expand": "Expand menu",
-    "today": "Today"
+    "today": "Today",
+    "pro": "VoCript Pro"
   },
   "today": {
     "status": {
@@ -1207,5 +1208,30 @@
     "title": "Search",
     "placeholder": "Go to a section…",
     "empty": "No section matches that."
+  },
+  "pro": {
+    "crosshair": {
+      "hint": "Drag over the text you want read aloud.",
+      "escape": "Esc"
+    },
+    "pageSubtitle": "Your licence and the paid features.",
+    "license": {
+      "title": "Licence",
+      "description": "Paste the key you got when you subscribed. It is checked on this computer, with no internet.",
+      "placeholder": "VOCRIPT-PRO....",
+      "activate": "Activate",
+      "remove": "Remove",
+      "activated": "VoCript Pro is active.",
+      "rejected": "That key is not valid.",
+      "expires": "Valid until {{fecha}}."
+    },
+    "readAloud": {
+      "title": "Read aloud",
+      "description": "Drag a box over any text on screen and VoCript reads it out.",
+      "pick": "Pick text",
+      "stop": "Stop",
+      "lastRead": "Last thing read:",
+      "noVoice": "Windows has no voice installed, so nothing will be heard. Add one in Settings, Time and language, Speech."
+    }
   }
 }

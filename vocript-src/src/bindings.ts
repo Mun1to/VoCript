@@ -1202,6 +1202,134 @@ async resetOverlayPosition() : Promise<Result<null, string>> {
  */
 async hasCustomOverlayPosition() : Promise<boolean> {
     return await TAURI_INVOKE("has_custom_overlay_position");
+},
+/**
+ * True cuando este binario trae las funciones de pago dentro.
+ * 
+ * No dice si están desbloqueadas, solo si existen: sirve para que la interfaz sepa si debe
+ * enseñar siquiera la pantalla donde se pega la licencia.
+ */
+async proIsAvailable() : Promise<boolean> {
+    return await TAURI_INVOKE("pro_is_available");
+},
+/**
+ * El estado de la licencia guardada en este equipo.
+ */
+async proLicenseStatus() : Promise<EstadoLicencia> {
+    return await TAURI_INVOKE("pro_license_status");
+},
+/**
+ * Guarda una licencia si es válida. Si no lo es, devuelve el porqué sin guardar nada.
+ */
+async proActivateLicense(clave: string) : Promise<Result<EstadoLicencia, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_activate_license", { clave }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Quita la licencia de este equipo, por ejemplo para llevársela a otro.
+ */
+async proDeactivateLicense() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_deactivate_license") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Lee el texto que haya dentro del recuadro y lo devuelve.
+ */
+async proReadRegion(region: Region) : Promise<Result<string, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_read_region", { region }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Lee el texto del recuadro y lo dice en voz alta.
+ * 
+ * Devuelve también el texto: la interfaz lo enseña mientras suena, que es lo que deja claro
+ * que ha leído lo que tocaba cuando la voz se equivoca de palabra.
+ */
+async proReadAloud(region: Region) : Promise<Result<string, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_read_aloud", { region }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Abre la mirilla y devuelve el recuadro que se arrastre, o nada si se cancela.
+ */
+async proPickRegion() : Promise<Result<Region | null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_pick_region") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * La función completa: señalas un trozo de pantalla y VoCript te lo lee en voz alta.
+ * 
+ * Es un solo comando y no tres encadenados desde el frontend a propósito. Entre señalar y
+ * oír no hay ninguna decisión que tomar, y partirlo obligaría a que la interfaz supiera de
+ * recuadros, capturas y motores de voz para nada.
+ * 
+ * Devuelve `None` cuando la persona se arrepiente, que no es un error y no debe pintar uno.
+ */
+async proReadAloudPick() : Promise<Result<string | null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_read_aloud_pick") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Si este Windows tiene voz con la que leer.
+ * 
+ * La interfaz lo pregunta antes de ofrecer la lectura, para avisar en los ajustes y no a
+ * mitad de la función.
+ */
+async proHasVoice() : Promise<boolean> {
+    return await TAURI_INVOKE("pro_has_voice");
+},
+/**
+ * Manda callar a la voz.
+ * 
+ * No exige licencia a propósito: si por lo que sea la voz está sonando, poder pararla nunca
+ * puede depender de una comprobación que podría fallar.
+ */
+async proStopSpeaking() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_stop_speaking") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * El agente, primer paso: mira la pantalla y cuenta lo que ve.
+ * 
+ * Todavía no actúa ni entiende, solo lee la pantalla donde está el puntero y devuelve el
+ * texto. Es el trozo que hay que tener funcionando antes de que un modelo decida nada,
+ * porque el resto del agente se construye encima de esto.
+ */
+async proAgentSee() : Promise<Result<string, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_agent_see") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
 }
 }
 
@@ -1348,6 +1476,18 @@ export type EngineType = "Whisper" | "Parakeet" | "Moonshine" | "MoonshineStream
  */
 "TranscribeCpp"
 /**
+ * Lo que la interfaz necesita saber de una licencia, sin exponerle nada de criptografía.
+ */
+export type EstadoLicencia = { 
+/**
+ * La única que decide si las funciones de pago se ven o no.
+ */
+activa: boolean; correo: string | null; expira: string | null; 
+/**
+ * Por qué no vale, en un texto que se le pueda enseñar a una persona.
+ */
+motivo: string | null }
+/**
  * Result of transcribing an imported audio/video file. Both the plain text
  * and the SRT subtitle string are returned so the UI can offer either.
  */
@@ -1442,6 +1582,13 @@ export type PasteMethod = "ctrl_v" | "direct" | "none" | "shift_insert" | "ctrl_
 export type PermissionAccess = "allowed" | "denied" | "unknown"
 export type PostProcessProvider = { id: string; label: string; base_url: string; allow_base_url_edit?: boolean; models_endpoint?: string | null; supports_structured_output?: boolean }
 export type RecordingRetentionPeriod = "never" | "preserve_limit" | "days_3" | "weeks_2" | "months_3"
+/**
+ * Un rectángulo en coordenadas de escritorio, tal cual las da el sistema.
+ * 
+ * Físicas, no lógicas: con dos monitores a escalas distintas, las lógicas de uno no
+ * significan lo mismo que las del otro y el recorte se va de sitio.
+ */
+export type Region = { x: number; y: number; ancho: number; alto: number }
 export type SecretMap = Partial<{ [key in string]: string }>
 export type ShortcutBinding = { id: string; name: string; description: string; default_binding: string; current_binding: string }
 export type SoundTheme = "marimba" | "pop" | "custom"

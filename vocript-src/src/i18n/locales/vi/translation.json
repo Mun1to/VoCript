@@ -30,7 +30,8 @@
     },
     "collapse": "Thu gọn menu",
     "expand": "Mở rộng menu",
-    "today": "Hôm nay"
+    "today": "Hôm nay",
+    "pro": "VoCript Pro"
   },
   "today": {
     "status": {
@@ -1207,5 +1208,30 @@
     "title": "Tìm kiếm",
     "placeholder": "Đi tới một mục…",
     "empty": "Không có mục nào khớp."
+  },
+  "pro": {
+    "crosshair": {
+      "hint": "Kéo chọn phần văn bản bạn muốn nghe đọc.",
+      "escape": "Esc"
+    },
+    "pageSubtitle": "Giấy phép của bạn và các tính năng trả phí.",
+    "license": {
+      "title": "Giấy phép",
+      "description": "Dán mã bạn nhận được khi đăng ký. Mã được kiểm tra ngay trên máy này, không cần internet.",
+      "placeholder": "VOCRIPT-PRO....",
+      "activate": "Kích hoạt",
+      "remove": "Gỡ bỏ",
+      "activated": "VoCript Pro đang hoạt động.",
+      "rejected": "Mã này không hợp lệ.",
+      "expires": "Có hiệu lực đến {{fecha}}."
+    },
+    "readAloud": {
+      "title": "Đọc to",
+      "description": "Kéo một khung lên bất kỳ đoạn văn bản nào trên màn hình và VoCript sẽ đọc to cho bạn.",
+      "pick": "Chọn văn bản",
+      "stop": "Dừng",
+      "lastRead": "Nội dung đọc gần nhất:",
+      "noVoice": "Windows chưa cài giọng đọc nào nên sẽ không nghe thấy gì. Thêm giọng trong Cài đặt, Thời gian và ngôn ngữ, Giọng nói."
+    }
   }
 }

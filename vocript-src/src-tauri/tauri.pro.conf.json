@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "VoCript Pro",
+  "identifier": "com.vocript.pro",
+  "plugins": {
+    "updater": {
+      "endpoints": [
+        "https://github.com/Mun1to/VoCript-Pro-releases/releases/latest/download/latest.json"
+      ]
+    }
+  }
+}

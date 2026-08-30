@@ -14,8 +14,10 @@ import {
   FileAudio,
   Palette,
   Home,
+  Gem,
 } from "lucide-react";
 import { useSettings } from "../hooks/useSettings";
+import { useProStore } from "../stores/proStore";
 import { useResolvedTheme } from "../hooks/useResolvedTheme";
 import {
   GeneralSettings,
@@ -29,6 +31,7 @@ import {
   ModelsSettings,
   FileTranscription,
   ThemesSettings,
+  ProSettings,
 } from "./settings";
 import { TodayScreen } from "./today/TodayScreen";
 
@@ -110,6 +113,16 @@ export const SECTIONS_CONFIG = {
     component: DebugSettings,
     enabled: (settings) => settings?.debug_mode ?? false,
   },
+  pro: {
+    labelKey: "sidebar.pro",
+    icon: Gem,
+    // Solo aparece si este binario trae las funciones de pago dentro. En la edicion
+    // gratuita no se ensena ni la pantalla: ofrecer donde pegar una licencia que nunca va a
+    // servir de nada es peor que no ofrecer nada.
+    component: ProSettings,
+    // Lo decide el filtro de abajo, que si esta suscrito al store.
+    enabled: () => false,
+  },
   about: {
     labelKey: "sidebar.about",
     icon: Info,
@@ -147,6 +160,7 @@ const SECTION_GROUPS = [
       "models",
       "themes",
       "postprocessing",
+      "pro",
       "debug",
       "about",
       "advanced",
@@ -168,6 +182,7 @@ export const SECTION_SUBTITLE: Partial<Record<SidebarSection, string>> = {
   activity: "activity.subtitle",
   themes: "settings.pageSubtitle.themes",
   postprocessing: "settings.pageSubtitle.postProcessing",
+  pro: "pro.pageSubtitle",
   debug: "settings.pageSubtitle.debug",
   about: "settings.pageSubtitle.about",
   advanced: "settings.pageSubtitle.advanced",
@@ -188,6 +203,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const { t } = useTranslation();
   const { settings } = useSettings();
   const isLight = useResolvedTheme() === "light";
+  // Suscripcion al store de Pro: `enabled` lo lee con getState y por si solo no dispararia
+  // un re-render, asi que la seccion no aparecería hasta que se tocara otra cosa.
+  const proDisponible = useProStore((estado) => estado.disponible);
+  const cargarPro = useProStore((estado) => estado.cargar);
+  useEffect(() => {
+    void cargarPro();
+  }, [cargarPro]);
 
   const [plegado, setPlegado] = useState<boolean>(() => {
     try {
@@ -205,7 +227,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   }, [plegado]);
 
   const availableSections = Object.entries(SECTIONS_CONFIG)
-    .filter(([_, config]) => config.enabled(settings))
+    .filter(([id, config]) =>
+      id === "pro" ? proDisponible === true : config.enabled(settings),
+    )
     .map(([id, config]) => ({ id: id as SidebarSection, ...config }));
 
   const porId = new Map(availableSections.map((s) => [s.id, s]));

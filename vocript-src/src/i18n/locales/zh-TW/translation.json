@@ -30,7 +30,8 @@
     },
     "collapse": "收合選單",
     "expand": "展開選單",
-    "today": "今天"
+    "today": "今天",
+    "pro": "VoCript Pro"
   },
   "today": {
     "status": {
@@ -1207,5 +1208,30 @@
     "title": "搜尋",
     "placeholder": "跳到某個區段…",
     "empty": "沒有相符的區段。"
+  },
+  "pro": {
+    "crosshair": {
+      "hint": "拖曳選取你想聽的文字。",
+      "escape": "Esc"
+    },
+    "pageSubtitle": "你的授權與付費功能。",
+    "license": {
+      "title": "授權",
+      "description": "貼上訂閱時收到的金鑰。在本機驗證，不需連線。",
+      "placeholder": "VOCRIPT-PRO....",
+      "activate": "啟用",
+      "remove": "移除",
+      "activated": "VoCript Pro 已啟用。",
+      "rejected": "這組金鑰無效。",
+      "expires": "有效期限至 {{fecha}}。"
+    },
+    "readAloud": {
+      "title": "朗讀",
+      "description": "在螢幕上任何文字處拖出一個框，VoCript 就會念給你聽。",
+      "pick": "選取文字",
+      "stop": "停止",
+      "lastRead": "最近朗讀的內容：",
+      "noVoice": "Windows 沒有安裝任何語音，所以不會有聲音。可在設定、時間與語言、語音中新增。"
+    }
   }
 }

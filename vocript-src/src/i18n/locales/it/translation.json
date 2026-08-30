@@ -30,7 +30,8 @@
     },
     "collapse": "Riduci il menu",
     "expand": "Espandi il menu",
-    "today": "Oggi"
+    "today": "Oggi",
+    "pro": "VoCript Pro"
   },
   "today": {
     "status": {
@@ -1207,5 +1208,30 @@
     "title": "Cerca",
     "placeholder": "Vai a una sezione…",
     "empty": "Nessuna sezione corrisponde."
+  },
+  "pro": {
+    "crosshair": {
+      "hint": "Trascina sul testo che vuoi ascoltare.",
+      "escape": "Esc"
+    },
+    "pageSubtitle": "La tua licenza e le funzioni a pagamento.",
+    "license": {
+      "title": "Licenza",
+      "description": "Incolla la chiave ricevuta al momento dell'abbonamento. Viene verificata su questo computer, senza internet.",
+      "placeholder": "VOCRIPT-PRO....",
+      "activate": "Attiva",
+      "remove": "Rimuovi",
+      "activated": "VoCript Pro è attivo.",
+      "rejected": "Questa chiave non è valida.",
+      "expires": "Valida fino al {{fecha}}."
+    },
+    "readAloud": {
+      "title": "Leggi ad alta voce",
+      "description": "Trascina un riquadro su qualsiasi testo dello schermo e VoCript te lo legge.",
+      "pick": "Seleziona testo",
+      "stop": "Ferma",
+      "lastRead": "Ultimo testo letto:",
+      "noVoice": "Windows non ha nessuna voce installata, quindi non si sentirà nulla. Se ne aggiunge una in Impostazioni, Data e ora, Voce."
+    }
   }
 }

@@ -17,6 +17,15 @@ mod media_source;
 mod overlay;
 pub mod packaged;
 pub mod portable;
+// VoCript Pro. La carpeta `pro/` solo existe en la edición de pago; sin la bandera se monta
+// en su lugar el sustituto, que tiene las mismas funciones y contesta que no están.
+#[cfg(feature = "pro")]
+#[path = "pro/mod.rs"]
+mod pro;
+#[cfg(not(feature = "pro"))]
+#[path = "pro_stub.rs"]
+mod pro;
+mod pro_tipos;
 mod settings;
 mod shortcut;
 mod signal_handle;
@@ -664,6 +673,17 @@ pub fn run(cli_args: CliArgs) {
             get_system_theme,
             overlay::reset_overlay_position,
             overlay::has_custom_overlay_position,
+            pro::pro_is_available,
+            pro::pro_license_status,
+            pro::pro_activate_license,
+            pro::pro_deactivate_license,
+            pro::pro_read_region,
+            pro::pro_read_aloud,
+            pro::pro_pick_region,
+            pro::pro_read_aloud_pick,
+            pro::pro_has_voice,
+            pro::pro_stop_speaking,
+            pro::pro_agent_see,
         ])
         .events(collect_events![managers::history::HistoryUpdatePayload,]);
 
@@ -802,6 +822,9 @@ pub fn run(cli_args: CliArgs) {
             if should_force_show || !should_hide || !tray_available {
                 show_main_window(&app_handle);
             }
+
+            // VoCript Pro. En la edición gratuita esto no hace nada.
+            pro::al_arrancar(&app_handle);
 
             Ok(())
         })
