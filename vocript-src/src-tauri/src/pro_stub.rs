@@ -76,6 +76,18 @@ pub fn pro_stop_speaking() -> Result<(), String> {
 
 #[tauri::command]
 #[specta::specta]
+pub fn pro_get_hotkey(_app: AppHandle) -> String {
+    String::new()
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn pro_set_hotkey(_app: AppHandle, _atajo: String) -> Result<(), String> {
+    Err(NO_ESTA.to_string())
+}
+
+#[tauri::command]
+#[specta::specta]
 pub async fn pro_agent_see(_app: AppHandle) -> Result<String, String> {
     Err(NO_ESTA.to_string())
 }

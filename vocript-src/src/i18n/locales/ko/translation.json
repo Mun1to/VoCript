@@ -1232,6 +1232,16 @@
       "stop": "정지",
       "lastRead": "마지막으로 읽은 내용:",
       "noVoice": "Windows에 설치된 음성이 없어 아무 소리도 나지 않습니다. 설정, 시간 및 언어, 음성에서 추가하세요."
+    },
+    "hotkey": {
+      "title": "단축키",
+      "description": "조준선을 여는 키입니다. VoCript가 트레이에 있어도 어디서나 작동합니다.",
+      "change": "변경",
+      "cancel": "취소",
+      "recording": "키를 누르세요...",
+      "none": "설정 안 됨",
+      "saved": "단축키를 저장했습니다.",
+      "needsModifier": "단축키에는 Ctrl, Alt 또는 Shift가 필요합니다."
     }
   }
 }

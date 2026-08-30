@@ -1303,6 +1303,27 @@ async proHasVoice() : Promise<boolean> {
     return await TAURI_INVOKE("pro_has_voice");
 },
 /**
+ * El atajo que abre la mirilla ahora mismo.
+ */
+async proGetHotkey() : Promise<string> {
+    return await TAURI_INVOKE("pro_get_hotkey");
+},
+/**
+ * Cambia el atajo, y lo deja funcionando sin reiniciar.
+ * 
+ * Si el nuevo no se puede registrar (lo tiene cogido otro programa, o no se entiende), **se
+ * vuelve al anterior** y se devuelve el motivo. Guardar uno que no funciona dejaría la
+ * función sin atajo hasta el siguiente arranque, y encima sin decirlo.
+ */
+async proSetHotkey(atajo: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_set_hotkey", { atajo }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
  * Manda callar a la voz.
  * 
  * No exige licencia a propósito: si por lo que sea la voz está sonando, poder pararla nunca

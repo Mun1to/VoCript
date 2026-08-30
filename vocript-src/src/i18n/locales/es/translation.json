@@ -1232,6 +1232,16 @@
       "stop": "Parar",
       "lastRead": "Lo último leído:",
       "noVoice": "Windows no tiene ninguna voz instalada, así que no se oirá nada. Se añade en Configuración, Hora e idioma, Voz."
+    },
+    "hotkey": {
+      "title": "Atajo",
+      "description": "Las teclas que abren la mirilla. Funciona en cualquier sitio, aunque VoCript esté en la bandeja.",
+      "change": "Cambiar",
+      "cancel": "Cancelar",
+      "recording": "Pulsa las teclas...",
+      "none": "sin poner",
+      "saved": "Atajo guardado.",
+      "needsModifier": "Un atajo necesita al menos Ctrl, Alt o Mayús."
     }
   }
 }

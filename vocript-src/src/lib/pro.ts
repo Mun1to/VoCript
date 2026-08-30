@@ -46,6 +46,18 @@ export const hayVoz = () => invoke<boolean>("pro_has_voice");
  */
 export const leerEnVozAlta = () => invoke<string | null>("pro_read_aloud_pick");
 
+/** El atajo que abre la mirilla ahora mismo. */
+export const atajo = () => invoke<string>("pro_get_hotkey");
+
+/**
+ * Cambia el atajo y lo deja funcionando sin reiniciar.
+ *
+ * Si el nuevo no se puede registrar, el backend repone el anterior y esto lanza con el
+ * motivo, asi que aqui no hay que deshacer nada.
+ */
+export const ponerAtajo = (atajo: string) =>
+  invoke<void>("pro_set_hotkey", { atajo });
+
 /** Manda callar a la voz. */
 export const callar = () => invoke<void>("pro_stop_speaking");
 

@@ -4,6 +4,7 @@ import { BadgeCheck, ScanText, Square, TriangleAlert } from "lucide-react";
 import { toast } from "sonner";
 import { SettingContainer } from "../../ui/SettingContainer";
 import { Button } from "../../ui/Button";
+import { CapturarAtajo } from "./CapturarAtajo";
 import { useProStore } from "@/stores/proStore";
 import * as pro from "@/lib/pro";
 
@@ -21,9 +22,11 @@ export const ProSettings: React.FC = () => {
   const [activando, setActivando] = useState(false);
   const [leyendo, setLeyendo] = useState(false);
   const [ultimoTexto, setUltimoTexto] = useState<string | null>(null);
+  const [atajo, setAtajo] = useState("");
 
   useEffect(() => {
     void cargar();
+    void pro.atajo().then(setAtajo);
   }, [cargar]);
 
   const activa = licencia?.activa ?? false;
@@ -137,6 +140,17 @@ export const ProSettings: React.FC = () => {
           </Button>
         </div>
       </SettingContainer>
+
+      {activa && (
+        <SettingContainer
+          title={t("pro.hotkey.title")}
+          description={t("pro.hotkey.description")}
+          descriptionMode="inline"
+          grouped
+        >
+          <CapturarAtajo valor={atajo} onCambio={setAtajo} />
+        </SettingContainer>
+      )}
 
       {!hayVoz && (
         <p className="flex items-start gap-1.5 px-1 text-xs text-amber-600">

@@ -1232,6 +1232,16 @@
       "stop": "Stopp",
       "lastRead": "Zuletzt vorgelesen:",
       "noVoice": "Windows hat keine Stimme installiert, es wird also nichts zu hören sein. Unter Einstellungen, Zeit und Sprache, Sprachausgabe hinzufügen."
+    },
+    "hotkey": {
+      "title": "Tastenkürzel",
+      "description": "Die Tasten, die das Fadenkreuz öffnen. Funktioniert überall, auch wenn VoCript im Infobereich liegt.",
+      "change": "Ändern",
+      "cancel": "Abbrechen",
+      "recording": "Tasten drücken...",
+      "none": "nicht gesetzt",
+      "saved": "Tastenkürzel gespeichert.",
+      "needsModifier": "Ein Tastenkürzel braucht mindestens Strg, Alt oder Umschalt."
     }
   }
 }

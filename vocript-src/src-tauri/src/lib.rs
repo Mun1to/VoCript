@@ -682,6 +682,8 @@ pub fn run(cli_args: CliArgs) {
             pro::pro_pick_region,
             pro::pro_read_aloud_pick,
             pro::pro_has_voice,
+            pro::pro_get_hotkey,
+            pro::pro_set_hotkey,
             pro::pro_stop_speaking,
             pro::pro_agent_see,
         ])

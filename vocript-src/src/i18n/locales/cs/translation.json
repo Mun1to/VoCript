@@ -1232,6 +1232,16 @@
       "stop": "Zastavit",
       "lastRead": "Naposledy přečteno:",
       "noVoice": "Windows nemá nainstalovaný žádný hlas, takže nebude nic slyšet. Přidá se v Nastavení, Čas a jazyk, Řeč."
+    },
+    "hotkey": {
+      "title": "Klávesová zkratka",
+      "description": "Klávesy, které otevřou zaměřovač. Funguje kdekoli, i když je VoCript v oznamovací oblasti.",
+      "change": "Změnit",
+      "cancel": "Zrušit",
+      "recording": "Stiskněte klávesy...",
+      "none": "nenastaveno",
+      "saved": "Zkratka uložena.",
+      "needsModifier": "Zkratka potřebuje alespoň Ctrl, Alt nebo Shift."
     }
   }
 }

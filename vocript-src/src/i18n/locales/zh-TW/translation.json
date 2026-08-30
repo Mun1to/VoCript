@@ -1232,6 +1232,16 @@
       "stop": "停止",
       "lastRead": "最近朗讀的內容：",
       "noVoice": "Windows 沒有安裝任何語音，所以不會有聲音。可在設定、時間與語言、語音中新增。"
+    },
+    "hotkey": {
+      "title": "快速鍵",
+      "description": "開啟取詞框的按鍵。即使 VoCript 縮到系統匣，也能在任何地方使用。",
+      "change": "變更",
+      "cancel": "取消",
+      "recording": "請按下按鍵…",
+      "none": "未設定",
+      "saved": "快速鍵已儲存。",
+      "needsModifier": "快速鍵至少需要 Ctrl、Alt 或 Shift。"
     }
   }
 }

@@ -1232,6 +1232,16 @@
       "stop": "Parar",
       "lastRead": "Último texto lido:",
       "noVoice": "O Windows não tem nenhuma voz instalada, por isso não se ouvirá nada. Adicione uma em Definições, Hora e idioma, Voz."
+    },
+    "hotkey": {
+      "title": "Atalho",
+      "description": "As teclas que abrem a mira. Funciona em qualquer lado, mesmo com o VoCript na bandeja.",
+      "change": "Mudar",
+      "cancel": "Cancelar",
+      "recording": "Prima as teclas...",
+      "none": "por definir",
+      "saved": "Atalho guardado.",
+      "needsModifier": "Um atalho precisa de pelo menos Ctrl, Alt ou Shift."
     }
   }
 }

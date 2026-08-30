@@ -1232,6 +1232,16 @@
       "stop": "Arrêter",
       "lastRead": "Dernier texte lu :",
       "noVoice": "Windows n'a aucune voix installée, rien ne sera audible. Ajoutez-en une dans Paramètres, Heure et langue, Voix."
+    },
+    "hotkey": {
+      "title": "Raccourci",
+      "description": "Les touches qui ouvrent la visée. Fonctionne partout, même avec VoCript dans la barre d'état.",
+      "change": "Modifier",
+      "cancel": "Annuler",
+      "recording": "Appuyez sur les touches...",
+      "none": "non défini",
+      "saved": "Raccourci enregistré.",
+      "needsModifier": "Un raccourci a besoin au minimum de Ctrl, Alt ou Maj."
     }
   }
 }

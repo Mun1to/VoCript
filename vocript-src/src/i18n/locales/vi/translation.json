@@ -1232,6 +1232,16 @@
       "stop": "Dừng",
       "lastRead": "Nội dung đọc gần nhất:",
       "noVoice": "Windows chưa cài giọng đọc nào nên sẽ không nghe thấy gì. Thêm giọng trong Cài đặt, Thời gian và ngôn ngữ, Giọng nói."
+    },
+    "hotkey": {
+      "title": "Phím tắt",
+      "description": "Các phím mở khung chọn. Hoạt động ở mọi nơi, kể cả khi VoCript nằm trong khay hệ thống.",
+      "change": "Đổi",
+      "cancel": "Hủy",
+      "recording": "Nhấn các phím...",
+      "none": "chưa đặt",
+      "saved": "Đã lưu phím tắt.",
+      "needsModifier": "Phím tắt cần ít nhất Ctrl, Alt hoặc Shift."
     }
   }
 }

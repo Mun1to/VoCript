@@ -1232,6 +1232,16 @@
       "stop": "Zatrzymaj",
       "lastRead": "Ostatnio przeczytane:",
       "noVoice": "Windows nie ma zainstalowanego żadnego głosu, więc nic nie zabrzmi. Dodaj go w Ustawieniach, Czas i język, Mowa."
+    },
+    "hotkey": {
+      "title": "Skrót klawiszowy",
+      "description": "Klawisze otwierające celownik. Działa wszędzie, nawet gdy VoCript jest w zasobniku.",
+      "change": "Zmień",
+      "cancel": "Anuluj",
+      "recording": "Naciśnij klawisze...",
+      "none": "nie ustawiono",
+      "saved": "Skrót zapisany.",
+      "needsModifier": "Skrót wymaga co najmniej Ctrl, Alt lub Shift."
     }
   }
 }

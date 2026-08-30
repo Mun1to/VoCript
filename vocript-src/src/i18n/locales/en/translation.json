@@ -1232,6 +1232,16 @@
       "stop": "Stop",
       "lastRead": "Last thing read:",
       "noVoice": "Windows has no voice installed, so nothing will be heard. Add one in Settings, Time and language, Speech."
+    },
+    "hotkey": {
+      "title": "Shortcut",
+      "description": "The keys that open the crosshair. It works anywhere, even with VoCript in the tray.",
+      "change": "Change",
+      "cancel": "Cancel",
+      "recording": "Press the keys...",
+      "none": "not set",
+      "saved": "Shortcut saved.",
+      "needsModifier": "A shortcut needs at least Ctrl, Alt or Shift."
     }
   }
 }

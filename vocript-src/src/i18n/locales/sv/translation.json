@@ -1232,6 +1232,16 @@
       "stop": "Stoppa",
       "lastRead": "Senast upplästa:",
       "noVoice": "Windows har ingen röst installerad, så inget kommer att höras. Lägg till en under Inställningar, Tid och språk, Tal."
+    },
+    "hotkey": {
+      "title": "Kortkommando",
+      "description": "Tangenterna som öppnar hårkorset. Fungerar överallt, även med VoCript i aktivitetsfältet.",
+      "change": "Ändra",
+      "cancel": "Avbryt",
+      "recording": "Tryck på tangenterna...",
+      "none": "inte angivet",
+      "saved": "Kortkommandot sparat.",
+      "needsModifier": "Ett kortkommando behöver minst Ctrl, Alt eller Skift."
     }
   }
 }

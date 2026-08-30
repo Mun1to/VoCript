@@ -1232,6 +1232,16 @@
       "stop": "停止",
       "lastRead": "最近朗读的内容：",
       "noVoice": "Windows 未安装任何语音，所以听不到声音。可在设置、时间和语言、语音中添加。"
+    },
+    "hotkey": {
+      "title": "快捷键",
+      "description": "打开取词框的按键。即使 VoCript 缩到托盘，也在任何地方都能用。",
+      "change": "更改",
+      "cancel": "取消",
+      "recording": "请按下按键…",
+      "none": "未设置",
+      "saved": "快捷键已保存。",
+      "needsModifier": "快捷键至少需要 Ctrl、Alt 或 Shift。"
     }
   }
 }

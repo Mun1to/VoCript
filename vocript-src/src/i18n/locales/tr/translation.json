@@ -1232,6 +1232,16 @@
       "stop": "Durdur",
       "lastRead": "Son okunan:",
       "noVoice": "Windows'ta yüklü ses yok, bu yüzden hiçbir şey duyulmaz. Ayarlar, Saat ve dil, Konuşma bölümünden eklenir."
+    },
+    "hotkey": {
+      "title": "Kısayol",
+      "description": "Nişangahı açan tuşlar. VoCript sistem tepsisindeyken bile her yerde çalışır.",
+      "change": "Değiştir",
+      "cancel": "İptal",
+      "recording": "Tuşlara bas...",
+      "none": "ayarlı değil",
+      "saved": "Kısayol kaydedildi.",
+      "needsModifier": "Kısayol en az Ctrl, Alt veya Shift gerektirir."
     }
   }
 }

@@ -1232,6 +1232,16 @@
       "stop": "Ferma",
       "lastRead": "Ultimo testo letto:",
       "noVoice": "Windows non ha nessuna voce installata, quindi non si sentirà nulla. Se ne aggiunge una in Impostazioni, Data e ora, Voce."
+    },
+    "hotkey": {
+      "title": "Scorciatoia",
+      "description": "I tasti che aprono il mirino. Funziona ovunque, anche con VoCript nella barra delle applicazioni.",
+      "change": "Cambia",
+      "cancel": "Annulla",
+      "recording": "Premi i tasti...",
+      "none": "non impostata",
+      "saved": "Scorciatoia salvata.",
+      "needsModifier": "Una scorciatoia richiede almeno Ctrl, Alt o Maiusc."
     }
   }
 }
