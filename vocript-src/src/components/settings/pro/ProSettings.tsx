@@ -4,6 +4,7 @@ import { BadgeCheck, ScanText, Square, TriangleAlert } from "lucide-react";
 import { toast } from "sonner";
 import { SettingContainer } from "../../ui/SettingContainer";
 import { Button } from "../../ui/Button";
+import { Agente } from "./Agente";
 import { CapturarAtajo } from "./CapturarAtajo";
 import { useProStore } from "@/stores/proStore";
 import * as pro from "@/lib/pro";
@@ -150,6 +151,18 @@ export const ProSettings: React.FC = () => {
         >
           <CapturarAtajo valor={atajo} onCambio={setAtajo} />
         </SettingContainer>
+      )}
+
+      {activa && (
+        // Sin SettingContainer: ese pone el control a la derecha del título, y el agente
+        // necesita el ancho entero para su caja de texto y su respuesta.
+        <div className="mt-1 rounded-lg border border-mid-gray/20 p-3">
+          <h3 className="text-sm font-medium">{t("pro.agent.title")}</h3>
+          <p className="mb-2.5 mt-0.5 text-xs text-mid-gray">
+            {t("pro.agent.description")}
+          </p>
+          <Agente />
+        </div>
       )}
 
       {!hayVoz && (

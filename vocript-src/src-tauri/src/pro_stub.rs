@@ -92,6 +92,12 @@ pub async fn pro_agent_see(_app: AppHandle) -> Result<String, String> {
     Err(NO_ESTA.to_string())
 }
 
+#[tauri::command]
+#[specta::specta]
+pub async fn pro_agent_do(_app: AppHandle, _encargo: String) -> Result<String, String> {
+    Err(NO_ESTA.to_string())
+}
+
 const NO_ESTA: &str = "Esta edición de VoCript no incluye las funciones de VoCript Pro.";
 
 /// En la edición gratuita no hay nada que enganchar al arrancar.

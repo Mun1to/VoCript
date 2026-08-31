@@ -1242,6 +1242,17 @@
       "none": "nenastaveno",
       "saved": "Zkratka uložena.",
       "needsModifier": "Zkratka potřebuje alespoň Ctrl, Alt nebo Shift."
+    },
+    "agent": {
+      "title": "Asistent",
+      "description": "Řekni mu, co potřebuješ, a vyřeší to podle toho, co máš na obrazovce. Potřebuje jazykový model, ten samý jako na čištění řeči.",
+      "placeholder": "Odpověz mu, že v úterý nemůžu...",
+      "ask": "Zeptat se",
+      "thinking": "Přemýšlí...",
+      "hint": "Odešle to i Ctrl + Enter.",
+      "answer": "Jeho odpověď:",
+      "copy": "Kopírovat",
+      "copied": "Zkopírováno."
     }
   }
 }

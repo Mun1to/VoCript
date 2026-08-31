@@ -1242,6 +1242,17 @@
       "none": "chưa đặt",
       "saved": "Đã lưu phím tắt.",
       "needsModifier": "Phím tắt cần ít nhất Ctrl, Alt hoặc Shift."
+    },
+    "agent": {
+      "title": "Trợ lý",
+      "description": "Nói cho nó biết bạn cần gì, nó sẽ giải quyết dựa trên những gì đang hiển thị trên màn hình. Cần một mô hình ngôn ngữ, chính là mô hình bạn dùng để làm sạch lời nói.",
+      "placeholder": "Trả lời rằng thứ Ba tôi không đi được...",
+      "ask": "Hỏi",
+      "thinking": "Đang nghĩ...",
+      "hint": "Ctrl + Enter cũng gửi được.",
+      "answer": "Câu trả lời:",
+      "copy": "Sao chép",
+      "copied": "Đã sao chép."
     }
   }
 }

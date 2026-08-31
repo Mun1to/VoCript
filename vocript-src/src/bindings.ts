@@ -1351,6 +1351,20 @@ async proAgentSee() : Promise<Result<string, string>> {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
+},
+/**
+ * El agente: dictas un encargo y lo resuelve mirando lo que tienes en pantalla.
+ * 
+ * Devuelve el texto listo para escribir. Quien lo llama decide si lo pega, lo enseña o lo
+ * dice en voz alta: eso no es cosa del agente.
+ */
+async proAgentDo(encargo: string) : Promise<Result<string, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_agent_do", { encargo }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
 }
 }
 

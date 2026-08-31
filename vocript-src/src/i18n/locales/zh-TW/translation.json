@@ -1242,6 +1242,17 @@
       "none": "未設定",
       "saved": "快速鍵已儲存。",
       "needsModifier": "快速鍵至少需要 Ctrl、Alt 或 Shift。"
+    },
+    "agent": {
+      "title": "智慧助手",
+      "description": "告訴它你要什麼，它會依照螢幕上的內容來處理。需要一個語言模型，和你用來潤飾語音的那個一樣。",
+      "placeholder": "回覆他說週二我去不了……",
+      "ask": "提問",
+      "thinking": "思考中……",
+      "hint": "Ctrl + Enter 也能送出。",
+      "answer": "它的回答：",
+      "copy": "複製",
+      "copied": "已複製。"
     }
   }
 }

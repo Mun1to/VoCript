@@ -1242,6 +1242,17 @@
       "none": "por definir",
       "saved": "Atalho guardado.",
       "needsModifier": "Um atalho precisa de pelo menos Ctrl, Alt ou Shift."
+    },
+    "agent": {
+      "title": "O agente",
+      "description": "Diz-lhe o que precisas e ele resolve com o que tens no ecrã. Precisa de um modelo de linguagem, o mesmo que usas para limpar a fala.",
+      "placeholder": "Responde-lhe que na terça não posso...",
+      "ask": "Perguntar",
+      "thinking": "A pensar...",
+      "hint": "Ctrl + Enter também envia.",
+      "answer": "A resposta dele:",
+      "copy": "Copiar",
+      "copied": "Copiado."
     }
   }
 }

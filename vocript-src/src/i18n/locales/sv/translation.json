@@ -1242,6 +1242,17 @@
       "none": "inte angivet",
       "saved": "Kortkommandot sparat.",
       "needsModifier": "Ett kortkommando behöver minst Ctrl, Alt eller Skift."
+    },
+    "agent": {
+      "title": "Assistenten",
+      "description": "Säg vad du behöver så löser den det utifrån vad du har på skärmen. Kräver en språkmodell, samma som du använder för att städa talet.",
+      "placeholder": "Svara att jag inte kan på tisdag...",
+      "ask": "Fråga",
+      "thinking": "Tänker...",
+      "hint": "Ctrl + Enter skickar också.",
+      "answer": "Dess svar:",
+      "copy": "Kopiera",
+      "copied": "Kopierat."
     }
   }
 }

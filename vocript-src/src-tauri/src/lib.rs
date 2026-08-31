@@ -686,6 +686,7 @@ pub fn run(cli_args: CliArgs) {
             pro::pro_set_hotkey,
             pro::pro_stop_speaking,
             pro::pro_agent_see,
+            pro::pro_agent_do,
         ])
         .events(collect_events![managers::history::HistoryUpdatePayload,]);
 

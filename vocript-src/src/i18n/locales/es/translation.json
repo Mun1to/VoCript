@@ -1242,6 +1242,17 @@
       "none": "sin poner",
       "saved": "Atajo guardado.",
       "needsModifier": "Un atajo necesita al menos Ctrl, Alt o Mayús."
+    },
+    "agent": {
+      "title": "El agente",
+      "description": "Le dices lo que necesitas y lo resuelve con lo que tengas en pantalla. Necesita un modelo de lenguaje, el mismo que usas para limpiar el habla.",
+      "placeholder": "Contéstale que el martes no puedo...",
+      "ask": "Preguntar",
+      "thinking": "Pensando...",
+      "hint": "Ctrl + Intro también lo envía.",
+      "answer": "Su respuesta:",
+      "copy": "Copiar",
+      "copied": "Copiado."
     }
   }
 }

@@ -61,5 +61,14 @@ export const ponerAtajo = (atajo: string) =>
 /** Manda callar a la voz. */
 export const callar = () => invoke<void>("pro_stop_speaking");
 
+/**
+ * El agente: le das un encargo y lo resuelve mirando lo que hay en pantalla.
+ *
+ * Devuelve el texto listo para escribir. Necesita un modelo de lenguaje configurado en
+ * Ajustes, el mismo que se usa para limpiar el habla.
+ */
+export const agenteHaz = (encargo: string) =>
+  invoke<string>("pro_agent_do", { encargo });
+
 /** El agente, primer paso: lee la pantalla donde está el puntero y devuelve lo que ve. */
 export const agenteMira = () => invoke<string>("pro_agent_see");

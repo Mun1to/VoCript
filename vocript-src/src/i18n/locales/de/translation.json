@@ -1242,6 +1242,17 @@
       "none": "nicht gesetzt",
       "saved": "Tastenkürzel gespeichert.",
       "needsModifier": "Ein Tastenkürzel braucht mindestens Strg, Alt oder Umschalt."
+    },
+    "agent": {
+      "title": "Der Assistent",
+      "description": "Sag ihm, was du brauchst, und er löst es mit dem, was auf deinem Bildschirm steht. Braucht ein Sprachmodell, dasselbe wie zum Aufräumen der Sprache.",
+      "placeholder": "Antworte ihm, dass ich am Dienstag nicht kann...",
+      "ask": "Fragen",
+      "thinking": "Denkt nach...",
+      "hint": "Strg + Enter sendet auch.",
+      "answer": "Seine Antwort:",
+      "copy": "Kopieren",
+      "copied": "Kopiert."
     }
   }
 }

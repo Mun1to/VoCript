@@ -1242,6 +1242,17 @@
       "none": "not set",
       "saved": "Shortcut saved.",
       "needsModifier": "A shortcut needs at least Ctrl, Alt or Shift."
+    },
+    "agent": {
+      "title": "The agent",
+      "description": "Tell it what you need and it works it out from what is on your screen. Needs a language model, the same one you use to clean up speech.",
+      "placeholder": "Reply saying I cannot make Tuesday...",
+      "ask": "Ask",
+      "thinking": "Thinking...",
+      "hint": "Ctrl + Enter also sends it.",
+      "answer": "Its answer:",
+      "copy": "Copy",
+      "copied": "Copied."
     }
   }
 }

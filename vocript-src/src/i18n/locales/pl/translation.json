@@ -1242,6 +1242,17 @@
       "none": "nie ustawiono",
       "saved": "Skrót zapisany.",
       "needsModifier": "Skrót wymaga co najmniej Ctrl, Alt lub Shift."
+    },
+    "agent": {
+      "title": "Asystent",
+      "description": "Powiedz, czego potrzebujesz, a rozwiąże to na podstawie tego, co masz na ekranie. Wymaga modelu językowego, tego samego co do czyszczenia mowy.",
+      "placeholder": "Odpisz mu, że we wtorek nie mogę...",
+      "ask": "Zapytaj",
+      "thinking": "Myśli...",
+      "hint": "Ctrl + Enter też wysyła.",
+      "answer": "Jego odpowiedź:",
+      "copy": "Kopiuj",
+      "copied": "Skopiowano."
     }
   }
 }

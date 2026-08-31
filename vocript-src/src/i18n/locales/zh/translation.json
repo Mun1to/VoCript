@@ -1242,6 +1242,17 @@
       "none": "未设置",
       "saved": "快捷键已保存。",
       "needsModifier": "快捷键至少需要 Ctrl、Alt 或 Shift。"
+    },
+    "agent": {
+      "title": "智能助手",
+      "description": "告诉它你要什么，它会根据屏幕上的内容来处理。需要一个语言模型，和你用来润色语音的那个一样。",
+      "placeholder": "回复他说周二我去不了……",
+      "ask": "提问",
+      "thinking": "思考中……",
+      "hint": "Ctrl + Enter 也能发送。",
+      "answer": "它的回答：",
+      "copy": "复制",
+      "copied": "已复制。"
     }
   }
 }

@@ -1242,6 +1242,17 @@
       "none": "non défini",
       "saved": "Raccourci enregistré.",
       "needsModifier": "Un raccourci a besoin au minimum de Ctrl, Alt ou Maj."
+    },
+    "agent": {
+      "title": "L'assistant",
+      "description": "Dis-lui ce dont tu as besoin et il le résout avec ce qui est à l'écran. Il lui faut un modèle de langage, le même que pour nettoyer la parole.",
+      "placeholder": "Réponds-lui que mardi je ne peux pas...",
+      "ask": "Demander",
+      "thinking": "Réflexion...",
+      "hint": "Ctrl + Entrée l'envoie aussi.",
+      "answer": "Sa réponse :",
+      "copy": "Copier",
+      "copied": "Copié."
     }
   }
 }

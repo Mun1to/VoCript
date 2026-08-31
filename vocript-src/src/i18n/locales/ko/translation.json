@@ -1242,6 +1242,17 @@
       "none": "설정 안 됨",
       "saved": "단축키를 저장했습니다.",
       "needsModifier": "단축키에는 Ctrl, Alt 또는 Shift가 필요합니다."
+    },
+    "agent": {
+      "title": "에이전트",
+      "description": "필요한 것을 말하면 화면에 있는 내용을 보고 해결합니다. 언어 모델이 필요하며, 음성 정리에 쓰는 것과 같은 모델이면 됩니다.",
+      "placeholder": "화요일은 안 된다고 답장해 줘...",
+      "ask": "물어보기",
+      "thinking": "생각 중...",
+      "hint": "Ctrl + Enter로도 보낼 수 있습니다.",
+      "answer": "답변:",
+      "copy": "복사",
+      "copied": "복사했습니다."
     }
   }
 }

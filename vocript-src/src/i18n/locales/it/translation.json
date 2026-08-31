@@ -1242,6 +1242,17 @@
       "none": "non impostata",
       "saved": "Scorciatoia salvata.",
       "needsModifier": "Una scorciatoia richiede almeno Ctrl, Alt o Maiusc."
+    },
+    "agent": {
+      "title": "L'agente",
+      "description": "Digli cosa ti serve e lo risolve con quello che hai a schermo. Richiede un modello linguistico, lo stesso che usi per ripulire il parlato.",
+      "placeholder": "Rispondigli che martedì non posso...",
+      "ask": "Chiedi",
+      "thinking": "Sto pensando...",
+      "hint": "Anche Ctrl + Invio lo invia.",
+      "answer": "La sua risposta:",
+      "copy": "Copia",
+      "copied": "Copiato."
     }
   }
 }

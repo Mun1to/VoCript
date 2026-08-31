@@ -1242,6 +1242,17 @@
       "none": "ayarlı değil",
       "saved": "Kısayol kaydedildi.",
       "needsModifier": "Kısayol en az Ctrl, Alt veya Shift gerektirir."
+    },
+    "agent": {
+      "title": "Asistan",
+      "description": "Ne istediğini söyle, ekrandakine bakarak halletsin. Bir dil modeli gerekir, konuşmayı temizlemek için kullandığın model.",
+      "placeholder": "Salı günü gelemeyeceğimi yaz...",
+      "ask": "Sor",
+      "thinking": "Düşünüyor...",
+      "hint": "Ctrl + Enter da gönderir.",
+      "answer": "Cevabı:",
+      "copy": "Kopyala",
+      "copied": "Kopyalandı."
     }
   }
 }
