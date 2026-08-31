@@ -1231,7 +1231,11 @@
       "pick": "Sélectionner un texte",
       "stop": "Arrêter",
       "lastRead": "Dernier texte lu :",
-      "noVoice": "Windows n'a aucune voix installée, rien ne sera audible. Ajoutez-en une dans Paramètres, Heure et langue, Voix."
+      "noVoice": "Windows n'a aucune voix installée, rien ne sera audible. Ajoutez-en une dans Paramètres, Heure et langue, Voix.",
+      "wholeScreen": "Tout l'écran",
+      "again": "Relire",
+      "pause": "Pause",
+      "resume": "Reprendre"
     },
     "hotkey": {
       "title": "Raccourci",

@@ -1231,7 +1231,11 @@
       "pick": "选取文字",
       "stop": "停止",
       "lastRead": "最近朗读的内容：",
-      "noVoice": "Windows 未安装任何语音，所以听不到声音。可在设置、时间和语言、语音中添加。"
+      "noVoice": "Windows 未安装任何语音，所以听不到声音。可在设置、时间和语言、语音中添加。",
+      "wholeScreen": "整个屏幕",
+      "again": "再读一遍",
+      "pause": "暂停",
+      "resume": "继续"
     },
     "hotkey": {
       "title": "快捷键",

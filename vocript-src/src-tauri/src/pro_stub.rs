@@ -70,6 +70,36 @@ pub fn pro_has_voice() -> bool {
 
 #[tauri::command]
 #[specta::specta]
+pub async fn pro_read_aloud_screen(_app: AppHandle) -> Result<String, String> {
+    Err(NO_ESTA.to_string())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn pro_read_aloud_again(_app: AppHandle) -> Result<Option<String>, String> {
+    Err(NO_ESTA.to_string())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn pro_can_repeat() -> bool {
+    false
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn pro_pause_speaking() -> Result<(), String> {
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn pro_resume_speaking() -> Result<(), String> {
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
 pub fn pro_stop_speaking() -> Result<(), String> {
     Ok(())
 }

@@ -1231,7 +1231,11 @@
       "pick": "Metin seç",
       "stop": "Durdur",
       "lastRead": "Son okunan:",
-      "noVoice": "Windows'ta yüklü ses yok, bu yüzden hiçbir şey duyulmaz. Ayarlar, Saat ve dil, Konuşma bölümünden eklenir."
+      "noVoice": "Windows'ta yüklü ses yok, bu yüzden hiçbir şey duyulmaz. Ayarlar, Saat ve dil, Konuşma bölümünden eklenir.",
+      "wholeScreen": "Tüm ekran",
+      "again": "Tekrar",
+      "pause": "Duraklat",
+      "resume": "Devam"
     },
     "hotkey": {
       "title": "Kısayol",

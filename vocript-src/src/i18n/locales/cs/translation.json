@@ -1231,7 +1231,11 @@
       "pick": "Vybrat text",
       "stop": "Zastavit",
       "lastRead": "Naposledy přečteno:",
-      "noVoice": "Windows nemá nainstalovaný žádný hlas, takže nebude nic slyšet. Přidá se v Nastavení, Čas a jazyk, Řeč."
+      "noVoice": "Windows nemá nainstalovaný žádný hlas, takže nebude nic slyšet. Přidá se v Nastavení, Čas a jazyk, Řeč.",
+      "wholeScreen": "Celá obrazovka",
+      "again": "Znovu",
+      "pause": "Pauza",
+      "resume": "Pokračovat"
     },
     "hotkey": {
       "title": "Klávesová zkratka",

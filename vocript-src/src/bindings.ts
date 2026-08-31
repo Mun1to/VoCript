@@ -1303,6 +1303,63 @@ async proHasVoice() : Promise<boolean> {
     return await TAURI_INVOKE("pro_has_voice");
 },
 /**
+ * Lee en voz alta toda la pantalla donde está el puntero, sin señalar nada.
+ * 
+ * Para cuando lo que quieres oír es lo que hay delante y no un trozo: un artículo, un
+ * correo abierto, una página. Sale más texto y alguna palabra suelta de la interfaz, pero
+ * ahorra el arrastre.
+ */
+async proReadAloudScreen() : Promise<Result<string, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_read_aloud_screen") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Vuelve a leer el último recuadro que se señaló.
+ * 
+ * Relee la pantalla en vez de guardar el texto: si lo que había ahí ha cambiado, lo que se
+ * espera oír es lo de ahora, no lo de hace un minuto.
+ */
+async proReadAloudAgain() : Promise<Result<string | null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_read_aloud_again") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Si hay algo que repetir, para que el botón no aparezca cuando no sirve de nada.
+ */
+async proCanRepeat() : Promise<boolean> {
+    return await TAURI_INVOKE("pro_can_repeat");
+},
+/**
+ * Deja la voz a media frase.
+ */
+async proPauseSpeaking() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_pause_speaking") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Sigue por donde se quedó.
+ */
+async proResumeSpeaking() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_resume_speaking") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
  * El atajo que abre la mirilla ahora mismo.
  */
 async proGetHotkey() : Promise<string> {

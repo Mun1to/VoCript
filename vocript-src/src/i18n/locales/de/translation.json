@@ -1231,7 +1231,11 @@
       "pick": "Text auswählen",
       "stop": "Stopp",
       "lastRead": "Zuletzt vorgelesen:",
-      "noVoice": "Windows hat keine Stimme installiert, es wird also nichts zu hören sein. Unter Einstellungen, Zeit und Sprache, Sprachausgabe hinzufügen."
+      "noVoice": "Windows hat keine Stimme installiert, es wird also nichts zu hören sein. Unter Einstellungen, Zeit und Sprache, Sprachausgabe hinzufügen.",
+      "wholeScreen": "Ganzer Bildschirm",
+      "again": "Nochmal",
+      "pause": "Pause",
+      "resume": "Weiter"
     },
     "hotkey": {
       "title": "Tastenkürzel",

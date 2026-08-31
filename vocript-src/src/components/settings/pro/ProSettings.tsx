@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { BadgeCheck, ScanText, Square, TriangleAlert } from "lucide-react";
+import {
+  BadgeCheck,
+  Monitor,
+  Pause,
+  Play,
+  RotateCcw,
+  ScanText,
+  Square,
+  TriangleAlert,
+} from "lucide-react";
 import { toast } from "sonner";
 import { SettingContainer } from "../../ui/SettingContainer";
 import { Button } from "../../ui/Button";
@@ -24,10 +33,13 @@ export const ProSettings: React.FC = () => {
   const [leyendo, setLeyendo] = useState(false);
   const [ultimoTexto, setUltimoTexto] = useState<string | null>(null);
   const [atajo, setAtajo] = useState("");
+  const [puedeRepetir, setPuedeRepetir] = useState(false);
+  const [pausada, setPausada] = useState(false);
 
   useEffect(() => {
     void cargar();
     void pro.atajo().then(setAtajo);
+    void pro.puedeRepetir().then(setPuedeRepetir);
   }, [cargar]);
 
   const activa = licencia?.activa ?? false;
@@ -49,16 +61,35 @@ export const ProSettings: React.FC = () => {
     }
   };
 
-  const alLeer = async () => {
+  /**
+   * Las tres formas de leer son la misma cosa con distinta fuente, asi que comparten el
+   * estado de "leyendo", el ultimo texto y el aviso de error.
+   *
+   * `null` significa que no habia nada que leer sin que sea un fallo: la mirilla cerrada sin
+   * elegir, o un "repetir" cuando todavia no se ha senalado nada.
+   */
+  const leerCon = async (fuente: () => Promise<string | null>) => {
     setLeyendo(true);
     try {
-      const texto = await pro.leerEnVozAlta();
-      // `null` es que ha cerrado la mirilla sin elegir. No ha pasado nada malo.
-      if (texto !== null) setUltimoTexto(texto);
+      const texto = await fuente();
+      if (texto !== null) {
+        setUltimoTexto(texto);
+        setPausada(false);
+        setPuedeRepetir(await pro.puedeRepetir());
+      }
     } catch (e) {
       toast.error(String(e));
     } finally {
       setLeyendo(false);
+    }
+  };
+
+  const alPausar = async () => {
+    try {
+      await (pausada ? pro.seguir() : pro.pausar());
+      setPausada(!pausada);
+    } catch (e) {
+      toast.error(String(e));
     }
   };
 
@@ -118,11 +149,11 @@ export const ProSettings: React.FC = () => {
         descriptionMode="inline"
         grouped
       >
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center justify-end gap-2">
           <Button
             variant="primary"
             size="sm"
-            onClick={() => void alLeer()}
+            onClick={() => void leerCon(pro.leerEnVozAlta)}
             disabled={!activa || leyendo || !hayVoz}
             className="flex items-center gap-1.5"
           >
@@ -132,7 +163,46 @@ export const ProSettings: React.FC = () => {
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => void pro.callar()}
+            onClick={() => void leerCon(pro.leerPantalla)}
+            disabled={!activa || leyendo || !hayVoz}
+            className="flex items-center gap-1.5"
+          >
+            <Monitor className="h-3.5 w-3.5" />
+            {t("pro.readAloud.wholeScreen")}
+          </Button>
+          {puedeRepetir && (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => void leerCon(pro.repetir)}
+              disabled={!activa || leyendo || !hayVoz}
+              className="flex items-center gap-1.5"
+            >
+              <RotateCcw className="h-3.5 w-3.5" />
+              {t("pro.readAloud.again")}
+            </Button>
+          )}
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => void alPausar()}
+            disabled={!activa}
+            className="flex items-center gap-1.5"
+          >
+            {pausada ? (
+              <Play className="h-3.5 w-3.5" />
+            ) : (
+              <Pause className="h-3.5 w-3.5" />
+            )}
+            {pausada ? t("pro.readAloud.resume") : t("pro.readAloud.pause")}
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => {
+              void pro.callar();
+              setPausada(false);
+            }}
             disabled={!activa}
             className="flex items-center gap-1.5"
           >

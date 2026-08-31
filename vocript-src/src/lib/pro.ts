@@ -58,6 +58,26 @@ export const atajo = () => invoke<string>("pro_get_hotkey");
 export const ponerAtajo = (atajo: string) =>
   invoke<void>("pro_set_hotkey", { atajo });
 
+/** Lee en voz alta toda la pantalla donde esta el puntero, sin senalar nada. */
+export const leerPantalla = () => invoke<string>("pro_read_aloud_screen");
+
+/**
+ * Vuelve a leer el ultimo recuadro. Devuelve `null` si todavia no se ha senalado ninguno.
+ *
+ * Relee la pantalla, no repite el texto guardado: si lo que hay ahi ha cambiado, lo que se
+ * espera oir es lo de ahora.
+ */
+export const repetir = () => invoke<string | null>("pro_read_aloud_again");
+
+/** Si hay algo que repetir. */
+export const puedeRepetir = () => invoke<boolean>("pro_can_repeat");
+
+/** Deja la voz a media frase. */
+export const pausar = () => invoke<void>("pro_pause_speaking");
+
+/** Sigue por donde se quedo. */
+export const seguir = () => invoke<void>("pro_resume_speaking");
+
 /** Manda callar a la voz. */
 export const callar = () => invoke<void>("pro_stop_speaking");
 

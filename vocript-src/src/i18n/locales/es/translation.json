@@ -1231,7 +1231,11 @@
       "pick": "Señalar texto",
       "stop": "Parar",
       "lastRead": "Lo último leído:",
-      "noVoice": "Windows no tiene ninguna voz instalada, así que no se oirá nada. Se añade en Configuración, Hora e idioma, Voz."
+      "noVoice": "Windows no tiene ninguna voz instalada, así que no se oirá nada. Se añade en Configuración, Hora e idioma, Voz.",
+      "wholeScreen": "Toda la pantalla",
+      "again": "Repetir",
+      "pause": "Pausa",
+      "resume": "Seguir"
     },
     "hotkey": {
       "title": "Atajo",

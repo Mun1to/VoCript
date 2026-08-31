@@ -1231,7 +1231,11 @@
       "pick": "Seleziona testo",
       "stop": "Ferma",
       "lastRead": "Ultimo testo letto:",
-      "noVoice": "Windows non ha nessuna voce installata, quindi non si sentirà nulla. Se ne aggiunge una in Impostazioni, Data e ora, Voce."
+      "noVoice": "Windows non ha nessuna voce installata, quindi non si sentirà nulla. Se ne aggiunge una in Impostazioni, Data e ora, Voce.",
+      "wholeScreen": "Tutto lo schermo",
+      "again": "Ripeti",
+      "pause": "Pausa",
+      "resume": "Riprendi"
     },
     "hotkey": {
       "title": "Scorciatoia",

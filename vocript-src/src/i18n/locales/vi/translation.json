@@ -1231,7 +1231,11 @@
       "pick": "Chọn văn bản",
       "stop": "Dừng",
       "lastRead": "Nội dung đọc gần nhất:",
-      "noVoice": "Windows chưa cài giọng đọc nào nên sẽ không nghe thấy gì. Thêm giọng trong Cài đặt, Thời gian và ngôn ngữ, Giọng nói."
+      "noVoice": "Windows chưa cài giọng đọc nào nên sẽ không nghe thấy gì. Thêm giọng trong Cài đặt, Thời gian và ngôn ngữ, Giọng nói.",
+      "wholeScreen": "Toàn màn hình",
+      "again": "Đọc lại",
+      "pause": "Tạm dừng",
+      "resume": "Tiếp tục"
     },
     "hotkey": {
       "title": "Phím tắt",
