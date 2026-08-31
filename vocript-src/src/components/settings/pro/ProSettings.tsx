@@ -143,74 +143,76 @@ export const ProSettings: React.FC = () => {
         </p>
       )}
 
-      <SettingContainer
-        title={t("pro.readAloud.title")}
-        description={t("pro.readAloud.description")}
-        descriptionMode="inline"
-        grouped
-      >
-        <div className="flex flex-wrap items-center justify-end gap-2">
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={() => void leerCon(pro.leerEnVozAlta)}
-            disabled={!activa || leyendo || !hayVoz}
-            className="flex items-center gap-1.5"
-          >
-            <ScanText className="h-3.5 w-3.5" />
-            {t("pro.readAloud.pick")}
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => void leerCon(pro.leerPantalla)}
-            disabled={!activa || leyendo || !hayVoz}
-            className="flex items-center gap-1.5"
-          >
-            <Monitor className="h-3.5 w-3.5" />
-            {t("pro.readAloud.wholeScreen")}
-          </Button>
-          {puedeRepetir && (
+      {activa && (
+        <SettingContainer
+          title={t("pro.readAloud.title")}
+          description={t("pro.readAloud.description")}
+          descriptionMode="inline"
+          grouped
+        >
+          <div className="flex flex-wrap items-center justify-end gap-2">
             <Button
-              variant="secondary"
+              variant="primary"
               size="sm"
-              onClick={() => void leerCon(pro.repetir)}
+              onClick={() => void leerCon(pro.leerEnVozAlta)}
               disabled={!activa || leyendo || !hayVoz}
               className="flex items-center gap-1.5"
             >
-              <RotateCcw className="h-3.5 w-3.5" />
-              {t("pro.readAloud.again")}
+              <ScanText className="h-3.5 w-3.5" />
+              {t("pro.readAloud.pick")}
             </Button>
-          )}
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => void alPausar()}
-            disabled={!activa}
-            className="flex items-center gap-1.5"
-          >
-            {pausada ? (
-              <Play className="h-3.5 w-3.5" />
-            ) : (
-              <Pause className="h-3.5 w-3.5" />
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => void leerCon(pro.leerPantalla)}
+              disabled={!activa || leyendo || !hayVoz}
+              className="flex items-center gap-1.5"
+            >
+              <Monitor className="h-3.5 w-3.5" />
+              {t("pro.readAloud.wholeScreen")}
+            </Button>
+            {puedeRepetir && (
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => void leerCon(pro.repetir)}
+                disabled={!activa || leyendo || !hayVoz}
+                className="flex items-center gap-1.5"
+              >
+                <RotateCcw className="h-3.5 w-3.5" />
+                {t("pro.readAloud.again")}
+              </Button>
             )}
-            {pausada ? t("pro.readAloud.resume") : t("pro.readAloud.pause")}
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              void pro.callar();
-              setPausada(false);
-            }}
-            disabled={!activa}
-            className="flex items-center gap-1.5"
-          >
-            <Square className="h-3.5 w-3.5" />
-            {t("pro.readAloud.stop")}
-          </Button>
-        </div>
-      </SettingContainer>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => void alPausar()}
+              disabled={!activa}
+              className="flex items-center gap-1.5"
+            >
+              {pausada ? (
+                <Play className="h-3.5 w-3.5" />
+              ) : (
+                <Pause className="h-3.5 w-3.5" />
+              )}
+              {pausada ? t("pro.readAloud.resume") : t("pro.readAloud.pause")}
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                void pro.callar();
+                setPausada(false);
+              }}
+              disabled={!activa}
+              className="flex items-center gap-1.5"
+            >
+              <Square className="h-3.5 w-3.5" />
+              {t("pro.readAloud.stop")}
+            </Button>
+          </div>
+        </SettingContainer>
+      )}
 
       {activa && (
         <SettingContainer
@@ -235,7 +237,7 @@ export const ProSettings: React.FC = () => {
         </div>
       )}
 
-      {!hayVoz && (
+      {activa && !hayVoz && (
         <p className="flex items-start gap-1.5 px-1 text-xs text-amber-600">
           <TriangleAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           {t("pro.readAloud.noVoice")}
