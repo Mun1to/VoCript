@@ -45,6 +45,34 @@ impl EstadoLicencia {
     }
 }
 
+/// El id del atajo del agente dentro del sistema de dictado de VoCript.
+///
+/// Es el único nombre de Pro que la edición gratuita conoce: lo necesita para saber que ese
+/// dictado no se pega tal cual sino que se le entrega a Pro (ver `actions.rs`). En la edición
+/// gratuita ese atajo nunca se registra, así que el nombre no lleva a ningún sitio.
+pub const BINDING_AGENTE: &str = "pro_agente";
+
+/// Un ordenador dado de alta en la nube con una licencia.
+#[derive(Debug, Clone, Serialize, Deserialize, specta::Type)]
+pub struct Dispositivo {
+    pub id: String,
+    pub nombre: String,
+    /// Fecha de alta, AAAA-MM-DD.
+    pub alta: String,
+}
+
+/// Lo que la nube sabe de esta licencia, para enseñarlo en la pantalla de Pro.
+#[derive(Debug, Clone, Serialize, Deserialize, specta::Type)]
+pub struct EstadoNube {
+    pub dispositivos: Vec<Dispositivo>,
+    pub tope_dispositivos: u32,
+    pub tokens_usados: u64,
+    pub cuota_tokens: u64,
+    /// El id de este ordenador, para marcarlo en la lista y no dejar que se quite a sí mismo
+    /// sin querer.
+    pub este_dispositivo: String,
+}
+
 /// Un rectángulo en coordenadas de escritorio, tal cual las da el sistema.
 ///
 /// Físicas, no lógicas: con dos monitores a escalas distintas, las lógicas de uno no

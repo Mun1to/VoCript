@@ -1219,7 +1219,12 @@ async proLicenseStatus() : Promise<EstadoLicencia> {
     return await TAURI_INVOKE("pro_license_status");
 },
 /**
- * Guarda una licencia si es válida. Si no lo es, devuelve el porqué sin guardar nada.
+ * Guarda una licencia si es válida y da de alta este ordenador en la nube.
+ * 
+ * El orden: primero la firma en local (sin eso no hay nada que hablar con nadie), después
+ * la nube, y solo si la nube no la rechaza se guarda. Si no hay red, se guarda igual y se
+ * deja apuntado que hay que avisar a la nube al arrancar: una licencia buena no puede
+ * depender de tener conexión en ese preciso momento.
  */
 async proActivateLicense(clave: string) : Promise<Result<EstadoLicencia, string>> {
     try {
@@ -1231,6 +1236,9 @@ async proActivateLicense(clave: string) : Promise<Result<EstadoLicencia, string>
 },
 /**
  * Quita la licencia de este equipo, por ejemplo para llevársela a otro.
+ * 
+ * Avisa a la nube para liberar el hueco, pero no espera a que conteste para borrar: quien
+ * quita una licencia quiere que desaparezca ahora, con red o sin ella.
  */
 async proDeactivateLicense() : Promise<Result<null, string>> {
     try {
@@ -1366,11 +1374,7 @@ async proGetHotkey() : Promise<string> {
     return await TAURI_INVOKE("pro_get_hotkey");
 },
 /**
- * Cambia el atajo, y lo deja funcionando sin reiniciar.
- * 
- * Si el nuevo no se puede registrar (lo tiene cogido otro programa, o no se entiende), **se
- * vuelve al anterior** y se devuelve el motivo. Guardar uno que no funciona dejaría la
- * función sin atajo hasta el siguiente arranque, y encima sin decirlo.
+ * Cambia el atajo de leer, y lo deja funcionando sin reiniciar.
  */
 async proSetHotkey(atajo: string) : Promise<Result<null, string>> {
     try {
@@ -1418,6 +1422,76 @@ async proAgentSee() : Promise<Result<string, string>> {
 async proAgentDo(encargo: string) : Promise<Result<string, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("pro_agent_do", { encargo }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Lo que la nube sabe de esta licencia: dispositivos y uso del mes.
+ */
+async proCloudStatus() : Promise<Result<EstadoNube, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_cloud_status") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Da de baja un ordenador de la lista, para dejar sitio a otro.
+ */
+async proRemoveDevice(id: string) : Promise<Result<Dispositivo[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_remove_device", { id }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Si la limpieza del habla está encendida y va por la nube de Pro.
+ */
+async proCloudCleanupEnabled() : Promise<boolean> {
+    return await TAURI_INVOKE("pro_cloud_cleanup_enabled");
+},
+/**
+ * Enciende o apaga la limpieza del habla por la nube de Pro.
+ */
+async proSetCloudCleanup(activa: boolean) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_set_cloud_cleanup", { activa }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * El atajo del agente ahora mismo.
+ */
+async proGetAgentHotkey() : Promise<string> {
+    return await TAURI_INVOKE("pro_get_agent_hotkey");
+},
+/**
+ * Cambia el atajo del agente, y lo deja funcionando sin reiniciar.
+ */
+async proSetAgentHotkey(atajo: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_set_agent_hotkey", { atajo }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Empieza o termina un encargo dictado desde un botón, sin atajo.
+ * 
+ * Siempre alterna (una pulsación empieza, otra termina), sea cual sea el gesto que la
+ * persona tenga puesto para los atajos: un botón no se puede mantener pulsado.
+ */
+async proAgentToggle() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_agent_toggle") };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -1560,6 +1634,14 @@ days: DayStat[]; total_words: number; total_seconds: number; total_sessions: num
  * breaks once a full day goes by with nothing dictated).
  */
 current_streak: number; longest_streak: number; best_day: DayStat | null }
+/**
+ * Un ordenador dado de alta en la nube con una licencia.
+ */
+export type Dispositivo = { id: string; nombre: string; 
+/**
+ * Fecha de alta, AAAA-MM-DD.
+ */
+alta: string }
 export type EngineType = "Whisper" | "Parakeet" | "Moonshine" | "MoonshineStreaming" | "SenseVoice" | "GigaAM" | "Canary" | "Cohere" | 
 /**
  * Runs on `transcribe-cpp` (GGUF/GGML) instead of `transcribe-rs` (ONNX) —
@@ -1579,6 +1661,15 @@ activa: boolean; correo: string | null; expira: string | null;
  * Por qué no vale, en un texto que se le pueda enseñar a una persona.
  */
 motivo: string | null }
+/**
+ * Lo que la nube sabe de esta licencia, para enseñarlo en la pantalla de Pro.
+ */
+export type EstadoNube = { dispositivos: Dispositivo[]; tope_dispositivos: number; tokens_usados: number; cuota_tokens: number; 
+/**
+ * El id de este ordenador, para marcarlo en la lista y no dejar que se quite a sí mismo
+ * sin querer.
+ */
+este_dispositivo: string }
 /**
  * Result of transcribing an imported audio/video file. Both the plain text
  * and the SRT subtitle string are returned so the UI can offer either.

@@ -43,6 +43,7 @@ pub fn is_transcribe_binding(id: &str) -> bool {
         || id == "transcribe_system"
         || id == "transcribe_live"
         || id == "transcribe_system_live"
+        || id == crate::pro_tipos::BINDING_AGENTE
 }
 
 /// The user-facing gesture behind a binding id, ignoring the live variant.

@@ -379,6 +379,7 @@ pub(crate) async fn process_transcription_output(
     app: &AppHandle,
     transcription: &str,
     post_process: bool,
+    binding_id: &str,
 ) -> ProcessedTranscription {
     let settings = get_settings(app);
     let mut final_text = transcription.to_string();
@@ -387,6 +388,28 @@ pub(crate) async fn process_transcription_output(
 
     if let Some(converted_text) = maybe_convert_chinese_variant(&settings, transcription).await {
         final_text = converted_text;
+    }
+
+    // VoCript Pro can claim a whole dictation: with the agent's shortcut, what
+    // was said is an instruction and what gets typed is the answer. The free
+    // edition's stub always answers None, so nothing changes there.
+    if let Some(resultado) = crate::pro::transformar_dictado(app, binding_id, &final_text).await {
+        return match resultado {
+            Ok(respuesta) => ProcessedTranscription {
+                final_text: respuesta.clone(),
+                post_processed_text: Some(respuesta),
+                post_process_prompt: None,
+            },
+            Err(motivo) => {
+                error!("VoCript Pro agent failed: {}", motivo);
+                let _ = app.emit("pro://agente-fallo", motivo);
+                ProcessedTranscription {
+                    final_text: String::new(),
+                    post_processed_text: None,
+                    post_process_prompt: None,
+                }
+            }
+        };
     }
 
     if post_process {
@@ -746,9 +769,13 @@ impl ShortcutAction for TranscribeAction {
                             if post_process {
                                 show_processing_overlay(&ah);
                             }
-                            let processed =
-                                process_transcription_output(&ah, &transcription, post_process)
-                                    .await;
+                            let processed = process_transcription_output(
+                                &ah,
+                                &transcription,
+                                post_process,
+                                &binding_id,
+                            )
+                            .await;
 
                             // Save to history if WAV was saved
                             if wav_saved {
@@ -1040,6 +1067,16 @@ pub static ACTION_MAP: Lazy<HashMap<String, Arc<dyn ShortcutAction>>> = Lazy::ne
         Arc::new(TranscribeAction {
             post_process: false,
             live: true,
+        }) as Arc<dyn ShortcutAction>,
+    );
+    // VoCript Pro's agent: a plain dictation whose text is handed to the agent
+    // instead of being pasted (see process_transcription_output). The free
+    // edition never registers a shortcut for it, so the entry is inert there.
+    map.insert(
+        crate::pro_tipos::BINDING_AGENTE.to_string(),
+        Arc::new(TranscribeAction {
+            post_process: false,
+            live: false,
         }) as Arc<dyn ShortcutAction>,
     );
     map.insert(

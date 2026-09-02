@@ -92,10 +92,11 @@ tauri-plugin-dialog = "2.6"
 # dependencias no se descargan siquiera, y el binario que sale es el gratuito.
 ed25519-dalek = { version = "2", optional = true }
 xcap = { version = "0.9", optional = true }
+uuid = { version = "1", features = ["v4"], optional = true }
 
 [features]
 # El binario de pago. El gratuito es el de por defecto, sin nada de esto.
-pro = ["dep:ed25519-dalek", "dep:xcap"]
+pro = ["dep:ed25519-dalek", "dep:xcap", "dep:uuid"]
 
 [target.'cfg(unix)'.dependencies]
 signal-hook = "0.3"

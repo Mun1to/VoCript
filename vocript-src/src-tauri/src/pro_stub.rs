@@ -7,7 +7,7 @@
 //!
 //! Este archivo se queda en el repositorio público. La carpeta `pro/` no.
 
-use crate::pro_tipos::{EstadoLicencia, Region};
+use crate::pro_tipos::{Dispositivo, EstadoLicencia, EstadoNube, Region};
 use tauri::AppHandle;
 
 /// Esta edición no trae las funciones de pago.
@@ -20,6 +20,57 @@ pub fn pro_is_available() -> bool {
     false
 }
 
+/// El enganche con el dictado: en esta edición ningún dictado es para Pro.
+pub async fn transformar_dictado(
+    _app: &AppHandle,
+    _binding_id: &str,
+    _texto: &str,
+) -> Option<Result<String, String>> {
+    None
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn pro_cloud_status(_app: AppHandle) -> Result<EstadoNube, String> {
+    Err(NO_ESTA.to_string())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn pro_remove_device(_app: AppHandle, _id: String) -> Result<Vec<Dispositivo>, String> {
+    Err(NO_ESTA.to_string())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn pro_cloud_cleanup_enabled(_app: AppHandle) -> bool {
+    false
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn pro_set_cloud_cleanup(_app: AppHandle, _activa: bool) -> Result<(), String> {
+    Err(NO_ESTA.to_string())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn pro_agent_toggle(_app: AppHandle) -> Result<(), String> {
+    Err(NO_ESTA.to_string())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn pro_get_agent_hotkey(_app: AppHandle) -> String {
+    String::new()
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn pro_set_agent_hotkey(_app: AppHandle, _atajo: String) -> Result<(), String> {
+    Err(NO_ESTA.to_string())
+}
+
 #[tauri::command]
 #[specta::specta]
 pub fn pro_license_status(_app: AppHandle) -> EstadoLicencia {
@@ -28,13 +79,16 @@ pub fn pro_license_status(_app: AppHandle) -> EstadoLicencia {
 
 #[tauri::command]
 #[specta::specta]
-pub fn pro_activate_license(_app: AppHandle, _clave: String) -> Result<EstadoLicencia, String> {
+pub async fn pro_activate_license(
+    _app: AppHandle,
+    _clave: String,
+) -> Result<EstadoLicencia, String> {
     Ok(EstadoLicencia::rechazada(NO_ESTA))
 }
 
 #[tauri::command]
 #[specta::specta]
-pub fn pro_deactivate_license(_app: AppHandle) -> Result<(), String> {
+pub async fn pro_deactivate_license(_app: AppHandle) -> Result<(), String> {
     Ok(())
 }
 

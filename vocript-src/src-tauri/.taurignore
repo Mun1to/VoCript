@@ -1,0 +1,4 @@
+# Lo que `tauri dev` no debe vigilar. Sin esto, cualquier archivo que cambie dentro de
+# src-tauri reinicia la app en desarrollo, y el servidor local de la nube de VoCript Pro
+# escribe su estado en cada petición.
+src/pro/nube/

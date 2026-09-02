@@ -7820,6 +7820,7 @@ dependencies = [
  "tokio",
  "transcribe-cpp",
  "transcribe-rs",
+ "uuid",
  "vad-rs",
  "wasapi",
  "windows 0.61.3",

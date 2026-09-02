@@ -692,6 +692,13 @@ pub fn run(cli_args: CliArgs) {
             pro::pro_stop_speaking,
             pro::pro_agent_see,
             pro::pro_agent_do,
+            pro::pro_cloud_status,
+            pro::pro_remove_device,
+            pro::pro_cloud_cleanup_enabled,
+            pro::pro_set_cloud_cleanup,
+            pro::pro_get_agent_hotkey,
+            pro::pro_set_agent_hotkey,
+            pro::pro_agent_toggle,
         ])
         .events(collect_events![managers::history::HistoryUpdatePayload,]);
 
