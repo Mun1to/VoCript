@@ -1223,7 +1223,22 @@
       "remove": "移除",
       "activated": "VoCript Pro 已啟用。",
       "rejected": "這組金鑰無效。",
-      "expires": "有效期限至 {{fecha}}。"
+      "expires": "有效期限至 {{fecha}}。",
+      "activating": "正在啟用...",
+      "expiresSoon": "你的訂閱將於{{fecha}}到期，還剩{{dias}}天。下次付款後，新的授權會透過電子郵件寄給你。",
+      "changed": "VoCript Pro 已在這台電腦上停用：{{motivo}}"
+    },
+    "cloud": {
+      "title": "VoCript Pro 雲端",
+      "description": "不需要設定任何金鑰的語言模型：你的授權就是鑰匙。送出的內容只會處理，不會儲存。",
+      "cleanup": "用雲端整理語音",
+      "cleanupDescription": "每次聽寫都會去掉贅詞、修正標點，讓文字直接可用。",
+      "usage": "本月用量：已包含額度的 {{porcentaje}}%。",
+      "devices": "使用此授權的電腦（{{n}} / {{tope}}）",
+      "thisDevice": "這台電腦",
+      "removeDevice": "移除",
+      "offline": "目前無法連線到雲端。授權在這台電腦上仍然有效。",
+      "refresh": "重新整理"
     },
     "readAloud": {
       "title": "朗讀",
@@ -1249,14 +1264,19 @@
     },
     "agent": {
       "title": "智慧助手",
-      "description": "告訴它你要什麼，它會依照螢幕上的內容來處理。需要一個語言模型，和你用來潤飾語音的那個一樣。",
+      "description": "告訴它你需要什麼，它會根據螢幕上的內容來解決。有了 Pro 雲端，不需要任何設定。",
       "placeholder": "回覆他說週二我去不了……",
       "ask": "提問",
       "thinking": "思考中……",
       "hint": "Ctrl + Enter 也能送出。",
       "answer": "它的回答：",
       "copy": "複製",
-      "copied": "已複製。"
+      "copied": "已複製。",
+      "hotkeyTitle": "代理程式快捷鍵",
+      "hotkeyDescription": "按住按鍵，說出你的需求，然後放開：答案會寫在你原本的位置。",
+      "failed": "代理程式無法回答：{{motivo}}",
+      "dictate": "口述需求",
+      "dictateHint": "點一下，說出你的需求，再點一下。答案會寫在游標所在的位置。"
     }
   }
 }

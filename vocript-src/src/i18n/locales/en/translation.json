@@ -1223,7 +1223,22 @@
       "remove": "Remove",
       "activated": "VoCript Pro is active.",
       "rejected": "That key is not valid.",
-      "expires": "Valid until {{fecha}}."
+      "expires": "Valid until {{fecha}}.",
+      "activating": "Activating...",
+      "expiresSoon": "Your subscription expires on {{fecha}}, in {{dias}} days. Your new licence will arrive by email with the next payment.",
+      "changed": "VoCript Pro has been switched off on this computer: {{motivo}}"
+    },
+    "cloud": {
+      "title": "VoCript Pro cloud",
+      "description": "A language model with no key to set up: your licence is the key. What you send is processed and not stored.",
+      "cleanup": "Clean up speech with the cloud",
+      "cleanupDescription": "On every dictation, drops the filler words, fixes punctuation and leaves the text ready.",
+      "usage": "Usage this month: {{porcentaje}}% of what is included.",
+      "devices": "Computers using this licence ({{n}} of {{tope}})",
+      "thisDevice": "this computer",
+      "removeDevice": "Remove",
+      "offline": "No connection to the cloud right now. Your licence still works on this computer.",
+      "refresh": "Refresh"
     },
     "readAloud": {
       "title": "Read aloud",
@@ -1249,14 +1264,19 @@
     },
     "agent": {
       "title": "The agent",
-      "description": "Tell it what you need and it works it out from what is on your screen. Needs a language model, the same one you use to clean up speech.",
+      "description": "Tell it what you need and it works it out from what is on your screen. With the Pro cloud there is nothing to set up.",
       "placeholder": "Reply saying I cannot make Tuesday...",
       "ask": "Ask",
       "thinking": "Thinking...",
       "hint": "Ctrl + Enter also sends it.",
       "answer": "Its answer:",
       "copy": "Copy",
-      "copied": "Copied."
+      "copied": "Copied.",
+      "hotkeyTitle": "Agent shortcut",
+      "hotkeyDescription": "Hold the keys, say what you need and release: the answer is typed where you were.",
+      "failed": "The agent could not answer: {{motivo}}",
+      "dictate": "Dictate the request",
+      "dictateHint": "Click, say what you need and click again. The answer is typed where the cursor is."
     }
   }
 }

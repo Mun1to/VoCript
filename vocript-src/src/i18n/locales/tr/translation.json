@@ -1223,7 +1223,22 @@
       "remove": "Kaldır",
       "activated": "VoCript Pro etkin.",
       "rejected": "Bu anahtar geçerli değil.",
-      "expires": "{{fecha}} tarihine kadar geçerli."
+      "expires": "{{fecha}} tarihine kadar geçerli.",
+      "activating": "Etkinleştiriliyor...",
+      "expiresSoon": "Aboneliğin {{fecha}} tarihinde, {{dias}} gün sonra sona eriyor. Bir sonraki ödemeyle yeni lisans e-postayla gelecek.",
+      "changed": "VoCript Pro bu bilgisayarda kapatıldı: {{motivo}}"
+    },
+    "cloud": {
+      "title": "VoCript Pro bulutu",
+      "description": "Ayarlanacak anahtarı olmayan bir dil modeli: lisansın anahtardır. Gönderdiğin şey işlenir ve saklanmaz.",
+      "cleanup": "Konuşmayı bulutla temizle",
+      "cleanupDescription": "Her dikte edişte dolgu sözcüklerini atar, noktalamayı düzeltir ve metni hazır bırakır.",
+      "usage": "Bu ayki kullanım: dahil olanın %{{porcentaje}}’i.",
+      "devices": "Bu lisansı kullanan bilgisayarlar ({{n}} / {{tope}})",
+      "thisDevice": "bu bilgisayar",
+      "removeDevice": "Kaldır",
+      "offline": "Şu anda bulutla bağlantı yok. Lisans bu bilgisayarda geçerli olmaya devam ediyor.",
+      "refresh": "Yenile"
     },
     "readAloud": {
       "title": "Sesli oku",
@@ -1249,14 +1264,19 @@
     },
     "agent": {
       "title": "Asistan",
-      "description": "Ne istediğini söyle, ekrandakine bakarak halletsin. Bir dil modeli gerekir, konuşmayı temizlemek için kullandığın model.",
+      "description": "Ona ne istediğini söyle, ekranındakilerle çözsün. Pro bulutuyla ayarlanacak bir şey yok.",
       "placeholder": "Salı günü gelemeyeceğimi yaz...",
       "ask": "Sor",
       "thinking": "Düşünüyor...",
       "hint": "Ctrl + Enter da gönderir.",
       "answer": "Cevabı:",
       "copy": "Kopyala",
-      "copied": "Kopyalandı."
+      "copied": "Kopyalandı.",
+      "hotkeyTitle": "Ajan kısayolu",
+      "hotkeyDescription": "Tuşları basılı tut, ne istediğini söyle ve bırak: cevap bulunduğun yere yazılır.",
+      "failed": "Ajan cevap veremedi: {{motivo}}",
+      "dictate": "İsteği dikte et",
+      "dictateHint": "Tıkla, ne istediğini söyle ve tekrar tıkla. Cevap imlecin olduğu yere yazılır."
     }
   }
 }

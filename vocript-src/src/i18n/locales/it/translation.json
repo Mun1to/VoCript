@@ -1223,7 +1223,22 @@
       "remove": "Rimuovi",
       "activated": "VoCript Pro è attivo.",
       "rejected": "Questa chiave non è valida.",
-      "expires": "Valida fino al {{fecha}}."
+      "expires": "Valida fino al {{fecha}}.",
+      "activating": "Attivazione...",
+      "expiresSoon": "Il tuo abbonamento scade il {{fecha}}, tra {{dias}} giorni. Con il prossimo pagamento riceverai la nuova licenza via e-mail.",
+      "changed": "VoCript Pro è stato disattivato su questo computer: {{motivo}}"
+    },
+    "cloud": {
+      "title": "Il cloud di VoCript Pro",
+      "description": "Un modello linguistico senza nessuna chiave da configurare: la tua licenza è la chiave. Quello che invii viene elaborato e non conservato.",
+      "cleanup": "Pulire il parlato con il cloud",
+      "cleanupDescription": "A ogni dettatura toglie gli intercalari, sistema la punteggiatura e lascia il testo pronto.",
+      "usage": "Utilizzo questo mese: {{porcentaje}}% di quanto incluso.",
+      "devices": "Computer che usano questa licenza ({{n}} su {{tope}})",
+      "thisDevice": "questo computer",
+      "removeDevice": "Rimuovi",
+      "offline": "In questo momento non c’è connessione con il cloud. La licenza resta valida su questo computer.",
+      "refresh": "Aggiorna"
     },
     "readAloud": {
       "title": "Leggi ad alta voce",
@@ -1249,14 +1264,19 @@
     },
     "agent": {
       "title": "L'agente",
-      "description": "Digli cosa ti serve e lo risolve con quello che hai a schermo. Richiede un modello linguistico, lo stesso che usi per ripulire il parlato.",
+      "description": "Gli dici cosa ti serve e lo risolve con quello che hai sullo schermo. Con il cloud Pro non c’è nulla da configurare.",
       "placeholder": "Rispondigli che martedì non posso...",
       "ask": "Chiedi",
       "thinking": "Sto pensando...",
       "hint": "Anche Ctrl + Invio lo invia.",
       "answer": "La sua risposta:",
       "copy": "Copia",
-      "copied": "Copiato."
+      "copied": "Copiato.",
+      "hotkeyTitle": "Scorciatoia dell’agente",
+      "hotkeyDescription": "Tieni premuti i tasti, di’ cosa ti serve e rilascia: la risposta viene scritta dove eri.",
+      "failed": "L’agente non ha potuto rispondere: {{motivo}}",
+      "dictate": "Detta la richiesta",
+      "dictateHint": "Clicca, di’ cosa ti serve e clicca di nuovo. La risposta viene scritta dove si trova il cursore."
     }
   }
 }

@@ -1223,7 +1223,22 @@
       "remove": "Usuń",
       "activated": "VoCript Pro jest aktywny.",
       "rejected": "Ten klucz jest nieprawidłowy.",
-      "expires": "Ważna do {{fecha}}."
+      "expires": "Ważna do {{fecha}}.",
+      "activating": "Aktywowanie...",
+      "expiresSoon": "Twoja subskrypcja wygasa {{fecha}}, za {{dias}} dni. Nowa licencja przyjdzie e-mailem wraz z następną płatnością.",
+      "changed": "VoCript Pro został wyłączony na tym komputerze: {{motivo}}"
+    },
+    "cloud": {
+      "title": "Chmura VoCript Pro",
+      "description": "Model językowy bez żadnego klucza do ustawiania: twoja licencja jest kluczem. To, co wysyłasz, jest przetwarzane i nie jest przechowywane.",
+      "cleanup": "Czyść mowę w chmurze",
+      "cleanupDescription": "Przy każdym dyktowaniu usuwa wypełniacze, poprawia interpunkcję i zostawia gotowy tekst.",
+      "usage": "Zużycie w tym miesiącu: {{porcentaje}}% tego, co w pakiecie.",
+      "devices": "Komputery z tą licencją ({{n}} z {{tope}})",
+      "thisDevice": "ten komputer",
+      "removeDevice": "Usuń",
+      "offline": "W tej chwili brak połączenia z chmurą. Licencja nadal działa na tym komputerze.",
+      "refresh": "Odśwież"
     },
     "readAloud": {
       "title": "Czytanie na głos",
@@ -1249,14 +1264,19 @@
     },
     "agent": {
       "title": "Asystent",
-      "description": "Powiedz, czego potrzebujesz, a rozwiąże to na podstawie tego, co masz na ekranie. Wymaga modelu językowego, tego samego co do czyszczenia mowy.",
+      "description": "Powiedz mu, czego potrzebujesz, a rozwiąże to na podstawie tego, co masz na ekranie. Z chmurą Pro nie trzeba nic konfigurować.",
       "placeholder": "Odpisz mu, że we wtorek nie mogę...",
       "ask": "Zapytaj",
       "thinking": "Myśli...",
       "hint": "Ctrl + Enter też wysyła.",
       "answer": "Jego odpowiedź:",
       "copy": "Kopiuj",
-      "copied": "Skopiowano."
+      "copied": "Skopiowano.",
+      "hotkeyTitle": "Skrót agenta",
+      "hotkeyDescription": "Przytrzymaj klawisze, powiedz, czego potrzebujesz, i puść: odpowiedź zostanie wpisana tam, gdzie byłeś.",
+      "failed": "Agent nie mógł odpowiedzieć: {{motivo}}",
+      "dictate": "Podyktuj polecenie",
+      "dictateHint": "Kliknij, powiedz, czego potrzebujesz, i kliknij ponownie. Odpowiedź zostanie wpisana tam, gdzie jest kursor."
     }
   }
 }

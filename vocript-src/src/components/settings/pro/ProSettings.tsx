@@ -15,8 +15,18 @@ import { SettingContainer } from "../../ui/SettingContainer";
 import { Button } from "../../ui/Button";
 import { Agente } from "./Agente";
 import { CapturarAtajo } from "./CapturarAtajo";
+import { Nube } from "./Nube";
 import { useProStore } from "@/stores/proStore";
 import * as pro from "@/lib/pro";
+
+/** Con menos días que esto por delante, la fecha de caducidad se enseña en ámbar. */
+const DIAS_DE_AVISO = 14;
+
+/** Días que quedan hasta una fecha AAAA-MM-DD, contando el de hoy como cero. */
+function diasHasta(fecha: string): number {
+  const objetivo = new Date(`${fecha}T00:00:00`).getTime();
+  return Math.ceil((objetivo - Date.now()) / 86_400_000);
+}
 
 /**
  * VoCript Pro: dónde se activa y dónde se prueba.
@@ -33,16 +43,19 @@ export const ProSettings: React.FC = () => {
   const [leyendo, setLeyendo] = useState(false);
   const [ultimoTexto, setUltimoTexto] = useState<string | null>(null);
   const [atajo, setAtajo] = useState("");
+  const [atajoAgente, setAtajoAgente] = useState("");
   const [puedeRepetir, setPuedeRepetir] = useState(false);
   const [pausada, setPausada] = useState(false);
 
   useEffect(() => {
     void cargar();
     void pro.atajo().then(setAtajo);
+    void pro.atajoAgente().then(setAtajoAgente);
     void pro.puedeRepetir().then(setPuedeRepetir);
   }, [cargar]);
 
   const activa = licencia?.activa ?? false;
+  const diasQueQuedan = licencia?.expira ? diasHasta(licencia.expira) : null;
 
   const alActivar = async () => {
     setActivando(true);
@@ -131,16 +144,48 @@ export const ProSettings: React.FC = () => {
               onClick={() => void alActivar()}
               disabled={activando || clave.trim().length === 0}
             >
-              {t("pro.license.activate")}
+              {activando
+                ? t("pro.license.activating")
+                : t("pro.license.activate")}
             </Button>
           </div>
         )}
       </SettingContainer>
 
-      {activa && licencia?.expira && (
-        <p className="px-1 text-xs text-mid-gray">
-          {t("pro.license.expires", { fecha: licencia.expira })}
+      {/* Hay una licencia guardada pero no vale (caducada, casi siempre): se dice por qué,
+          justo encima de donde se pega la nueva. */}
+      {!activa && licencia?.motivo && (
+        <p className="flex items-start gap-1.5 px-1 text-xs text-red-500">
+          <TriangleAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+          {licencia.motivo}
         </p>
+      )}
+
+      {activa &&
+        licencia?.expira &&
+        diasQueQuedan !== null &&
+        (diasQueQuedan <= DIAS_DE_AVISO ? (
+          <p className="flex items-start gap-1.5 px-1 text-xs text-amber-600">
+            <TriangleAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+            {t("pro.license.expiresSoon", {
+              fecha: licencia.expira,
+              dias: Math.max(0, diasQueQuedan),
+            })}
+          </p>
+        ) : (
+          <p className="px-1 text-xs text-mid-gray">
+            {t("pro.license.expires", { fecha: licencia.expira })}
+          </p>
+        ))}
+
+      {activa && (
+        <div className="mt-1 rounded-lg border border-mid-gray/20 p-3">
+          <h3 className="text-sm font-medium">{t("pro.cloud.title")}</h3>
+          <p className="mb-2.5 mt-0.5 text-xs text-mid-gray">
+            {t("pro.cloud.description")}
+          </p>
+          <Nube />
+        </div>
       )}
 
       {activa && (
@@ -233,7 +278,21 @@ export const ProSettings: React.FC = () => {
           <p className="mb-2.5 mt-0.5 text-xs text-mid-gray">
             {t("pro.agent.description")}
           </p>
-          <Agente />
+          <SettingContainer
+            title={t("pro.agent.hotkeyTitle")}
+            description={t("pro.agent.hotkeyDescription")}
+            descriptionMode="inline"
+            grouped
+          >
+            <CapturarAtajo
+              valor={atajoAgente}
+              onCambio={setAtajoAgente}
+              guardarEn={pro.ponerAtajoAgente}
+            />
+          </SettingContainer>
+          <div className="mt-2.5">
+            <Agente />
+          </div>
         </div>
       )}
 

@@ -1223,7 +1223,22 @@
       "remove": "Gỡ bỏ",
       "activated": "VoCript Pro đang hoạt động.",
       "rejected": "Mã này không hợp lệ.",
-      "expires": "Có hiệu lực đến {{fecha}}."
+      "expires": "Có hiệu lực đến {{fecha}}.",
+      "activating": "Đang kích hoạt...",
+      "expiresSoon": "Gói đăng ký của bạn hết hạn ngày {{fecha}}, còn {{dias}} ngày. Giấy phép mới sẽ được gửi qua email cùng lần thanh toán tiếp theo.",
+      "changed": "VoCript Pro đã bị tắt trên máy tính này: {{motivo}}"
+    },
+    "cloud": {
+      "title": "Đám mây VoCript Pro",
+      "description": "Một mô hình ngôn ngữ không cần cài khóa nào: giấy phép của bạn chính là chìa khóa. Nội dung gửi đi được xử lý và không được lưu.",
+      "cleanup": "Làm sạch lời nói bằng đám mây",
+      "cleanupDescription": "Mỗi lần đọc chính tả, bỏ từ đệm, sửa dấu câu và để văn bản sẵn sàng.",
+      "usage": "Đã dùng tháng này: {{porcentaje}}% phần được bao gồm.",
+      "devices": "Máy tính dùng giấy phép này ({{n}} trên {{tope}})",
+      "thisDevice": "máy tính này",
+      "removeDevice": "Gỡ",
+      "offline": "Hiện không có kết nối với đám mây. Giấy phép vẫn có hiệu lực trên máy tính này.",
+      "refresh": "Làm mới"
     },
     "readAloud": {
       "title": "Đọc to",
@@ -1249,14 +1264,19 @@
     },
     "agent": {
       "title": "Trợ lý",
-      "description": "Nói cho nó biết bạn cần gì, nó sẽ giải quyết dựa trên những gì đang hiển thị trên màn hình. Cần một mô hình ngôn ngữ, chính là mô hình bạn dùng để làm sạch lời nói.",
+      "description": "Bạn nói điều mình cần và nó giải quyết dựa trên những gì đang có trên màn hình. Với đám mây Pro, không phải cài đặt gì cả.",
       "placeholder": "Trả lời rằng thứ Ba tôi không đi được...",
       "ask": "Hỏi",
       "thinking": "Đang nghĩ...",
       "hint": "Ctrl + Enter cũng gửi được.",
       "answer": "Câu trả lời:",
       "copy": "Sao chép",
-      "copied": "Đã sao chép."
+      "copied": "Đã sao chép.",
+      "hotkeyTitle": "Phím tắt của trợ lý",
+      "hotkeyDescription": "Giữ phím, nói điều bạn cần rồi thả: câu trả lời được gõ vào đúng chỗ bạn đang ở.",
+      "failed": "Trợ lý không trả lời được: {{motivo}}",
+      "dictate": "Đọc yêu cầu",
+      "dictateHint": "Bấm, nói điều bạn cần rồi bấm lại. Câu trả lời được gõ vào chỗ con trỏ."
     }
   }
 }

@@ -1223,7 +1223,22 @@
       "remove": "Odebrat",
       "activated": "VoCript Pro je aktivní.",
       "rejected": "Tento klíč není platný.",
-      "expires": "Platná do {{fecha}}."
+      "expires": "Platná do {{fecha}}.",
+      "activating": "Aktivace...",
+      "expiresSoon": "Předplatné vyprší {{fecha}}, za {{dias}} dní. S další platbou ti přijde nová licence e-mailem.",
+      "changed": "VoCript Pro byl na tomto počítači vypnut: {{motivo}}"
+    },
+    "cloud": {
+      "title": "Cloud VoCript Pro",
+      "description": "Jazykový model bez jakéhokoli klíče: tvoje licence je klíč. Co pošleš, se zpracuje a neukládá.",
+      "cleanup": "Čistit řeč přes cloud",
+      "cleanupDescription": "Při každém diktování odstraní výplňová slova, opraví interpunkci a nechá text hotový.",
+      "usage": "Využití tento měsíc: {{porcentaje}}% z toho, co je v ceně.",
+      "devices": "Počítače s touto licencí ({{n}} z {{tope}})",
+      "thisDevice": "tento počítač",
+      "removeDevice": "Odebrat",
+      "offline": "Právě teď není spojení s cloudem. Licence na tomto počítači platí dál.",
+      "refresh": "Obnovit"
     },
     "readAloud": {
       "title": "Čtení nahlas",
@@ -1249,14 +1264,19 @@
     },
     "agent": {
       "title": "Asistent",
-      "description": "Řekni mu, co potřebuješ, a vyřeší to podle toho, co máš na obrazovce. Potřebuje jazykový model, ten samý jako na čištění řeči.",
+      "description": "Řekneš mu, co potřebuješ, a vyřeší to podle toho, co máš na obrazovce. S cloudem Pro není co nastavovat.",
       "placeholder": "Odpověz mu, že v úterý nemůžu...",
       "ask": "Zeptat se",
       "thinking": "Přemýšlí...",
       "hint": "Odešle to i Ctrl + Enter.",
       "answer": "Jeho odpověď:",
       "copy": "Kopírovat",
-      "copied": "Zkopírováno."
+      "copied": "Zkopírováno.",
+      "hotkeyTitle": "Zkratka agenta",
+      "hotkeyDescription": "Podrž klávesy, řekni, co potřebuješ, a pusť: odpověď se napíše tam, kde jsi byl.",
+      "failed": "Agent nemohl odpovědět: {{motivo}}",
+      "dictate": "Nadiktovat zadání",
+      "dictateHint": "Klikni, řekni, co potřebuješ, a klikni znovu. Odpověď se napíše tam, kde je kurzor."
     }
   }
 }

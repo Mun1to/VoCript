@@ -1223,7 +1223,22 @@
       "remove": "移除",
       "activated": "VoCript Pro 已激活。",
       "rejected": "该密钥无效。",
-      "expires": "有效期至 {{fecha}}。"
+      "expires": "有效期至 {{fecha}}。",
+      "activating": "正在激活...",
+      "expiresSoon": "你的订阅将于{{fecha}}到期，还剩{{dias}}天。下次付款后，新许可证会通过邮件发给你。",
+      "changed": "VoCript Pro 已在这台电脑上停用：{{motivo}}"
+    },
+    "cloud": {
+      "title": "VoCript Pro 云端",
+      "description": "无需配置任何密钥的语言模型：你的许可证就是钥匙。发送的内容只做处理，不会保存。",
+      "cleanup": "用云端整理语音",
+      "cleanupDescription": "每次听写都会去掉口头禅、修正标点，让文本直接可用。",
+      "usage": "本月用量：已包含额度的 {{porcentaje}}%。",
+      "devices": "使用此许可证的电脑（{{n}} / {{tope}}）",
+      "thisDevice": "这台电脑",
+      "removeDevice": "移除",
+      "offline": "目前无法连接云端。许可证在这台电脑上仍然有效。",
+      "refresh": "刷新"
     },
     "readAloud": {
       "title": "朗读",
@@ -1249,14 +1264,19 @@
     },
     "agent": {
       "title": "智能助手",
-      "description": "告诉它你要什么，它会根据屏幕上的内容来处理。需要一个语言模型，和你用来润色语音的那个一样。",
+      "description": "告诉它你需要什么，它会根据屏幕上的内容来解决。有了 Pro 云端，无需任何配置。",
       "placeholder": "回复他说周二我去不了……",
       "ask": "提问",
       "thinking": "思考中……",
       "hint": "Ctrl + Enter 也能发送。",
       "answer": "它的回答：",
       "copy": "复制",
-      "copied": "已复制。"
+      "copied": "已复制。",
+      "hotkeyTitle": "智能体快捷键",
+      "hotkeyDescription": "按住按键，说出你的需求，然后松开：答案会写在你原来的位置。",
+      "failed": "智能体无法回答：{{motivo}}",
+      "dictate": "口述需求",
+      "dictateHint": "点击，说出你的需求，再点击一次。答案会写在光标所在的位置。"
     }
   }
 }

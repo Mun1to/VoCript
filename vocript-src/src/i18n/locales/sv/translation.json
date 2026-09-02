@@ -1223,7 +1223,22 @@
       "remove": "Ta bort",
       "activated": "VoCript Pro är aktivt.",
       "rejected": "Den nyckeln är inte giltig.",
-      "expires": "Gäller till {{fecha}}."
+      "expires": "Gäller till {{fecha}}.",
+      "activating": "Aktiverar...",
+      "expiresSoon": "Din prenumeration går ut {{fecha}}, om {{dias}} dagar. Den nya licensen kommer med e-post vid nästa betalning.",
+      "changed": "VoCript Pro har stängts av på den här datorn: {{motivo}}"
+    },
+    "cloud": {
+      "title": "VoCript Pro-molnet",
+      "description": "En språkmodell utan någon nyckel att ställa in: din licens är nyckeln. Det du skickar bearbetas och sparas inte.",
+      "cleanup": "Rensa talet med molnet",
+      "cleanupDescription": "Vid varje diktering tar bort utfyllnadsord, rättar skiljetecken och lämnar texten klar.",
+      "usage": "Användning den här månaden: {{porcentaje}}% av det som ingår.",
+      "devices": "Datorer med den här licensen ({{n}} av {{tope}})",
+      "thisDevice": "den här datorn",
+      "removeDevice": "Ta bort",
+      "offline": "Ingen anslutning till molnet just nu. Licensen gäller fortfarande på den här datorn.",
+      "refresh": "Uppdatera"
     },
     "readAloud": {
       "title": "Läs upp",
@@ -1249,14 +1264,19 @@
     },
     "agent": {
       "title": "Assistenten",
-      "description": "Säg vad du behöver så löser den det utifrån vad du har på skärmen. Kräver en språkmodell, samma som du använder för att städa talet.",
+      "description": "Säg vad du behöver så löser den det utifrån det som finns på skärmen. Med Pro-molnet finns inget att ställa in.",
       "placeholder": "Svara att jag inte kan på tisdag...",
       "ask": "Fråga",
       "thinking": "Tänker...",
       "hint": "Ctrl + Enter skickar också.",
       "answer": "Dess svar:",
       "copy": "Kopiera",
-      "copied": "Kopierat."
+      "copied": "Kopierat.",
+      "hotkeyTitle": "Agentens kortkommando",
+      "hotkeyDescription": "Håll tangenterna, säg vad du behöver och släpp: svaret skrivs där du var.",
+      "failed": "Agenten kunde inte svara: {{motivo}}",
+      "dictate": "Diktera uppdraget",
+      "dictateHint": "Klicka, säg vad du behöver och klicka igen. Svaret skrivs där markören står."
     }
   }
 }

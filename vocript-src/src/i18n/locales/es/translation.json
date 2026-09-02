@@ -1223,7 +1223,22 @@
       "remove": "Quitar",
       "activated": "VoCript Pro está activo.",
       "rejected": "Esa clave no es válida.",
-      "expires": "Válida hasta el {{fecha}}."
+      "expires": "Válida hasta el {{fecha}}.",
+      "activating": "Activando...",
+      "expiresSoon": "Tu suscripción caduca el {{fecha}}, dentro de {{dias}} días. Con el siguiente cobro te llegará la licencia nueva por correo.",
+      "changed": "VoCript Pro se ha desactivado en este ordenador: {{motivo}}"
+    },
+    "cloud": {
+      "title": "La nube de VoCript Pro",
+      "description": "Un modelo de lenguaje sin poner ninguna clave: la licencia es la llave. Lo que mandas se procesa y no se guarda.",
+      "cleanup": "Limpiar el habla con la nube",
+      "cleanupDescription": "En cada dictado quita las muletillas, arregla la puntuación y deja el texto listo.",
+      "usage": "Uso este mes: {{porcentaje}}% de lo incluido.",
+      "devices": "Ordenadores con esta licencia ({{n}} de {{tope}})",
+      "thisDevice": "este ordenador",
+      "removeDevice": "Quitar",
+      "offline": "Ahora mismo no hay conexión con la nube. La licencia sigue valiendo en este ordenador.",
+      "refresh": "Actualizar"
     },
     "readAloud": {
       "title": "Leer en voz alta",
@@ -1249,14 +1264,19 @@
     },
     "agent": {
       "title": "El agente",
-      "description": "Le dices lo que necesitas y lo resuelve con lo que tengas en pantalla. Necesita un modelo de lenguaje, el mismo que usas para limpiar el habla.",
+      "description": "Le dices lo que necesitas y lo resuelve con lo que tengas en pantalla. Con la nube de Pro no hay que configurar nada.",
       "placeholder": "Contéstale que el martes no puedo...",
       "ask": "Preguntar",
       "thinking": "Pensando...",
       "hint": "Ctrl + Intro también lo envía.",
       "answer": "Su respuesta:",
       "copy": "Copiar",
-      "copied": "Copiado."
+      "copied": "Copiado.",
+      "hotkeyTitle": "Atajo del agente",
+      "hotkeyDescription": "Mantén las teclas, di lo que necesitas y suelta: la respuesta se escribe donde estabas.",
+      "failed": "El agente no ha podido contestar: {{motivo}}",
+      "dictate": "Dictar el encargo",
+      "dictateHint": "Pulsa, di lo que necesitas y vuelve a pulsar. La respuesta se escribe donde esté el cursor."
     }
   }
 }

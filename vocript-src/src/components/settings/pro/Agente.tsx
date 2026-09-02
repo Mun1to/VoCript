@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { listen } from "@tauri-apps/api/event";
 import { useTranslation } from "react-i18next";
-import { Copy, Sparkles } from "lucide-react";
+import { Copy, Mic, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "../../ui/Button";
 import * as pro from "@/lib/pro";
@@ -19,6 +20,17 @@ export const Agente: React.FC<{ disabled?: boolean }> = ({
   const [encargo, setEncargo] = useState("");
   const [pensando, setPensando] = useState(false);
   const [respuesta, setRespuesta] = useState<string | null>(null);
+
+  // Lo que contesta el agente a un encargo dictado con el botón llega por evento: el
+  // dictado lo lleva el backend de principio a fin y aquí solo hay que enseñarlo.
+  useEffect(() => {
+    const suelto = listen<string>(pro.EVENTO_AGENTE_RESPUESTA, (evento) => {
+      setRespuesta(evento.payload);
+    });
+    return () => {
+      void suelto.then((quitar) => quitar());
+    };
+  }, []);
 
   const preguntar = async () => {
     setPensando(true);
@@ -69,6 +81,19 @@ export const Agente: React.FC<{ disabled?: boolean }> = ({
           {pensando ? t("pro.agent.thinking") : t("pro.agent.ask")}
         </Button>
         <span className="text-xs text-mid-gray">{t("pro.agent.hint")}</span>
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() =>
+            void pro.agenteDictar().catch((e) => toast.error(String(e)))
+          }
+          disabled={disabled}
+          className="ml-auto flex items-center gap-1.5"
+          title={t("pro.agent.dictateHint")}
+        >
+          <Mic className="h-3.5 w-3.5" />
+          {t("pro.agent.dictate")}
+        </Button>
       </div>
 
       {respuesta !== null && (

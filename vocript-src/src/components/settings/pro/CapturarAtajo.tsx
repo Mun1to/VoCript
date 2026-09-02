@@ -17,6 +17,11 @@ interface Props {
   /** El atajo guardado ahora mismo, en el formato del backend (`ctrl+alt+l`). */
   valor: string;
   onCambio: (nuevo: string) => void;
+  /**
+   * Quién guarda la combinación en el backend. Por defecto, el atajo de leer en voz alta;
+   * el del agente pasa el suyo. El resto del componente es el mismo para los dos.
+   */
+  guardarEn?: (combinacion: string) => Promise<void>;
   disabled?: boolean;
 }
 
@@ -31,6 +36,7 @@ interface Props {
 export const CapturarAtajo: React.FC<Props> = ({
   valor,
   onCambio,
+  guardarEn = pro.ponerAtajo,
   disabled = false,
 }) => {
   const { t } = useTranslation();
@@ -41,7 +47,7 @@ export const CapturarAtajo: React.FC<Props> = ({
   const guardar = useCallback(
     async (combinacion: string) => {
       try {
-        await pro.ponerAtajo(combinacion);
+        await guardarEn(combinacion);
         onCambio(combinacion);
         toast.success(t("pro.hotkey.saved"));
       } catch (e) {
@@ -50,7 +56,7 @@ export const CapturarAtajo: React.FC<Props> = ({
         toast.error(String(e));
       }
     },
-    [onCambio, t],
+    [guardarEn, onCambio, t],
   );
 
   useEffect(() => {

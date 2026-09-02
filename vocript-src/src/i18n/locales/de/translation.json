@@ -1223,7 +1223,22 @@
       "remove": "Entfernen",
       "activated": "VoCript Pro ist aktiv.",
       "rejected": "Dieser Schlüssel ist ungültig.",
-      "expires": "Gültig bis {{fecha}}."
+      "expires": "Gültig bis {{fecha}}.",
+      "activating": "Wird aktiviert...",
+      "expiresSoon": "Dein Abonnement läuft am {{fecha}} ab, in {{dias}} Tagen. Mit der nächsten Zahlung bekommst du die neue Lizenz per E-Mail.",
+      "changed": "VoCript Pro wurde auf diesem Computer deaktiviert: {{motivo}}"
+    },
+    "cloud": {
+      "title": "Die VoCript Pro Cloud",
+      "description": "Ein Sprachmodell ohne eigenen Schlüssel: deine Lizenz ist der Schlüssel. Was du sendest, wird verarbeitet und nicht gespeichert.",
+      "cleanup": "Sprache mit der Cloud bereinigen",
+      "cleanupDescription": "Entfernt bei jedem Diktat Füllwörter, korrigiert die Zeichensetzung und macht den Text fertig.",
+      "usage": "Verbrauch diesen Monat: {{porcentaje}}% des Inklusivvolumens.",
+      "devices": "Computer mit dieser Lizenz ({{n}} von {{tope}})",
+      "thisDevice": "dieser Computer",
+      "removeDevice": "Entfernen",
+      "offline": "Gerade keine Verbindung zur Cloud. Die Lizenz gilt auf diesem Computer weiterhin.",
+      "refresh": "Aktualisieren"
     },
     "readAloud": {
       "title": "Vorlesen",
@@ -1249,14 +1264,19 @@
     },
     "agent": {
       "title": "Der Assistent",
-      "description": "Sag ihm, was du brauchst, und er löst es mit dem, was auf deinem Bildschirm steht. Braucht ein Sprachmodell, dasselbe wie zum Aufräumen der Sprache.",
+      "description": "Sag ihm, was du brauchst, und er löst es mit dem, was auf deinem Bildschirm ist. Mit der Pro Cloud musst du nichts einrichten.",
       "placeholder": "Antworte ihm, dass ich am Dienstag nicht kann...",
       "ask": "Fragen",
       "thinking": "Denkt nach...",
       "hint": "Strg + Enter sendet auch.",
       "answer": "Seine Antwort:",
       "copy": "Kopieren",
-      "copied": "Kopiert."
+      "copied": "Kopiert.",
+      "hotkeyTitle": "Tastenkürzel des Agenten",
+      "hotkeyDescription": "Tasten halten, sagen, was du brauchst, loslassen: Die Antwort wird dort geschrieben, wo du warst.",
+      "failed": "Der Agent konnte nicht antworten: {{motivo}}",
+      "dictate": "Auftrag diktieren",
+      "dictateHint": "Klicken, sagen, was du brauchst, und noch einmal klicken. Die Antwort wird dort geschrieben, wo der Cursor steht."
     }
   }
 }

@@ -1,4 +1,7 @@
 import { create } from "zustand";
+import { listen } from "@tauri-apps/api/event";
+import { toast } from "sonner";
+import i18n from "i18next";
 import * as pro from "@/lib/pro";
 
 /**
@@ -18,6 +21,31 @@ interface EstadoPro {
   desactivar: () => Promise<void>;
 }
 
+/** Los avisos del backend se escuchan una sola vez por ventana, no una por pantalla. */
+let escuchando = false;
+
+function escuchar(recargar: () => Promise<void>) {
+  if (escuchando) return;
+  escuchando = true;
+
+  // La nube ha retirado la licencia (revocada, o rechazada al sincronizar una activación
+  // que se hizo sin red). Se recarga el estado, que ya vendrá sin licencia, y se dice por qué.
+  void listen<string>(pro.EVENTO_LICENCIA_CAMBIADA, (evento) => {
+    void recargar();
+    toast.warning(i18n.t("pro.license.changed", { motivo: evento.payload }), {
+      duration: 12000,
+    });
+  });
+
+  // El agente no ha podido contestar a un dictado. No se ha pegado nada, y sin esto la
+  // persona solo vería que el atajo «no hace nada».
+  void listen<string>(pro.EVENTO_AGENTE_FALLO, (evento) => {
+    toast.error(i18n.t("pro.agent.failed", { motivo: evento.payload }), {
+      duration: 8000,
+    });
+  });
+}
+
 export const useProStore = create<EstadoPro>((set, get) => ({
   disponible: null,
   licencia: null,
@@ -31,6 +59,7 @@ export const useProStore = create<EstadoPro>((set, get) => ({
       set({ disponible: false, licencia: null, hayVoz: false });
       return;
     }
+    escuchar(get().cargar);
     const [licencia, hayVoz] = await Promise.all([
       pro.estadoLicencia(),
       pro.hayVoz(),

@@ -1223,7 +1223,22 @@
       "remove": "Retirer",
       "activated": "VoCript Pro est actif.",
       "rejected": "Cette clé n'est pas valide.",
-      "expires": "Valable jusqu'au {{fecha}}."
+      "expires": "Valable jusqu'au {{fecha}}.",
+      "activating": "Activation...",
+      "expiresSoon": "Ton abonnement expire le {{fecha}}, dans {{dias}} jours. Ta nouvelle licence arrivera par e-mail avec le prochain paiement.",
+      "changed": "VoCript Pro a été désactivé sur cet ordinateur : {{motivo}}"
+    },
+    "cloud": {
+      "title": "Le cloud de VoCript Pro",
+      "description": "Un modèle de langage sans aucune clé à configurer : ta licence est la clé. Ce que tu envoies est traité et n’est pas conservé.",
+      "cleanup": "Nettoyer la parole avec le cloud",
+      "cleanupDescription": "À chaque dictée, retire les mots de remplissage, corrige la ponctuation et laisse le texte prêt.",
+      "usage": "Utilisation ce mois-ci : {{porcentaje}}% de ce qui est inclus.",
+      "devices": "Ordinateurs utilisant cette licence ({{n}} sur {{tope}})",
+      "thisDevice": "cet ordinateur",
+      "removeDevice": "Retirer",
+      "offline": "Pas de connexion au cloud pour le moment. La licence reste valable sur cet ordinateur.",
+      "refresh": "Actualiser"
     },
     "readAloud": {
       "title": "Lecture à voix haute",
@@ -1249,14 +1264,19 @@
     },
     "agent": {
       "title": "L'assistant",
-      "description": "Dis-lui ce dont tu as besoin et il le résout avec ce qui est à l'écran. Il lui faut un modèle de langage, le même que pour nettoyer la parole.",
+      "description": "Dis-lui ce qu’il te faut et il le résout avec ce qui est à l’écran. Avec le cloud Pro, rien à configurer.",
       "placeholder": "Réponds-lui que mardi je ne peux pas...",
       "ask": "Demander",
       "thinking": "Réflexion...",
       "hint": "Ctrl + Entrée l'envoie aussi.",
       "answer": "Sa réponse :",
       "copy": "Copier",
-      "copied": "Copié."
+      "copied": "Copié.",
+      "hotkeyTitle": "Raccourci de l’agent",
+      "hotkeyDescription": "Maintiens les touches, dis ce qu’il te faut et relâche : la réponse s’écrit là où tu étais.",
+      "failed": "L’agent n’a pas pu répondre : {{motivo}}",
+      "dictate": "Dicter la demande",
+      "dictateHint": "Clique, dis ce qu’il te faut et clique à nouveau. La réponse s’écrit là où est le curseur."
     }
   }
 }

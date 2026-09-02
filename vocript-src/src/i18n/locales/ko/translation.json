@@ -1223,7 +1223,22 @@
       "remove": "제거",
       "activated": "VoCript Pro가 활성화되었습니다.",
       "rejected": "유효하지 않은 키입니다.",
-      "expires": "{{fecha}}까지 유효합니다."
+      "expires": "{{fecha}}까지 유효합니다.",
+      "activating": "활성화하는 중...",
+      "expiresSoon": "구독이 {{fecha}}에 만료됩니다({{dias}}일 남음). 다음 결제 시 새 라이선스가 이메일로 도착합니다.",
+      "changed": "이 컴퓨터에서 VoCript Pro가 꺼졌습니다: {{motivo}}"
+    },
+    "cloud": {
+      "title": "VoCript Pro 클라우드",
+      "description": "키를 설정할 필요가 없는 언어 모델입니다. 라이선스가 곧 열쇠입니다. 보낸 내용은 처리되고 저장되지 않습니다.",
+      "cleanup": "클라우드로 말을 다듬기",
+      "cleanupDescription": "받아쓸 때마다 군말을 없애고 문장 부호를 고쳐 바로 쓸 수 있는 글로 만듭니다.",
+      "usage": "이번 달 사용량: 포함된 양의 {{porcentaje}}%.",
+      "devices": "이 라이선스를 쓰는 컴퓨터({{n}} / {{tope}})",
+      "thisDevice": "이 컴퓨터",
+      "removeDevice": "제거",
+      "offline": "지금은 클라우드에 연결할 수 없습니다. 라이선스는 이 컴퓨터에서 계속 유효합니다.",
+      "refresh": "새로고침"
     },
     "readAloud": {
       "title": "소리 내어 읽기",
@@ -1249,14 +1264,19 @@
     },
     "agent": {
       "title": "에이전트",
-      "description": "필요한 것을 말하면 화면에 있는 내용을 보고 해결합니다. 언어 모델이 필요하며, 음성 정리에 쓰는 것과 같은 모델이면 됩니다.",
+      "description": "필요한 것을 말하면 화면에 있는 내용으로 해결합니다. Pro 클라우드가 있으면 설정할 것이 없습니다.",
       "placeholder": "화요일은 안 된다고 답장해 줘...",
       "ask": "물어보기",
       "thinking": "생각 중...",
       "hint": "Ctrl + Enter로도 보낼 수 있습니다.",
       "answer": "답변:",
       "copy": "복사",
-      "copied": "복사했습니다."
+      "copied": "복사했습니다.",
+      "hotkeyTitle": "에이전트 단축키",
+      "hotkeyDescription": "키를 누른 채 필요한 것을 말하고 놓으면, 있던 자리에 답이 입력됩니다.",
+      "failed": "에이전트가 답하지 못했습니다: {{motivo}}",
+      "dictate": "요청 받아쓰기",
+      "dictateHint": "클릭하고 필요한 것을 말한 뒤 다시 클릭하세요. 답은 커서가 있는 곳에 입력됩니다."
     }
   }
 }
