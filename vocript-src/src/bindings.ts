@@ -1496,6 +1496,45 @@ async proAgentToggle() : Promise<Result<null, string>> {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
+},
+/**
+ * Las voces instaladas en este Windows.
+ */
+async proListVoices() : Promise<Result<Voz[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_list_voices") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Qué voz lee y a qué velocidad.
+ */
+async proGetVoice() : Promise<AjustesVoz> {
+    return await TAURI_INVOKE("pro_get_voice");
+},
+/**
+ * Cambia la voz o la velocidad. Se aplica a la siguiente frase que se lea.
+ */
+async proSetVoice(ajustesVoz: AjustesVoz) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_set_voice", { ajustesVoz }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Dice un texto cualquiera en voz alta, por ejemplo para probar la voz elegida.
+ */
+async proSpeak(texto: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_speak", { texto }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
 }
 }
 
@@ -1514,6 +1553,18 @@ historyUpdatePayload: "history-update-payload"
 
 /** user-defined types **/
 
+/**
+ * Cómo se lee en voz alta: qué voz y a qué velocidad.
+ */
+export type AjustesVoz = { 
+/**
+ * `None` es la voz que Windows tenga puesta por defecto.
+ */
+voz_id: string | null; 
+/**
+ * 1.0 es la velocidad normal; 2.0 el doble.
+ */
+velocidad: number }
 export type AppSettings = { bindings: Partial<{ [key in string]: ShortcutBinding }>; push_to_talk: boolean; audio_feedback: boolean; audio_feedback_volume?: number; sound_theme?: SoundTheme; start_hidden?: boolean; autostart_enabled?: boolean; update_checks_enabled?: boolean; track_dictation_stats?: boolean; 
 /**
  * What this user's own model writes when they say the wake word.
@@ -1785,6 +1836,14 @@ export type TrayMenuState = { version_label: string; live_voice: boolean; live_s
  */
 available_update: string | null }
 export type TypingTool = "auto" | "wtype" | "kwtype" | "dotool" | "ydotool" | "xdotool"
+/**
+ * Una voz instalada en el sistema, para elegirla.
+ */
+export type Voz = { id: string; nombre: string; 
+/**
+ * Etiqueta de idioma, como `es-ES`.
+ */
+idioma: string }
 export type WhisperAcceleratorSetting = "auto" | "cpu" | "gpu"
 export type WindowsMicrophonePermissionStatus = { supported: boolean; overall_access: PermissionAccess; device_access: PermissionAccess; app_access: PermissionAccess; desktop_app_access: PermissionAccess }
 /**

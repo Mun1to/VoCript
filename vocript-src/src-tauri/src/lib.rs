@@ -699,6 +699,10 @@ pub fn run(cli_args: CliArgs) {
             pro::pro_get_agent_hotkey,
             pro::pro_set_agent_hotkey,
             pro::pro_agent_toggle,
+            pro::pro_list_voices,
+            pro::pro_get_voice,
+            pro::pro_set_voice,
+            pro::pro_speak,
         ])
         .events(collect_events![managers::history::HistoryUpdatePayload,]);
 

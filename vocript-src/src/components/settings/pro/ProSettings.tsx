@@ -16,6 +16,7 @@ import { Button } from "../../ui/Button";
 import { Agente } from "./Agente";
 import { CapturarAtajo } from "./CapturarAtajo";
 import { Nube } from "./Nube";
+import { Voz } from "./Voz";
 import { useProStore } from "@/stores/proStore";
 import * as pro from "@/lib/pro";
 
@@ -258,6 +259,8 @@ export const ProSettings: React.FC = () => {
           </div>
         </SettingContainer>
       )}
+
+      {activa && hayVoz && <Voz />}
 
       {activa && (
         <SettingContainer

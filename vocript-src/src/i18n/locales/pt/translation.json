@@ -1252,6 +1252,22 @@
       "pause": "Pausa",
       "resume": "Continuar"
     },
+    "voice": {
+      "title": "Voz",
+      "description": "Com que voz e a que velocidade se lê. As vozes são as que o Windows tem.",
+      "voice": "Voz",
+      "systemDefault": "A do sistema",
+      "speed": "Velocidade",
+      "speedSlow": "Lenta",
+      "speedNormal": "Normal",
+      "speedFast": "Rápida",
+      "speedFaster": "Mais rápida",
+      "speedDouble": "Dupla",
+      "test": "Experimentar",
+      "sample": "Isto é o VoCript Pro a ler em voz alta com a voz que escolheste.",
+      "naturalHint": "O Windows 11 tem vozes naturais gratuitas: Definições, Acessibilidade, Narrador, «Adicionar vozes naturais». Depois de instaladas aparecem aqui.",
+      "saved": "Voz guardada."
+    },
     "hotkey": {
       "title": "Atalho",
       "description": "As teclas que abrem a mira. Funciona em qualquer lado, mesmo com o VoCript na bandeja.",

@@ -1252,6 +1252,22 @@
       "pause": "Paus",
       "resume": "Fortsätt"
     },
+    "voice": {
+      "title": "Röst",
+      "description": "Vilken röst som läser och hur snabbt. Rösterna är de som Windows har.",
+      "voice": "Röst",
+      "systemDefault": "Systemets",
+      "speed": "Hastighet",
+      "speedSlow": "Långsam",
+      "speedNormal": "Normal",
+      "speedFast": "Snabb",
+      "speedFaster": "Snabbare",
+      "speedDouble": "Dubbel",
+      "test": "Prova",
+      "sample": "Det här är VoCript Pro som läser högt med rösten du valde.",
+      "naturalHint": "Windows 11 har gratis naturliga röster: Inställningar, Hjälpmedel, Skärmläsaren, ”Lägg till naturliga röster”. När de är installerade visas de här.",
+      "saved": "Röst sparad."
+    },
     "hotkey": {
       "title": "Kortkommando",
       "description": "Tangenterna som öppnar hårkorset. Fungerar överallt, även med VoCript i aktivitetsfältet.",

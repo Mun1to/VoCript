@@ -1252,6 +1252,22 @@
       "pause": "Pauza",
       "resume": "Wznów"
     },
+    "voice": {
+      "title": "Głos",
+      "description": "Jakim głosem i jak szybko czytać. Głosy to te, które ma Windows.",
+      "voice": "Głos",
+      "systemDefault": "Systemowy",
+      "speed": "Szybkość",
+      "speedSlow": "Wolno",
+      "speedNormal": "Normalnie",
+      "speedFast": "Szybko",
+      "speedFaster": "Szybciej",
+      "speedDouble": "Podwójnie",
+      "test": "Wypróbuj",
+      "sample": "To VoCript Pro czyta na głos wybranym przez ciebie głosem.",
+      "naturalHint": "Windows 11 ma darmowe naturalne głosy: Ustawienia, Ułatwienia dostępu, Narrator, „Dodaj naturalne głosy”. Po zainstalowaniu pojawią się tutaj.",
+      "saved": "Głos zapisany."
+    },
     "hotkey": {
       "title": "Skrót klawiszowy",
       "description": "Klawisze otwierające celownik. Działa wszędzie, nawet gdy VoCript jest w zasobniku.",

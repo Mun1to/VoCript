@@ -1252,6 +1252,22 @@
       "pause": "Duraklat",
       "resume": "Devam"
     },
+    "voice": {
+      "title": "Ses",
+      "description": "Hangi sesle ve ne hızda okunacağı. Sesler Windows’un sesleridir.",
+      "voice": "Ses",
+      "systemDefault": "Sistemdeki",
+      "speed": "Hız",
+      "speedSlow": "Yavaş",
+      "speedNormal": "Normal",
+      "speedFast": "Hızlı",
+      "speedFaster": "Daha hızlı",
+      "speedDouble": "İki kat",
+      "test": "Dene",
+      "sample": "Bu, seçtiğin sesle sesli okuyan VoCript Pro.",
+      "naturalHint": "Windows 11’de ücretsiz doğal sesler var: Ayarlar, Erişilebilirlik, Ekran Okuyucusu, «Doğal sesler ekle». Yüklendiklerinde burada görünürler.",
+      "saved": "Ses kaydedildi."
+    },
     "hotkey": {
       "title": "Kısayol",
       "description": "Nişangahı açan tuşlar. VoCript sistem tepsisindeyken bile her yerde çalışır.",

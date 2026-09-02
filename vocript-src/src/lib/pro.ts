@@ -80,6 +80,31 @@ export const limpiezaEnNube = () =>
 export const ponerLimpiezaEnNube = (activa: boolean) =>
   invoke<void>("pro_set_cloud_cleanup", { activa });
 
+/** Una voz instalada en el sistema. */
+export interface Voz {
+  id: string;
+  nombre: string;
+  /** Etiqueta de idioma, como `es-ES`. */
+  idioma: string;
+}
+
+/** Qué voz lee y a qué velocidad. `voz_id` a `null` es la que Windows tenga por defecto. */
+export interface AjustesVoz {
+  voz_id: string | null;
+  velocidad: number;
+}
+
+export const voces = () => invoke<Voz[]>("pro_list_voices");
+
+export const ajustesVoz = () => invoke<AjustesVoz>("pro_get_voice");
+
+/** Cambia la voz o la velocidad. Se aplica a la siguiente frase que se lea. */
+export const ponerVoz = (ajustesVoz: AjustesVoz) =>
+  invoke<void>("pro_set_voice", { ajustesVoz });
+
+/** Dice un texto cualquiera, por ejemplo para probar la voz elegida. */
+export const decir = (texto: string) => invoke<void>("pro_speak", { texto });
+
 /** Si Windows tiene una voz instalada con la que leer. */
 export const hayVoz = () => invoke<boolean>("pro_has_voice");
 

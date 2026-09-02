@@ -1252,6 +1252,22 @@
       "pause": "Pause",
       "resume": "Resume"
     },
+    "voice": {
+      "title": "Voice",
+      "description": "Which voice reads and how fast. The voices are the ones Windows has.",
+      "voice": "Voice",
+      "systemDefault": "System default",
+      "speed": "Speed",
+      "speedSlow": "Slow",
+      "speedNormal": "Normal",
+      "speedFast": "Fast",
+      "speedFaster": "Faster",
+      "speedDouble": "Double",
+      "test": "Try it",
+      "sample": "This is VoCript Pro reading aloud with the voice you chose.",
+      "naturalHint": "Windows 11 has free natural voices: Settings, Accessibility, Narrator, \"Add natural voices\". Once installed they show up here.",
+      "saved": "Voice saved."
+    },
     "hotkey": {
       "title": "Shortcut",
       "description": "The keys that open the crosshair. It works anywhere, even with VoCript in the tray.",

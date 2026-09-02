@@ -139,6 +139,8 @@ windows = { version = "0.61.3", features = [
   "Globalization",
   "Foundation_Collections",
   "Win32_Media_Speech",
+  "Media_SpeechSynthesis",
+  "Media_Core",
 ] }
 winreg = "0.55"
 

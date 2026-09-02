@@ -1252,6 +1252,22 @@
       "pause": "暫停",
       "resume": "繼續"
     },
+    "voice": {
+      "title": "語音",
+      "description": "用哪個聲音、以多快的速度朗讀。聲音來自 Windows 內建。",
+      "voice": "聲音",
+      "systemDefault": "系統預設",
+      "speed": "速度",
+      "speedSlow": "慢",
+      "speedNormal": "正常",
+      "speedFast": "快",
+      "speedFaster": "更快",
+      "speedDouble": "兩倍",
+      "test": "試聽",
+      "sample": "這是 VoCript Pro 用你選擇的聲音朗讀。",
+      "naturalHint": "Windows 11 提供免費的自然語音：設定、協助工具、朗讀程式、「新增自然語音」。安裝後會顯示在這裡。",
+      "saved": "已儲存語音。"
+    },
     "hotkey": {
       "title": "快速鍵",
       "description": "開啟取詞框的按鍵。即使 VoCript 縮到系統匣，也能在任何地方使用。",

@@ -1252,6 +1252,22 @@
       "pause": "Pauza",
       "resume": "Pokračovat"
     },
+    "voice": {
+      "title": "Hlas",
+      "description": "Jakým hlasem a jak rychle se čte. Hlasy jsou ty, které má Windows.",
+      "voice": "Hlas",
+      "systemDefault": "Systémový",
+      "speed": "Rychlost",
+      "speedSlow": "Pomalu",
+      "speedNormal": "Normálně",
+      "speedFast": "Rychle",
+      "speedFaster": "Rychleji",
+      "speedDouble": "Dvojnásobně",
+      "test": "Vyzkoušet",
+      "sample": "Tohle je VoCript Pro, který čte nahlas hlasem, který sis vybral.",
+      "naturalHint": "Windows 11 má zdarma přirozené hlasy: Nastavení, Přístupnost, Předčítání, „Přidat přirozené hlasy“. Po instalaci se objeví tady.",
+      "saved": "Hlas uložen."
+    },
     "hotkey": {
       "title": "Klávesová zkratka",
       "description": "Klávesy, které otevřou zaměřovač. Funguje kdekoli, i když je VoCript v oznamovací oblasti.",

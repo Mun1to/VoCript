@@ -7,7 +7,7 @@
 //!
 //! Este archivo se queda en el repositorio público. La carpeta `pro/` no.
 
-use crate::pro_tipos::{Dispositivo, EstadoLicencia, EstadoNube, Region};
+use crate::pro_tipos::{AjustesVoz, Dispositivo, EstadoLicencia, EstadoNube, Region, Voz};
 use tauri::AppHandle;
 
 /// Esta edición no trae las funciones de pago.
@@ -56,6 +56,30 @@ pub fn pro_set_cloud_cleanup(_app: AppHandle, _activa: bool) -> Result<(), Strin
 #[tauri::command]
 #[specta::specta]
 pub fn pro_agent_toggle(_app: AppHandle) -> Result<(), String> {
+    Err(NO_ESTA.to_string())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn pro_list_voices(_app: AppHandle) -> Result<Vec<Voz>, String> {
+    Err(NO_ESTA.to_string())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn pro_get_voice(_app: AppHandle) -> AjustesVoz {
+    AjustesVoz::default()
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn pro_set_voice(_app: AppHandle, _ajustes_voz: AjustesVoz) -> Result<(), String> {
+    Err(NO_ESTA.to_string())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn pro_speak(_app: AppHandle, _texto: String) -> Result<(), String> {
     Err(NO_ESTA.to_string())
 }
 

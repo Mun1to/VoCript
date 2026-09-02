@@ -1252,6 +1252,22 @@
       "pause": "Pause",
       "resume": "Reprendre"
     },
+    "voice": {
+      "title": "Voix",
+      "description": "Quelle voix lit et à quelle vitesse. Les voix sont celles de Windows.",
+      "voice": "Voix",
+      "systemDefault": "Celle du système",
+      "speed": "Vitesse",
+      "speedSlow": "Lente",
+      "speedNormal": "Normale",
+      "speedFast": "Rapide",
+      "speedFaster": "Plus rapide",
+      "speedDouble": "Double",
+      "test": "Essayer",
+      "sample": "Ceci est VoCript Pro qui lit à voix haute avec la voix que tu as choisie.",
+      "naturalHint": "Windows 11 propose des voix naturelles gratuites : Paramètres, Accessibilité, Narrateur, « Ajouter des voix naturelles ». Une fois installées, elles apparaissent ici.",
+      "saved": "Voix enregistrée."
+    },
     "hotkey": {
       "title": "Raccourci",
       "description": "Les touches qui ouvrent la visée. Fonctionne partout, même avec VoCript dans la barre d'état.",

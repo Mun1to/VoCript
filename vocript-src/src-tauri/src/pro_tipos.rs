@@ -73,6 +73,33 @@ pub struct EstadoNube {
     pub este_dispositivo: String,
 }
 
+/// Una voz instalada en el sistema, para elegirla.
+#[derive(Debug, Clone, Serialize, Deserialize, specta::Type)]
+pub struct Voz {
+    pub id: String,
+    pub nombre: String,
+    /// Etiqueta de idioma, como `es-ES`.
+    pub idioma: String,
+}
+
+/// Cómo se lee en voz alta: qué voz y a qué velocidad.
+#[derive(Debug, Clone, Serialize, Deserialize, specta::Type)]
+pub struct AjustesVoz {
+    /// `None` es la voz que Windows tenga puesta por defecto.
+    pub voz_id: Option<String>,
+    /// 1.0 es la velocidad normal; 2.0 el doble.
+    pub velocidad: f64,
+}
+
+impl Default for AjustesVoz {
+    fn default() -> Self {
+        Self {
+            voz_id: None,
+            velocidad: 1.0,
+        }
+    }
+}
+
 /// Un rectángulo en coordenadas de escritorio, tal cual las da el sistema.
 ///
 /// Físicas, no lógicas: con dos monitores a escalas distintas, las lógicas de uno no

@@ -1252,6 +1252,22 @@
       "pause": "일시정지",
       "resume": "계속"
     },
+    "voice": {
+      "title": "음성",
+      "description": "어떤 목소리로 얼마나 빠르게 읽을지 정합니다. 목소리는 Windows에 있는 것들입니다.",
+      "voice": "목소리",
+      "systemDefault": "시스템 기본",
+      "speed": "속도",
+      "speedSlow": "느리게",
+      "speedNormal": "보통",
+      "speedFast": "빠르게",
+      "speedFaster": "더 빠르게",
+      "speedDouble": "두 배",
+      "test": "들어보기",
+      "sample": "선택한 목소리로 VoCript Pro가 읽어 주고 있습니다.",
+      "naturalHint": "Windows 11에는 무료 자연 음성이 있습니다. 설정, 접근성, 내레이터, «자연 음성 추가». 설치하면 여기에 나타납니다.",
+      "saved": "음성을 저장했습니다."
+    },
     "hotkey": {
       "title": "단축키",
       "description": "조준선을 여는 키입니다. VoCript가 트레이에 있어도 어디서나 작동합니다.",

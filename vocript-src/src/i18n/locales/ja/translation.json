@@ -1252,6 +1252,22 @@
       "pause": "一時停止",
       "resume": "再開"
     },
+    "voice": {
+      "title": "音声",
+      "description": "どの声で、どの速さで読み上げるか。声はWindowsに入っているものです。",
+      "voice": "声",
+      "systemDefault": "システムの既定",
+      "speed": "速さ",
+      "speedSlow": "ゆっくり",
+      "speedNormal": "標準",
+      "speedFast": "速い",
+      "speedFaster": "もっと速い",
+      "speedDouble": "2倍",
+      "test": "試す",
+      "sample": "これはVoCript Proが選んだ声で読み上げています。",
+      "naturalHint": "Windows 11には無料の自然な音声があります。設定、アクセシビリティ、ナレーター、「自然な音声を追加」。インストールするとここに表示されます。",
+      "saved": "音声を保存しました。"
+    },
     "hotkey": {
       "title": "ショートカット",
       "description": "照準を開くキーです。VoCript がトレイにあっても、どこでも使えます。",

@@ -1252,6 +1252,22 @@
       "pause": "Tạm dừng",
       "resume": "Tiếp tục"
     },
+    "voice": {
+      "title": "Giọng đọc",
+      "description": "Đọc bằng giọng nào và nhanh cỡ nào. Giọng đọc là những giọng Windows có sẵn.",
+      "voice": "Giọng",
+      "systemDefault": "Của hệ thống",
+      "speed": "Tốc độ",
+      "speedSlow": "Chậm",
+      "speedNormal": "Bình thường",
+      "speedFast": "Nhanh",
+      "speedFaster": "Nhanh hơn",
+      "speedDouble": "Gấp đôi",
+      "test": "Thử",
+      "sample": "Đây là VoCript Pro đang đọc to bằng giọng bạn đã chọn.",
+      "naturalHint": "Windows 11 có giọng tự nhiên miễn phí: Cài đặt, Trợ năng, Trình tường thuật, «Thêm giọng tự nhiên». Cài xong sẽ hiện ở đây.",
+      "saved": "Đã lưu giọng đọc."
+    },
     "hotkey": {
       "title": "Phím tắt",
       "description": "Các phím mở khung chọn. Hoạt động ở mọi nơi, kể cả khi VoCript nằm trong khay hệ thống.",

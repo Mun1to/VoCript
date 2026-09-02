@@ -1252,6 +1252,22 @@
       "pause": "Pause",
       "resume": "Weiter"
     },
+    "voice": {
+      "title": "Stimme",
+      "description": "Mit welcher Stimme und wie schnell vorgelesen wird. Die Stimmen sind die von Windows.",
+      "voice": "Stimme",
+      "systemDefault": "Systemstandard",
+      "speed": "Geschwindigkeit",
+      "speedSlow": "Langsam",
+      "speedNormal": "Normal",
+      "speedFast": "Schnell",
+      "speedFaster": "Schneller",
+      "speedDouble": "Doppelt",
+      "test": "Ausprobieren",
+      "sample": "Das ist VoCript Pro, das mit der gewählten Stimme vorliest.",
+      "naturalHint": "Windows 11 hat kostenlose natürliche Stimmen: Einstellungen, Barrierefreiheit, Sprachausgabe, „Natürliche Stimmen hinzufügen“. Nach der Installation erscheinen sie hier.",
+      "saved": "Stimme gespeichert."
+    },
     "hotkey": {
       "title": "Tastenkürzel",
       "description": "Die Tasten, die das Fadenkreuz öffnen. Funktioniert überall, auch wenn VoCript im Infobereich liegt.",
