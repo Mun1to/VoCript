@@ -1299,6 +1299,26 @@
       "dictate": "Detta la richiesta",
       "dictateHint": "Clicca, di’ cosa ti serve e clicca di nuovo. La risposta viene scritta dove si trova il cursore."
     },
+    "modes": {
+      "title": "Un profilo per applicazione",
+      "description": "Scegli quale profilo vale quando detti dentro ogni programma. Con una regola decide il programma; senza, vale il profilo dell'intestazione come sempre.",
+      "rulesEmpty": "Ancora nessuna regola. Scegli qui sotto un programma aperto e il profilo che deve usare.",
+      "appPlaceholder": "Scegli un programma aperto...",
+      "refreshApps": "Ricontrolla cosa è aperto",
+      "add": "Aggiungi",
+      "remove": "Rimuovi",
+      "profilesTitle": "I tuoi profili",
+      "profilesDescription": "Quanti ne servono, ognuno con i suoi comandi vocali. Compaiono nelle regole qui sopra.",
+      "profilesEmpty": "Non hai ancora profili tuoi.",
+      "commandCount": "{{n}} comandi",
+      "commands": "Comandi",
+      "deleteProfile": "Elimina il profilo",
+      "commandsTitle": "Comandi di questo profilo",
+      "commandsDescription": "A sinistra quello che dici, a destra quello che si scrive.",
+      "newProfilePlaceholder": "Nome del nuovo profilo",
+      "addProfile": "Aggiungi profilo",
+      "hint": "Mentre detti in un programma con una regola, il profilo dell'intestazione non conta: vale quello della regola."
+    },
     "errors": {
       "sin_licencia": "Questo fa parte di VoCript Pro e questa copia non ha licenza.",
       "sin_licencia_guardada": "Su questo computer non c'è nessuna licenza salvata.",

@@ -1299,6 +1299,26 @@
       "dictate": "口述需求",
       "dictateHint": "点击，说出你的需求，再点击一次。答案会写在光标所在的位置。"
     },
+    "modes": {
+      "title": "每个应用一个配置",
+      "description": "选择在每个程序里听写时使用哪个配置。有规则时由程序决定；没有规则时，照旧使用顶栏里的配置。",
+      "rulesEmpty": "还没有规则。在下面选一个打开的程序和它要用的配置。",
+      "appPlaceholder": "选择一个打开的程序...",
+      "refreshApps": "重新查看打开了什么",
+      "add": "添加",
+      "remove": "移除",
+      "profilesTitle": "你自己的配置",
+      "profilesDescription": "想要多少就有多少，每个都有自己的语音命令。它们会出现在上面的规则里。",
+      "profilesEmpty": "你还没有自己的配置。",
+      "commandCount": "{{n}} 条命令",
+      "commands": "命令",
+      "deleteProfile": "删除配置",
+      "commandsTitle": "这个配置的命令",
+      "commandsDescription": "左边是你说的，右边是写出来的。",
+      "newProfilePlaceholder": "新配置的名称",
+      "addProfile": "添加配置",
+      "hint": "在有规则的程序里听写时，顶栏的配置不起作用，以规则的配置为准。"
+    },
     "errors": {
       "sin_licencia": "这是 VoCript Pro 的功能，而此副本没有许可证。",
       "sin_licencia_guardada": "这台电脑上没有保存的许可证。",

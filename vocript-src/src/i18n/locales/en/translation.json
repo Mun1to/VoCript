@@ -1299,6 +1299,26 @@
       "dictate": "Dictate the request",
       "dictateHint": "Click, say what you need and click again. The answer is typed where the cursor is."
     },
+    "modes": {
+      "title": "A profile per application",
+      "description": "Pick which profile applies when you dictate into each program. With a rule, the program decides; without one, the profile in the header applies as always.",
+      "rulesEmpty": "No rules yet. Choose an open program below and the profile it should use.",
+      "appPlaceholder": "Choose an open program...",
+      "refreshApps": "Look again at what is open",
+      "add": "Add",
+      "remove": "Remove",
+      "profilesTitle": "Your own profiles",
+      "profilesDescription": "As many as you need, each with its own voice commands. They show up in the rules above.",
+      "profilesEmpty": "No profiles of your own yet.",
+      "commandCount": "{{n}} commands",
+      "commands": "Commands",
+      "deleteProfile": "Delete the profile",
+      "commandsTitle": "Commands of this profile",
+      "commandsDescription": "What you say on the left, what gets written on the right.",
+      "newProfilePlaceholder": "Name of the new profile",
+      "addProfile": "Add profile",
+      "hint": "While you dictate into a program with a rule, the header's profile does not count: the rule's one applies."
+    },
     "errors": {
       "sin_licencia": "This is part of VoCript Pro and this copy has no licence.",
       "sin_licencia_guardada": "There is no licence saved on this computer.",

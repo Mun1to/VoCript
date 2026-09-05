@@ -1299,6 +1299,26 @@
       "dictate": "Diktera uppdraget",
       "dictateHint": "Klicka, säg vad du behöver och klicka igen. Svaret skrivs där markören står."
     },
+    "modes": {
+      "title": "En profil per program",
+      "description": "Välj vilken profil som gäller när du dikterar i varje program. Med en regel bestämmer programmet; utan gäller profilen i sidhuvudet som vanligt.",
+      "rulesEmpty": "Inga regler än. Välj ett öppet program nedan och profilen det ska använda.",
+      "appPlaceholder": "Välj ett öppet program...",
+      "refreshApps": "Titta igen på vad som är öppet",
+      "add": "Lägg till",
+      "remove": "Ta bort",
+      "profilesTitle": "Dina egna profiler",
+      "profilesDescription": "Så många du behöver, var och en med sina röstkommandon. De dyker upp i reglerna ovan.",
+      "profilesEmpty": "Inga egna profiler än.",
+      "commandCount": "{{n}} kommandon",
+      "commands": "Kommandon",
+      "deleteProfile": "Ta bort profilen",
+      "commandsTitle": "Kommandon i den här profilen",
+      "commandsDescription": "Till vänster det du säger, till höger det som skrivs.",
+      "newProfilePlaceholder": "Namn på den nya profilen",
+      "addProfile": "Lägg till profil",
+      "hint": "Medan du dikterar i ett program med en regel räknas inte profilen i sidhuvudet: regelns profil gäller."
+    },
     "errors": {
       "sin_licencia": "Det här hör till VoCript Pro och den här kopian saknar licens.",
       "sin_licencia_guardada": "Det finns ingen sparad licens på den här datorn.",

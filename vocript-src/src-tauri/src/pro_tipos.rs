@@ -90,6 +90,9 @@ pub struct ResumenImportacion {
 
 impl ResumenImportacion {
     /// Se miró y no había que traer nada, o Pro ya tenía lo suyo.
+    ///
+    /// Solo la llama la edición de pago; en la gratuita queda sin usar a propósito.
+    #[allow(dead_code)]
     pub fn saltada(fecha: String) -> Self {
         Self {
             fecha,
@@ -101,6 +104,38 @@ impl ResumenImportacion {
             avisada: true,
         }
     }
+}
+
+/// Un perfil propio de Pro: un nombre y sus comandos de voz a símbolo, como el
+/// «Personalizado» de la edición gratuita pero sin límite de cuántos.
+#[derive(Debug, Clone, Serialize, Deserialize, specta::Type)]
+pub struct PerfilPro {
+    pub id: String,
+    pub nombre: String,
+    pub comandos: Vec<crate::settings::WordReplacement>,
+}
+
+/// Qué perfil manda cuando se dicta dentro de una aplicación concreta.
+#[derive(Debug, Clone, Serialize, Deserialize, specta::Type)]
+pub struct Modo {
+    /// El ejecutable, en minúsculas y sin ruta: `slack.exe`.
+    pub app: String,
+    /// `normal`, `coding`, `custom` o el id de un perfil propio.
+    pub perfil: String,
+}
+
+/// Los perfiles propios y las reglas por aplicación, juntos porque se editan juntos.
+#[derive(Debug, Clone, Default, Serialize, Deserialize, specta::Type)]
+pub struct AjustesModos {
+    pub perfiles: Vec<PerfilPro>,
+    pub modos: Vec<Modo>,
+}
+
+/// Una aplicación con ventana abierta ahora mismo, para elegirla en una regla.
+#[derive(Debug, Clone, Serialize, Deserialize, specta::Type)]
+pub struct AppAbierta {
+    pub exe: String,
+    pub titulo: String,
 }
 
 /// Una voz instalada en el sistema, para elegirla.

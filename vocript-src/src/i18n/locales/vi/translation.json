@@ -1299,6 +1299,26 @@
       "dictate": "Đọc yêu cầu",
       "dictateHint": "Bấm, nói điều bạn cần rồi bấm lại. Câu trả lời được gõ vào chỗ con trỏ."
     },
+    "modes": {
+      "title": "Mỗi ứng dụng một hồ sơ",
+      "description": "Chọn hồ sơ nào áp dụng khi bạn đọc chính tả vào từng chương trình. Có quy tắc thì chương trình quyết định; không có thì hồ sơ ở thanh trên áp dụng như mọi khi.",
+      "rulesEmpty": "Chưa có quy tắc nào. Chọn bên dưới một chương trình đang mở và hồ sơ nó nên dùng.",
+      "appPlaceholder": "Chọn một chương trình đang mở...",
+      "refreshApps": "Xem lại những gì đang mở",
+      "add": "Thêm",
+      "remove": "Bỏ",
+      "profilesTitle": "Hồ sơ của riêng bạn",
+      "profilesDescription": "Bao nhiêu tùy bạn, mỗi hồ sơ có lệnh giọng nói riêng. Chúng xuất hiện trong các quy tắc ở trên.",
+      "profilesEmpty": "Bạn chưa có hồ sơ riêng nào.",
+      "commandCount": "{{n}} lệnh",
+      "commands": "Lệnh",
+      "deleteProfile": "Xóa hồ sơ",
+      "commandsTitle": "Lệnh của hồ sơ này",
+      "commandsDescription": "Bên trái là điều bạn nói, bên phải là điều được viết ra.",
+      "newProfilePlaceholder": "Tên hồ sơ mới",
+      "addProfile": "Thêm hồ sơ",
+      "hint": "Khi bạn đọc chính tả vào một chương trình có quy tắc, hồ sơ ở thanh trên không tính: hồ sơ của quy tắc được áp dụng."
+    },
     "errors": {
       "sin_licencia": "Đây là tính năng của VoCript Pro và bản sao này không có giấy phép.",
       "sin_licencia_guardada": "Máy tính này không có giấy phép nào được lưu.",

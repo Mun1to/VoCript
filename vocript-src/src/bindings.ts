@@ -1544,6 +1544,34 @@ async proSpeak(texto: string) : Promise<Result<null, string>> {
  */
 async proImportSummary() : Promise<ResumenImportacion | null> {
     return await TAURI_INVOKE("pro_import_summary");
+},
+/**
+ * Los perfiles propios y las reglas por aplicación.
+ */
+async proGetModes() : Promise<AjustesModos> {
+    return await TAURI_INVOKE("pro_get_modes");
+},
+/**
+ * Guarda los perfiles propios y las reglas, ya limpios.
+ */
+async proSetModes(modos: AjustesModos) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_set_modes", { modos }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Las aplicaciones con ventana abierta ahora mismo, para elegir una en una regla.
+ */
+async proRunningApps() : Promise<Result<AppAbierta[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("pro_running_apps") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
 }
 }
 
@@ -1563,6 +1591,10 @@ historyUpdatePayload: "history-update-payload"
 /** user-defined types **/
 
 /**
+ * Los perfiles propios y las reglas por aplicación, juntos porque se editan juntos.
+ */
+export type AjustesModos = { perfiles: PerfilPro[]; modos: Modo[] }
+/**
  * Cómo se lee en voz alta: qué voz y a qué velocidad.
  */
 export type AjustesVoz = { 
@@ -1574,6 +1606,10 @@ voz_id: string | null;
  * 1.0 es la velocidad normal; 2.0 el doble.
  */
 velocidad: number }
+/**
+ * Una aplicación con ventana abierta ahora mismo, para elegirla en una regla.
+ */
+export type AppAbierta = { exe: string; titulo: string }
 export type AppSettings = { bindings: Partial<{ [key in string]: ShortcutBinding }>; push_to_talk: boolean; audio_feedback: boolean; audio_feedback_volume?: number; sound_theme?: SoundTheme; start_hidden?: boolean; autostart_enabled?: boolean; update_checks_enabled?: boolean; track_dictation_stats?: boolean; 
 /**
  * What this user's own model writes when they say the wake word.
@@ -1811,6 +1847,18 @@ export type ModelLoadStatus = { is_loaded: boolean; current_model: string | null
  */
 last_transcription_ms: number | null }
 export type ModelUnloadTimeout = "never" | "immediately" | "min_2" | "min_5" | "min_10" | "min_15" | "hour_1" | "sec_15"
+/**
+ * Qué perfil manda cuando se dicta dentro de una aplicación concreta.
+ */
+export type Modo = { 
+/**
+ * El ejecutable, en minúsculas y sin ruta: `slack.exe`.
+ */
+app: string; 
+/**
+ * `normal`, `coding`, `custom` o el id de un perfil propio.
+ */
+perfil: string }
 export type OrtAcceleratorSetting = "auto" | "cpu" | "cuda" | "directml" | "rocm"
 /**
  * Where the user last dragged the overlay to, in physical pixels. `None`
@@ -1822,6 +1870,11 @@ export type OverlayCustomPosition = { x: number; y: number }
 export type OverlayPosition = "none" | "top" | "bottom"
 export type PaginatedHistory = { entries: HistoryEntry[]; has_more: boolean }
 export type PasteMethod = "ctrl_v" | "direct" | "none" | "shift_insert" | "ctrl_shift_v" | "external_script"
+/**
+ * Un perfil propio de Pro: un nombre y sus comandos de voz a símbolo, como el
+ * «Personalizado» de la edición gratuita pero sin límite de cuántos.
+ */
+export type PerfilPro = { id: string; nombre: string; comandos: WordReplacement[] }
 export type PermissionAccess = "allowed" | "denied" | "unknown"
 export type PostProcessProvider = { id: string; label: string; base_url: string; allow_base_url_edit?: boolean; models_endpoint?: string | null; supports_structured_output?: boolean }
 export type RecordingRetentionPeriod = "never" | "preserve_limit" | "days_3" | "weeks_2" | "months_3"

@@ -1299,6 +1299,26 @@
       "dictate": "Nadiktovat zadání",
       "dictateHint": "Klikni, řekni, co potřebuješ, a klikni znovu. Odpověď se napíše tam, kde je kurzor."
     },
+    "modes": {
+      "title": "Profil pro každou aplikaci",
+      "description": "Vyberte, který profil platí, když diktujete do jednotlivých programů. S pravidlem rozhoduje program; bez něj platí jako vždy profil v záhlaví.",
+      "rulesEmpty": "Zatím žádná pravidla. Vyberte níže otevřený program a profil, který má používat.",
+      "appPlaceholder": "Vyberte otevřený program...",
+      "refreshApps": "Znovu se podívat, co je otevřené",
+      "add": "Přidat",
+      "remove": "Odebrat",
+      "profilesTitle": "Vaše vlastní profily",
+      "profilesDescription": "Kolik jich potřebujete, každý se svými hlasovými příkazy. Objeví se v pravidlech výše.",
+      "profilesEmpty": "Zatím nemáte vlastní profily.",
+      "commandCount": "Příkazů: {{n}}",
+      "commands": "Příkazy",
+      "deleteProfile": "Smazat profil",
+      "commandsTitle": "Příkazy tohoto profilu",
+      "commandsDescription": "Vlevo to, co říkáte, vpravo to, co se zapíše.",
+      "newProfilePlaceholder": "Název nového profilu",
+      "addProfile": "Přidat profil",
+      "hint": "Když diktujete do programu s pravidlem, profil v záhlaví se nepočítá: platí ten z pravidla."
+    },
     "errors": {
       "sin_licencia": "Tohle je součást VoCript Pro a tato kopie nemá licenci.",
       "sin_licencia_guardada": "Na tomto počítači není uložená žádná licence.",

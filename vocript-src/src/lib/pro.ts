@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import i18n from "i18next";
+import type { WordReplacement } from "@/bindings";
 
 /**
  * Cliente de los comandos de VoCript Pro.
@@ -98,6 +99,38 @@ export interface ResumenImportacion {
  */
 export const importacionRecienHecha = () =>
   invoke<ResumenImportacion | null>("pro_import_summary");
+
+/** Un perfil propio de Pro: nombre y comandos de «lo que digo» a «lo que se escribe». */
+export interface PerfilPro {
+  id: string;
+  nombre: string;
+  comandos: WordReplacement[];
+}
+
+/** Qué perfil manda al dictar dentro de una aplicación (`slack.exe`). */
+export interface Modo {
+  app: string;
+  /** `normal`, `coding`, `custom` o el id de un perfil propio. */
+  perfil: string;
+}
+
+export interface AjustesModos {
+  perfiles: PerfilPro[];
+  modos: Modo[];
+}
+
+/** Una aplicación con ventana abierta ahora mismo. */
+export interface AppAbierta {
+  exe: string;
+  titulo: string;
+}
+
+export const modos = () => invoke<AjustesModos>("pro_get_modes");
+
+export const ponerModos = (modos: AjustesModos) =>
+  invoke<void>("pro_set_modes", { modos });
+
+export const appsAbiertas = () => invoke<AppAbierta[]>("pro_running_apps");
 
 /**
  * Los errores de Pro llegan como una CLAVE (`sin_texto_recuadro`), a veces con un dato

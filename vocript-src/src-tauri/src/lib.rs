@@ -704,6 +704,9 @@ pub fn run(cli_args: CliArgs) {
             pro::pro_set_voice,
             pro::pro_speak,
             pro::pro_import_summary,
+            pro::pro_get_modes,
+            pro::pro_set_modes,
+            pro::pro_running_apps,
         ])
         .events(collect_events![managers::history::HistoryUpdatePayload,]);
 

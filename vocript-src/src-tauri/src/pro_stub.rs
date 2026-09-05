@@ -8,7 +8,8 @@
 //! Este archivo se queda en el repositorio público. La carpeta `pro/` no.
 
 use crate::pro_tipos::{
-    AjustesVoz, Dispositivo, EstadoLicencia, EstadoNube, Region, ResumenImportacion, Voz,
+    AjustesModos, AjustesVoz, AppAbierta, Dispositivo, EstadoLicencia, EstadoNube, Region,
+    ResumenImportacion, Voz,
 };
 use tauri::AppHandle;
 
@@ -59,6 +60,29 @@ pub fn pro_import_summary(_app: AppHandle) -> Option<ResumenImportacion> {
 
 /// En la edición gratuita no hay nada que hacer antes de leer los ajustes.
 pub fn antes_de_leer_los_ajustes(_app: &AppHandle) {}
+
+/// En la edición gratuita ninguna aplicación manda sobre el perfil de la cabecera.
+pub fn comandos_del_modo(_app: &AppHandle) -> Option<Vec<crate::settings::WordReplacement>> {
+    None
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn pro_get_modes(_app: AppHandle) -> AjustesModos {
+    AjustesModos::default()
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn pro_set_modes(_app: AppHandle, _modos: AjustesModos) -> Result<(), String> {
+    Err(NO_ESTA.to_string())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn pro_running_apps(_app: AppHandle) -> Result<Vec<AppAbierta>, String> {
+    Err(NO_ESTA.to_string())
+}
 
 #[tauri::command]
 #[specta::specta]

@@ -1299,6 +1299,26 @@
       "dictate": "口述需求",
       "dictateHint": "點一下，說出你的需求，再點一下。答案會寫在游標所在的位置。"
     },
+    "modes": {
+      "title": "每個應用一個設定檔",
+      "description": "選擇在每個程式裡聽寫時要用哪個設定檔。有規則時由程式決定；沒有規則時，照舊使用頂欄的設定檔。",
+      "rulesEmpty": "還沒有規則。在下面選一個開啟中的程式和它要用的設定檔。",
+      "appPlaceholder": "選擇一個開啟中的程式...",
+      "refreshApps": "重新查看開啟了什麼",
+      "add": "新增",
+      "remove": "移除",
+      "profilesTitle": "你自己的設定檔",
+      "profilesDescription": "想要多少就有多少，每個都有自己的語音指令。它們會出現在上面的規則裡。",
+      "profilesEmpty": "你還沒有自己的設定檔。",
+      "commandCount": "{{n}} 條指令",
+      "commands": "指令",
+      "deleteProfile": "刪除設定檔",
+      "commandsTitle": "這個設定檔的指令",
+      "commandsDescription": "左邊是你說的，右邊是寫出來的。",
+      "newProfilePlaceholder": "新設定檔的名稱",
+      "addProfile": "新增設定檔",
+      "hint": "在有規則的程式裡聽寫時，頂欄的設定檔不起作用，以規則的設定檔為準。"
+    },
     "errors": {
       "sin_licencia": "這是 VoCript Pro 的功能，而此副本沒有授權。",
       "sin_licencia_guardada": "這台電腦上沒有儲存的授權。",

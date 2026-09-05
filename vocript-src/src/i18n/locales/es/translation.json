@@ -1299,6 +1299,26 @@
       "dictate": "Dictar el encargo",
       "dictateHint": "Pulsa, di lo que necesitas y vuelve a pulsar. La respuesta se escribe donde esté el cursor."
     },
+    "modes": {
+      "title": "Un perfil por aplicación",
+      "description": "Elige qué perfil manda cuando dictas dentro de cada programa. Con regla, decide el programa; sin ella, vale el perfil de la cabecera como siempre.",
+      "rulesEmpty": "Todavía no hay reglas. Elige abajo un programa abierto y el perfil que debe usar.",
+      "appPlaceholder": "Elige un programa abierto...",
+      "refreshApps": "Volver a mirar qué hay abierto",
+      "add": "Añadir",
+      "remove": "Quitar",
+      "profilesTitle": "Tus perfiles propios",
+      "profilesDescription": "Tantos como necesites, cada uno con sus comandos de voz. Aparecen en las reglas de arriba.",
+      "profilesEmpty": "Todavía no tienes perfiles propios.",
+      "commandCount": "{{n}} comandos",
+      "commands": "Comandos",
+      "deleteProfile": "Borrar el perfil",
+      "commandsTitle": "Comandos de este perfil",
+      "commandsDescription": "Lo que dices a la izquierda, lo que se escribe a la derecha.",
+      "newProfilePlaceholder": "Nombre del perfil nuevo",
+      "addProfile": "Añadir perfil",
+      "hint": "Mientras dictas en un programa con regla, el perfil de la cabecera no cuenta: manda el de la regla."
+    },
     "errors": {
       "sin_licencia": "Esto es de VoCript Pro y esta copia no tiene licencia.",
       "sin_licencia_guardada": "En este ordenador no hay ninguna licencia guardada.",

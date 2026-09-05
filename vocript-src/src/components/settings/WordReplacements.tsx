@@ -18,6 +18,10 @@ interface WordReplacementsProps {
   titleKey?: string;
   descriptionKey?: string;
   exportFileName?: string;
+  /** Controlled mode: manage this list instead of a settings key. VoCript Pro
+   *  uses it for its own profiles, which live outside the settings store. */
+  value?: WordReplacement[];
+  onChange?: (list: WordReplacement[]) => void | Promise<void>;
 }
 
 // Words a CSV header row might use, so we can skip it on import.
@@ -116,13 +120,18 @@ export const WordReplacements: React.FC<WordReplacementsProps> = React.memo(
     titleKey = "settings.advanced.wordReplacements.title",
     descriptionKey = "settings.advanced.wordReplacements.description",
     exportFileName = "diccionario-vocript.csv",
+    value,
+    onChange,
   }) => {
     const { t } = useTranslation();
     const { getSetting, updateSetting, isUpdating } = useSettings();
     const [newFrom, setNewFrom] = useState("");
     const [newTo, setNewTo] = useState("");
-    const replacements: WordReplacement[] = getSetting(settingKey) || [];
-    const updating = isUpdating(settingKey);
+    const replacements: WordReplacement[] =
+      value ?? (getSetting(settingKey) || []);
+    const updating = onChange ? false : isUpdating(settingKey);
+    const persist = (list: WordReplacement[]) =>
+      onChange ? onChange(list) : updateSetting(settingKey, list);
 
     const handleAdd = () => {
       const from = newFrom.trim();
@@ -136,16 +145,13 @@ export const WordReplacements: React.FC<WordReplacementsProps> = React.memo(
         );
         return;
       }
-      updateSetting(settingKey, [...replacements, { from, to }]);
+      void persist([...replacements, { from, to }]);
       setNewFrom("");
       setNewTo("");
     };
 
     const handleRemove = (index: number) => {
-      updateSetting(
-        settingKey,
-        replacements.filter((_, i) => i !== index),
-      );
+      void persist(replacements.filter((_, i) => i !== index));
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -178,7 +184,7 @@ export const WordReplacements: React.FC<WordReplacementsProps> = React.memo(
         for (const r of replacements) map.set(r.from.toLowerCase(), r);
         for (const r of parsed)
           map.set(r.from.toLowerCase(), { from: r.from, to: r.to });
-        await updateSetting(settingKey, Array.from(map.values()));
+        await persist(Array.from(map.values()));
         toast.success(
           t("settings.advanced.wordReplacements.imported", {
             count: parsed.length,

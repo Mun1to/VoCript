@@ -1299,6 +1299,26 @@
       "dictate": "Podyktuj polecenie",
       "dictateHint": "Kliknij, powiedz, czego potrzebujesz, i kliknij ponownie. Odpowiedź zostanie wpisana tam, gdzie jest kursor."
     },
+    "modes": {
+      "title": "Profil dla każdej aplikacji",
+      "description": "Wybierz, który profil obowiązuje, gdy dyktujesz w danym programie. Z regułą decyduje program; bez niej obowiązuje jak zawsze profil z nagłówka.",
+      "rulesEmpty": "Nie ma jeszcze reguł. Wybierz poniżej otwarty program i profil, którego ma używać.",
+      "appPlaceholder": "Wybierz otwarty program...",
+      "refreshApps": "Sprawdź ponownie, co jest otwarte",
+      "add": "Dodaj",
+      "remove": "Usuń",
+      "profilesTitle": "Twoje własne profile",
+      "profilesDescription": "Tyle, ile potrzebujesz, każdy z własnymi poleceniami głosowymi. Pojawiają się w regułach powyżej.",
+      "profilesEmpty": "Nie masz jeszcze własnych profili.",
+      "commandCount": "Polecenia: {{n}}",
+      "commands": "Polecenia",
+      "deleteProfile": "Usuń profil",
+      "commandsTitle": "Polecenia tego profilu",
+      "commandsDescription": "Po lewej to, co mówisz, po prawej to, co się zapisuje.",
+      "newProfilePlaceholder": "Nazwa nowego profilu",
+      "addProfile": "Dodaj profil",
+      "hint": "Gdy dyktujesz w programie z regułą, profil z nagłówka się nie liczy: obowiązuje ten z reguły."
+    },
     "errors": {
       "sin_licencia": "To część VoCript Pro, a ta kopia nie ma licencji.",
       "sin_licencia_guardada": "Na tym komputerze nie ma zapisanej licencji.",

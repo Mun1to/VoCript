@@ -15,6 +15,7 @@ import { SettingContainer } from "../../ui/SettingContainer";
 import { Button } from "../../ui/Button";
 import { Agente } from "./Agente";
 import { CapturarAtajo } from "./CapturarAtajo";
+import { Modos } from "./Modos";
 import { LiberarOrdenador, Nube } from "./Nube";
 import { Voz } from "./Voz";
 import { useProStore } from "@/stores/proStore";
@@ -316,6 +317,8 @@ export const ProSettings: React.FC = () => {
           </div>
         </div>
       )}
+
+      {activa && <Modos />}
 
       {activa && !hayVoz && (
         <p className="flex items-start gap-1.5 px-1 text-xs text-amber-600">

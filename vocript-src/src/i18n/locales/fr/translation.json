@@ -1299,6 +1299,26 @@
       "dictate": "Dicter la demande",
       "dictateHint": "Clique, dis ce qu’il te faut et clique à nouveau. La réponse s’écrit là où est le curseur."
     },
+    "modes": {
+      "title": "Un profil par application",
+      "description": "Choisissez quel profil s'applique quand vous dictez dans chaque programme. Avec une règle, le programme décide ; sans règle, le profil de l'en-tête s'applique comme toujours.",
+      "rulesEmpty": "Pas encore de règle. Choisissez ci-dessous un programme ouvert et le profil qu'il doit utiliser.",
+      "appPlaceholder": "Choisir un programme ouvert...",
+      "refreshApps": "Revoir ce qui est ouvert",
+      "add": "Ajouter",
+      "remove": "Retirer",
+      "profilesTitle": "Vos propres profils",
+      "profilesDescription": "Autant que nécessaire, chacun avec ses commandes vocales. Ils apparaissent dans les règles ci-dessus.",
+      "profilesEmpty": "Pas encore de profil à vous.",
+      "commandCount": "{{n}} commandes",
+      "commands": "Commandes",
+      "deleteProfile": "Supprimer le profil",
+      "commandsTitle": "Commandes de ce profil",
+      "commandsDescription": "À gauche ce que vous dites, à droite ce qui s'écrit.",
+      "newProfilePlaceholder": "Nom du nouveau profil",
+      "addProfile": "Ajouter un profil",
+      "hint": "Pendant que vous dictez dans un programme avec une règle, le profil de l'en-tête ne compte pas : celui de la règle s'applique."
+    },
     "errors": {
       "sin_licencia": "Ceci fait partie de VoCript Pro et cette copie n'a pas de licence.",
       "sin_licencia_guardada": "Aucune licence n'est enregistrée sur cet ordinateur.",

@@ -1299,6 +1299,26 @@
       "dictate": "İsteği dikte et",
       "dictateHint": "Tıkla, ne istediğini söyle ve tekrar tıkla. Cevap imlecin olduğu yere yazılır."
     },
+    "modes": {
+      "title": "Her uygulamaya bir profil",
+      "description": "Her programın içine dikte ederken hangi profilin geçerli olacağını seçin. Kural varsa program karar verir; yoksa her zamanki gibi üst çubuktaki profil geçerlidir.",
+      "rulesEmpty": "Henüz kural yok. Aşağıdan açık bir program ve kullanması gereken profili seçin.",
+      "appPlaceholder": "Açık bir program seçin...",
+      "refreshApps": "Neyin açık olduğuna yeniden bak",
+      "add": "Ekle",
+      "remove": "Kaldır",
+      "profilesTitle": "Kendi profilleriniz",
+      "profilesDescription": "İhtiyacınız kadar, her biri kendi sesli komutlarıyla. Yukarıdaki kurallarda görünürler.",
+      "profilesEmpty": "Henüz kendi profiliniz yok.",
+      "commandCount": "{{n}} komut",
+      "commands": "Komutlar",
+      "deleteProfile": "Profili sil",
+      "commandsTitle": "Bu profilin komutları",
+      "commandsDescription": "Solda söylediğiniz, sağda yazılan.",
+      "newProfilePlaceholder": "Yeni profilin adı",
+      "addProfile": "Profil ekle",
+      "hint": "Kuralı olan bir programa dikte ederken üst çubuktaki profil sayılmaz: kuralın profili geçerlidir."
+    },
     "errors": {
       "sin_licencia": "Bu VoCript Pro'nun bir parçası ve bu kopyanın lisansı yok.",
       "sin_licencia_guardada": "Bu bilgisayarda kayıtlı lisans yok.",
