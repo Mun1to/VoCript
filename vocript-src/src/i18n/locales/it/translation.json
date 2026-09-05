@@ -1238,7 +1238,12 @@
       "thisDevice": "questo computer",
       "removeDevice": "Rimuovi",
       "offline": "In questo momento non c’è connessione con il cloud. La licenza resta valida su questo computer.",
-      "refresh": "Aggiorna"
+      "refresh": "Aggiorna",
+      "limitTitle": "Questa licenza è già su {{tope}} computer. Rimuovine uno e si attiverà qui da sola."
+    },
+    "import": {
+      "done": "Il tuo VoCript è venuto con te.",
+      "detail": "Impostazioni, dizionario e cronologia; registrazioni: {{grabaciones}}; modelli: {{modelos}}. Riprendi da dove eri."
     },
     "readAloud": {
       "title": "Leggi ad alta voce",
@@ -1293,6 +1298,48 @@
       "failed": "L’agente non ha potuto rispondere: {{motivo}}",
       "dictate": "Detta la richiesta",
       "dictateHint": "Clicca, di’ cosa ti serve e clicca di nuovo. La risposta viene scritta dove si trova il cursore."
+    },
+    "errors": {
+      "sin_licencia": "Questo fa parte di VoCript Pro e questa copia non ha licenza.",
+      "sin_licencia_guardada": "Su questo computer non c'è nessuna licenza salvata.",
+      "licencia_forma": "Quella chiave non ha la forma di una licenza VoCript Pro.",
+      "licencia_incompleta": "La licenza è incompleta o è stata copiata a metà.",
+      "licencia_no_comprobable": "Questa copia di VoCript non può verificare le licenze.",
+      "licencia_firma_invalida": "La firma non è valida. Quella licenza non l'abbiamo emessa noi.",
+      "licencia_caducada": "L'abbonamento è scaduto. Rinnovalo per riattivare Pro.",
+      "licencia_archivo": "Impossibile leggere o salvare il file della licenza: {{detalle}}",
+      "licencia_invalida": "Il cloud non accetta questa licenza.",
+      "caducada": "L'abbonamento è scaduto. Rinnovalo per usare di nuovo il cloud.",
+      "revocada": "Questa licenza è stata disattivata.",
+      "cuota_agotada": "Hai raggiunto l'uso mensile incluso in VoCript Pro. Si rinnova il mese prossimo.",
+      "limite_dispositivos": "Questa licenza è già su tutti i computer che consente. Rimuovine uno per usarla qui.",
+      "modelo_caido": "Il modello non risponde in questo momento. Riprova tra poco.",
+      "modelo_error": "Il modello ha restituito un errore. Riprova tra poco.",
+      "sin_red": "Impossibile raggiungere il cloud di VoCript Pro: {{detalle}}",
+      "nube_no_disponible": "Il cloud di VoCript Pro non è disponibile in questo momento ({{detalle}}).",
+      "nube_respuesta_rara": "Il cloud ha risposto qualcosa di inatteso: {{detalle}}",
+      "nube_contesto": "Il cloud ha risposto: {{detalle}}",
+      "sin_texto": "Lì non c'è testo da leggere.",
+      "sin_texto_recuadro": "In quel riquadro non c'è testo da leggere.",
+      "sin_texto_pantalla": "Non è stato possibile leggere nulla su questo schermo.",
+      "sin_texto_ya": "Lì non c'è più testo da leggere.",
+      "recuadro_fuera": "Quel riquadro è fuori da tutti gli schermi.",
+      "captura_fallo": "Impossibile catturare lo schermo: {{detalle}}",
+      "ocr_fallo": "Il lettore di testo di Windows non ha funzionato: {{detalle}}",
+      "ocr_sin_idioma": "Windows non ha nessuna lingua con riconoscimento del testo installata. Aggiungila in Impostazioni, Data/ora e lingua, Lingua, nelle opzioni della tua lingua.",
+      "ocr_solo_windows": "Leggere lo schermo per ora è solo per Windows.",
+      "voz_solo_windows": "Leggere ad alta voce per ora è solo per Windows.",
+      "voz_sin_voces": "Windows non ha nessuna voce installata.",
+      "voz_fallo": "Il motore vocale di Windows non ha funzionato: {{detalle}}",
+      "voz_caida": "Il lettore vocale si è bloccato. Riavvia VoCript Pro.",
+      "agente_sin_encargo": "Non hai detto cosa vuoi che faccia.",
+      "agente_sin_respuesta": "Il modello non ha risposto nulla.",
+      "agente_sin_modelo": "L'agente ha bisogno di un modello linguistico. Scegline uno in Impostazioni, Pulisci il parlato.",
+      "agente_sin_modelo_elegido": "Il fornitore {{detalle}} non ha nessun modello selezionato.",
+      "atajo_invalido": "{{detalle}} non è una combinazione di tasti valida.",
+      "atajo_en_uso": "{{detalle}} è già in uso da un altro programma.",
+      "atajo_no_registrado": "Impossibile registrare la scorciatoia: {{detalle}}",
+      "trabajo_no_termino": "L'operazione non è arrivata alla fine: {{detalle}}"
     }
   }
 }

@@ -32,17 +32,25 @@ function escuchar(recargar: () => Promise<void>) {
   // que se hizo sin red). Se recarga el estado, que ya vendrá sin licencia, y se dice por qué.
   void listen<string>(pro.EVENTO_LICENCIA_CAMBIADA, (evento) => {
     void recargar();
-    toast.warning(i18n.t("pro.license.changed", { motivo: evento.payload }), {
-      duration: 12000,
-    });
+    toast.warning(
+      i18n.t("pro.license.changed", {
+        motivo: pro.mensajeDeError(evento.payload),
+      }),
+      {
+        duration: 12000,
+      },
+    );
   });
 
   // El agente no ha podido contestar a un dictado. No se ha pegado nada, y sin esto la
   // persona solo vería que el atajo «no hace nada».
   void listen<string>(pro.EVENTO_AGENTE_FALLO, (evento) => {
-    toast.error(i18n.t("pro.agent.failed", { motivo: evento.payload }), {
-      duration: 8000,
-    });
+    toast.error(
+      i18n.t("pro.agent.failed", { motivo: pro.mensajeDeError(evento.payload) }),
+      {
+        duration: 8000,
+      },
+    );
   });
 }
 

@@ -1238,7 +1238,12 @@
       "thisDevice": "這台電腦",
       "removeDevice": "移除",
       "offline": "目前無法連線到雲端。授權在這台電腦上仍然有效。",
-      "refresh": "重新整理"
+      "refresh": "重新整理",
+      "limitTitle": "此授權已在 {{tope}} 台電腦上使用。移除一台後，它會在這裡自動啟用。"
+    },
+    "import": {
+      "done": "你的 VoCript 資料已跟過來了。",
+      "detail": "設定、詞典和歷史；錄音：{{grabaciones}}；模型：{{modelos}}。從上次的地方繼續。"
     },
     "readAloud": {
       "title": "朗讀",
@@ -1293,6 +1298,48 @@
       "failed": "代理程式無法回答：{{motivo}}",
       "dictate": "口述需求",
       "dictateHint": "點一下，說出你的需求，再點一下。答案會寫在游標所在的位置。"
+    },
+    "errors": {
+      "sin_licencia": "這是 VoCript Pro 的功能，而此副本沒有授權。",
+      "sin_licencia_guardada": "這台電腦上沒有儲存的授權。",
+      "licencia_forma": "這個金鑰不像 VoCript Pro 的授權。",
+      "licencia_incompleta": "授權不完整，或者只複製了一半。",
+      "licencia_no_comprobable": "此 VoCript 副本無法驗證授權。",
+      "licencia_firma_invalida": "簽章無效。這個授權不是我們簽發的。",
+      "licencia_caducada": "訂閱已過期。續訂後即可重新啟用 Pro。",
+      "licencia_archivo": "無法讀取或儲存授權檔案：{{detalle}}",
+      "licencia_invalida": "雲端不接受此授權。",
+      "caducada": "訂閱已過期。續訂後即可重新使用雲端。",
+      "revocada": "此授權已被取消。",
+      "cuota_agotada": "你已用完 VoCript Pro 本月包含的用量。下個月會重設。",
+      "limite_dispositivos": "此授權已在允許的所有電腦上使用。移除一台後才能在這裡使用。",
+      "modelo_caido": "模型目前沒有回應。請稍後再試。",
+      "modelo_error": "模型回傳了錯誤。請稍後再試。",
+      "sin_red": "無法連線 VoCript Pro 雲端：{{detalle}}",
+      "nube_no_disponible": "VoCript Pro 雲端目前無法使用（{{detalle}}）。",
+      "nube_respuesta_rara": "雲端回傳了意外的內容：{{detalle}}",
+      "nube_contesto": "雲端回覆：{{detalle}}",
+      "sin_texto": "那裡沒有可朗讀的文字。",
+      "sin_texto_recuadro": "該區域內沒有可朗讀的文字。",
+      "sin_texto_pantalla": "這個螢幕上沒有讀到任何文字。",
+      "sin_texto_ya": "那裡已經沒有文字了。",
+      "recuadro_fuera": "該區域超出了所有螢幕。",
+      "captura_fallo": "無法擷取螢幕：{{detalle}}",
+      "ocr_fallo": "Windows 文字辨識失敗：{{detalle}}",
+      "ocr_sin_idioma": "Windows 沒有安裝帶文字辨識的語言。請在「設定、時間與語言、語言」中，從你的語言選項裡新增。",
+      "ocr_solo_windows": "讀取螢幕目前僅支援 Windows。",
+      "voz_solo_windows": "朗讀目前僅支援 Windows。",
+      "voz_sin_voces": "Windows 沒有安裝任何語音。",
+      "voz_fallo": "Windows 語音引擎失敗：{{detalle}}",
+      "voz_caida": "朗讀器已停止運作。請重新啟動 VoCript Pro。",
+      "agente_sin_encargo": "你沒有說要做什麼。",
+      "agente_sin_respuesta": "模型沒有任何回覆。",
+      "agente_sin_modelo": "助理需要一個語言模型。請在「設定、整理語音」中選擇一個。",
+      "agente_sin_modelo_elegido": "供應商 {{detalle}} 沒有選擇模型。",
+      "atajo_invalido": "{{detalle}} 不是有效的按鍵組合。",
+      "atajo_en_uso": "{{detalle}} 已被其他程式佔用。",
+      "atajo_no_registrado": "無法註冊快速鍵：{{detalle}}",
+      "trabajo_no_termino": "操作沒有完成：{{detalle}}"
     }
   }
 }

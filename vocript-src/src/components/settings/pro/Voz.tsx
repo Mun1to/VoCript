@@ -50,7 +50,7 @@ export const Voz: React.FC = () => {
       setAjustes(nuevos);
       toast.success(t("pro.voice.saved"));
     } catch (e) {
-      toast.error(String(e));
+      toast.error(pro.mensajeDeError(e));
     }
   };
 
@@ -103,7 +103,7 @@ export const Voz: React.FC = () => {
             onClick={() =>
               void pro
                 .decir(t("pro.voice.sample"))
-                .catch((e) => toast.error(String(e)))
+                .catch((e) => toast.error(pro.mensajeDeError(e)))
             }
             className="flex items-center gap-1.5"
           >

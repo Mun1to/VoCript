@@ -1238,7 +1238,12 @@
       "thisDevice": "máy tính này",
       "removeDevice": "Gỡ",
       "offline": "Hiện không có kết nối với đám mây. Giấy phép vẫn có hiệu lực trên máy tính này.",
-      "refresh": "Làm mới"
+      "refresh": "Làm mới",
+      "limitTitle": "Giấy phép này đã dùng trên {{tope}} máy tính. Gỡ một máy và nó sẽ tự kích hoạt ở đây."
+    },
+    "import": {
+      "done": "VoCript của bạn đã đi cùng bạn.",
+      "detail": "Cài đặt, từ điển và lịch sử; bản ghi âm: {{grabaciones}}; mô hình: {{modelos}}. Bạn tiếp tục từ chỗ đang dở."
     },
     "readAloud": {
       "title": "Đọc to",
@@ -1293,6 +1298,48 @@
       "failed": "Trợ lý không trả lời được: {{motivo}}",
       "dictate": "Đọc yêu cầu",
       "dictateHint": "Bấm, nói điều bạn cần rồi bấm lại. Câu trả lời được gõ vào chỗ con trỏ."
+    },
+    "errors": {
+      "sin_licencia": "Đây là tính năng của VoCript Pro và bản sao này không có giấy phép.",
+      "sin_licencia_guardada": "Máy tính này không có giấy phép nào được lưu.",
+      "licencia_forma": "Khóa đó không giống một giấy phép VoCript Pro.",
+      "licencia_incompleta": "Giấy phép không đầy đủ hoặc chỉ được sao chép một nửa.",
+      "licencia_no_comprobable": "Bản VoCript này không thể kiểm tra giấy phép.",
+      "licencia_firma_invalida": "Chữ ký không hợp lệ. Giấy phép đó không do chúng tôi cấp.",
+      "licencia_caducada": "Gói đăng ký đã hết hạn. Gia hạn để bật lại Pro.",
+      "licencia_archivo": "Không đọc hoặc lưu được tệp giấy phép: {{detalle}}",
+      "licencia_invalida": "Đám mây không chấp nhận giấy phép này.",
+      "caducada": "Gói đăng ký đã hết hạn. Gia hạn để dùng lại đám mây.",
+      "revocada": "Giấy phép này đã bị hủy.",
+      "cuota_agotada": "Bạn đã dùng hết mức sử dụng tháng này của VoCript Pro. Sẽ được làm mới vào tháng sau.",
+      "limite_dispositivos": "Giấy phép này đã dùng trên tất cả máy tính được phép. Gỡ một máy để dùng ở đây.",
+      "modelo_caido": "Mô hình hiện không phản hồi. Hãy thử lại sau giây lát.",
+      "modelo_error": "Mô hình trả về lỗi. Hãy thử lại sau giây lát.",
+      "sin_red": "Không kết nối được đám mây VoCript Pro: {{detalle}}",
+      "nube_no_disponible": "Đám mây VoCript Pro hiện không khả dụng ({{detalle}}).",
+      "nube_respuesta_rara": "Đám mây trả lời điều gì đó không mong đợi: {{detalle}}",
+      "nube_contesto": "Đám mây trả lời: {{detalle}}",
+      "sin_texto": "Ở đó không có chữ để đọc.",
+      "sin_texto_recuadro": "Trong vùng đó không có chữ để đọc.",
+      "sin_texto_pantalla": "Không đọc được gì trên màn hình này.",
+      "sin_texto_ya": "Ở đó không còn chữ để đọc nữa.",
+      "recuadro_fuera": "Vùng đó nằm ngoài mọi màn hình.",
+      "captura_fallo": "Không chụp được màn hình: {{detalle}}",
+      "ocr_fallo": "Trình nhận dạng chữ của Windows bị lỗi: {{detalle}}",
+      "ocr_sin_idioma": "Windows chưa cài ngôn ngữ nào có nhận dạng chữ. Thêm trong Cài đặt, Thời gian và ngôn ngữ, Ngôn ngữ, ở tùy chọn của ngôn ngữ của bạn.",
+      "ocr_solo_windows": "Đọc màn hình hiện chỉ có trên Windows.",
+      "voz_solo_windows": "Đọc thành tiếng hiện chỉ có trên Windows.",
+      "voz_sin_voces": "Windows chưa cài giọng đọc nào.",
+      "voz_fallo": "Bộ máy giọng nói của Windows bị lỗi: {{detalle}}",
+      "voz_caida": "Trình đọc đã ngừng hoạt động. Hãy khởi động lại VoCript Pro.",
+      "agente_sin_encargo": "Bạn chưa nói muốn làm gì.",
+      "agente_sin_respuesta": "Mô hình không trả lời gì.",
+      "agente_sin_modelo": "Trợ lý cần một mô hình ngôn ngữ. Chọn một cái trong Cài đặt, Làm sạch lời nói.",
+      "agente_sin_modelo_elegido": "Nhà cung cấp {{detalle}} chưa chọn mô hình nào.",
+      "atajo_invalido": "{{detalle}} không phải là tổ hợp phím hợp lệ.",
+      "atajo_en_uso": "{{detalle}} đã được chương trình khác dùng.",
+      "atajo_no_registrado": "Không đăng ký được phím tắt: {{detalle}}",
+      "trabajo_no_termino": "Thao tác chưa hoàn tất: {{detalle}}"
     }
   }
 }

@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
+import i18n from "i18next";
 
 /**
  * Cliente de los comandos de VoCript Pro.
@@ -66,12 +67,68 @@ export const activarLicencia = (clave: string) =>
 
 export const desactivarLicencia = () => invoke<void>("pro_deactivate_license");
 
-/** Lo que la nube sabe de esta licencia. Lanza si no hay conexión. */
-export const estadoNube = () => invoke<EstadoNube>("pro_cloud_status");
+/**
+ * Lo que la nube sabe de esta licencia. Lanza si no hay conexión.
+ *
+ * Con `clave` se pregunta por una licencia que todavía no está guardada: la que se acaba
+ * de pegar y la nube ha rechazado por el tope de ordenadores.
+ */
+export const estadoNube = (clave?: string) =>
+  invoke<EstadoNube>("pro_cloud_status", { clave: clave ?? null });
 
 /** Da de baja un ordenador de la lista y devuelve la lista que queda. */
-export const quitarDispositivo = (id: string) =>
-  invoke<Dispositivo[]>("pro_remove_device", { id });
+export const quitarDispositivo = (id: string, clave?: string) =>
+  invoke<Dispositivo[]>("pro_remove_device", { id, clave: clave ?? null });
+
+/** Lo que Pro se trajo de la VoCript gratuita en su primer arranque. */
+export interface ResumenImportacion {
+  /** AAAA-MM-DD. */
+  fecha: string;
+  hecha: boolean;
+  ajustes: boolean;
+  historial: boolean;
+  grabaciones: number;
+  modelos: number;
+  avisada: boolean;
+}
+
+/**
+ * El resumen de la importación, la primera vez que se pregunta y nunca más. `null` en la
+ * edición gratuita, cuando no había nada que traer, o cuando ya se contó.
+ */
+export const importacionRecienHecha = () =>
+  invoke<ResumenImportacion | null>("pro_import_summary");
+
+/**
+ * Los errores de Pro llegan como una CLAVE (`sin_texto_recuadro`), a veces con un dato
+ * detrás de una barra (`atajo_en_uso|Ctrl+Alt+J`), y aquí se convierten en la frase del
+ * idioma de la persona (`pro.errors.<clave>` en las traducciones). Lo que no es una clave
+ * se enseña tal cual: los errores del cliente de LLM, por ejemplo, vienen en inglés de la
+ * edición gratuita y no pasan por aquí.
+ */
+const FORMA_DE_CLAVE = /^([a-z][a-z0-9_]*)(?:\|([\s\S]*))?$/;
+
+function textoDe(e: unknown): string {
+  if (e instanceof Error) return e.message;
+  return e === null || e === undefined ? "" : String(e);
+}
+
+/** La clave de un error de Pro, o `null` si no es uno de los nuestros. */
+export function codigoDeError(e: unknown): string | null {
+  const encontrado = FORMA_DE_CLAVE.exec(textoDe(e));
+  return encontrado ? encontrado[1] : null;
+}
+
+/** La frase que se le enseña a la persona, en su idioma. */
+export function mensajeDeError(e: unknown): string {
+  const texto = textoDe(e);
+  const encontrado = FORMA_DE_CLAVE.exec(texto);
+  if (!encontrado) return texto;
+  const [, codigo, detalle = ""] = encontrado;
+  const clave = `pro.errors.${codigo}`;
+  if (!i18n.exists(clave)) return detalle || texto;
+  return i18n.t(clave, { detalle });
+}
 
 /** Si la limpieza del habla está encendida y va por la nube de Pro. */
 export const limpiezaEnNube = () =>

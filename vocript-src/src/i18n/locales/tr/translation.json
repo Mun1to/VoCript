@@ -1238,7 +1238,12 @@
       "thisDevice": "bu bilgisayar",
       "removeDevice": "Kaldır",
       "offline": "Şu anda bulutla bağlantı yok. Lisans bu bilgisayarda geçerli olmaya devam ediyor.",
-      "refresh": "Yenile"
+      "refresh": "Yenile",
+      "limitTitle": "Bu lisans zaten {{tope}} bilgisayarda. Birini kaldırın, burada kendiliğinden etkinleşecek."
+    },
+    "import": {
+      "done": "VoCript'iniz sizinle geldi.",
+      "detail": "Ayarlar, sözlük ve geçmiş; kayıtlar: {{grabaciones}}; modeller: {{modelos}}. Kaldığınız yerden devam edin."
     },
     "readAloud": {
       "title": "Sesli oku",
@@ -1293,6 +1298,48 @@
       "failed": "Ajan cevap veremedi: {{motivo}}",
       "dictate": "İsteği dikte et",
       "dictateHint": "Tıkla, ne istediğini söyle ve tekrar tıkla. Cevap imlecin olduğu yere yazılır."
+    },
+    "errors": {
+      "sin_licencia": "Bu VoCript Pro'nun bir parçası ve bu kopyanın lisansı yok.",
+      "sin_licencia_guardada": "Bu bilgisayarda kayıtlı lisans yok.",
+      "licencia_forma": "Bu anahtar bir VoCript Pro lisansına benzemiyor.",
+      "licencia_incompleta": "Lisans eksik ya da yarım kopyalanmış.",
+      "licencia_no_comprobable": "Bu VoCript kopyası lisansları doğrulayamıyor.",
+      "licencia_firma_invalida": "İmza geçersiz. Bu lisansı biz vermedik.",
+      "licencia_caducada": "Abonelik sona erdi. Pro'yu yeniden etkinleştirmek için yenileyin.",
+      "licencia_archivo": "Lisans dosyası okunamadı ya da kaydedilemedi: {{detalle}}",
+      "licencia_invalida": "Bulut bu lisansı kabul etmiyor.",
+      "caducada": "Abonelik sona erdi. Bulutu yeniden kullanmak için yenileyin.",
+      "revocada": "Bu lisans iptal edildi.",
+      "cuota_agotada": "VoCript Pro'ya dahil aylık kullanımı bitirdiniz. Gelecek ay yenilenir.",
+      "limite_dispositivos": "Bu lisans zaten izin verdiği tüm bilgisayarlarda. Burada kullanmak için birini kaldırın.",
+      "modelo_caido": "Model şu anda yanıt vermiyor. Birazdan yeniden deneyin.",
+      "modelo_error": "Model bir hata döndürdü. Birazdan yeniden deneyin.",
+      "sin_red": "VoCript Pro bulutuna ulaşılamıyor: {{detalle}}",
+      "nube_no_disponible": "VoCript Pro bulutu şu anda kullanılamıyor ({{detalle}}).",
+      "nube_respuesta_rara": "Bulut beklenmedik bir şey yanıtladı: {{detalle}}",
+      "nube_contesto": "Bulut şunu yanıtladı: {{detalle}}",
+      "sin_texto": "Orada okunacak metin yok.",
+      "sin_texto_recuadro": "Bu alanda okunacak metin yok.",
+      "sin_texto_pantalla": "Bu ekranda hiçbir şey okunamadı.",
+      "sin_texto_ya": "Orada artık okunacak metin yok.",
+      "recuadro_fuera": "Bu alan tüm ekranların dışında kalıyor.",
+      "captura_fallo": "Ekran görüntüsü alınamadı: {{detalle}}",
+      "ocr_fallo": "Windows metin okuyucusu başarısız oldu: {{detalle}}",
+      "ocr_sin_idioma": "Windows'ta metin tanıma yüklü bir dil yok. Ayarlar, Zaman ve dil, Dil bölümünde dilinizin seçeneklerinden ekleyin.",
+      "ocr_solo_windows": "Ekranı okuma şimdilik yalnızca Windows'ta.",
+      "voz_solo_windows": "Sesli okuma şimdilik yalnızca Windows'ta.",
+      "voz_sin_voces": "Windows'ta yüklü ses yok.",
+      "voz_fallo": "Windows ses motoru başarısız oldu: {{detalle}}",
+      "voz_caida": "Okuyucu çalışmayı durdurdu. VoCript Pro'yu yeniden başlatın.",
+      "agente_sin_encargo": "Ne yapılmasını istediğinizi söylemediniz.",
+      "agente_sin_respuesta": "Model hiçbir şey yanıtlamadı.",
+      "agente_sin_modelo": "Ajanın bir dil modeline ihtiyacı var. Ayarlar, Konuşmayı temizle bölümünden birini seçin.",
+      "agente_sin_modelo_elegido": "{{detalle}} sağlayıcısında seçili model yok.",
+      "atajo_invalido": "{{detalle}} geçerli bir tuş birleşimi değil.",
+      "atajo_en_uso": "{{detalle}} zaten başka bir program tarafından kullanılıyor.",
+      "atajo_no_registrado": "Kısayol kaydedilemedi: {{detalle}}",
+      "trabajo_no_termino": "İşlem tamamlanamadı: {{detalle}}"
     }
   }
 }

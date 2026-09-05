@@ -1238,7 +1238,12 @@
       "thisDevice": "tento počítač",
       "removeDevice": "Odebrat",
       "offline": "Právě teď není spojení s cloudem. Licence na tomto počítači platí dál.",
-      "refresh": "Obnovit"
+      "refresh": "Obnovit",
+      "limitTitle": "Tato licence už je na {{tope}} počítačích. Odeberte jeden a aktivuje se tady sama."
+    },
+    "import": {
+      "done": "Váš VoCript se přestěhoval s vámi.",
+      "detail": "Nastavení, slovník a historie; nahrávky: {{grabaciones}}; modely: {{modelos}}. Pokračujete tam, kde jste byli."
     },
     "readAloud": {
       "title": "Čtení nahlas",
@@ -1293,6 +1298,48 @@
       "failed": "Agent nemohl odpovědět: {{motivo}}",
       "dictate": "Nadiktovat zadání",
       "dictateHint": "Klikni, řekni, co potřebuješ, a klikni znovu. Odpověď se napíše tam, kde je kurzor."
+    },
+    "errors": {
+      "sin_licencia": "Tohle je součást VoCript Pro a tato kopie nemá licenci.",
+      "sin_licencia_guardada": "Na tomto počítači není uložená žádná licence.",
+      "licencia_forma": "Tento klíč nevypadá jako licence VoCript Pro.",
+      "licencia_incompleta": "Licence je neúplná nebo byla zkopírována jen zčásti.",
+      "licencia_no_comprobable": "Tato kopie VoCript nemůže ověřovat licence.",
+      "licencia_firma_invalida": "Podpis není platný. Tuto licenci jsme nevydali my.",
+      "licencia_caducada": "Předplatné vypršelo. Obnovte ho, aby se Pro znovu aktivovalo.",
+      "licencia_archivo": "Soubor s licencí se nepodařilo přečíst ani uložit: {{detalle}}",
+      "licencia_invalida": "Cloud tuto licenci nepřijímá.",
+      "caducada": "Předplatné vypršelo. Obnovte ho, abyste mohli cloud znovu používat.",
+      "revocada": "Tato licence byla zrušena.",
+      "cuota_agotada": "Vyčerpali jste měsíční objem zahrnutý ve VoCript Pro. Obnoví se příští měsíc.",
+      "limite_dispositivos": "Tato licence už je na všech povolených počítačích. Odeberte jeden, abyste ji mohli použít tady.",
+      "modelo_caido": "Model teď neodpovídá. Zkuste to za chvíli znovu.",
+      "modelo_error": "Model vrátil chybu. Zkuste to za chvíli znovu.",
+      "sin_red": "Cloud VoCript Pro není dostupný: {{detalle}}",
+      "nube_no_disponible": "Cloud VoCript Pro teď není k dispozici ({{detalle}}).",
+      "nube_respuesta_rara": "Cloud odpověděl něco nesrozumitelného: {{detalle}}",
+      "nube_contesto": "Cloud odpověděl: {{detalle}}",
+      "sin_texto": "Tam není žádný text ke čtení.",
+      "sin_texto_recuadro": "V této oblasti není žádný text ke čtení.",
+      "sin_texto_pantalla": "Na této obrazovce se nepodařilo nic přečíst.",
+      "sin_texto_ya": "Tam už žádný text ke čtení není.",
+      "recuadro_fuera": "Tato oblast leží mimo všechny obrazovky.",
+      "captura_fallo": "Nepodařilo se pořídit snímek obrazovky: {{detalle}}",
+      "ocr_fallo": "Čtečka textu systému Windows selhala: {{detalle}}",
+      "ocr_sin_idioma": "Windows nemá nainstalovaný žádný jazyk s rozpoznáváním textu. Přidejte ho v Nastavení, Čas a jazyk, Jazyk, v možnostech vašeho jazyka.",
+      "ocr_solo_windows": "Čtení obrazovky je zatím jen ve Windows.",
+      "voz_solo_windows": "Předčítání je zatím jen ve Windows.",
+      "voz_sin_voces": "Windows nemá nainstalovaný žádný hlas.",
+      "voz_fallo": "Hlasový modul systému Windows selhal: {{detalle}}",
+      "voz_caida": "Předčítání přestalo fungovat. Restartujte VoCript Pro.",
+      "agente_sin_encargo": "Neřekli jste, co má udělat.",
+      "agente_sin_respuesta": "Model nic neodpověděl.",
+      "agente_sin_modelo": "Agent potřebuje jazykový model. Vyberte ho v Nastavení, Čištění řeči.",
+      "agente_sin_modelo_elegido": "Poskytovatel {{detalle}} nemá vybraný žádný model.",
+      "atajo_invalido": "{{detalle}} není platná kombinace kláves.",
+      "atajo_en_uso": "{{detalle}} už používá jiný program.",
+      "atajo_no_registrado": "Zkratku se nepodařilo zaregistrovat: {{detalle}}",
+      "trabajo_no_termino": "Operace se nedokončila: {{detalle}}"
     }
   }
 }

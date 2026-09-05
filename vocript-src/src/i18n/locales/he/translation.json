@@ -1238,7 +1238,12 @@
       "thisDevice": "המחשב הזה",
       "removeDevice": "הסר",
       "offline": "כרגע אין חיבור לענן. הרישיון עדיין תקף במחשב הזה.",
-      "refresh": "רענן"
+      "refresh": "רענן",
+      "limitTitle": "הרישיון הזה כבר בשימוש ב-{{tope}} מחשבים. הסירו אחד והוא יופעל כאן מעצמו."
+    },
+    "import": {
+      "done": "ה-VoCript שלך עבר איתך.",
+      "detail": "הגדרות, מילון והיסטוריה; הקלטות: {{grabaciones}}; מודלים: {{modelos}}. ממשיכים מאיפה שהייתם."
     },
     "readAloud": {
       "title": "הקראה",
@@ -1293,6 +1298,48 @@
       "failed": "הסוכן לא הצליח לענות: {{motivo}}",
       "dictate": "להכתיב את הבקשה",
       "dictateHint": "לוחצים, אומרים מה צריך ולוחצים שוב. התשובה נכתבת איפה שהסמן נמצא."
+    },
+    "errors": {
+      "sin_licencia": "זה חלק מ-VoCript Pro ולעותק הזה אין רישיון.",
+      "sin_licencia_guardada": "במחשב הזה אין רישיון שמור.",
+      "licencia_forma": "המפתח הזה לא נראה כמו רישיון של VoCript Pro.",
+      "licencia_incompleta": "הרישיון חלקי או הועתק עד חצי.",
+      "licencia_no_comprobable": "העותק הזה של VoCript לא יכול לבדוק רישיונות.",
+      "licencia_firma_invalida": "החתימה אינה תקפה. את הרישיון הזה לא אנחנו הנפקנו.",
+      "licencia_caducada": "המינוי פג. חדשו אותו כדי להפעיל שוב את Pro.",
+      "licencia_archivo": "לא ניתן לקרוא או לשמור את קובץ הרישיון: {{detalle}}",
+      "licencia_invalida": "הענן לא מקבל את הרישיון הזה.",
+      "caducada": "המינוי פג. חדשו אותו כדי להשתמש שוב בענן.",
+      "revocada": "הרישיון הזה בוטל.",
+      "cuota_agotada": "ניצלתם את השימוש החודשי הכלול ב-VoCript Pro. הוא מתחדש בחודש הבא.",
+      "limite_dispositivos": "הרישיון הזה כבר בשימוש בכל המחשבים שהוא מאפשר. הסירו אחד כדי להשתמש בו כאן.",
+      "modelo_caido": "המודל לא עונה כרגע. נסו שוב בעוד רגע.",
+      "modelo_error": "המודל החזיר שגיאה. נסו שוב בעוד רגע.",
+      "sin_red": "אין גישה לענן של VoCript Pro: {{detalle}}",
+      "nube_no_disponible": "הענן של VoCript Pro אינו זמין כרגע ({{detalle}}).",
+      "nube_respuesta_rara": "הענן ענה משהו לא צפוי: {{detalle}}",
+      "nube_contesto": "הענן ענה: {{detalle}}",
+      "sin_texto": "אין שם טקסט לקריאה.",
+      "sin_texto_recuadro": "באזור הזה אין טקסט לקריאה.",
+      "sin_texto_pantalla": "לא ניתן היה לקרוא דבר במסך הזה.",
+      "sin_texto_ya": "אין שם יותר טקסט לקריאה.",
+      "recuadro_fuera": "האזור הזה נמצא מחוץ לכל המסכים.",
+      "captura_fallo": "לא ניתן לצלם את המסך: {{detalle}}",
+      "ocr_fallo": "קורא הטקסט של Windows נכשל: {{detalle}}",
+      "ocr_sin_idioma": "ב-Windows אין שפה עם זיהוי טקסט מותקן. הוסיפו אותה בהגדרות, שעה ושפה, שפה, באפשרויות של השפה שלכם.",
+      "ocr_solo_windows": "קריאת המסך זמינה בינתיים רק ב-Windows.",
+      "voz_solo_windows": "הקראה זמינה בינתיים רק ב-Windows.",
+      "voz_sin_voces": "ב-Windows לא מותקן שום קול.",
+      "voz_fallo": "מנוע הדיבור של Windows נכשל: {{detalle}}",
+      "voz_caida": "הקורא הפסיק לעבוד. הפעילו מחדש את VoCript Pro.",
+      "agente_sin_encargo": "לא אמרתם מה לעשות.",
+      "agente_sin_respuesta": "המודל לא ענה כלום.",
+      "agente_sin_modelo": "הסוכן צריך מודל שפה. בחרו אחד בהגדרות, ניקוי הדיבור.",
+      "agente_sin_modelo_elegido": "לספק {{detalle}} לא נבחר מודל.",
+      "atajo_invalido": "{{detalle}} אינו צירוף מקשים תקף.",
+      "atajo_en_uso": "{{detalle}} כבר בשימוש של תוכנית אחרת.",
+      "atajo_no_registrado": "לא ניתן לרשום את הקיצור: {{detalle}}",
+      "trabajo_no_termino": "הפעולה לא הסתיימה: {{detalle}}"
     }
   }
 }

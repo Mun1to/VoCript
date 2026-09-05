@@ -1238,7 +1238,12 @@
       "thisDevice": "este computador",
       "removeDevice": "Remover",
       "offline": "Agora mesmo não há ligação à nuvem. A licença continua válida neste computador.",
-      "refresh": "Atualizar"
+      "refresh": "Atualizar",
+      "limitTitle": "Esta licença já está em {{tope}} computadores. Remova um e ela será ativada aqui sozinha."
+    },
+    "import": {
+      "done": "O seu VoCript veio com você.",
+      "detail": "Ajustes, dicionário e histórico; gravações: {{grabaciones}}; modelos: {{modelos}}. Você continua de onde estava."
     },
     "readAloud": {
       "title": "Ler em voz alta",
@@ -1293,6 +1298,48 @@
       "failed": "O agente não conseguiu responder: {{motivo}}",
       "dictate": "Ditar o pedido",
       "dictateHint": "Clica, diz o que precisas e volta a clicar. A resposta é escrita onde estiver o cursor."
+    },
+    "errors": {
+      "sin_licencia": "Isto faz parte do VoCript Pro e esta cópia não tem licença.",
+      "sin_licencia_guardada": "Não há nenhuma licença guardada neste computador.",
+      "licencia_forma": "Essa chave não tem a forma de uma licença do VoCript Pro.",
+      "licencia_incompleta": "A licença está incompleta ou foi copiada pela metade.",
+      "licencia_no_comprobable": "Esta cópia do VoCript não consegue verificar licenças.",
+      "licencia_firma_invalida": "A assinatura não é válida. Essa licença não foi emitida por nós.",
+      "licencia_caducada": "A assinatura expirou. Renove-a para ativar o Pro de novo.",
+      "licencia_archivo": "Não foi possível ler ou guardar o arquivo da licença: {{detalle}}",
+      "licencia_invalida": "A nuvem não aceita esta licença.",
+      "caducada": "A assinatura expirou. Renove-a para voltar a usar a nuvem.",
+      "revocada": "Esta licença foi cancelada.",
+      "cuota_agotada": "Você chegou ao uso mensal incluído no VoCript Pro. Renova-se no mês que vem.",
+      "limite_dispositivos": "Esta licença já está em todos os computadores que permite. Remova um para usá-la aqui.",
+      "modelo_caido": "O modelo não está respondendo agora. Tente de novo daqui a pouco.",
+      "modelo_error": "O modelo devolveu um erro. Tente de novo daqui a pouco.",
+      "sin_red": "Não foi possível chegar à nuvem do VoCript Pro: {{detalle}}",
+      "nube_no_disponible": "A nuvem do VoCript Pro não está disponível agora ({{detalle}}).",
+      "nube_respuesta_rara": "A nuvem respondeu algo inesperado: {{detalle}}",
+      "nube_contesto": "A nuvem respondeu: {{detalle}}",
+      "sin_texto": "Ali não há texto para ler.",
+      "sin_texto_recuadro": "Nesse quadro não há texto para ler.",
+      "sin_texto_pantalla": "Não foi possível ler nada nesta tela.",
+      "sin_texto_ya": "Ali já não há texto para ler.",
+      "recuadro_fuera": "Esse quadro fica fora de todas as telas.",
+      "captura_fallo": "Não foi possível capturar a tela: {{detalle}}",
+      "ocr_fallo": "O leitor de texto do Windows falhou: {{detalle}}",
+      "ocr_sin_idioma": "O Windows não tem nenhum idioma com reconhecimento de texto instalado. Adicione-o em Configurações, Hora e idioma, Idioma, nas opções do seu idioma.",
+      "ocr_solo_windows": "Ler a tela por enquanto é só no Windows.",
+      "voz_solo_windows": "Ler em voz alta por enquanto é só no Windows.",
+      "voz_sin_voces": "O Windows não tem nenhuma voz instalada.",
+      "voz_fallo": "O motor de voz do Windows falhou: {{detalle}}",
+      "voz_caida": "O leitor de voz parou de funcionar. Reinicie o VoCript Pro.",
+      "agente_sin_encargo": "Você não disse o que quer que ele faça.",
+      "agente_sin_respuesta": "O modelo não respondeu nada.",
+      "agente_sin_modelo": "O agente precisa de um modelo de linguagem. Escolha um em Ajustes, Limpar a fala.",
+      "agente_sin_modelo_elegido": "O provedor {{detalle}} não tem nenhum modelo escolhido.",
+      "atajo_invalido": "{{detalle}} não é uma combinação de teclas válida.",
+      "atajo_en_uso": "{{detalle}} já está sendo usado por outro programa.",
+      "atajo_no_registrado": "Não foi possível registrar o atalho: {{detalle}}",
+      "trabajo_no_termino": "A operação não chegou ao fim: {{detalle}}"
     }
   }
 }

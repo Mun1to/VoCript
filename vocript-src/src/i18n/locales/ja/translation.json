@@ -1238,7 +1238,12 @@
       "thisDevice": "このパソコン",
       "removeDevice": "削除",
       "offline": "今はクラウドに接続できません。ライセンスはこのパソコンで引き続き有効です。",
-      "refresh": "更新"
+      "refresh": "更新",
+      "limitTitle": "このライセンスはすでに{{tope}}台のパソコンで使われています。1台を外すと、ここで自動的に有効になります。"
+    },
+    "import": {
+      "done": "VoCriptのデータを引き継ぎました。",
+      "detail": "設定、辞書、履歴。録音: {{grabaciones}}、モデル: {{modelos}}。前の続きから使えます。"
     },
     "readAloud": {
       "title": "読み上げ",
@@ -1293,6 +1298,48 @@
       "failed": "エージェントが答えられませんでした：{{motivo}}",
       "dictate": "依頼を口述する",
       "dictateHint": "クリックして必要なことを話し、もう一度クリックします。答えはカーソルの位置に入力されます。"
+    },
+    "errors": {
+      "sin_licencia": "これはVoCript Proの機能で、このコピーにはライセンスがありません。",
+      "sin_licencia_guardada": "このパソコンに保存されたライセンスはありません。",
+      "licencia_forma": "このキーはVoCript Proのライセンスの形式ではありません。",
+      "licencia_incompleta": "ライセンスが不完全か、途中までしかコピーされていません。",
+      "licencia_no_comprobable": "このVoCriptはライセンスを確認できません。",
+      "licencia_firma_invalida": "署名が無効です。このライセンスは私たちが発行したものではありません。",
+      "licencia_caducada": "サブスクリプションの期限が切れました。更新するとProが再び有効になります。",
+      "licencia_archivo": "ライセンスファイルを読み書きできませんでした: {{detalle}}",
+      "licencia_invalida": "クラウドがこのライセンスを受け付けません。",
+      "caducada": "サブスクリプションの期限が切れました。更新するとクラウドを再び使えます。",
+      "revocada": "このライセンスは解約されています。",
+      "cuota_agotada": "VoCript Proに含まれる今月分の利用量を使い切りました。来月にリセットされます。",
+      "limite_dispositivos": "このライセンスはすでに上限台数のパソコンで使われています。ここで使うには1台を外してください。",
+      "modelo_caido": "モデルが現在応答していません。しばらくしてからもう一度お試しください。",
+      "modelo_error": "モデルがエラーを返しました。しばらくしてからもう一度お試しください。",
+      "sin_red": "VoCript Proのクラウドに接続できません: {{detalle}}",
+      "nube_no_disponible": "VoCript Proのクラウドは現在利用できません（{{detalle}}）。",
+      "nube_respuesta_rara": "クラウドから予期しない応答がありました: {{detalle}}",
+      "nube_contesto": "クラウドの応答: {{detalle}}",
+      "sin_texto": "読み上げるテキストがありません。",
+      "sin_texto_recuadro": "その範囲に読み上げるテキストがありません。",
+      "sin_texto_pantalla": "この画面では何も読み取れませんでした。",
+      "sin_texto_ya": "そこにはもうテキストがありません。",
+      "recuadro_fuera": "その範囲はどの画面にも入っていません。",
+      "captura_fallo": "画面をキャプチャできませんでした: {{detalle}}",
+      "ocr_fallo": "Windowsの文字認識に失敗しました: {{detalle}}",
+      "ocr_sin_idioma": "Windowsに文字認識がインストールされた言語がありません。設定、時刻と言語、言語で、使用言語のオプションから追加してください。",
+      "ocr_solo_windows": "画面の読み取りは今のところWindowsのみです。",
+      "voz_solo_windows": "読み上げは今のところWindowsのみです。",
+      "voz_sin_voces": "Windowsに音声がインストールされていません。",
+      "voz_fallo": "Windowsの音声エンジンに失敗しました: {{detalle}}",
+      "voz_caida": "読み上げが停止しました。VoCript Proを再起動してください。",
+      "agente_sin_encargo": "何をしてほしいか伝えられていません。",
+      "agente_sin_respuesta": "モデルから応答がありませんでした。",
+      "agente_sin_modelo": "エージェントには言語モデルが必要です。設定の「発話をきれいにする」で選んでください。",
+      "agente_sin_modelo_elegido": "プロバイダー {{detalle}} にモデルが選ばれていません。",
+      "atajo_invalido": "{{detalle}} は有効なキーの組み合わせではありません。",
+      "atajo_en_uso": "{{detalle}} はすでに別のプログラムが使っています。",
+      "atajo_no_registrado": "ショートカットを登録できませんでした: {{detalle}}",
+      "trabajo_no_termino": "処理が完了しませんでした: {{detalle}}"
     }
   }
 }

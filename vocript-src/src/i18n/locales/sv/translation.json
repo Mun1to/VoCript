@@ -1238,7 +1238,12 @@
       "thisDevice": "den här datorn",
       "removeDevice": "Ta bort",
       "offline": "Ingen anslutning till molnet just nu. Licensen gäller fortfarande på den här datorn.",
-      "refresh": "Uppdatera"
+      "refresh": "Uppdatera",
+      "limitTitle": "Den här licensen finns redan på {{tope}} datorer. Ta bort en så aktiveras den här av sig själv."
+    },
+    "import": {
+      "done": "Din VoCript följde med.",
+      "detail": "Inställningar, ordlista och historik; inspelningar: {{grabaciones}}; modeller: {{modelos}}. Du fortsätter där du var."
     },
     "readAloud": {
       "title": "Läs upp",
@@ -1293,6 +1298,48 @@
       "failed": "Agenten kunde inte svara: {{motivo}}",
       "dictate": "Diktera uppdraget",
       "dictateHint": "Klicka, säg vad du behöver och klicka igen. Svaret skrivs där markören står."
+    },
+    "errors": {
+      "sin_licencia": "Det här hör till VoCript Pro och den här kopian saknar licens.",
+      "sin_licencia_guardada": "Det finns ingen sparad licens på den här datorn.",
+      "licencia_forma": "Den nyckeln ser inte ut som en VoCript Pro-licens.",
+      "licencia_incompleta": "Licensen är ofullständig eller kopierades bara till hälften.",
+      "licencia_no_comprobable": "Den här kopian av VoCript kan inte kontrollera licenser.",
+      "licencia_firma_invalida": "Signaturen är ogiltig. Den licensen är inte utfärdad av oss.",
+      "licencia_caducada": "Prenumerationen har gått ut. Förnya den för att aktivera Pro igen.",
+      "licencia_archivo": "Licensfilen kunde inte läsas eller sparas: {{detalle}}",
+      "licencia_invalida": "Molnet godtar inte den här licensen.",
+      "caducada": "Prenumerationen har gått ut. Förnya den för att använda molnet igen.",
+      "revocada": "Den här licensen har sagts upp.",
+      "cuota_agotada": "Du har använt månadens användning som ingår i VoCript Pro. Den förnyas nästa månad.",
+      "limite_dispositivos": "Den här licensen finns redan på alla datorer den tillåter. Ta bort en för att använda den här.",
+      "modelo_caido": "Modellen svarar inte just nu. Försök igen om en stund.",
+      "modelo_error": "Modellen returnerade ett fel. Försök igen om en stund.",
+      "sin_red": "Kan inte nå VoCript Pro-molnet: {{detalle}}",
+      "nube_no_disponible": "VoCript Pro-molnet är inte tillgängligt just nu ({{detalle}}).",
+      "nube_respuesta_rara": "Molnet svarade något oväntat: {{detalle}}",
+      "nube_contesto": "Molnet svarade: {{detalle}}",
+      "sin_texto": "Där finns ingen text att läsa.",
+      "sin_texto_recuadro": "I den rutan finns ingen text att läsa.",
+      "sin_texto_pantalla": "Inget kunde läsas på den här skärmen.",
+      "sin_texto_ya": "Där finns ingen text längre.",
+      "recuadro_fuera": "Den rutan hamnar utanför alla skärmar.",
+      "captura_fallo": "Kunde inte ta en skärmbild: {{detalle}}",
+      "ocr_fallo": "Windows textläsare misslyckades: {{detalle}}",
+      "ocr_sin_idioma": "Windows har inget språk med textigenkänning installerat. Lägg till det under Inställningar, Tid och språk, Språk, i alternativen för ditt språk.",
+      "ocr_solo_windows": "Att läsa skärmen finns än så länge bara i Windows.",
+      "voz_solo_windows": "Uppläsning finns än så länge bara i Windows.",
+      "voz_sin_voces": "Windows har ingen röst installerad.",
+      "voz_fallo": "Windows röstmotor misslyckades: {{detalle}}",
+      "voz_caida": "Uppläsaren slutade fungera. Starta om VoCript Pro.",
+      "agente_sin_encargo": "Du sa inte vad som ska göras.",
+      "agente_sin_respuesta": "Modellen svarade ingenting.",
+      "agente_sin_modelo": "Agenten behöver en språkmodell. Välj en under Inställningar, Rensa talet.",
+      "agente_sin_modelo_elegido": "Leverantören {{detalle}} har ingen modell vald.",
+      "atajo_invalido": "{{detalle}} är inte en giltig tangentkombination.",
+      "atajo_en_uso": "{{detalle}} används redan av ett annat program.",
+      "atajo_no_registrado": "Kortkommandot kunde inte registreras: {{detalle}}",
+      "trabajo_no_termino": "Åtgärden blev inte klar: {{detalle}}"
     }
   }
 }

@@ -38,7 +38,7 @@ export const Agente: React.FC<{ disabled?: boolean }> = ({
     try {
       setRespuesta(await pro.agenteHaz(encargo));
     } catch (e) {
-      toast.error(String(e));
+      toast.error(pro.mensajeDeError(e));
     } finally {
       setPensando(false);
     }
@@ -85,7 +85,7 @@ export const Agente: React.FC<{ disabled?: boolean }> = ({
           variant="secondary"
           size="sm"
           onClick={() =>
-            void pro.agenteDictar().catch((e) => toast.error(String(e)))
+            void pro.agenteDictar().catch((e) => toast.error(pro.mensajeDeError(e)))
           }
           disabled={disabled}
           className="ml-auto flex items-center gap-1.5"

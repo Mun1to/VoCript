@@ -1238,7 +1238,12 @@
       "thisDevice": "este ordenador",
       "removeDevice": "Quitar",
       "offline": "Ahora mismo no hay conexión con la nube. La licencia sigue valiendo en este ordenador.",
-      "refresh": "Actualizar"
+      "refresh": "Actualizar",
+      "limitTitle": "Esta licencia ya está en {{tope}} ordenadores. Quita uno y se activará aquí sola."
+    },
+    "import": {
+      "done": "Tu VoCript se ha venido contigo.",
+      "detail": "Ajustes, diccionario e historial; grabaciones: {{grabaciones}}; modelos: {{modelos}}. Sigues donde estabas."
     },
     "readAloud": {
       "title": "Leer en voz alta",
@@ -1293,6 +1298,48 @@
       "failed": "El agente no ha podido contestar: {{motivo}}",
       "dictate": "Dictar el encargo",
       "dictateHint": "Pulsa, di lo que necesitas y vuelve a pulsar. La respuesta se escribe donde esté el cursor."
+    },
+    "errors": {
+      "sin_licencia": "Esto es de VoCript Pro y esta copia no tiene licencia.",
+      "sin_licencia_guardada": "En este ordenador no hay ninguna licencia guardada.",
+      "licencia_forma": "Esa clave no tiene la forma de una licencia de VoCript Pro.",
+      "licencia_incompleta": "La licencia está incompleta o se ha copiado a medias.",
+      "licencia_no_comprobable": "Esta copia de VoCript no puede comprobar licencias.",
+      "licencia_firma_invalida": "La firma no es válida. Esa licencia no la hemos emitido nosotros.",
+      "licencia_caducada": "La suscripción ha caducado. Renuévala para volver a activar Pro.",
+      "licencia_archivo": "No se ha podido leer o guardar el archivo de la licencia: {{detalle}}",
+      "licencia_invalida": "La nube no acepta esta licencia.",
+      "caducada": "La suscripción ha caducado. Renuévala para volver a usar la nube.",
+      "revocada": "Esta licencia se ha dado de baja.",
+      "cuota_agotada": "Has llegado al uso mensual incluido en VoCript Pro. Se renueva el mes que viene.",
+      "limite_dispositivos": "Esta licencia ya está en todos los ordenadores que permite. Quita uno para usarla aquí.",
+      "modelo_caido": "El modelo no responde ahora mismo. Vuelve a intentarlo en un momento.",
+      "modelo_error": "El modelo ha devuelto un error. Vuelve a intentarlo en un momento.",
+      "sin_red": "No se llega a la nube de VoCript Pro: {{detalle}}",
+      "nube_no_disponible": "La nube de VoCript Pro no está disponible ahora mismo ({{detalle}}).",
+      "nube_respuesta_rara": "La nube ha contestado algo que no se entiende: {{detalle}}",
+      "nube_contesto": "La nube ha contestado: {{detalle}}",
+      "sin_texto": "Ahí no hay texto que leer.",
+      "sin_texto_recuadro": "En ese recuadro no hay texto que leer.",
+      "sin_texto_pantalla": "No se ha podido leer nada en esta pantalla.",
+      "sin_texto_ya": "Ahí ya no hay texto que leer.",
+      "recuadro_fuera": "Ese recuadro se queda fuera de todas las pantallas.",
+      "captura_fallo": "No se ha podido fotografiar la pantalla: {{detalle}}",
+      "ocr_fallo": "El lector de texto de Windows ha fallado: {{detalle}}",
+      "ocr_sin_idioma": "Windows no tiene ningún idioma con lector de texto instalado. Se añade en Configuración, Hora e idioma, Idioma, en las opciones de tu idioma.",
+      "ocr_solo_windows": "Leer la pantalla todavía es solo de Windows.",
+      "voz_solo_windows": "Leer en voz alta todavía es solo de Windows.",
+      "voz_sin_voces": "Windows no tiene ninguna voz instalada.",
+      "voz_fallo": "El motor de voz de Windows ha fallado: {{detalle}}",
+      "voz_caida": "El lector de voz se ha caído. Reinicia VoCript Pro.",
+      "agente_sin_encargo": "No has dicho qué quieres que haga.",
+      "agente_sin_respuesta": "El modelo no ha contestado nada.",
+      "agente_sin_modelo": "El agente necesita un modelo de lenguaje. Elige uno en Ajustes, Limpiar el habla.",
+      "agente_sin_modelo_elegido": "El proveedor {{detalle}} no tiene ningún modelo elegido.",
+      "atajo_invalido": "{{detalle}} no es una combinación de teclas válida.",
+      "atajo_en_uso": "{{detalle}} ya lo está usando otro programa.",
+      "atajo_no_registrado": "No se ha podido registrar el atajo: {{detalle}}",
+      "trabajo_no_termino": "El trabajo no ha llegado a terminar: {{detalle}}"
     }
   }
 }

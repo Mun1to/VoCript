@@ -53,7 +53,7 @@ export const CapturarAtajo: React.FC<Props> = ({
       } catch (e) {
         // El backend repone el anterior cuando el nuevo no se puede registrar, así que aquí
         // solo hay que contar por qué, sin deshacer nada.
-        toast.error(String(e));
+        toast.error(pro.mensajeDeError(e));
       }
     },
     [guardarEn, onCambio, t],

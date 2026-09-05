@@ -1238,7 +1238,12 @@
       "thisDevice": "dieser Computer",
       "removeDevice": "Entfernen",
       "offline": "Gerade keine Verbindung zur Cloud. Die Lizenz gilt auf diesem Computer weiterhin.",
-      "refresh": "Aktualisieren"
+      "refresh": "Aktualisieren",
+      "limitTitle": "Diese Lizenz ist bereits auf {{tope}} Computern. Entferne einen, und sie wird hier von selbst aktiviert."
+    },
+    "import": {
+      "done": "Dein VoCript ist mitgekommen.",
+      "detail": "Einstellungen, Wörterbuch und Verlauf; Aufnahmen: {{grabaciones}}; Modelle: {{modelos}}. Du machst weiter, wo du warst."
     },
     "readAloud": {
       "title": "Vorlesen",
@@ -1293,6 +1298,48 @@
       "failed": "Der Agent konnte nicht antworten: {{motivo}}",
       "dictate": "Auftrag diktieren",
       "dictateHint": "Klicken, sagen, was du brauchst, und noch einmal klicken. Die Antwort wird dort geschrieben, wo der Cursor steht."
+    },
+    "errors": {
+      "sin_licencia": "Das gehört zu VoCript Pro, und diese Kopie hat keine Lizenz.",
+      "sin_licencia_guardada": "Auf diesem Computer ist keine Lizenz gespeichert.",
+      "licencia_forma": "Dieser Schlüssel sieht nicht wie eine VoCript-Pro-Lizenz aus.",
+      "licencia_incompleta": "Die Lizenz ist unvollständig oder wurde nur zur Hälfte kopiert.",
+      "licencia_no_comprobable": "Diese Kopie von VoCript kann keine Lizenzen prüfen.",
+      "licencia_firma_invalida": "Die Signatur ist ungültig. Diese Lizenz wurde nicht von uns ausgestellt.",
+      "licencia_caducada": "Das Abonnement ist abgelaufen. Verlängere es, um Pro wieder zu aktivieren.",
+      "licencia_archivo": "Die Lizenzdatei konnte nicht gelesen oder gespeichert werden: {{detalle}}",
+      "licencia_invalida": "Die Cloud akzeptiert diese Lizenz nicht.",
+      "caducada": "Das Abonnement ist abgelaufen. Verlängere es, um die Cloud wieder zu nutzen.",
+      "revocada": "Diese Lizenz wurde gekündigt.",
+      "cuota_agotada": "Du hast das in VoCript Pro enthaltene Monatsvolumen aufgebraucht. Es erneuert sich nächsten Monat.",
+      "limite_dispositivos": "Diese Lizenz ist bereits auf allen erlaubten Computern. Entferne einen, um sie hier zu nutzen.",
+      "modelo_caido": "Das Modell antwortet gerade nicht. Versuche es gleich noch einmal.",
+      "modelo_error": "Das Modell hat einen Fehler zurückgegeben. Versuche es gleich noch einmal.",
+      "sin_red": "Die VoCript-Pro-Cloud ist nicht erreichbar: {{detalle}}",
+      "nube_no_disponible": "Die VoCript-Pro-Cloud ist gerade nicht verfügbar ({{detalle}}).",
+      "nube_respuesta_rara": "Die Cloud hat etwas Unerwartetes geantwortet: {{detalle}}",
+      "nube_contesto": "Die Cloud hat geantwortet: {{detalle}}",
+      "sin_texto": "Dort gibt es keinen Text zum Vorlesen.",
+      "sin_texto_recuadro": "In diesem Bereich gibt es keinen Text zum Vorlesen.",
+      "sin_texto_pantalla": "Auf diesem Bildschirm konnte nichts gelesen werden.",
+      "sin_texto_ya": "Dort gibt es keinen Text mehr.",
+      "recuadro_fuera": "Dieser Bereich liegt außerhalb aller Bildschirme.",
+      "captura_fallo": "Der Bildschirm konnte nicht aufgenommen werden: {{detalle}}",
+      "ocr_fallo": "Die Texterkennung von Windows ist fehlgeschlagen: {{detalle}}",
+      "ocr_sin_idioma": "Windows hat keine Sprache mit Texterkennung installiert. Füge sie unter Einstellungen, Zeit und Sprache, Sprache in den Optionen deiner Sprache hinzu.",
+      "ocr_solo_windows": "Den Bildschirm lesen gibt es vorerst nur unter Windows.",
+      "voz_solo_windows": "Vorlesen gibt es vorerst nur unter Windows.",
+      "voz_sin_voces": "Windows hat keine Stimme installiert.",
+      "voz_fallo": "Die Sprachausgabe von Windows ist fehlgeschlagen: {{detalle}}",
+      "voz_caida": "Der Vorleser ist abgestürzt. Starte VoCript Pro neu.",
+      "agente_sin_encargo": "Du hast nicht gesagt, was getan werden soll.",
+      "agente_sin_respuesta": "Das Modell hat nichts geantwortet.",
+      "agente_sin_modelo": "Der Agent braucht ein Sprachmodell. Wähle eines unter Einstellungen, Sprache bereinigen.",
+      "agente_sin_modelo_elegido": "Für den Anbieter {{detalle}} ist kein Modell ausgewählt.",
+      "atajo_invalido": "{{detalle}} ist keine gültige Tastenkombination.",
+      "atajo_en_uso": "{{detalle}} wird bereits von einem anderen Programm benutzt.",
+      "atajo_no_registrado": "Die Tastenkombination konnte nicht registriert werden: {{detalle}}",
+      "trabajo_no_termino": "Der Vorgang wurde nicht abgeschlossen: {{detalle}}"
     }
   }
 }
