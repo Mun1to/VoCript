@@ -73,6 +73,36 @@ pub struct EstadoNube {
     pub este_dispositivo: String,
 }
 
+/// Lo que Pro se trajo de la VoCript gratuita en su primer arranque, para contarlo una vez.
+#[derive(Debug, Clone, Serialize, Deserialize, specta::Type)]
+pub struct ResumenImportacion {
+    /// AAAA-MM-DD.
+    pub fecha: String,
+    /// `false` cuando no había nada que traer, o Pro ya tenía lo suyo.
+    pub hecha: bool,
+    pub ajustes: bool,
+    pub historial: bool,
+    pub grabaciones: u32,
+    pub modelos: u32,
+    /// La interfaz ya lo ha contado. Se cuenta una sola vez.
+    pub avisada: bool,
+}
+
+impl ResumenImportacion {
+    /// Se miró y no había que traer nada, o Pro ya tenía lo suyo.
+    pub fn saltada(fecha: String) -> Self {
+        Self {
+            fecha,
+            hecha: false,
+            ajustes: false,
+            historial: false,
+            grabaciones: 0,
+            modelos: 0,
+            avisada: true,
+        }
+    }
+}
+
 /// Una voz instalada en el sistema, para elegirla.
 #[derive(Debug, Clone, Serialize, Deserialize, specta::Type)]
 pub struct Voz {

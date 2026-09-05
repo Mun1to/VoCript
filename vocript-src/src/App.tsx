@@ -40,6 +40,7 @@ import {
 import { useSettingsStore } from "./stores/settingsStore";
 import { useTourStore } from "./stores/tourStore";
 import { commands } from "@/bindings";
+import { importacionRecienHecha, type ResumenImportacion } from "@/lib/pro";
 import { getLanguageDirection, initializeRTL } from "@/lib/utils/rtl";
 
 type OnboardingStep = "accessibility" | "first" | "done";
@@ -70,6 +71,9 @@ const renderSettingsContent = (
 
 function App() {
   const { t, i18n } = useTranslation();
+  // What VoCript Pro brought over from the free VoCript on its first start. Kept here
+  // until the main app (and its Toaster) is mounted: a toast fired before that is lost.
+  const [importado, setImportado] = useState<ResumenImportacion | null>(null);
   const [onboardingStep, setOnboardingStep] = useState<OnboardingStep | null>(
     "done",
   );
@@ -176,6 +180,19 @@ function App() {
     }
   }, [onboardingStep, refreshAudioDevices, refreshOutputDevices]);
 
+  // A word about what VoCript Pro imported, once there is a screen to say it on.
+  useEffect(() => {
+    if (onboardingStep !== "done" || !importado) return;
+    toast.success(t("pro.import.done"), {
+      description: t("pro.import.detail", {
+        grabaciones: importado.grabaciones,
+        modelos: importado.modelos,
+      }),
+      duration: 12000,
+    });
+    setImportado(null);
+  }, [onboardingStep, importado, t]);
+
   // Handle keyboard shortcuts for debug mode toggle
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -278,6 +295,15 @@ function App() {
 
   const checkOnboardingStatus = async () => {
     try {
+      // VoCript Pro brought the free VoCript's data over on its first start: no
+      // first-run questions again, and a word about what came along. The free
+      // edition answers null here and nothing changes.
+      const traido = await importacionRecienHecha().catch(() => null);
+      if (traido) {
+        localStorage.setItem("vocript_onboarded", "1");
+        setImportado(traido);
+      }
+
       // Check if they have any models available
       const onboarded = localStorage.getItem("vocript_onboarded") === "1";
       const result = await commands.hasAnyModelsAvailable();

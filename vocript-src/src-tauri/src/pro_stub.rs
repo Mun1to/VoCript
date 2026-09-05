@@ -7,7 +7,9 @@
 //!
 //! Este archivo se queda en el repositorio público. La carpeta `pro/` no.
 
-use crate::pro_tipos::{AjustesVoz, Dispositivo, EstadoLicencia, EstadoNube, Region, Voz};
+use crate::pro_tipos::{
+    AjustesVoz, Dispositivo, EstadoLicencia, EstadoNube, Region, ResumenImportacion, Voz,
+};
 use tauri::AppHandle;
 
 /// Esta edición no trae las funciones de pago.
@@ -31,15 +33,32 @@ pub async fn transformar_dictado(
 
 #[tauri::command]
 #[specta::specta]
-pub async fn pro_cloud_status(_app: AppHandle) -> Result<EstadoNube, String> {
+pub async fn pro_cloud_status(
+    _app: AppHandle,
+    _clave: Option<String>,
+) -> Result<EstadoNube, String> {
     Err(NO_ESTA.to_string())
 }
 
 #[tauri::command]
 #[specta::specta]
-pub async fn pro_remove_device(_app: AppHandle, _id: String) -> Result<Vec<Dispositivo>, String> {
+pub async fn pro_remove_device(
+    _app: AppHandle,
+    _id: String,
+    _clave: Option<String>,
+) -> Result<Vec<Dispositivo>, String> {
     Err(NO_ESTA.to_string())
 }
+
+/// En esta edición no hay otra VoCript de la que importar nada.
+#[tauri::command]
+#[specta::specta]
+pub fn pro_import_summary(_app: AppHandle) -> Option<ResumenImportacion> {
+    None
+}
+
+/// En la edición gratuita no hay nada que hacer antes de leer los ajustes.
+pub fn antes_de_leer_los_ajustes(_app: &AppHandle) {}
 
 #[tauri::command]
 #[specta::specta]

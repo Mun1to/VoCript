@@ -1429,10 +1429,13 @@ async proAgentDo(encargo: string) : Promise<Result<string, string>> {
 },
 /**
  * Lo que la nube sabe de esta licencia: dispositivos y uso del mes.
+ * 
+ * Con `clave`, se pregunta por una licencia que todavía no está guardada: es lo que permite
+ * ver (y liberar) los ordenadores cuando la activación se rechaza por el tope.
  */
-async proCloudStatus() : Promise<Result<EstadoNube, string>> {
+async proCloudStatus(clave: string | null) : Promise<Result<EstadoNube, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("pro_cloud_status") };
+    return { status: "ok", data: await TAURI_INVOKE("pro_cloud_status", { clave }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -1441,9 +1444,9 @@ async proCloudStatus() : Promise<Result<EstadoNube, string>> {
 /**
  * Da de baja un ordenador de la lista, para dejar sitio a otro.
  */
-async proRemoveDevice(id: string) : Promise<Result<Dispositivo[], string>> {
+async proRemoveDevice(id: string, clave: string | null) : Promise<Result<Dispositivo[], string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("pro_remove_device", { id }) };
+    return { status: "ok", data: await TAURI_INVOKE("pro_remove_device", { id, clave }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -1535,6 +1538,12 @@ async proSpeak(texto: string) : Promise<Result<null, string>> {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
+},
+/**
+ * Lo que Pro se trajo de la VoCript gratuita, la primera vez que se pregunta y nunca más.
+ */
+async proImportSummary() : Promise<ResumenImportacion | null> {
+    return await TAURI_INVOKE("pro_import_summary");
 }
 }
 
@@ -1823,6 +1832,22 @@ export type RecordingRetentionPeriod = "never" | "preserve_limit" | "days_3" | "
  * significan lo mismo que las del otro y el recorte se va de sitio.
  */
 export type Region = { x: number; y: number; ancho: number; alto: number }
+/**
+ * Lo que Pro se trajo de la VoCript gratuita en su primer arranque, para contarlo una vez.
+ */
+export type ResumenImportacion = { 
+/**
+ * AAAA-MM-DD.
+ */
+fecha: string; 
+/**
+ * `false` cuando no había nada que traer, o Pro ya tenía lo suyo.
+ */
+hecha: boolean; ajustes: boolean; historial: boolean; grabaciones: number; modelos: number; 
+/**
+ * La interfaz ya lo ha contado. Se cuenta una sola vez.
+ */
+avisada: boolean }
 export type SecretMap = Partial<{ [key in string]: string }>
 export type ShortcutBinding = { id: string; name: string; description: string; default_binding: string; current_binding: string }
 export type SoundTheme = "marimba" | "pop" | "custom"

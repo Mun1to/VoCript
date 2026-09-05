@@ -703,6 +703,7 @@ pub fn run(cli_args: CliArgs) {
             pro::pro_get_voice,
             pro::pro_set_voice,
             pro::pro_speak,
+            pro::pro_import_summary,
         ])
         .events(collect_events![managers::history::HistoryUpdatePayload,]);
 
@@ -795,6 +796,9 @@ pub fn run(cli_args: CliArgs) {
             // place — everyone upgrading from <= v2.2.4 kept their models and
             // history but silently lost every preference.
             portable::migrate_legacy_identifier_data(app.handle());
+            // Same reason, other edition: VoCript Pro imports the free VoCript's data on
+            // its first start, and that has to happen before the store caches the file.
+            pro::antes_de_leer_los_ajustes(app.handle());
 
             let mut settings = get_settings(app.handle());
 
