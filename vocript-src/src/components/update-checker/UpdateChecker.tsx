@@ -8,6 +8,7 @@ import { openUrl } from "@tauri-apps/plugin-opener";
 import { ProgressBar } from "../shared";
 import { useSettings } from "../../hooks/useSettings";
 import { commands, InstallMismatch } from "../../bindings";
+import { cabecerasDeActualizacion } from "@/lib/pro";
 
 const RELEASES_URL = "https://github.com/Mun1to/VoCript/releases/latest";
 
@@ -75,7 +76,9 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
 
     try {
       setIsChecking(true);
-      const update = await check();
+      // VoCript Pro fetches its updates from its own cloud with the licence as the
+      // key; the free edition answers with no headers and GitHub serves it as always.
+      const update = await check({ headers: await cabecerasDeActualizacion() });
 
       if (update) {
         setUpdateAvailable(true);
@@ -149,7 +152,7 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
       setDownloadProgress(0);
       downloadedBytesRef.current = 0;
       contentLengthRef.current = 0;
-      const update = await check();
+      const update = await check({ headers: await cabecerasDeActualizacion() });
 
       if (!update) {
         console.log("No update available during install attempt");

@@ -133,6 +133,13 @@ export const ponerModos = (modos: AjustesModos) =>
 export const appsAbiertas = () => invoke<AppAbierta[]>("pro_running_apps");
 
 /**
+ * Las cabeceras con las que se piden las actualizaciones. En Pro llevan la licencia, porque
+ * el instalador lo sirve la nube y solo a quien la tiene; en la gratuita no hay ninguna.
+ */
+export const cabecerasDeActualizacion = () =>
+  invoke<Record<string, string>>("pro_update_headers");
+
+/**
  * Los errores de Pro llegan como una CLAVE (`sin_texto_recuadro`), a veces con un dato
  * detrás de una barra (`atajo_en_uso|Ctrl+Alt+J`), y aquí se convierten en la frase del
  * idioma de la persona (`pro.errors.<clave>` en las traducciones). Lo que no es una clave

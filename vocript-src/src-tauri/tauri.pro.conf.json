@@ -3,11 +3,14 @@
   "productName": "VoCript Pro",
   "version": "0.1.0",
   "identifier": "com.vocript.pro",
+  "bundle": {
+    "licenseFile": "src/pro/distribucion/EULA.txt"
+  },
   "plugins": {
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDIwQzQzOUY0OTUzRUNCNkMKUldSc3l6NlY5RG5FSU1COXdDeUNnVVF4eWdyKys3d0M5OEtZV1F6eTNMdmw2ckVQNXRFaXFvc3MK",
       "endpoints": [
-        "https://github.com/Mun1to/VoCript-Pro-releases/releases/latest/download/latest.json"
+        "https://nube.vocript.app/v1/actualizaciones/latest.json"
       ]
     }
   }

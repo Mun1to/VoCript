@@ -1572,6 +1572,16 @@ async proRunningApps() : Promise<Result<AppAbierta[], string>> {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
+},
+/**
+ * Las cabeceras con las que el actualizador pide `latest.json` y el instalador.
+ * 
+ * El instalador de Pro no es público: lo sirve la nube, y la nube pide la licencia. Sin
+ * licencia no hay cabeceras y la comprobación falla como fallaría contra un sitio caído,
+ * que es lo correcto: quien no tiene licencia no tiene nada que actualizar.
+ */
+async proUpdateHeaders() : Promise<Partial<{ [key in string]: string }>> {
+    return await TAURI_INVOKE("pro_update_headers");
 }
 }
 

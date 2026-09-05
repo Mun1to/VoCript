@@ -61,6 +61,13 @@ pub fn pro_import_summary(_app: AppHandle) -> Option<ResumenImportacion> {
 /// En la edición gratuita no hay nada que hacer antes de leer los ajustes.
 pub fn antes_de_leer_los_ajustes(_app: &AppHandle) {}
 
+/// La edición gratuita se actualiza desde GitHub, sin cabeceras.
+#[tauri::command]
+#[specta::specta]
+pub fn pro_update_headers(_app: AppHandle) -> std::collections::HashMap<String, String> {
+    std::collections::HashMap::new()
+}
+
 /// En la edición gratuita ninguna aplicación manda sobre el perfil de la cabecera.
 pub fn comandos_del_modo(_app: &AppHandle) -> Option<Vec<crate::settings::WordReplacement>> {
     None

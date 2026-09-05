@@ -707,6 +707,7 @@ pub fn run(cli_args: CliArgs) {
             pro::pro_get_modes,
             pro::pro_set_modes,
             pro::pro_running_apps,
+            pro::pro_update_headers,
         ])
         .events(collect_events![managers::history::HistoryUpdatePayload,]);
 
