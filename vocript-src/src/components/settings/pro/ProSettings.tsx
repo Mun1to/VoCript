@@ -15,7 +15,7 @@ import { SettingContainer } from "../../ui/SettingContainer";
 import { Button } from "../../ui/Button";
 import { Agente } from "./Agente";
 import { CapturarAtajo } from "./CapturarAtajo";
-import { Nube } from "./Nube";
+import { LiberarOrdenador, Nube } from "./Nube";
 import { Voz } from "./Voz";
 import { useProStore } from "@/stores/proStore";
 import * as pro from "@/lib/pro";
@@ -57,6 +57,13 @@ export const ProSettings: React.FC = () => {
 
   const activa = licencia?.activa ?? false;
   const diasQueQuedan = licencia?.expira ? diasHasta(licencia.expira) : null;
+  // La nube ha dicho que no porque la licencia ya está en todos sus ordenadores: se enseñan
+  // debajo, para quitar uno sin salir de aquí.
+  const topeDeOrdenadores =
+    !activa &&
+    licencia?.motivo !== null &&
+    pro.codigoDeError(licencia?.motivo) === "limite_dispositivos" &&
+    clave.trim().length > 0;
 
   const alActivar = async () => {
     setActivando(true);
@@ -66,10 +73,14 @@ export const ProSettings: React.FC = () => {
         setClave("");
         toast.success(t("pro.license.activated"));
       } else {
-        toast.error(resultado.motivo ?? t("pro.license.rejected"));
+        toast.error(
+          resultado.motivo
+            ? pro.mensajeDeError(resultado.motivo)
+            : t("pro.license.rejected"),
+        );
       }
     } catch (e) {
-      toast.error(String(e));
+      toast.error(pro.mensajeDeError(e));
     } finally {
       setActivando(false);
     }
@@ -92,7 +103,7 @@ export const ProSettings: React.FC = () => {
         setPuedeRepetir(await pro.puedeRepetir());
       }
     } catch (e) {
-      toast.error(String(e));
+      toast.error(pro.mensajeDeError(e));
     } finally {
       setLeyendo(false);
     }
@@ -103,7 +114,7 @@ export const ProSettings: React.FC = () => {
       await (pausada ? pro.seguir() : pro.pausar());
       setPausada(!pausada);
     } catch (e) {
-      toast.error(String(e));
+      toast.error(pro.mensajeDeError(e));
     }
   };
 
@@ -158,8 +169,15 @@ export const ProSettings: React.FC = () => {
       {!activa && licencia?.motivo && (
         <p className="flex items-start gap-1.5 px-1 text-xs text-red-500">
           <TriangleAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-          {licencia.motivo}
+          {pro.mensajeDeError(licencia.motivo)}
         </p>
+      )}
+
+      {topeDeOrdenadores && (
+        <LiberarOrdenador
+          clave={clave.trim()}
+          alLiberado={() => void alActivar()}
+        />
       )}
 
       {activa &&

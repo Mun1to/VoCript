@@ -7,6 +7,102 @@ import { ToggleSwitch } from "../../ui/ToggleSwitch";
 import * as pro from "@/lib/pro";
 
 /**
+ * Los ordenadores que usan una licencia, con el botón de quitar cada uno menos este.
+ *
+ * Es un componente aparte porque se enseña en dos sitios: en el bloque de la nube cuando
+ * la licencia ya está activa, y debajo del campo de la licencia cuando la nube la rechaza
+ * por el tope, que es justo el momento en que hace falta poder quitar uno.
+ */
+export const ListaDispositivos: React.FC<{
+  estado: pro.EstadoNube;
+  alQuitar: (id: string) => void;
+}> = ({ estado, alQuitar }) => {
+  const { t } = useTranslation();
+  return (
+    <ul className="flex flex-col gap-1">
+      {estado.dispositivos.map((d) => {
+        const esEste = d.id === estado.este_dispositivo;
+        return (
+          <li
+            key={d.id}
+            className="flex items-center gap-2 rounded-md border border-mid-gray/20 px-2.5 py-1.5 text-xs"
+          >
+            <Laptop className="h-3.5 w-3.5 shrink-0 text-mid-gray" />
+            <span className="truncate">{d.nombre}</span>
+            <span className="text-mid-gray">{d.alta}</span>
+            {esEste ? (
+              <span className="ml-auto text-mid-gray">
+                {t("pro.cloud.thisDevice")}
+              </span>
+            ) : (
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => alQuitar(d.id)}
+                className="ml-auto"
+              >
+                {t("pro.cloud.removeDevice")}
+              </Button>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  );
+};
+
+/**
+ * La activación se ha rechazado porque la licencia ya está en todos los ordenadores que
+ * permite. Aquí se enseñan, con la clave que se acaba de pegar (todavía no guardada), y
+ * al quitar uno se vuelve a intentar la activación sola: la persona pulsa un solo botón.
+ */
+export const LiberarOrdenador: React.FC<{
+  clave: string;
+  alLiberado: () => void;
+}> = ({ clave, alLiberado }) => {
+  const { t } = useTranslation();
+  const [estado, setEstado] = useState<pro.EstadoNube | null>(null);
+  const [fallo, setFallo] = useState<string | null>(null);
+
+  useEffect(() => {
+    let vivo = true;
+    pro
+      .estadoNube(clave)
+      .then((e) => {
+        if (vivo) setEstado(e);
+      })
+      .catch((e) => {
+        if (vivo) setFallo(pro.mensajeDeError(e));
+      });
+    return () => {
+      vivo = false;
+    };
+  }, [clave]);
+
+  const alQuitar = async (id: string) => {
+    try {
+      await pro.quitarDispositivo(id, clave);
+      alLiberado();
+    } catch (e) {
+      toast.error(pro.mensajeDeError(e));
+    }
+  };
+
+  if (fallo !== null) {
+    return <p className="px-1 text-xs text-red-500">{fallo}</p>;
+  }
+  if (!estado) return null;
+  return (
+    <div className="mt-1 rounded-lg border border-amber-500/40 p-3">
+      <p className="mb-2 text-xs">
+        {t("pro.cloud.limitTitle", { tope: estado.tope_dispositivos })}
+      </p>
+      <ListaDispositivos estado={estado} alQuitar={(id) => void alQuitar(id)} />
+    </div>
+  );
+};
+
+/**
  * La nube de VoCript Pro: el interruptor de limpiar el habla, el uso del mes y los
  * ordenadores que usan esta licencia.
  *
@@ -29,7 +125,7 @@ export const Nube: React.FC = () => {
       setSinConexion(null);
     } catch (e) {
       setEstado(null);
-      setSinConexion(String(e));
+      setSinConexion(pro.mensajeDeError(e));
     } finally {
       setCargando(false);
     }
@@ -44,7 +140,7 @@ export const Nube: React.FC = () => {
       await pro.ponerLimpiezaEnNube(activa);
       setLimpiando(activa);
     } catch (e) {
-      toast.error(String(e));
+      toast.error(pro.mensajeDeError(e));
     }
   };
 
@@ -53,7 +149,7 @@ export const Nube: React.FC = () => {
       const dispositivos = await pro.quitarDispositivo(id);
       setEstado((e) => (e ? { ...e, dispositivos } : e));
     } catch (e) {
-      toast.error(String(e));
+      toast.error(pro.mensajeDeError(e));
     }
   };
 
@@ -102,35 +198,10 @@ export const Nube: React.FC = () => {
               tope: estado.tope_dispositivos,
             })}
           </p>
-          <ul className="flex flex-col gap-1">
-            {estado.dispositivos.map((d) => {
-              const esEste = d.id === estado.este_dispositivo;
-              return (
-                <li
-                  key={d.id}
-                  className="flex items-center gap-2 rounded-md border border-mid-gray/20 px-2.5 py-1.5 text-xs"
-                >
-                  <Laptop className="h-3.5 w-3.5 shrink-0 text-mid-gray" />
-                  <span className="truncate">{d.nombre}</span>
-                  <span className="text-mid-gray">{d.alta}</span>
-                  {esEste ? (
-                    <span className="ml-auto text-mid-gray">
-                      {t("pro.cloud.thisDevice")}
-                    </span>
-                  ) : (
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => void alQuitar(d.id)}
-                      className="ml-auto"
-                    >
-                      {t("pro.cloud.removeDevice")}
-                    </Button>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
+          <ListaDispositivos
+            estado={estado}
+            alQuitar={(id) => void alQuitar(id)}
+          />
         </div>
       ) : null}
     </div>
