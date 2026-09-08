@@ -1,4 +1,8 @@
 # Lo que `tauri dev` no debe vigilar. Sin esto, cualquier archivo que cambie dentro de
-# src-tauri reinicia la app en desarrollo, y el servidor local de la nube de VoCript Pro
-# escribe su estado en cada petición.
+# src-tauri reinicia la app en desarrollo.
+#
+# Las dos rutas son de una extensión montada en `src/pro` (ver `src/extension.rs`): la
+# primera porque un servidor local escribe ahí su estado en cada petición, y la segunda
+# porque es código web, y eso lo recarga Vite en caliente sin reiniciar nada.
 src/pro/nube/
+src/pro/frontend/

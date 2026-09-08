@@ -53,7 +53,7 @@ dist-demo
 # Es un derivado: lo regeneran los scripts demo y build:demo.
 demo/src/simulador/modelos.generado.json
 
-# El motor de VoCript Pro. Vive en su propio repositorio privado y se clona aqui dentro;
-# este repositorio es publico y ese codigo no lo es. Sin la carpeta, la compilacion normal
-# funciona igual: solo se compila con la bandera `pro`.
+# El punto de montaje de una extension: una edicion que anade funciones sobre esta se clona
+# aqui dentro, con su codigo, su frontend y sus textos. No es de este repositorio. Sin la
+# carpeta, VoCript se compila y funciona igual (ver `src-tauri/src/extension.rs`).
 /src-tauri/src/pro/
