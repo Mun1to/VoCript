@@ -18,7 +18,7 @@ interface WordReplacementsProps {
   titleKey?: string;
   descriptionKey?: string;
   exportFileName?: string;
-  /** Controlled mode: manage this list instead of a settings key. VoCript Pro
+  /** Controlled mode: manage this list instead of a settings key. An extension
    *  uses it for its own profiles, which live outside the settings store. */
   value?: WordReplacement[];
   onChange?: (list: WordReplacement[]) => void | Promise<void>;

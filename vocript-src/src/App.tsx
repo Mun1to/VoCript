@@ -40,7 +40,10 @@ import {
 import { useSettingsStore } from "./stores/settingsStore";
 import { useTourStore } from "./stores/tourStore";
 import { commands } from "@/bindings";
-import { importacionRecienHecha, type ResumenImportacion } from "@/lib/pro";
+import {
+  avisoDePrimerArranque,
+  type AvisoDePrimerArranque,
+} from "@/extension";
 import { getLanguageDirection, initializeRTL } from "@/lib/utils/rtl";
 
 type OnboardingStep = "accessibility" | "first" | "done";
@@ -71,9 +74,9 @@ const renderSettingsContent = (
 
 function App() {
   const { t, i18n } = useTranslation();
-  // What VoCript Pro brought over from the free VoCript on its first start. Kept here
-  // until the main app (and its Toaster) is mounted: a toast fired before that is lost.
-  const [importado, setImportado] = useState<ResumenImportacion | null>(null);
+  // What an extension has to say about its first start. Kept here until the main app (and
+  // its Toaster) is mounted: a toast fired before that is lost.
+  const [aviso, setAviso] = useState<AvisoDePrimerArranque | null>(null);
   const [onboardingStep, setOnboardingStep] = useState<OnboardingStep | null>(
     "done",
   );
@@ -180,18 +183,16 @@ function App() {
     }
   }, [onboardingStep, refreshAudioDevices, refreshOutputDevices]);
 
-  // A word about what VoCript Pro imported, once there is a screen to say it on.
+  // The extension's word about its first start, once there is a screen to say it on. The
+  // text comes translated from the extension: nothing here knows what it is about.
   useEffect(() => {
-    if (onboardingStep !== "done" || !importado) return;
-    toast.success(t("pro.import.done"), {
-      description: t("pro.import.detail", {
-        grabaciones: importado.grabaciones,
-        modelos: importado.modelos,
-      }),
+    if (onboardingStep !== "done" || !aviso) return;
+    toast.success(aviso.titulo, {
+      description: aviso.detalle,
       duration: 12000,
     });
-    setImportado(null);
-  }, [onboardingStep, importado, t]);
+    setAviso(null);
+  }, [onboardingStep, aviso]);
 
   // Handle keyboard shortcuts for debug mode toggle
   useEffect(() => {
@@ -295,13 +296,13 @@ function App() {
 
   const checkOnboardingStatus = async () => {
     try {
-      // VoCript Pro brought the free VoCript's data over on its first start: no
-      // first-run questions again, and a word about what came along. The free
+      // An extension may have set this copy up on its own (bringing another install's data
+      // over, say): then there is nothing to ask on first run, only something to say. This
       // edition answers null here and nothing changes.
-      const traido = await importacionRecienHecha().catch(() => null);
-      if (traido) {
+      const suyo = await avisoDePrimerArranque().catch(() => null);
+      if (suyo) {
         localStorage.setItem("vocript_onboarded", "1");
-        setImportado(traido);
+        setAviso(suyo);
       }
 
       // Check if they have any models available

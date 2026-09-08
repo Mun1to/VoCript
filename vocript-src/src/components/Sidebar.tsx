@@ -14,10 +14,16 @@ import {
   FileAudio,
   Palette,
   Home,
-  Gem,
+  Puzzle,
 } from "lucide-react";
 import { useSettings } from "../hooks/useSettings";
-import { useProStore } from "../stores/proStore";
+import {
+  PanelDeExtension,
+  CLAVE_DEL_PANEL,
+  ICONO_DEL_PANEL,
+  SUBTITULO_DEL_PANEL,
+  usarExtensionDisponible,
+} from "@/extension";
 import { useResolvedTheme } from "../hooks/useResolvedTheme";
 import {
   GeneralSettings,
@@ -31,7 +37,6 @@ import {
   ModelsSettings,
   FileTranscription,
   ThemesSettings,
-  ProSettings,
 } from "./settings";
 import { TodayScreen } from "./today/TodayScreen";
 
@@ -113,14 +118,13 @@ export const SECTIONS_CONFIG = {
     component: DebugSettings,
     enabled: (settings) => settings?.debug_mode ?? false,
   },
-  pro: {
-    labelKey: "sidebar.pro",
-    icon: Gem,
-    // Solo aparece si este binario trae las funciones de pago dentro. En la edicion
-    // gratuita no se ensena ni la pantalla: ofrecer donde pegar una licencia que nunca va a
-    // servir de nada es peor que no ofrecer nada.
-    component: ProSettings,
-    // Lo decide el filtro de abajo, que si esta suscrito al store.
+  extension: {
+    // Nombre e icono los pone la extensión; los de aquí solo evitan un hueco si no los
+    // trae. Sin extensión montada esta entrada no llega a pintarse.
+    labelKey: CLAVE_DEL_PANEL || "sidebar.extension",
+    icon: ICONO_DEL_PANEL ?? Puzzle,
+    component: PanelDeExtension ?? (() => null),
+    // Lo decide el filtro de abajo, que sí está suscrito a la respuesta del backend.
     enabled: () => false,
   },
   about: {
@@ -160,7 +164,7 @@ const SECTION_GROUPS = [
       "models",
       "themes",
       "postprocessing",
-      "pro",
+      "extension",
       "debug",
       "about",
       "advanced",
@@ -182,7 +186,7 @@ export const SECTION_SUBTITLE: Partial<Record<SidebarSection, string>> = {
   activity: "activity.subtitle",
   themes: "settings.pageSubtitle.themes",
   postprocessing: "settings.pageSubtitle.postProcessing",
-  pro: "pro.pageSubtitle",
+  extension: SUBTITULO_DEL_PANEL,
   debug: "settings.pageSubtitle.debug",
   about: "settings.pageSubtitle.about",
   advanced: "settings.pageSubtitle.advanced",
@@ -203,13 +207,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const { t } = useTranslation();
   const { settings } = useSettings();
   const isLight = useResolvedTheme() === "light";
-  // Suscripcion al store de Pro: `enabled` lo lee con getState y por si solo no dispararia
-  // un re-render, asi que la seccion no aparecería hasta que se tocara otra cosa.
-  const proDisponible = useProStore((estado) => estado.disponible);
-  const cargarPro = useProStore((estado) => estado.cargar);
-  useEffect(() => {
-    void cargarPro();
-  }, [cargarPro]);
+  // Es un hook y no una lectura suelta a propósito: la respuesta llega del backend, y sin
+  // suscripción la sección no aparecería hasta que se tocara otra cosa.
+  const hayExtension = usarExtensionDisponible();
 
   const [plegado, setPlegado] = useState<boolean>(() => {
     try {
@@ -228,7 +228,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const availableSections = Object.entries(SECTIONS_CONFIG)
     .filter(([id, config]) =>
-      id === "pro" ? proDisponible === true : config.enabled(settings),
+      id === "extension" ? hayExtension : config.enabled(settings),
     )
     .map(([id, config]) => ({ id: id as SidebarSection, ...config }));
 

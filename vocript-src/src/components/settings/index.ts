@@ -10,7 +10,6 @@ export { PostProcessingSettings } from "./post-processing/PostProcessingSettings
 export { ModelsSettings } from "./models/ModelsSettings";
 export { FileTranscription } from "./file-transcription/FileTranscription";
 export { ThemesSettings } from "./themes/ThemesSettings";
-export { ProSettings } from "./pro/ProSettings";
 
 // Individual setting components
 export { MicrophoneSelector } from "./MicrophoneSelector";
