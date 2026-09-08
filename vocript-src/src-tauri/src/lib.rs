@@ -17,15 +17,13 @@ mod media_source;
 mod overlay;
 pub mod packaged;
 pub mod portable;
-// VoCript Pro. La carpeta `pro/` solo existe en la edición de pago; sin la bandera se monta
-// en su lugar el sustituto, que tiene las mismas funciones y contesta que no están.
-#[cfg(feature = "pro")]
+// Los puntos por donde otra edición añade funciones a esta. Sin la bandera se monta
+// `extension.rs`, que no hace nada; con ella, el módulo que traiga la extensión.
+#[cfg(feature = "extension")]
 #[path = "pro/mod.rs"]
-mod pro;
-#[cfg(not(feature = "pro"))]
-#[path = "pro_stub.rs"]
-mod pro;
-mod pro_tipos;
+mod extension;
+#[cfg(not(feature = "extension"))]
+mod extension;
 mod settings;
 mod shortcut;
 mod signal_handle;
@@ -40,7 +38,7 @@ mod wake_word;
 pub use cli::CliArgs;
 #[cfg(debug_assertions)]
 use specta_typescript::{BigIntExportBehavior, Typescript};
-use tauri_specta::{collect_commands, collect_events, Builder};
+use tauri_specta::{collect_events, Builder};
 
 use env_filter::Builder as EnvFilterBuilder;
 use managers::audio::AudioRecordingManager;
@@ -527,7 +525,10 @@ pub fn run(cli_args: CliArgs) {
     let console_filter = build_console_filter();
 
     let specta_builder = Builder::<tauri::Wry>::new()
-        .commands(collect_commands![
+        // `con_extension!` en vez de `collect_commands!` directamente: así una edición con
+        // funciones añadidas mete las suyas en la lista sin tocar este archivo. Ver
+        // `extension.rs`.
+        .commands(con_extension![
             shortcut::change_binding,
             shortcut::reset_binding,
             shortcut::change_ptt_setting,
@@ -673,45 +674,13 @@ pub fn run(cli_args: CliArgs) {
             get_system_theme,
             overlay::reset_overlay_position,
             overlay::has_custom_overlay_position,
-            pro::pro_is_available,
-            pro::pro_license_status,
-            pro::pro_activate_license,
-            pro::pro_deactivate_license,
-            pro::pro_read_region,
-            pro::pro_read_aloud,
-            pro::pro_pick_region,
-            pro::pro_read_aloud_pick,
-            pro::pro_has_voice,
-            pro::pro_read_aloud_screen,
-            pro::pro_read_aloud_again,
-            pro::pro_can_repeat,
-            pro::pro_pause_speaking,
-            pro::pro_resume_speaking,
-            pro::pro_get_hotkey,
-            pro::pro_set_hotkey,
-            pro::pro_stop_speaking,
-            pro::pro_agent_see,
-            pro::pro_agent_do,
-            pro::pro_cloud_status,
-            pro::pro_remove_device,
-            pro::pro_cloud_cleanup_enabled,
-            pro::pro_set_cloud_cleanup,
-            pro::pro_get_agent_hotkey,
-            pro::pro_set_agent_hotkey,
-            pro::pro_agent_toggle,
-            pro::pro_list_voices,
-            pro::pro_get_voice,
-            pro::pro_set_voice,
-            pro::pro_speak,
-            pro::pro_import_summary,
-            pro::pro_get_modes,
-            pro::pro_set_modes,
-            pro::pro_running_apps,
-            pro::pro_update_headers,
         ])
         .events(collect_events![managers::history::HistoryUpdatePayload,]);
 
-    #[cfg(debug_assertions)] // <- Only export on non-release builds
+    // Only export on non-release builds, and only from this edition: `bindings.ts` is
+    // versioned here, and an edition that adds commands would otherwise write its own into
+    // this repository just by being run once in development.
+    #[cfg(all(debug_assertions, not(feature = "extension")))]
     specta_builder
         .export(
             Typescript::default().bigint(BigIntExportBehavior::Number),
@@ -800,9 +769,9 @@ pub fn run(cli_args: CliArgs) {
             // place — everyone upgrading from <= v2.2.4 kept their models and
             // history but silently lost every preference.
             portable::migrate_legacy_identifier_data(app.handle());
-            // Same reason, other edition: VoCript Pro imports the free VoCript's data on
-            // its first start, and that has to happen before the store caches the file.
-            pro::antes_de_leer_los_ajustes(app.handle());
+            // Same reason, other hook: an extension may bring another install's data over
+            // on its first start, and that has to happen before the store caches the file.
+            extension::antes_de_leer_los_ajustes(app.handle());
 
             let mut settings = get_settings(app.handle());
 
@@ -850,8 +819,8 @@ pub fn run(cli_args: CliArgs) {
                 show_main_window(&app_handle);
             }
 
-            // VoCript Pro. En la edición gratuita esto no hace nada.
-            pro::al_arrancar(&app_handle);
+            // El gancho de arranque de la extensión. Sin extensión, no hace nada.
+            extension::al_arrancar(&app_handle);
 
             Ok(())
         })

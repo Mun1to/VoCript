@@ -390,19 +390,20 @@ pub(crate) async fn process_transcription_output(
         final_text = converted_text;
     }
 
-    // VoCript Pro can claim a whole dictation: with the agent's shortcut, what
-    // was said is an instruction and what gets typed is the answer. The free
-    // edition's stub always answers None, so nothing changes there.
-    if let Some(resultado) = crate::pro::transformar_dictado(app, binding_id, &final_text).await {
+    // An extension can claim a whole dictation: what was said is an instruction to it, and
+    // what gets typed is its answer. This edition always answers None, so nothing changes.
+    if let Some(resultado) =
+        crate::extension::transformar_dictado(app, binding_id, &final_text).await
+    {
         return match resultado {
             Ok(respuesta) => ProcessedTranscription {
                 final_text: respuesta.clone(),
                 post_processed_text: Some(respuesta),
                 post_process_prompt: None,
             },
-            Err(motivo) => {
-                error!("VoCript Pro agent failed: {}", motivo);
-                let _ = app.emit("pro://agente-fallo", motivo);
+            // Telling the user is the extension's job: the failure is its own, and so is
+            // whatever it wants to say about it. Here we only make sure nothing is typed.
+            Err(_) => {
                 ProcessedTranscription {
                     final_text: String::new(),
                     post_processed_text: None,
@@ -1069,16 +1070,18 @@ pub static ACTION_MAP: Lazy<HashMap<String, Arc<dyn ShortcutAction>>> = Lazy::ne
             live: true,
         }) as Arc<dyn ShortcutAction>,
     );
-    // VoCript Pro's agent: a plain dictation whose text is handed to the agent
-    // instead of being pasted (see process_transcription_output). The free
-    // edition never registers a shortcut for it, so the entry is inert there.
-    map.insert(
-        crate::pro_tipos::BINDING_AGENTE.to_string(),
-        Arc::new(TranscribeAction {
-            post_process: false,
-            live: false,
-        }) as Arc<dyn ShortcutAction>,
-    );
+    // An extension's own dictation, if it brings one: recorded and transcribed like any
+    // other, except its text goes through `extension::transformar_dictado` instead of being
+    // pasted (see process_transcription_output). This edition has none, so nothing is added.
+    if let Some(binding) = crate::extension::binding_de_dictado() {
+        map.insert(
+            binding.to_string(),
+            Arc::new(TranscribeAction {
+                post_process: false,
+                live: false,
+            }) as Arc<dyn ShortcutAction>,
+        );
+    }
     map.insert(
         "cancel".to_string(),
         Arc::new(CancelAction) as Arc<dyn ShortcutAction>,

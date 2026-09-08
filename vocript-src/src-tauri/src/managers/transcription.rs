@@ -663,9 +663,9 @@ impl TranscriptionManager {
         // layer (coding symbols / custom commands). Deterministic exact replacements,
         // the last touch on every engine's output (including Whisper).
         let mut replacements = settings.word_replacements.clone();
-        // VoCript Pro may let the app being dictated into pick the profile. Without a
-        // rule for it (always, in the free edition) the header's profile applies.
-        match crate::pro::comandos_del_modo(&self.app_handle) {
+        // An extension may let the app being dictated into pick the profile. Without a
+        // rule for it (always, in this edition) the header's profile applies.
+        match crate::extension::comandos_del_modo(&self.app_handle) {
             Some(del_modo) => replacements.extend(del_modo),
             None => match settings.work_profile.as_deref() {
                 Some("coding") => replacements.extend(coding_commands()),
