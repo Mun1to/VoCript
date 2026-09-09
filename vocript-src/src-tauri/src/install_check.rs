@@ -42,16 +42,19 @@ pub struct InstallPaths {
 /// Always answers, unlike `detect`. A support log or a screenshot of the debug
 /// panel should show the real state of the machine even when it is fine, and
 /// especially in a dev build, where `detect` stays quiet on purpose.
-pub fn paths() -> InstallPaths {
+pub fn paths(product: &str) -> InstallPaths {
     let running_from = std::env::current_exe()
         .ok()
         .and_then(|exe| exe.parent().map(|p| p.to_string_lossy().into_owned()))
         .unwrap_or_default();
 
     #[cfg(target_os = "windows")]
-    let updates_go_to = install_location_from_registry();
+    let updates_go_to = install_location_from_registry(product);
     #[cfg(not(target_os = "windows"))]
-    let updates_go_to = None;
+    let updates_go_to = {
+        let _ = product;
+        None
+    };
 
     InstallPaths {
         running_from,
@@ -64,22 +67,22 @@ pub fn paths() -> InstallPaths {
 /// Biased hard towards silence: a warning that fires when nothing is wrong
 /// would be worse than not having one at all, since it appears at the exact
 /// moment the user is trying to update.
-pub fn detect() -> Option<InstallMismatch> {
+pub fn detect(product: &str) -> Option<InstallMismatch> {
     // A dev build runs from `target/debug`, which never matches the installed
     // copy, so this would fire on every single `tauri dev` launch.
     if cfg!(debug_assertions) {
         return None;
     }
-    detect_inner()
+    detect_inner(product)
 }
 
 #[cfg(not(target_os = "windows"))]
-fn detect_inner() -> Option<InstallMismatch> {
+fn detect_inner(_product: &str) -> Option<InstallMismatch> {
     None
 }
 
 #[cfg(target_os = "windows")]
-fn detect_inner() -> Option<InstallMismatch> {
+fn detect_inner(product: &str) -> Option<InstallMismatch> {
     // Portable copies live outside any install location on purpose, and they
     // already refuse to self-update with a dialog of their own.
     if crate::portable::is_portable() {
@@ -99,7 +102,7 @@ fn detect_inner() -> Option<InstallMismatch> {
     // No registry entry means nothing claims to know where updates go: a Scoop
     // install, a hand-unzipped copy, a first run before the installer ever ran.
     // Guessing a target here would only invent false alarms.
-    let updates_go_to = std::path::PathBuf::from(install_location_from_registry()?);
+    let updates_go_to = std::path::PathBuf::from(install_location_from_registry(product)?);
 
     if same_folder(&running_from, &updates_go_to) {
         return None;
@@ -130,19 +133,23 @@ fn detect_inner() -> Option<InstallMismatch> {
 /// prompted this check they did: reading the harmless one found it matching and
 /// reported the install healthy while every update went somewhere else.
 #[cfg(target_os = "windows")]
-fn install_location_from_registry() -> Option<String> {
+fn install_location_from_registry(product: &str) -> Option<String> {
     use winreg::enums::{HKEY_CURRENT_USER, HKEY_LOCAL_MACHINE};
     use winreg::RegKey;
 
     // MANUPRODUCTKEY in installer.nsi is Software\${MANUFACTURER}\${PRODUCTNAME},
-    // so this pair has to keep matching `publisher` and `productName` in
-    // tauri.conf.json. Renaming either one silently blinds this check.
-    const INSTALL_DIR_KEY: &str = r"Software\VoCript\VoCript";
+    // so the product half comes from whoever is running, not from a constant.
+    //
+    // It used to be hardcoded, and that was a real bug: an edition with its own
+    // `productName` read the *other* edition's key, decided its updates would
+    // land in a folder it does not use, and refused to update at all. The
+    // publisher half stays fixed because it is the same for every edition.
+    let install_dir_key = format!(r"Software\VoCript\{product}");
 
     // Per-user first: that is the hive `installMode: currentUser` writes to, and
     // the one SHCTX resolves to when the installer runs again.
     for hive in [HKEY_CURRENT_USER, HKEY_LOCAL_MACHINE] {
-        let Ok(key) = RegKey::predef(hive).open_subkey(INSTALL_DIR_KEY) else {
+        let Ok(key) = RegKey::predef(hive).open_subkey(&install_dir_key) else {
             continue;
         };
         // The default value of the key, written bare by `WriteRegStr ... "" $INSTDIR`.
@@ -235,9 +242,11 @@ mod tests {
     #[test]
     #[ignore]
     fn manual_what_does_this_machine_say() {
-        match install_location_from_registry() {
+        // El nombre del producto de esta edición. La de pruebas es la de casa.
+        const PRODUCTO: &str = "VoCript";
+        match install_location_from_registry(PRODUCTO) {
             Some(dir) => {
-                println!("Software\\VoCript\\VoCript (decides) reads: {dir}");
+                println!("Software\\VoCript\\{PRODUCTO} (decides) reads: {dir}");
                 assert!(!dir.starts_with('"'), "quotes were not stripped");
                 assert!(!dir.is_empty());
             }
@@ -262,7 +271,7 @@ mod tests {
         // where the app is installed the answer here should be a mismatch.
         // `paths` es lo que enseña el panel de depuración: tiene que responder
         // siempre, también en una build de desarrollo como esta.
-        let p = paths();
+        let p = paths(PRODUCTO);
         println!("paths() -> running_from: {}", p.running_from);
         println!("paths() -> updates_go_to: {:?}", p.updates_go_to);
         assert!(
@@ -271,7 +280,7 @@ mod tests {
         );
 
         println!("running from: {:?}", std::env::current_exe());
-        match detect_inner() {
+        match detect_inner(PRODUCTO) {
             Some(m) => println!(
                 "detect_inner -> MISMATCH\n  running_from: {}\n  updates_go_to: {}",
                 m.running_from, m.updates_go_to
@@ -284,6 +293,6 @@ mod tests {
     fn dev_builds_never_report_a_mismatch() {
         // The test binary is a debug build, so this also documents why the
         // guard exists: without it, every `tauri dev` run would warn.
-        assert_eq!(detect(), None);
+        assert_eq!(detect("VoCript"), None);
     }
 }

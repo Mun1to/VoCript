@@ -446,7 +446,7 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     // this copy runs from. The user gets stopped with an explanation before any
     // update is applied (see install_check.rs); this line is so a log sent in
     // for support answers the question without anyone having to ask for it.
-    if let Some(mismatch) = install_check::detect() {
+    if let Some(mismatch) = install_check::detect(&app_handle.package_info().name) {
         log::warn!(
             "Running from {} but updates would install into {}. \
              Every update will appear to work and change nothing.",

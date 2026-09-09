@@ -33,16 +33,18 @@ pub fn is_packaged() -> bool {
 /// is the normal case. See install_check.rs for what a mismatch means.
 #[tauri::command]
 #[specta::specta]
-pub fn install_location_mismatch() -> Option<crate::install_check::InstallMismatch> {
-    crate::install_check::detect()
+pub fn install_location_mismatch(
+    app: tauri::AppHandle,
+) -> Option<crate::install_check::InstallMismatch> {
+    crate::install_check::detect(&app.package_info().name)
 }
 
 /// Both folders for the debug panel, agreeing or not. Answers in dev builds
 /// too, where `install_location_mismatch` deliberately stays quiet.
 #[tauri::command]
 #[specta::specta]
-pub fn install_paths() -> crate::install_check::InstallPaths {
-    crate::install_check::paths()
+pub fn install_paths(app: tauri::AppHandle) -> crate::install_check::InstallPaths {
+    crate::install_check::paths(&app.package_info().name)
 }
 
 #[tauri::command]
