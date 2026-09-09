@@ -96,7 +96,7 @@ pub struct LLMPrompt {
 
 /// A personal-dictionary entry: replace exact occurrences of `from` with `to`
 /// in the transcribed text. Deterministic (unlike the fuzzy `custom_words`).
-#[derive(Serialize, Deserialize, Debug, Clone, Type)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Type)]
 pub struct WordReplacement {
     pub from: String,
     pub to: String,

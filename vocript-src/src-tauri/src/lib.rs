@@ -36,7 +36,8 @@ mod utils;
 mod wake_word;
 
 pub use cli::CliArgs;
-#[cfg(debug_assertions)]
+// Solo se usa para exportar `bindings.ts`, y eso no se hace con una extensión montada.
+#[cfg(all(debug_assertions, not(feature = "extension")))]
 use specta_typescript::{BigIntExportBehavior, Typescript};
 use tauri_specta::{collect_events, Builder};
 
