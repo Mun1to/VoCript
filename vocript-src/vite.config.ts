@@ -81,7 +81,17 @@ export default defineConfig(async () => ({
       // 3. tell vite to ignore watching `src-tauri`, except an extension's frontend, which
       //    lives next to its engine but is web code and deserves hot reload like any other.
       //    `src-tauri/.taurignore` keeps Tauri from restarting the app for those same files.
-      ignored: ["**/src-tauri/**", "!**/src-tauri/src/pro/frontend/**"],
+      //
+      //    A predicate, not a `["**/src-tauri/**", "!**/…/**"]` pair: the watcher does not
+      //    apply a negated glob as an exception to an earlier one, so the broad pattern won
+      //    and the extension's frontend was never watched. It failed quietly, in the worst
+      //    way: the dev server kept serving the file it had cached from startup, so an edit
+      //    looked applied in the editor and had no effect on screen.
+      ignored: (ruta) => {
+        const normal = ruta.replace(/\\/g, "/");
+        if (!normal.includes("/src-tauri/")) return false;
+        return !normal.includes("/src-tauri/src/pro/frontend/");
+      },
     },
   },
 }));
