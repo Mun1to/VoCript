@@ -658,6 +658,7 @@ pub fn run(cli_args: CliArgs) {
             commands::transcription::unload_model_manually,
             commands::transcription::transcribe_file,
             commands::transcription::save_text_file,
+            commands::transcription::save_png_file,
             commands::transcription::read_text_file,
             commands::history::get_history_entries,
             commands::history::toggle_history_entry_saved,

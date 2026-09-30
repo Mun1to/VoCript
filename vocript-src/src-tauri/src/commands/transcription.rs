@@ -106,6 +106,29 @@ pub fn save_text_file(path: String, content: String) -> Result<(), String> {
     std::fs::write(&path, content).map_err(|e| format!("Failed to save file: {}", e))
 }
 
+/// Save a PNG drawn by the frontend (the shareable streak card) to a path the
+/// user chose in the save dialog. Arrives as base64 because a `Vec<u8>` would
+/// cross the bridge as a JSON array of numbers, four times the size. Refuses
+/// anything that is not a `.png` holding PNG bytes: this writes wherever it is
+/// told, so it should only ever write what it exists for. `async` so decoding
+/// and writing a few MB runs off the main thread and cannot freeze the window.
+#[tauri::command(async)]
+#[specta::specta]
+pub fn save_png_file(path: String, png_base64: String) -> Result<(), String> {
+    use base64::{engine::general_purpose::STANDARD, Engine as _};
+
+    if !path.to_lowercase().ends_with(".png") {
+        return Err("Only .png files can be saved here".to_string());
+    }
+    let bytes = STANDARD
+        .decode(png_base64.as_bytes())
+        .map_err(|e| format!("Not valid base64: {}", e))?;
+    if !bytes.starts_with(b"\x89PNG\r\n\x1a\n") {
+        return Err("Not a PNG image".to_string());
+    }
+    std::fs::write(&path, bytes).map_err(|e| format!("Failed to save file: {}", e))
+}
+
 /// Read a UTF-8 text file chosen by the user via the open dialog (e.g. a CSV to
 /// import into the personal dictionary). Done on the backend to avoid widening
 /// the frontend filesystem scope beyond `$APPDATA`. Tolerates invalid bytes and
@@ -176,4 +199,43 @@ fn format_srt_timestamp(seconds: f32) -> String {
     let m = (total_secs / 60) % 60;
     let h = total_secs / 3600;
     format!("{:02}:{:02}:{:02},{:03}", h, m, s, ms)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::save_png_file;
+    use base64::{engine::general_purpose::STANDARD, Engine as _};
+
+    /// The smallest valid PNG: one transparent pixel.
+    const PNG_1PX: &[u8] = &[
+        0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d, 0x49, 0x48, 0x44,
+        0x52, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x08, 0x06, 0x00, 0x00, 0x00, 0x1f,
+        0x15, 0xc4, 0x89, 0x00, 0x00, 0x00, 0x0d, 0x49, 0x44, 0x41, 0x54, 0x78, 0x9c, 0x63, 0x00,
+        0x01, 0x00, 0x00, 0x05, 0x00, 0x01, 0x0d, 0x0a, 0x2d, 0xb4, 0x00, 0x00, 0x00, 0x00, 0x49,
+        0x45, 0x4e, 0x44, 0xae, 0x42, 0x60, 0x82,
+    ];
+
+    #[test]
+    fn saves_a_png_byte_for_byte() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("card.PNG");
+        save_png_file(path.to_string_lossy().into(), STANDARD.encode(PNG_1PX)).unwrap();
+        assert_eq!(std::fs::read(&path).unwrap(), PNG_1PX);
+    }
+
+    #[test]
+    fn refuses_anything_that_is_not_a_png() {
+        let dir = tempfile::tempdir().unwrap();
+        // Right bytes, wrong name: it would overwrite whatever that file is.
+        let txt = dir.path().join("notes.txt");
+        assert!(save_png_file(txt.to_string_lossy().into(), STANDARD.encode(PNG_1PX)).is_err());
+        assert!(!txt.exists());
+        // Right name, wrong bytes.
+        let fake = dir.path().join("card.png");
+        let text = STANDARD.encode(b"not an image");
+        assert!(save_png_file(fake.to_string_lossy().into(), text).is_err());
+        assert!(!fake.exists());
+        // Not base64 at all.
+        assert!(save_png_file(fake.to_string_lossy().into(), "%%%".into()).is_err());
+    }
 }

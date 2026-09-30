@@ -84,6 +84,50 @@
       "empty": "Chưa có gì. Những gì bạn đọc sẽ hiện ở đây.",
       "seeAll": "Xem toàn bộ lịch sử",
       "report": "Báo lỗi với văn bản này"
+    },
+    "share": {
+      "button": "Chia sẻ",
+      "title": "Thẻ của bạn",
+      "subtitle": "Được vẽ ngay trên máy tính của bạn. Chỉ hình ảnh bạn lưu hoặc sao chép mới rời khỏi máy.",
+      "name": "Tên",
+      "namePlaceholder": "Tên của bạn",
+      "photo": "Ảnh",
+      "photoChoose": "Chọn ảnh",
+      "photoRemove": "Bỏ ảnh",
+      "photoError": "Không đọc được hình ảnh này.",
+      "color": "Màu",
+      "colorApp": "Màu của ứng dụng",
+      "colorN": "Màu {{n}}",
+      "show": "Hiển thị gì",
+      "parts": {
+        "words": "Số từ",
+        "time": "Thời gian",
+        "best": "Chuỗi dài nhất",
+        "activity": "Hoạt động"
+      },
+      "save": "Lưu hình ảnh",
+      "saved": "Đã lưu hình ảnh",
+      "saveError": "Không lưu được hình ảnh: {{error}}",
+      "copy": "Sao chép hình ảnh",
+      "copied": "Đã sao chép hình ảnh. Dán vào bất cứ đâu bạn muốn.",
+      "copyError": "Không sao chép được hình ảnh.",
+      "close": "Đóng",
+      "card": {
+        "since": "Đọc từ {{date}}",
+        "streak_one": "ngày đọc liên tiếp",
+        "streak_other": "ngày đọc liên tiếp",
+        "words": "Số từ",
+        "time": "Đã đọc",
+        "best": "Chuỗi dài nhất",
+        "level": "Cấp {{level}}",
+        "footer": "Dùng thử miễn phí",
+        "rarity": {
+          "common": "Thường",
+          "rare": "Hiếm",
+          "epic": "Sử thi",
+          "legendary": "Huyền thoại"
+        }
+      }
     }
   },
   "onboarding": {

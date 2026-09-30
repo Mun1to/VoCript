@@ -115,6 +115,50 @@
       "empty": "Nothing yet. What you dictate shows up here.",
       "seeAll": "See the whole history",
       "report": "Report a problem with this text"
+    },
+    "share": {
+      "button": "Share",
+      "title": "Your card",
+      "subtitle": "Drawn on your computer. Only the image you save or copy leaves it.",
+      "name": "Name",
+      "namePlaceholder": "Your name",
+      "photo": "Photo",
+      "photoChoose": "Choose a photo",
+      "photoRemove": "Remove",
+      "photoError": "That image could not be read.",
+      "color": "Color",
+      "colorApp": "App color",
+      "colorN": "Color {{n}}",
+      "show": "What it shows",
+      "parts": {
+        "words": "Words",
+        "time": "Time",
+        "best": "Best streak",
+        "activity": "Activity"
+      },
+      "save": "Save image",
+      "saved": "Image saved",
+      "saveError": "Could not save the image: {{error}}",
+      "copy": "Copy image",
+      "copied": "Image copied. Paste it wherever you like.",
+      "copyError": "Could not copy the image.",
+      "close": "Close",
+      "card": {
+        "since": "Dictating since {{date}}",
+        "streak_one": "day in a row dictating",
+        "streak_other": "days in a row dictating",
+        "words": "Words",
+        "time": "Dictated",
+        "best": "Best streak",
+        "level": "Level {{level}}",
+        "footer": "Try it free",
+        "rarity": {
+          "common": "Common",
+          "rare": "Rare",
+          "epic": "Epic",
+          "legendary": "Legendary"
+        }
+      }
     }
   },
   "onboarding": {

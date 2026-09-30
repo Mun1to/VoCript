@@ -84,6 +84,50 @@
       "empty": "まだありません。口述するとここに出ます。",
       "seeAll": "履歴をすべて見る",
       "report": "このテキストの問題を報告"
+    },
+    "share": {
+      "button": "共有",
+      "title": "あなたのカード",
+      "subtitle": "カードはこのパソコンの中で描かれます。外に出るのは、保存またはコピーした画像だけです。",
+      "name": "名前",
+      "namePlaceholder": "あなたの名前",
+      "photo": "写真",
+      "photoChoose": "写真を選ぶ",
+      "photoRemove": "外す",
+      "photoError": "その画像を読み込めませんでした。",
+      "color": "色",
+      "colorApp": "アプリの色",
+      "colorN": "色 {{n}}",
+      "show": "表示する項目",
+      "parts": {
+        "words": "単語数",
+        "time": "時間",
+        "best": "最長連続",
+        "activity": "アクティビティ"
+      },
+      "save": "画像を保存",
+      "saved": "画像を保存しました",
+      "saveError": "画像を保存できませんでした: {{error}}",
+      "copy": "画像をコピー",
+      "copied": "画像をコピーしました。好きな場所に貼り付けてください。",
+      "copyError": "画像をコピーできませんでした。",
+      "close": "閉じる",
+      "card": {
+        "since": "{{date}}から口述",
+        "streak_one": "日連続で口述",
+        "streak_other": "日連続で口述",
+        "words": "単語数",
+        "time": "口述時間",
+        "best": "最長連続",
+        "level": "レベル{{level}}",
+        "footer": "無料で試す",
+        "rarity": {
+          "common": "コモン",
+          "rare": "レア",
+          "epic": "エピック",
+          "legendary": "レジェンダリー"
+        }
+      }
     }
   },
   "onboarding": {

@@ -152,6 +152,7 @@ const NO_DISPONIBLES: Record<string, "microfono" | "archivos" | "descarga" | "si
 
   transcribe_file: "archivos",
   save_text_file: "archivos",
+  save_png_file: "archivos",
   open_app_data_dir: "archivos",
   open_log_dir: "archivos",
   open_recordings_folder: "archivos",

@@ -84,6 +84,50 @@
       "empty": "Henüz yok. Dikte ettiğin şeyler burada görünür.",
       "seeAll": "Tüm geçmişi gör",
       "report": "Bu metinle ilgili sorun bildir"
+    },
+    "share": {
+      "button": "Paylaş",
+      "title": "Kartın",
+      "subtitle": "Bilgisayarında çiziliyor. Dışarı yalnızca kaydettiğin ya da kopyaladığın görsel çıkar.",
+      "name": "Ad",
+      "namePlaceholder": "Adın",
+      "photo": "Fotoğraf",
+      "photoChoose": "Fotoğraf seç",
+      "photoRemove": "Kaldır",
+      "photoError": "Bu görsel okunamadı.",
+      "color": "Renk",
+      "colorApp": "Uygulama rengi",
+      "colorN": "Renk {{n}}",
+      "show": "Neler görünsün",
+      "parts": {
+        "words": "Kelime",
+        "time": "Süre",
+        "best": "En iyi seri",
+        "activity": "Etkinlik"
+      },
+      "save": "Görseli kaydet",
+      "saved": "Görsel kaydedildi",
+      "saveError": "Görsel kaydedilemedi: {{error}}",
+      "copy": "Görseli kopyala",
+      "copied": "Görsel kopyalandı. İstediğin yere yapıştır.",
+      "copyError": "Görsel kopyalanamadı.",
+      "close": "Kapat",
+      "card": {
+        "since": "{{date}} tarihinden beri dikte ediyor",
+        "streak_one": "gün üst üste dikte",
+        "streak_other": "gün üst üste dikte",
+        "words": "Kelime",
+        "time": "Dikte",
+        "best": "En iyi seri",
+        "level": "Seviye {{level}}",
+        "footer": "Ücretsiz dene",
+        "rarity": {
+          "common": "Sıradan",
+          "rare": "Nadir",
+          "epic": "Epik",
+          "legendary": "Efsanevi"
+        }
+      }
     }
   },
   "onboarding": {

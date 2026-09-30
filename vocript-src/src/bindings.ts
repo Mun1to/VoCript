@@ -1057,6 +1057,21 @@ async saveTextFile(path: string, content: string) : Promise<Result<null, string>
 }
 },
 /**
+ * Save a PNG drawn by the frontend (the shareable streak card) to a path the
+ * user chose in the save dialog. Arrives as base64 because a `Vec<u8>` would
+ * cross the bridge as a JSON array of numbers, four times the size. Refuses
+ * anything that is not a `.png` holding PNG bytes: this writes wherever it is
+ * told, so it should only ever write what it exists for.
+ */
+async savePngFile(path: string, pngBase64: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("save_png_file", { path, pngBase64 }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
  * Read a UTF-8 text file chosen by the user via the open dialog (e.g. a CSV to
  * import into the personal dictionary). Done on the backend to avoid widening
  * the frontend filesystem scope beyond `$APPDATA`. Tolerates invalid bytes and

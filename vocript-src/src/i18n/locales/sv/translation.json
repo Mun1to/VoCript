@@ -84,6 +84,50 @@
       "empty": "Inget än. Det du dikterar dyker upp här.",
       "seeAll": "Visa hela historiken",
       "report": "Rapportera ett problem med den här texten"
+    },
+    "share": {
+      "button": "Dela",
+      "title": "Ditt kort",
+      "subtitle": "Ritas på din dator. Bara bilden du sparar eller kopierar lämnar den.",
+      "name": "Namn",
+      "namePlaceholder": "Ditt namn",
+      "photo": "Foto",
+      "photoChoose": "Välj foto",
+      "photoRemove": "Ta bort",
+      "photoError": "Bilden kunde inte läsas.",
+      "color": "Färg",
+      "colorApp": "Appens färg",
+      "colorN": "Färg {{n}}",
+      "show": "Vad som visas",
+      "parts": {
+        "words": "Ord",
+        "time": "Tid",
+        "best": "Bästa svit",
+        "activity": "Aktivitet"
+      },
+      "save": "Spara bild",
+      "saved": "Bilden sparades",
+      "saveError": "Bilden kunde inte sparas: {{error}}",
+      "copy": "Kopiera bild",
+      "copied": "Bilden kopierades. Klistra in den var du vill.",
+      "copyError": "Bilden kunde inte kopieras.",
+      "close": "Stäng",
+      "card": {
+        "since": "Dikterar sedan {{date}}",
+        "streak_one": "dag i rad med diktering",
+        "streak_other": "dagar i rad med diktering",
+        "words": "Ord",
+        "time": "Dikterat",
+        "best": "Bästa svit",
+        "level": "Nivå {{level}}",
+        "footer": "Testa gratis",
+        "rarity": {
+          "common": "Vanlig",
+          "rare": "Sällsynt",
+          "epic": "Episk",
+          "legendary": "Legendarisk"
+        }
+      }
     }
   },
   "onboarding": {

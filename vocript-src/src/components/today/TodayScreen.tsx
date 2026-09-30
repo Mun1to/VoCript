@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Flag, Flame, Mic } from "lucide-react";
+import { Flag, Flame, Mic, Share2 } from "lucide-react";
 import {
   commands,
   events,
@@ -20,6 +20,7 @@ import { formatRelativeTime } from "../../utils/dateFormat";
 import { countWords } from "../../lib/utils/text";
 import { reportAiOutput } from "../../lib/utils/reportAiOutput";
 import { ActivityHeatmap } from "../settings/activity/ActivityHeatmap";
+import { ShareCardDialog } from "./ShareCardDialog";
 import type { SidebarSection } from "../Sidebar";
 
 /** How many past dictations the "last thing you dictated" panel lists. */
@@ -67,6 +68,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
     lastMs: number | null;
   } | null>(null);
   const [models, setModels] = useState<ModelInfo[]>([]);
+  const [sharing, setSharing] = useState(false);
 
   const loadStats = useCallback(async () => {
     try {
@@ -259,7 +261,20 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
         {/* How much you've dictated. Full width: a year of squares in half a
             column comes out at 6px a cell, more gap than square. */}
         <div className="vc-panel vc-panel-wide">
-          <h3 className="vc-panel-title">{t("today.dictated.title")}</h3>
+          <div className="flex items-start justify-between gap-3">
+            <h3 className="vc-panel-title">{t("today.dictated.title")}</h3>
+            {/* Only once there is something to show off. */}
+            {stats && totalWords > 0 && (
+              <button
+                type="button"
+                onClick={() => setSharing(true)}
+                className="-mt-1 inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-[12px] font-medium text-accent transition-colors hover:bg-mid-gray/10"
+              >
+                <Share2 width={14} height={14} />
+                {t("today.share.button")}
+              </button>
+            )}
+          </div>
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div>
               <div className="text-[28px] font-semibold leading-tight tracking-tight tabular-nums text-[var(--vc-text-main)]">
@@ -390,6 +405,9 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
           )}
         </div>
       </div>
+      {sharing && stats && (
+        <ShareCardDialog stats={stats} onClose={() => setSharing(false)} />
+      )}
     </div>
   );
 };

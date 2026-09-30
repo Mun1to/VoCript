@@ -84,6 +84,50 @@
       "empty": "Ancora niente. Quello che detti compare qui.",
       "seeAll": "Vedi tutta la cronologia",
       "report": "Segnala un problema con questo testo"
+    },
+    "share": {
+      "button": "Condividi",
+      "title": "La tua carta",
+      "subtitle": "Viene disegnata sul tuo computer. Esce solo l'immagine che salvi o copi.",
+      "name": "Nome",
+      "namePlaceholder": "Il tuo nome",
+      "photo": "Foto",
+      "photoChoose": "Scegli una foto",
+      "photoRemove": "Togli",
+      "photoError": "Impossibile leggere questa immagine.",
+      "color": "Colore",
+      "colorApp": "Colore dell'app",
+      "colorN": "Colore {{n}}",
+      "show": "Cosa mostra",
+      "parts": {
+        "words": "Parole",
+        "time": "Tempo",
+        "best": "Serie migliore",
+        "activity": "Attività"
+      },
+      "save": "Salva immagine",
+      "saved": "Immagine salvata",
+      "saveError": "Impossibile salvare l'immagine: {{error}}",
+      "copy": "Copia immagine",
+      "copied": "Immagine copiata. Incollala dove vuoi.",
+      "copyError": "Impossibile copiare l'immagine.",
+      "close": "Chiudi",
+      "card": {
+        "since": "Detta da {{date}}",
+        "streak_one": "giorno di fila a dettare",
+        "streak_other": "giorni di fila a dettare",
+        "words": "Parole",
+        "time": "Dettato",
+        "best": "Serie migliore",
+        "level": "Livello {{level}}",
+        "footer": "Provalo gratis",
+        "rarity": {
+          "common": "Comune",
+          "rare": "Rara",
+          "epic": "Epica",
+          "legendary": "Leggendaria"
+        }
+      }
     }
   },
   "onboarding": {

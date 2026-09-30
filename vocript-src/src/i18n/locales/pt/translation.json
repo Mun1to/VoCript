@@ -84,6 +84,50 @@
       "empty": "Ainda nada. O que ditares aparece aqui.",
       "seeAll": "Ver todo o histórico",
       "report": "Comunicar um problema com este texto"
+    },
+    "share": {
+      "button": "Partilhar",
+      "title": "O teu cartão",
+      "subtitle": "É desenhado no teu computador. Só sai a imagem que guardares ou copiares.",
+      "name": "Nome",
+      "namePlaceholder": "O teu nome",
+      "photo": "Foto",
+      "photoChoose": "Escolher foto",
+      "photoRemove": "Remover",
+      "photoError": "Não foi possível ler essa imagem.",
+      "color": "Cor",
+      "colorApp": "Cor da app",
+      "colorN": "Cor {{n}}",
+      "show": "O que aparece",
+      "parts": {
+        "words": "Palavras",
+        "time": "Tempo",
+        "best": "Melhor série",
+        "activity": "Atividade"
+      },
+      "save": "Guardar imagem",
+      "saved": "Imagem guardada",
+      "saveError": "Não foi possível guardar a imagem: {{error}}",
+      "copy": "Copiar imagem",
+      "copied": "Imagem copiada. Cola-a onde quiseres.",
+      "copyError": "Não foi possível copiar a imagem.",
+      "close": "Fechar",
+      "card": {
+        "since": "A ditar desde {{date}}",
+        "streak_one": "dia seguido a ditar",
+        "streak_other": "dias seguidos a ditar",
+        "words": "Palavras",
+        "time": "Ditado",
+        "best": "Melhor série",
+        "level": "Nível {{level}}",
+        "footer": "Experimenta grátis",
+        "rarity": {
+          "common": "Comum",
+          "rare": "Rara",
+          "epic": "Épica",
+          "legendary": "Lendária"
+        }
+      }
     }
   },
   "onboarding": {
