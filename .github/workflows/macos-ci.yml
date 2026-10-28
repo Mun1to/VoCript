@@ -1,0 +1,181 @@
+# Compila VoCript para macOS SIN publicar nada, para probar la firma de Apple
+# antes de que llegue a una Release. Hace lo mismo que el job build-macos de
+# release.yml (el mismo tools/macos/preparar-firma.sh, la misma comprobación),
+# pero no crea releases, ni etiquetas, ni sube artefactos.
+#
+# Tres pasadas en el mismo job, y las dos últimas solo reempaquetan:
+#   1. Sin secretos: tiene que salir ad-hoc, como siempre.
+#   2. Con un certificado de prueba hecho aquí y tirado al acabar: prueba el
+#      camino de la firma (el .p12, el llavero, el runtime endurecido) sin
+#      cuenta de Apple.
+#   3. Con los secretos de verdad, SOLO si existen: firma y notariza con Apple
+#      igual que lo haría una Release. Es la prueba que hay que lanzar a mano
+#      (Actions › macOS build check › Run workflow) después de meter los
+#      secretos y ANTES de sacar la primera versión firmada.
+name: macOS build check
+
+on:
+  push:
+    branches:
+      - ci/macos
+      - "mac-firma-*"
+  workflow_dispatch:
+
+# Solo lectura: con este token el workflow no puede crear releases ni tocar el repo.
+permissions:
+  contents: read
+
+jobs:
+  build-macos:
+    runs-on: macos-14
+    timeout-minutes: 90
+    env:
+      # true/false sin exponer el valor: los secretos no se pueden usar en un `if`.
+      HAY_SECRETOS_DE_APPLE: ${{ secrets.APPLE_CERTIFICATE != '' }}
+      # El mismo motivo que en release.yml: que el runner cambie de chip no
+      # puede dejar fuera a los Mac más viejos.
+      GGML_NATIVE: "OFF"
+
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v7
+
+      - name: Instalar Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Instalar Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache de Rust
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "vocript-src/src-tauri -> target"
+          # Si falla una comprobación del final, que la siguiente vuelta no
+          # tenga que recompilar todo.
+          cache-on-failure: true
+
+      - name: Instalar dependencias del frontend
+        working-directory: vocript-src
+        run: bun install
+
+      - name: Descargar modelo Silero VAD (recurso requerido)
+        working-directory: vocript-src
+        run: |
+          mkdir -p src-tauri/resources/models
+          curl -L -o src-tauri/resources/models/silero_vad_v4.onnx https://blob.handy.computer/silero_vad_v4.onnx
+
+      # --- 1. Sin secretos ---------------------------------------------------
+      - name: "1 · Firma: sin secretos"
+        id: adhoc
+        run: bash tools/macos/preparar-firma.sh
+
+      # Sin artefactos del updater: así esta prueba no necesita la clave que
+      # firma las actualizaciones, que no tiene nada que ver con Apple.
+      - name: "1 · Compilar (ad-hoc)"
+        working-directory: vocript-src
+        run: bun run tauri build --bundles app --config '{"bundle":{"createUpdaterArtifacts":false}}'
+
+      - name: "1 · Comprobar la firma y arrancar la app"
+        run: |
+          test "${{ steps.adhoc.outputs.modo }}" = adhoc
+          app=vocript-src/src-tauri/target/release/bundle/macos/VoCript.app
+          bash tools/macos/comprobar-firma.sh "$app" adhoc
+          bash tools/macos/arrancar-app.sh "$app"
+          rm -rf "$app"
+
+      # --- 2. Certificado de prueba ------------------------------------------
+      # Autofirmado y de usar y tirar, con el MISMO formato de .p12 que sale del
+      # script de Munir en Windows (3DES y SHA-1), para que una incompatibilidad
+      # con el llavero de macOS salga aquí y no el día de la Release.
+      - name: "2 · Crear un certificado de prueba"
+        run: |
+          openssl3="$(brew --prefix openssl@3)/bin/openssl"
+          "$openssl3" version
+          dir="$RUNNER_TEMP/cert-prueba"
+          mkdir -p "$dir"
+          "$openssl3" req -x509 -newkey rsa:2048 -nodes -days 2 \
+            -keyout "$dir/clave.pem" -out "$dir/cert.pem" \
+            -subj "/CN=Developer ID Application: VoCript CI (CI00000000)/OU=CI00000000/O=VoCript CI/C=US" \
+            -addext 'basicConstraints=critical,CA:false' \
+            -addext 'keyUsage=critical,digitalSignature' \
+            -addext 'extendedKeyUsage=critical,codeSigning'
+          contrasena=$("$openssl3" rand -hex 16)
+          printf '%s' "$contrasena" >"$dir/contrasena.txt"
+          "$openssl3" pkcs12 -export -inkey "$dir/clave.pem" -in "$dir/cert.pem" \
+            -name "Developer ID Application: VoCript CI (CI00000000)" -out "$dir/prueba.p12" \
+            -passout "file:$dir/contrasena.txt" -keypbe PBE-SHA1-3DES -certpbe PBE-SHA1-3DES -macalg sha1
+          # Que macOS lo dé por válido para firmar código; en un certificado de
+          # Apple esto ya lo hace su cadena.
+          sudo security add-trusted-cert -d -r trustRoot -p codeSign \
+            -k /Library/Keychains/System.keychain "$dir/cert.pem"
+          echo "::add-mask::$contrasena"
+          {
+            echo "PRUEBA_CERTIFICADO=$(base64 -i "$dir/prueba.p12" | tr -d '\n')"
+            echo "PRUEBA_CONTRASENA=$contrasena"
+          } >>"$GITHUB_ENV"
+          rm -f "$dir/clave.pem" "$dir/contrasena.txt"
+
+      - name: "2 · Firma: con el certificado de prueba"
+        id: prueba
+        env:
+          APPLE_CERTIFICATE: ${{ env.PRUEBA_CERTIFICADO }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ env.PRUEBA_CONTRASENA }}
+        run: bash tools/macos/preparar-firma.sh
+
+      - name: "2 · Compilar (firmada con el certificado de prueba)"
+        working-directory: vocript-src
+        run: bun run tauri build --bundles app --config '{"bundle":{"createUpdaterArtifacts":false}}'
+
+      - name: "2 · Comprobar la firma y arrancar la app"
+        run: |
+          test "${{ steps.prueba.outputs.modo }}" = firmado
+          app=vocript-src/src-tauri/target/release/bundle/macos/VoCript.app
+          bash tools/macos/comprobar-firma.sh "$app" firmado
+          codesign -dvvv "$app" 2>&1 | grep -q '^TeamIdentifier=CI00000000$'
+          bash tools/macos/arrancar-app.sh "$app"
+          rm -rf "$app"
+
+      - name: "2 · Quitar el certificado de prueba"
+        if: always()
+        run: |
+          cert="$RUNNER_TEMP/cert-prueba/cert.pem"
+          if [ -f "$cert" ]; then sudo security remove-trusted-cert -d "$cert" || true; fi
+          rm -rf "$RUNNER_TEMP/cert-prueba"
+          {
+            echo "PRUEBA_CERTIFICADO="
+            echo "PRUEBA_CONTRASENA="
+            # Lo que preparar-firma.sh exportó en la pasada 2 no puede llegar a
+            # la 3. GITHUB_ENV no sabe borrar una variable, solo vaciarla; la
+            # pasada 3 las vuelve a poner con los valores de verdad.
+            echo "APPLE_CERTIFICATE="
+            echo "APPLE_CERTIFICATE_PASSWORD="
+            echo "APPLE_SIGNING_IDENTITY="
+          } >>"$GITHUB_ENV"
+
+      # --- 3. Secretos de verdad (solo si están) -----------------------------
+      - name: "3 · Firma: con los secretos de Apple"
+        id: real
+        if: env.HAY_SECRETOS_DE_APPLE == 'true'
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
+          APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+        run: bash tools/macos/preparar-firma.sh
+
+      - name: "3 · Compilar (firmada y notarizada por Apple)"
+        if: env.HAY_SECRETOS_DE_APPLE == 'true'
+        working-directory: vocript-src
+        run: bun run tauri build --bundles app --config '{"bundle":{"createUpdaterArtifacts":false}}'
+
+      - name: "3 · Comprobar la firma y arrancar la app"
+        if: env.HAY_SECRETOS_DE_APPLE == 'true'
+        run: |
+          app=vocript-src/src-tauri/target/release/bundle/macos/VoCript.app
+          bash tools/macos/comprobar-firma.sh "$app" "${{ steps.real.outputs.modo }}"
+          bash tools/macos/arrancar-app.sh "$app"
+          if [ "${{ steps.real.outputs.modo }}" != notarizado ]; then
+            echo "::error::Con los secretos de Apple puestos, la app tendría que salir notarizada y sale «${{ steps.real.outputs.modo }}»."
+            exit 1
+          fi
