@@ -65,14 +65,16 @@ jobs:
           curl -L -o src-tauri/resources/models/silero_vad_v4.onnx https://blob.handy.computer/silero_vad_v4.onnx
 
       # El cuerpo de la Release lo escribe este job, pero quien firma el Mac es
-      # build-macos. Las dos cosas miran lo mismo: si están los cinco secretos de
-      # Apple, la app de Mac sale notarizada y abre a la primera, así que el aviso
-      # de «Abrir de todos modos» sobra. Se mira si existen, sin leerlos.
+      # build-macos. Las dos cosas miran lo mismo que tools/macos/preparar-firma.sh:
+      # con el certificado y una de las dos vías de notarización (clave de API de
+      # equipo, o Apple ID con contraseña de app), la app de Mac sale notarizada
+      # y abre a la primera, así que el aviso de «Abrir de todos modos» sobra. Se
+      # mira si los secretos existen, sin leerlos.
       - name: Aviso de macOS para la Release
         id: aviso_mac
         shell: bash
         env:
-          MAC_NOTARIZADO: ${{ secrets.APPLE_CERTIFICATE != '' && secrets.APPLE_CERTIFICATE_PASSWORD != '' && secrets.APPLE_API_ISSUER != '' && secrets.APPLE_API_KEY != '' && secrets.APPLE_API_KEY_P8 != '' }}
+          MAC_NOTARIZADO: ${{ secrets.APPLE_CERTIFICATE != '' && secrets.APPLE_CERTIFICATE_PASSWORD != '' && ((secrets.APPLE_API_ISSUER != '' && secrets.APPLE_API_KEY != '' && secrets.APPLE_API_KEY_P8 != '') || (secrets.APPLE_ID != '' && secrets.APPLE_PASSWORD != '')) }}
         run: |
           {
             echo "texto<<FIN_AVISO_MAC"
@@ -324,6 +326,8 @@ jobs:
           APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
           APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
           APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
         run: bash tools/macos/preparar-firma.sh
 
       - name: Compilar y añadir a la Release
@@ -353,6 +357,18 @@ jobs:
           # el paso anterior pone APPLE_SIGNING_IDENTITY, que manda sobre ese "-".
           args: --bundles app,dmg
 
+      # Tauri notariza la app de dentro, pero el DMG que baja la gente solo lo
+      # firma. Se notariza aquí, se le grapa el ticket y se vuelve a subir encima
+      # del que acaba de subir tauri-action, con el mismo nombre.
+      - name: Notarizar el DMG
+        if: steps.firma.outputs.modo == 'notarizado'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          dmg=$(find vocript-src/src-tauri/target/release/bundle/dmg -maxdepth 1 -name "*.dmg" | head -n1)
+          bash tools/macos/notarizar-dmg.sh "$dmg"
+          gh release upload "${{ github.ref_name }}" "$dmg" --clobber --repo ${{ github.repository }}
+
       # Copia con nombre fijo, igual que el .exe y el AppImage.
       - name: Subir copia del DMG con nombre fijo
         env:
@@ -366,4 +382,6 @@ jobs:
       # app no lleva la firma que se pidió (notarizada con los secretos puestos,
       # ad-hoc sin ellos), el run sale en rojo y hay que mirarlo.
       - name: Comprobar la firma
-        run: bash tools/macos/comprobar-firma.sh vocript-src/src-tauri/target/release/bundle/macos/VoCript.app "${{ steps.firma.outputs.modo }}"
+        run: |
+          dmg=$(find vocript-src/src-tauri/target/release/bundle/dmg -maxdepth 1 -name "*.dmg" | head -n1)
+          bash tools/macos/comprobar-firma.sh vocript-src/src-tauri/target/release/bundle/macos/VoCript.app "${{ steps.firma.outputs.modo }}" "$dmg"

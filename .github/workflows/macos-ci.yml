@@ -9,7 +9,8 @@
 #      camino de la firma (el .p12, el llavero, el runtime endurecido) sin
 #      cuenta de Apple.
 #   3. Con los secretos de verdad, SOLO si existen: firma y notariza con Apple
-#      igual que lo haría una Release. Es la prueba que hay que lanzar a mano
+#      la app y el DMG igual que lo haría una Release, y los deja en el runner,
+#      que se borra al acabar. Es la prueba que hay que lanzar a mano
 #      (Actions › macOS build check › Run workflow) después de meter los
 #      secretos y ANTES de sacar la primera versión firmada.
 name: macOS build check
@@ -162,18 +163,28 @@ jobs:
           APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
           APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
           APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
         run: bash tools/macos/preparar-firma.sh
 
+      # Con DMG, como la Release, para probar también su notarización.
       - name: "3 · Compilar (firmada y notarizada por Apple)"
         if: env.HAY_SECRETOS_DE_APPLE == 'true'
         working-directory: vocript-src
-        run: bun run tauri build --bundles app --config '{"bundle":{"createUpdaterArtifacts":false}}'
+        run: bun run tauri build --bundles app,dmg --config '{"bundle":{"createUpdaterArtifacts":false}}'
+
+      - name: "3 · Notarizar el DMG"
+        if: env.HAY_SECRETOS_DE_APPLE == 'true' && steps.real.outputs.modo == 'notarizado'
+        run: |
+          dmg=$(find vocript-src/src-tauri/target/release/bundle/dmg -maxdepth 1 -name "*.dmg" | head -n1)
+          bash tools/macos/notarizar-dmg.sh "$dmg"
 
       - name: "3 · Comprobar la firma y arrancar la app"
         if: env.HAY_SECRETOS_DE_APPLE == 'true'
         run: |
           app=vocript-src/src-tauri/target/release/bundle/macos/VoCript.app
-          bash tools/macos/comprobar-firma.sh "$app" "${{ steps.real.outputs.modo }}"
+          dmg=$(find vocript-src/src-tauri/target/release/bundle/dmg -maxdepth 1 -name "*.dmg" | head -n1)
+          bash tools/macos/comprobar-firma.sh "$app" "${{ steps.real.outputs.modo }}" "$dmg"
           bash tools/macos/arrancar-app.sh "$app"
           if [ "${{ steps.real.outputs.modo }}" != notarizado ]; then
             echo "::error::Con los secretos de Apple puestos, la app tendría que salir notarizada y sale «${{ steps.real.outputs.modo }}»."

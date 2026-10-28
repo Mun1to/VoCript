@@ -3,12 +3,13 @@
 # and the permission texts macOS shows. Fails loudly instead of letting a
 # release go out signed differently from what its notes say.
 #
-#   tools/macos/comprobar-firma.sh <path to VoCript.app> <adhoc|firmado|notarizado>
+#   tools/macos/comprobar-firma.sh <path to VoCript.app> <adhoc|firmado|notarizado> [path to the .dmg]
 
 set -euo pipefail
 
 app="$1"
 modo="$2"
+dmg="${3:-}"
 fallos=0
 mal() { echo "::error title=Firma de macOS::$1"; fallos=$((fallos + 1)); }
 
@@ -37,10 +38,20 @@ case "$modo" in
 esac
 
 if [ "$modo" = notarizado ]; then
+  # Tauri does not pass --timestamp to codesign, and Apple refuses to notarize
+  # without a secure one; "Signed Time" instead of "Timestamp" means there is none.
+  grep -q '^Timestamp=' <<<"$firma" || mal "the signature has no secure timestamp"
   gatekeeper=$(spctl --assess --type execute --verbose=4 "$app" 2>&1 || true)
   echo "$gatekeeper"
-  grep -q 'source=Notarized Developer ID' <<<"$gatekeeper" || mal "Gatekeeper does not see it as notarized"
+  grep -q 'source=Notarized Developer ID' <<<"$gatekeeper" || mal "Gatekeeper does not see the app as notarized"
+  # Tauri ignores stapler's exit code, so a failed staple would go unnoticed.
   xcrun stapler validate "$app" || mal "the notarization ticket is not stapled to the app"
+  if [ -n "$dmg" ]; then
+    gatekeeper=$(spctl --assess --type open --context context:primary-signature --verbose=4 "$dmg" 2>&1 || true)
+    echo "$gatekeeper"
+    grep -q 'source=Notarized Developer ID' <<<"$gatekeeper" || mal "Gatekeeper does not see the DMG as notarized"
+    xcrun stapler validate "$dmg" || mal "the notarization ticket is not stapled to the DMG"
+  fi
 fi
 
 # The microphone is the one permission that needs an entitlement under the
