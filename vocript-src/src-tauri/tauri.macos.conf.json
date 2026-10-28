@@ -1,0 +1,28 @@
+{
+  "bundle": {
+    "macOS": {
+      "files": {
+        "Resources/ar.lproj/InfoPlist.strings": "macos/ar.lproj/InfoPlist.strings",
+        "Resources/bg.lproj/InfoPlist.strings": "macos/bg.lproj/InfoPlist.strings",
+        "Resources/cs.lproj/InfoPlist.strings": "macos/cs.lproj/InfoPlist.strings",
+        "Resources/de.lproj/InfoPlist.strings": "macos/de.lproj/InfoPlist.strings",
+        "Resources/en.lproj/InfoPlist.strings": "macos/en.lproj/InfoPlist.strings",
+        "Resources/es.lproj/InfoPlist.strings": "macos/es.lproj/InfoPlist.strings",
+        "Resources/fr.lproj/InfoPlist.strings": "macos/fr.lproj/InfoPlist.strings",
+        "Resources/he.lproj/InfoPlist.strings": "macos/he.lproj/InfoPlist.strings",
+        "Resources/it.lproj/InfoPlist.strings": "macos/it.lproj/InfoPlist.strings",
+        "Resources/ja.lproj/InfoPlist.strings": "macos/ja.lproj/InfoPlist.strings",
+        "Resources/ko.lproj/InfoPlist.strings": "macos/ko.lproj/InfoPlist.strings",
+        "Resources/pl.lproj/InfoPlist.strings": "macos/pl.lproj/InfoPlist.strings",
+        "Resources/pt.lproj/InfoPlist.strings": "macos/pt.lproj/InfoPlist.strings",
+        "Resources/ru.lproj/InfoPlist.strings": "macos/ru.lproj/InfoPlist.strings",
+        "Resources/sv.lproj/InfoPlist.strings": "macos/sv.lproj/InfoPlist.strings",
+        "Resources/tr.lproj/InfoPlist.strings": "macos/tr.lproj/InfoPlist.strings",
+        "Resources/uk.lproj/InfoPlist.strings": "macos/uk.lproj/InfoPlist.strings",
+        "Resources/vi.lproj/InfoPlist.strings": "macos/vi.lproj/InfoPlist.strings",
+        "Resources/zh-Hans.lproj/InfoPlist.strings": "macos/zh-Hans.lproj/InfoPlist.strings",
+        "Resources/zh-Hant.lproj/InfoPlist.strings": "macos/zh-Hant.lproj/InfoPlist.strings"
+      }
+    }
+  }
+}

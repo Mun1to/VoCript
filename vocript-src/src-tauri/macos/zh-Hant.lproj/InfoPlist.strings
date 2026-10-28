@@ -1,0 +1,3 @@
+/* Shown by macOS when VoCript asks for the microphone. Same text as
+   onboarding.permissions.microphone.description in src/i18n/locales/zh-TW/translation.json. */
+"NSMicrophoneUsageDescription" = "需要聽取您的語音進行轉錄";
