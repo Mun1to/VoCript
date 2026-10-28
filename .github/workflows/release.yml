@@ -64,6 +64,27 @@ jobs:
           mkdir -p src-tauri/resources/models
           curl -L -o src-tauri/resources/models/silero_vad_v4.onnx https://blob.handy.computer/silero_vad_v4.onnx
 
+      # El cuerpo de la Release lo escribe este job, pero quien firma el Mac es
+      # build-macos. Las dos cosas miran lo mismo: si están los cinco secretos de
+      # Apple, la app de Mac sale notarizada y abre a la primera, así que el aviso
+      # de «Abrir de todos modos» sobra. Se mira si existen, sin leerlos.
+      - name: Aviso de macOS para la Release
+        id: aviso_mac
+        shell: bash
+        env:
+          MAC_NOTARIZADO: ${{ secrets.APPLE_CERTIFICATE != '' && secrets.APPLE_CERTIFICATE_PASSWORD != '' && secrets.APPLE_API_ISSUER != '' && secrets.APPLE_API_KEY != '' && secrets.APPLE_API_KEY_P8 != '' }}
+        run: |
+          {
+            echo "texto<<FIN_AVISO_MAC"
+            if [ "$MAC_NOTARIZADO" != true ]; then
+              echo '> **macOS**: la app todavía no está firmada con una cuenta de desarrollador de Apple, así que la primera vez el sistema no te dejará abrirla. Arrástrala a Aplicaciones y ábrela desde **Ajustes del Sistema → Privacidad y Seguridad → Abrir de todos modos**. Si aun así no arranca, ejecuta esto una vez en el Terminal:'
+              echo '> ```'
+              echo '> xattr -dr com.apple.quarantine /Applications/VoCript.app'
+              echo '> ```'
+            fi
+            echo "FIN_AVISO_MAC"
+          } >>"$GITHUB_OUTPUT"
+
       - name: Compilar, firmar y publicar la Release
         uses: tauri-apps/tauri-action@v0
         env:
@@ -110,10 +131,7 @@ jobs:
             - **Linux**: `VoCript-x86_64.AppImage` o el `.deb`
             - **macOS** (Apple Silicon): `VoCript-arm64.dmg`
 
-            > **macOS**: la app todavía no está firmada con una cuenta de desarrollador de Apple, así que la primera vez el sistema no te dejará abrirla. Arrástrala a Aplicaciones y ábrela desde **Ajustes del Sistema → Privacidad y Seguridad → Abrir de todos modos**. Si aun así no arranca, ejecuta esto una vez en el Terminal:
-            > ```
-            > xattr -dr com.apple.quarantine /Applications/VoCript.app
-            > ```
+            ${{ steps.aviso_mac.outputs.texto }}
           releaseDraft: false
           prerelease: false
           includeUpdaterJson: true
@@ -293,6 +311,21 @@ jobs:
           mkdir -p src-tauri/resources/models
           curl -L -o src-tauri/resources/models/silero_vad_v4.onnx https://blob.handy.computer/silero_vad_v4.onnx
 
+      # Con los secretos de Apple, firma con Developer ID y notariza; sin ellos no
+      # exporta nada y el build sale ad-hoc, como siempre. Las variables que lee
+      # Tauri solo existen a partir de aquí y solo si están completas: un secreto
+      # que no existe llega como texto vacío, y Tauri lo tomaría por puesto.
+      # macos-ci.yml prueba este mismo script sin publicar nada.
+      - name: Preparar la firma de Apple
+        id: firma
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
+          APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+        run: bash tools/macos/preparar-firma.sh
+
       - name: Compilar y añadir a la Release
         uses: tauri-apps/tauri-action@v0
         env:
@@ -314,9 +347,10 @@ jobs:
           prerelease: false
           includeUpdaterJson: true
           # `app` es lo que consume el auto-updater (.app.tar.gz), `dmg` es lo
-          # que descarga la gente. Sin firma de Apple: tauri.conf.json usa
-          # signingIdentity "-" (ad-hoc), que basta para que el binario corra
-          # pero NO evita la cuarentena al bajarlo de internet.
+          # que descarga la gente. Sin los secretos de Apple, tauri.conf.json
+          # usa signingIdentity "-" (ad-hoc), que basta para que el binario
+          # corra pero NO evita la cuarentena al bajarlo de internet. Con ellos,
+          # el paso anterior pone APPLE_SIGNING_IDENTITY, que manda sobre ese "-".
           args: --bundles app,dmg
 
       # Copia con nombre fijo, igual que el .exe y el AppImage.
@@ -327,3 +361,9 @@ jobs:
           dmg=$(find vocript-src/src-tauri/target/release/bundle/dmg -maxdepth 1 -name "*.dmg" | head -n1)
           cp "$dmg" VoCript-arm64.dmg
           gh release upload "${{ github.ref_name }}" VoCript-arm64.dmg --clobber --repo ${{ github.repository }}
+
+      # Al final, con todo ya subido, para no dejar la Release a medias: si la
+      # app no lleva la firma que se pidió (notarizada con los secretos puestos,
+      # ad-hoc sin ellos), el run sale en rojo y hay que mirarlo.
+      - name: Comprobar la firma
+        run: bash tools/macos/comprobar-firma.sh vocript-src/src-tauri/target/release/bundle/macos/VoCript.app "${{ steps.firma.outputs.modo }}"
