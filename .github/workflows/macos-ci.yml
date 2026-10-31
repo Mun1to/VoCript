@@ -130,18 +130,29 @@ jobs:
 
       - name: "2 · Comprobar la firma y arrancar la app"
         run: |
-          test "${{ steps.prueba.outputs.modo }}" = firmado
+          modo="${{ steps.prueba.outputs.modo }}"
+          if [ "$modo" != firmado ]; then
+            echo "::error::Con el certificado de prueba tendría que salir «firmado» y sale «$modo»."
+            exit 1
+          fi
           app=vocript-src/src-tauri/target/release/bundle/macos/VoCript.app
           bash tools/macos/comprobar-firma.sh "$app" firmado
-          codesign -dvvv "$app" 2>&1 | grep -q '^TeamIdentifier=CI00000000$'
+          equipo=$(codesign -dvvv "$app" 2>&1 | sed -n 's/^TeamIdentifier=//p')
+          if [ "$equipo" != CI00000000 ]; then
+            echo "::error::La app tendría que llevar el equipo CI00000000 del certificado de prueba y lleva «$equipo»."
+            exit 1
+          fi
           bash tools/macos/arrancar-app.sh "$app"
           rm -rf "$app"
 
       - name: "2 · Quitar el certificado de prueba"
         if: always()
+        # La confianza que dio `add-trusted-cert` se queda: quitarla con
+        # `security remove-trusted-cert` pide confirmación en una ventana que en el
+        # runner no ve nadie, y el paso se colgó una hora entera. No hace falta,
+        # porque la máquina de GitHub se tira al acabar el job.
+        timeout-minutes: 2
         run: |
-          cert="$RUNNER_TEMP/cert-prueba/cert.pem"
-          if [ -f "$cert" ]; then sudo security remove-trusted-cert -d "$cert" || true; fi
           rm -rf "$RUNNER_TEMP/cert-prueba"
           {
             echo "PRUEBA_CERTIFICADO="
