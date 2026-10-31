@@ -110,9 +110,12 @@ jobs:
           # Apple esto ya lo hace su cadena.
           sudo security add-trusted-cert -d -r trustRoot -p codeSign \
             -k /Library/Keychains/System.keychain "$dir/cert.pem"
+          # Enmascarados los dos: es de usar y tirar, pero el log de este repo es público.
+          certificado=$(base64 -i "$dir/prueba.p12" | tr -d '\n')
           echo "::add-mask::$contrasena"
+          echo "::add-mask::$certificado"
           {
-            echo "PRUEBA_CERTIFICADO=$(base64 -i "$dir/prueba.p12" | tr -d '\n')"
+            echo "PRUEBA_CERTIFICADO=$certificado"
             echo "PRUEBA_CONTRASENA=$contrasena"
           } >>"$GITHUB_ENV"
           rm -f "$dir/clave.pem" "$dir/contrasena.txt"
@@ -132,16 +135,14 @@ jobs:
         run: |
           modo="${{ steps.prueba.outputs.modo }}"
           if [ "$modo" != firmado ]; then
-            echo "::error::Con el certificado de prueba tendría que salir «firmado» y sale «$modo»."
+            echo "::error::Con el certificado de prueba tendría que salir «firmado» y sale «${modo}»."
             exit 1
           fi
+          # El equipo (TeamIdentifier) no se comprueba aquí: codesign solo lo saca
+          # de un certificado que emite Apple, y con este autofirmado sale «not set».
+          # La pasada 3 lo comprueba de verdad al notarizar.
           app=vocript-src/src-tauri/target/release/bundle/macos/VoCript.app
           bash tools/macos/comprobar-firma.sh "$app" firmado
-          equipo=$(codesign -dvvv "$app" 2>&1 | sed -n 's/^TeamIdentifier=//p')
-          if [ "$equipo" != CI00000000 ]; then
-            echo "::error::La app tendría que llevar el equipo CI00000000 del certificado de prueba y lleva «$equipo»."
-            exit 1
-          fi
           bash tools/macos/arrancar-app.sh "$app"
           rm -rf "$app"
 
