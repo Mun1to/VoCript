@@ -28,7 +28,8 @@ permissions:
 
 jobs:
   build-macos:
-    runs-on: macos-14
+    # El mismo runner que build-macos en release.yml.
+    runs-on: macos-15
     timeout-minutes: 90
     env:
       # true/false sin exponer el valor: los secretos no se pueden usar en un `if`.
