@@ -108,59 +108,34 @@ of carrying its own, which is where the AppImage runs into trouble there.
 
 ### macOS
 
-Paste this in Terminal:
+[Download the .dmg](https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-arm64.dmg),
+open it and drag VoCript to Applications. It is signed with an Apple Developer
+ID and notarized by Apple, so it opens like any other app.
+
+Prefer Terminal? This does the same:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Mun1to/VoCript/main/tools/install-macos.sh | sh
 ```
 
-It downloads the latest build and puts VoCript in your Applications folder, and
-the app then opens like any other, with no security dialog.
-
 > **Apple Silicon only** (M1 and newer). Intel Macs are not supported.
-
-<details>
-<summary>Why a command and not just the .dmg?</summary>
-
-The [.dmg](https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-arm64.dmg)
-is still there and works. What it also does is walk you into **"Apple could not
-verify that this app is free of malware"**, because VoCript is not notarized -
-that needs a paid Apple Developer account, and there is no free tier for it.
-
-Your browser tags everything it downloads with `com.apple.quarantine`, and that
-tag is what makes macOS check with Apple before opening an app. `curl` does not
-set it, and Apple has said it never will, so a copy installed this way is never
-sent to Gatekeeper in the first place. The app is still signed - Apple Silicon
-requires that of every binary - just not by an account Apple has charged for.
-
-Nothing on your Mac is weakened by this: no setting is changed, and the script
-only installs one app without the browser's download tag. It is about forty
-lines and worth reading before you pipe anything into a shell, including this.
-
-If you took the .dmg instead, either click **Open Anyway** in **System Settings
-→ Privacy & Security**, or run:
-
-```bash
-xattr -dr com.apple.quarantine /Applications/VoCript.app
-```
-
-</details>
 
 > Two things work differently on macOS: **system-audio capture is Windows-only**
 > for now (dictating with the microphone works normally), and macOS will ask for
 > **Accessibility** permission; without it the app cannot type into other apps.
 
 <details>
-<summary>Dictation types nothing after an update? Here is the 30 second fix</summary>
+<summary>Updating from 3.7.10 or older? Grant Accessibility one last time</summary>
 
-macOS decides whether an app still holds a permission by looking at the exact
-fingerprint of the app file. VoCript is signed, but not with a paid Apple
-Developer certificate, so that fingerprint is all macOS has to go on, and every
-update changes it. The result: after updating, the switch next to VoCript under
-**Accessibility** is still there and still **on**, but macOS quietly stops
-honouring it. Dictation records, and then types nothing.
+Up to 3.7.10, VoCript was not signed with an Apple Developer ID, so macOS tied
+the **Accessibility** permission to the exact fingerprint of each build and
+quietly dropped it after every update. Since 3.7.11 the app carries a Developer
+ID signature, and macOS keeps the permission from one update to the next, as
+Apple explains in
+[TN3127](https://developer.apple.com/documentation/technotes/tn3127-inside-code-signing-requirements).
 
-To fix it:
+The jump to the first signed version still looks like a new app to macOS, once.
+If dictation records and then types nothing after that update:
 
 1. Quit VoCript completely (**Cmd+Q**, and check it is gone from the menu bar).
 2. Open **System Settings > Privacy & Security > Accessibility**.
@@ -173,12 +148,6 @@ If it still says *Waiting*, run this in Terminal and then open VoCript again:
 ```bash
 tccutil reset Accessibility com.vocript.app
 ```
-
-The only real cure is a Developer ID certificate, the same 99 dollars a year
-account that would let us notarize the app. Until VoCript has enough Mac users
-to justify it, this is the workaround, and it is the one every ad-hoc signed Mac
-app lives with. Apple explains the underlying reason in
-[TN3127](https://developer.apple.com/documentation/technotes/tn3127-inside-code-signing-requirements).
 
 </details>
 

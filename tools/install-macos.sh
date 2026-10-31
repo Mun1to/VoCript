@@ -3,19 +3,17 @@
 #
 #   curl -fsSL https://vocript.app/mac | sh
 #
-# Why this exists instead of just handing you a .dmg: VoCript is not notarized,
-# because notarizing needs a paid Apple Developer account. Anything a browser
-# downloads gets tagged with com.apple.quarantine, and macOS refuses to open a
-# quarantined app that Apple has not seen - the "Apple could not verify that
-# this app is free of malware" dialog.
+# Since 3.7.11 VoCript is signed with an Apple Developer ID and notarized, so
+# the .dmg opens on its own and this script is just the Terminal way to get the
+# same app: it downloads the latest build and copies it to Applications.
 #
-# curl does not set that tag, and Apple has said it never will. An app that
-# arrives without it is never handed to Gatekeeper at all, so it just opens.
-# On Apple Silicon every binary still has to carry a signature: VoCript is
-# ad-hoc signed at build time, which is what the kernel actually checks.
+# It started as a way around the "Apple could not verify that this app is free
+# of malware" dialog, back when VoCript was not notarized. That is why it still
+# clears the download tag (com.apple.quarantine) at the end, which does nothing
+# harmful to a notarized app.
 #
-# Nothing here disables a security feature on your Mac. It installs one app
-# without the browser's download tag, and you can read every line of it first.
+# Nothing here disables a security feature on your Mac, and you can read every
+# line of it first.
 
 set -eu
 

@@ -109,44 +109,17 @@ traer el suyo, que es donde el AppImage se complica ahí.
 
 ### macOS
 
-Pega esto en el Terminal:
+[Descarga el .dmg](https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-arm64.dmg),
+ábrelo y arrastra VoCript a Aplicaciones. Está firmado con un Developer ID de
+Apple y notarizado por Apple, así que se abre como cualquier otra app.
+
+¿Prefieres el Terminal? Esto hace lo mismo:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Mun1to/VoCript/main/tools/install-macos.sh | sh
 ```
 
-Descarga la última versión y deja VoCript en tu carpeta de Aplicaciones. Después
-la abres como cualquier otra app, sin ningún aviso de seguridad.
-
 > **Solo Apple Silicon** (M1 en adelante). Los Mac con Intel no están soportados.
-
-<details>
-<summary>¿Por qué un comando y no el .dmg de siempre?</summary>
-
-El [.dmg](https://github.com/Mun1to/VoCript/releases/latest/download/VoCript-arm64.dmg)
-sigue ahí y funciona. Lo que también hace es llevarte de cabeza al aviso de
-**«Apple no ha podido verificar que esta app no contiene software malicioso»**,
-porque VoCript no está notarizada: eso exige una cuenta de desarrollador de
-Apple de pago, y no hay versión gratuita.
-
-Tu navegador marca todo lo que descarga con `com.apple.quarantine`, y esa marca
-es la que hace que macOS consulte con Apple antes de abrir una app. `curl` no la
-pone, y Apple ha dicho que nunca lo hará, así que una copia instalada así no
-pasa por ese control. La app sigue estando firmada, que es lo que Apple Silicon
-exige de cualquier binario; simplemente no por una cuenta que haya pagado.
-
-Esto no debilita nada de tu Mac: no cambia ningún ajuste, solo instala una app
-sin la marca de descarga del navegador. Son unas cuarenta líneas y merece la
-pena leerlas antes de meter nada en un intérprete de comandos, este incluido.
-
-Si prefieres el .dmg, pulsa **Abrir de todos modos** en **Ajustes del Sistema →
-Privacidad y Seguridad**, o ejecuta:
-
-```bash
-xattr -dr com.apple.quarantine /Applications/VoCript.app
-```
-
-</details>
 
 > Dos cosas funcionan distinto en macOS: la **captura del audio del sistema es
 > solo de Windows** por ahora (dictar con el micrófono funciona igual), y macOS
@@ -154,16 +127,17 @@ xattr -dr com.apple.quarantine /Applications/VoCript.app
 > otros programas.
 
 <details>
-<summary>¿El dictado no escribe nada después de una actualización? Se arregla en 30 segundos</summary>
+<summary>¿Vienes de la 3.7.10 o anterior? Da el permiso de Accesibilidad una última vez</summary>
 
-macOS decide si una app conserva un permiso mirando la huella exacta del archivo
-de la app. VoCript está firmado, pero no con un certificado de pago de Apple
-Developer, así que esa huella es lo único que macOS tiene, y cada actualización
-la cambia. El resultado: después de actualizar, el interruptor de VoCript en
-**Accesibilidad** sigue ahí y sigue **encendido**, pero macOS deja de hacerle
-caso sin decir nada. El dictado graba, y luego no escribe.
+Hasta la 3.7.10, VoCript no estaba firmado con un Developer ID de Apple, así que
+macOS ataba el permiso de **Accesibilidad** a la huella exacta de cada versión y
+lo dejaba de respetar sin decir nada después de cada actualización. Desde la
+3.7.11 la app lleva una firma Developer ID, y macOS conserva el permiso de una
+actualización a la siguiente, como explica Apple en
+[TN3127](https://developer.apple.com/documentation/technotes/tn3127-inside-code-signing-requirements).
 
-Para arreglarlo:
+El salto a la primera versión firmada sigue pareciéndole a macOS una app nueva,
+una sola vez. Si después de esa actualización el dictado graba y luego no escribe:
 
 1. Cierra VoCript del todo (**Cmd+Q**, y comprueba que no queda en la barra de menús).
 2. Abre **Ajustes del Sistema > Privacidad y seguridad > Accesibilidad**.
@@ -176,12 +150,6 @@ Si sigue diciendo *Esperando*, ejecuta esto en el Terminal y abre VoCript otra v
 ```bash
 tccutil reset Accessibility com.vocript.app
 ```
-
-La única cura de verdad es un certificado Developer ID, la misma cuenta de 99
-dólares al año que permitiría notarizar la app. Hasta que VoCript tenga usuarios
-de Mac que lo justifiquen, este es el apaño, y es con el que vive cualquier app
-de Mac firmada ad-hoc. Apple explica el motivo de fondo en
-[TN3127](https://developer.apple.com/documentation/technotes/tn3127-inside-code-signing-requirements).
 
 </details>
 
