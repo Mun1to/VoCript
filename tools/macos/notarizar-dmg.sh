@@ -31,5 +31,23 @@ if [ "$estado" != Accepted ]; then
   exit 1
 fi
 
-xcrun stapler staple "$dmg"
-xcrun stapler validate "$dmg"
+# stapler asks Apple's CDN for the ticket, and the GitHub runner drops its
+# network now and then: on 2026-10-31 the 3.7.11 release failed on "The network
+# connection was lost" right after Apple had accepted the DMG. A few tries with
+# a pause cover that; a real problem still fails after the last one.
+intentar() {
+  local intento
+  for intento in 1 2 3 4; do
+    if "$@"; then
+      return 0
+    fi
+    [ "$intento" = 4 ] && break
+    echo "::warning title=Notarización del DMG::\"$*\" failed (try $intento of 4), retrying in 20 s."
+    sleep 20
+  done
+  echo "::error title=Notarización del DMG::\"$*\" failed 4 times."
+  return 1
+}
+
+intentar xcrun stapler staple "$dmg"
+intentar xcrun stapler validate "$dmg"
