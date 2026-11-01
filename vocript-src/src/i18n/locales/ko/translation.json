@@ -84,6 +84,50 @@
       "empty": "아직 없어요. 받아쓰면 여기에 나타납니다.",
       "seeAll": "기록 전체 보기",
       "report": "이 텍스트의 문제 알리기"
+    },
+    "share": {
+      "button": "공유",
+      "title": "나의 카드",
+      "subtitle": "카드는 이 컴퓨터 안에서 그려져요. 저장하거나 복사한 이미지만 밖으로 나갑니다.",
+      "name": "이름",
+      "namePlaceholder": "내 이름",
+      "photo": "사진",
+      "photoChoose": "사진 선택",
+      "photoRemove": "빼기",
+      "photoError": "그 이미지를 읽을 수 없어요.",
+      "color": "색상",
+      "colorApp": "앱 색상",
+      "colorN": "색상 {{n}}",
+      "show": "표시할 항목",
+      "parts": {
+        "words": "단어",
+        "time": "시간",
+        "best": "최장 연속",
+        "activity": "활동"
+      },
+      "save": "이미지 저장",
+      "saved": "이미지를 저장했어요",
+      "saveError": "이미지를 저장하지 못했어요: {{error}}",
+      "copy": "이미지 복사",
+      "copied": "이미지를 복사했어요. 원하는 곳에 붙여 넣으세요.",
+      "copyError": "이미지를 복사하지 못했어요.",
+      "close": "닫기",
+      "card": {
+        "since": "{{date}}부터 받아쓰기",
+        "streak_one": "일 연속 받아쓰기",
+        "streak_other": "일 연속 받아쓰기",
+        "words": "단어",
+        "time": "받아쓴 시간",
+        "best": "최장 연속",
+        "level": "레벨 {{level}}",
+        "footer": "무료로 써 보기",
+        "rarity": {
+          "common": "일반",
+          "rare": "희귀",
+          "epic": "에픽",
+          "legendary": "전설"
+        }
+      }
     }
   },
   "onboarding": {

@@ -84,6 +84,50 @@
       "empty": "Noch nichts. Was du diktierst, erscheint hier.",
       "seeAll": "Ganzen Verlauf ansehen",
       "report": "Problem mit diesem Text melden"
+    },
+    "share": {
+      "button": "Teilen",
+      "title": "Deine Karte",
+      "subtitle": "Wird auf deinem Computer gezeichnet. Nur das Bild, das du speicherst oder kopierst, verlässt ihn.",
+      "name": "Name",
+      "namePlaceholder": "Dein Name",
+      "photo": "Foto",
+      "photoChoose": "Foto wählen",
+      "photoRemove": "Entfernen",
+      "photoError": "Dieses Bild konnte nicht gelesen werden.",
+      "color": "Farbe",
+      "colorApp": "Farbe der App",
+      "colorN": "Farbe {{n}}",
+      "show": "Was zu sehen ist",
+      "parts": {
+        "words": "Wörter",
+        "time": "Zeit",
+        "best": "Beste Serie",
+        "activity": "Aktivität"
+      },
+      "save": "Bild speichern",
+      "saved": "Bild gespeichert",
+      "saveError": "Das Bild konnte nicht gespeichert werden: {{error}}",
+      "copy": "Bild kopieren",
+      "copied": "Bild kopiert. Füge es ein, wo du willst.",
+      "copyError": "Das Bild konnte nicht kopiert werden.",
+      "close": "Schließen",
+      "card": {
+        "since": "Diktiert seit {{date}}",
+        "streak_one": "Tag in Folge diktiert",
+        "streak_other": "Tage in Folge diktiert",
+        "words": "Wörter",
+        "time": "Diktiert",
+        "best": "Beste Serie",
+        "level": "Stufe {{level}}",
+        "footer": "Kostenlos testen",
+        "rarity": {
+          "common": "Gewöhnlich",
+          "rare": "Selten",
+          "epic": "Episch",
+          "legendary": "Legendär"
+        }
+      }
     }
   },
   "onboarding": {

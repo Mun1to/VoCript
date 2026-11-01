@@ -84,6 +84,50 @@
       "empty": "Jeszcze nic. To, co podyktujesz, pojawi się tutaj.",
       "seeAll": "Zobacz całą historię",
       "report": "Zgłoś problem z tym tekstem"
+    },
+    "share": {
+      "button": "Udostępnij",
+      "title": "Twoja karta",
+      "subtitle": "Rysowana na twoim komputerze. Wychodzi z niego tylko obraz, który zapiszesz lub skopiujesz.",
+      "name": "Imię",
+      "namePlaceholder": "Twoje imię",
+      "photo": "Zdjęcie",
+      "photoChoose": "Wybierz zdjęcie",
+      "photoRemove": "Usuń",
+      "photoError": "Nie udało się odczytać tego obrazu.",
+      "color": "Kolor",
+      "colorApp": "Kolor aplikacji",
+      "colorN": "Kolor {{n}}",
+      "show": "Co widać",
+      "parts": {
+        "words": "Słowa",
+        "time": "Czas",
+        "best": "Najdłuższa seria",
+        "activity": "Aktywność"
+      },
+      "save": "Zapisz obraz",
+      "saved": "Obraz zapisany",
+      "saveError": "Nie udało się zapisać obrazu: {{error}}",
+      "copy": "Kopiuj obraz",
+      "copied": "Obraz skopiowany. Wklej go, gdzie chcesz.",
+      "copyError": "Nie udało się skopiować obrazu.",
+      "close": "Zamknij",
+      "card": {
+        "since": "Pierwsze dyktowanie: {{date}}",
+        "streak_one": "dzień z rzędu z dyktowaniem",
+        "streak_other": "dni z rzędu z dyktowaniem",
+        "words": "Słowa",
+        "time": "Dyktowanie",
+        "best": "Najdłuższa seria",
+        "level": "Poziom {{level}}",
+        "footer": "Wypróbuj za darmo",
+        "rarity": {
+          "common": "Zwykła",
+          "rare": "Rzadka",
+          "epic": "Epicka",
+          "legendary": "Legendarna"
+        }
+      }
     }
   },
   "onboarding": {

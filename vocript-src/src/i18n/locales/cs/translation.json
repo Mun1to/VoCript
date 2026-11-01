@@ -84,6 +84,50 @@
       "empty": "Zatím nic. Co nadiktuješ, objeví se tady.",
       "seeAll": "Zobrazit celou historii",
       "report": "Nahlásit problém s tímto textem"
+    },
+    "share": {
+      "button": "Sdílet",
+      "title": "Tvoje karta",
+      "subtitle": "Kreslí se na tvém počítači. Ven jde jen obrázek, který uložíš nebo zkopíruješ.",
+      "name": "Jméno",
+      "namePlaceholder": "Tvoje jméno",
+      "photo": "Fotka",
+      "photoChoose": "Vybrat fotku",
+      "photoRemove": "Odebrat",
+      "photoError": "Tento obrázek se nepodařilo načíst.",
+      "color": "Barva",
+      "colorApp": "Barva aplikace",
+      "colorN": "Barva {{n}}",
+      "show": "Co je vidět",
+      "parts": {
+        "words": "Slova",
+        "time": "Čas",
+        "best": "Nejdelší série",
+        "activity": "Aktivita"
+      },
+      "save": "Uložit obrázek",
+      "saved": "Obrázek uložen",
+      "saveError": "Obrázek se nepodařilo uložit: {{error}}",
+      "copy": "Kopírovat obrázek",
+      "copied": "Obrázek zkopírován. Vlož ho, kam chceš.",
+      "copyError": "Obrázek se nepodařilo zkopírovat.",
+      "close": "Zavřít",
+      "card": {
+        "since": "První diktování: {{date}}",
+        "streak_one": "den v řadě s diktováním",
+        "streak_other": "série dnů s diktováním",
+        "words": "Slova",
+        "time": "Diktováno",
+        "best": "Nejdelší série",
+        "level": "Úroveň {{level}}",
+        "footer": "Vyzkoušej zdarma",
+        "rarity": {
+          "common": "Běžná",
+          "rare": "Vzácná",
+          "epic": "Epická",
+          "legendary": "Legendární"
+        }
+      }
     }
   },
   "onboarding": {

@@ -115,6 +115,50 @@
       "empty": "Todavía nada. Lo que dictes aparece aquí.",
       "seeAll": "Ver todo el historial",
       "report": "Informar de un problema con este texto"
+    },
+    "share": {
+      "button": "Compartir",
+      "title": "Tu tarjeta",
+      "subtitle": "Se dibuja en tu ordenador. Solo sale la imagen que tú guardes o copies.",
+      "name": "Nombre",
+      "namePlaceholder": "Tu nombre",
+      "photo": "Foto",
+      "photoChoose": "Elegir foto",
+      "photoRemove": "Quitar",
+      "photoError": "No se ha podido leer esa imagen.",
+      "color": "Color",
+      "colorApp": "Color de la app",
+      "colorN": "Color {{n}}",
+      "show": "Qué sale",
+      "parts": {
+        "words": "Palabras",
+        "time": "Tiempo",
+        "best": "Mejor racha",
+        "activity": "Actividad"
+      },
+      "save": "Guardar imagen",
+      "saved": "Imagen guardada",
+      "saveError": "No se ha podido guardar la imagen: {{error}}",
+      "copy": "Copiar imagen",
+      "copied": "Imagen copiada. Pégala donde quieras.",
+      "copyError": "No se ha podido copiar la imagen.",
+      "close": "Cerrar",
+      "card": {
+        "since": "Dictando desde {{date}}",
+        "streak_one": "día seguido dictando",
+        "streak_other": "días seguidos dictando",
+        "words": "Palabras",
+        "time": "Dictado",
+        "best": "Mejor racha",
+        "level": "Nivel {{level}}",
+        "footer": "Pruébalo gratis",
+        "rarity": {
+          "common": "Común",
+          "rare": "Rara",
+          "epic": "Épica",
+          "legendary": "Legendaria"
+        }
+      }
     }
   },
   "onboarding": {

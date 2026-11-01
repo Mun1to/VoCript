@@ -84,6 +84,50 @@
       "empty": "还没有。你口述的内容会出现在这里。",
       "seeAll": "查看全部历史",
       "report": "报告这段文字的问题"
+    },
+    "share": {
+      "button": "分享",
+      "title": "你的卡片",
+      "subtitle": "卡片在你的电脑上绘制。只有你保存或复制的图片会离开电脑。",
+      "name": "名字",
+      "namePlaceholder": "你的名字",
+      "photo": "照片",
+      "photoChoose": "选择照片",
+      "photoRemove": "移除",
+      "photoError": "无法读取这张图片。",
+      "color": "颜色",
+      "colorApp": "应用颜色",
+      "colorN": "颜色 {{n}}",
+      "show": "显示内容",
+      "parts": {
+        "words": "字数",
+        "time": "时长",
+        "best": "最长连续",
+        "activity": "活动"
+      },
+      "save": "保存图片",
+      "saved": "图片已保存",
+      "saveError": "无法保存图片：{{error}}",
+      "copy": "复制图片",
+      "copied": "图片已复制，可以粘贴到任何地方。",
+      "copyError": "无法复制图片。",
+      "close": "关闭",
+      "card": {
+        "since": "自{{date}}起口述",
+        "streak_one": "天连续口述",
+        "streak_other": "天连续口述",
+        "words": "字数",
+        "time": "口述时长",
+        "best": "最长连续",
+        "level": "等级 {{level}}",
+        "footer": "免费试用",
+        "rarity": {
+          "common": "普通",
+          "rare": "稀有",
+          "epic": "史诗",
+          "legendary": "传说"
+        }
+      }
     }
   },
   "onboarding": {

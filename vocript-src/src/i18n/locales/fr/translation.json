@@ -84,6 +84,50 @@
       "empty": "Rien encore. Ce que tu dictes apparaît ici.",
       "seeAll": "Voir tout l'historique",
       "report": "Signaler un problème avec ce texte"
+    },
+    "share": {
+      "button": "Partager",
+      "title": "Ta carte",
+      "subtitle": "Dessinée sur ton ordinateur. Seule l'image que tu enregistres ou copies en sort.",
+      "name": "Nom",
+      "namePlaceholder": "Ton nom",
+      "photo": "Photo",
+      "photoChoose": "Choisir une photo",
+      "photoRemove": "Retirer",
+      "photoError": "Impossible de lire cette image.",
+      "color": "Couleur",
+      "colorApp": "Couleur de l'app",
+      "colorN": "Couleur {{n}}",
+      "show": "Ce qui s'affiche",
+      "parts": {
+        "words": "Mots",
+        "time": "Temps",
+        "best": "Meilleure série",
+        "activity": "Activité"
+      },
+      "save": "Enregistrer l'image",
+      "saved": "Image enregistrée",
+      "saveError": "Impossible d'enregistrer l'image : {{error}}",
+      "copy": "Copier l'image",
+      "copied": "Image copiée. Colle-la où tu veux.",
+      "copyError": "Impossible de copier l'image.",
+      "close": "Fermer",
+      "card": {
+        "since": "Dicte depuis {{date}}",
+        "streak_one": "jour d'affilée à dicter",
+        "streak_other": "jours d'affilée à dicter",
+        "words": "Mots",
+        "time": "Dicté",
+        "best": "Meilleure série",
+        "level": "Niveau {{level}}",
+        "footer": "Essaie-le gratuitement",
+        "rarity": {
+          "common": "Commune",
+          "rare": "Rare",
+          "epic": "Épique",
+          "legendary": "Légendaire"
+        }
+      }
     }
   },
   "onboarding": {
