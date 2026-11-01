@@ -55,7 +55,6 @@ porque contienen cambios propios de VoCript:
 | `src-tauri/src/settings.rs` | idioma por defecto "es" |
 | `src-tauri/src/` (varios) | strings "Handy" → "VoCript" |
 
-(Lista completa de cambios por fase en [../PLAN.md](../PLAN.md).)
 
 ---
 

@@ -4,10 +4,6 @@
 # código de producto: lo marcamos para que NO infle el % de lenguajes en GitHub.
 # (No borra nada ni afecta a la compilación; solo a cómo se muestra el repo.)
 
-# Entorno de desarrollo Nix (heredado de Handy; el desarrollo real es en Windows)
-*.nix linguist-vendored
-vocript-src/.nix/** linguist-vendored
-
 # Andamiaje específico de Apple / macOS (Swift)
 *.swift linguist-vendored
 
