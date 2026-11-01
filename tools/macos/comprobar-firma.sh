@@ -13,6 +13,17 @@ dmg="${3:-}"
 fallos=0
 mal() { echo "::error title=Firma de macOS::$1"; fallos=$((fallos + 1)); }
 
+# stapler validate asks Apple over the network, and on the runners that drops
+# now and then (-1005, error 68) with a perfectly good ticket.
+ticket_grapado() {
+  local intento
+  for intento in 1 2 3 4; do
+    xcrun stapler validate "$1" && return 0
+    [ "$intento" = 4 ] || sleep 20
+  done
+  return 1
+}
+
 # Every tool's output is captured first and searched afterwards: `tool | grep -q`
 # under pipefail fails at random when grep stops reading early.
 firma=$(codesign -dvvv "$app" 2>&1)
@@ -45,12 +56,12 @@ if [ "$modo" = notarizado ]; then
   echo "$gatekeeper"
   grep -q 'source=Notarized Developer ID' <<<"$gatekeeper" || mal "Gatekeeper does not see the app as notarized"
   # Tauri ignores stapler's exit code, so a failed staple would go unnoticed.
-  xcrun stapler validate "$app" || mal "the notarization ticket is not stapled to the app"
+  ticket_grapado "$app" || mal "the notarization ticket is not stapled to the app"
   if [ -n "$dmg" ]; then
     gatekeeper=$(spctl --assess --type open --context context:primary-signature --verbose=4 "$dmg" 2>&1 || true)
     echo "$gatekeeper"
     grep -q 'source=Notarized Developer ID' <<<"$gatekeeper" || mal "Gatekeeper does not see the DMG as notarized"
-    xcrun stapler validate "$dmg" || mal "the notarization ticket is not stapled to the DMG"
+    ticket_grapado "$dmg" || mal "the notarization ticket is not stapled to the DMG"
   fi
 fi
 
