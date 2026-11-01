@@ -4,6 +4,8 @@
 
 **Speak and it types.** Turn your **voice** and your **PC's audio** into text, instantly and 100% offline.
 
+**New: now available for Mac**, signed and notarized by Apple.
+
 🌍 [Español](README.es.md) · English
 
 <p>

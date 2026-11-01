@@ -4,6 +4,8 @@
 
 **Dicta y se escribe.** Convierte tu **voz** y el **audio de tu PC** en texto, al instante y 100 % offline.
 
+**Nuevo: ya disponible para Mac**, firmada y notarizada por Apple.
+
 🌍 Español · [English](README.md)
 
 <p>
