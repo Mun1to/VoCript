@@ -27,6 +27,33 @@ const availableLocaleCodes = Object.keys(localeLoaders)
   .map((path) => path.match(/\.\/locales\/(.+)\/translation\.json/)?.[1])
   .filter((code): code is string => Boolean(code));
 
+const EXTRA_PLURAL_FORMS = ["zero", "two", "few", "many"];
+
+/**
+ * i18next asks for the plural form the language defines: in Russian 3 is "few"
+ * and 5 is "many", in Arabic 2 is "two". A key that only has `_one` and `_other`
+ * then falls through to the fallback language, so a Russian screen would say
+ * "8 days". Any form a language has not written reads from its own `_other`.
+ */
+const withPluralFallbacks = (
+  node: Record<string, unknown>,
+): Record<string, unknown> => {
+  const result: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(node)) {
+    result[key] =
+      typeof value === "object" && value !== null && !Array.isArray(value)
+        ? withPluralFallbacks(value as Record<string, unknown>)
+        : value;
+    if (key.endsWith("_other")) {
+      const base = key.slice(0, -"other".length);
+      for (const form of EXTRA_PLURAL_FORMS) {
+        if (!(base + form in node)) result[base + form] = value;
+      }
+    }
+  }
+  return result;
+};
+
 /**
  * Fetches a language's translations the first time i18next needs it. English
  * never comes through here: it is the initial and fallback language, so it
@@ -42,7 +69,7 @@ const lazyLocaleBackend: BackendModule = {
       return;
     }
     loader()
-      .then((module) => callback(null, module.default))
+      .then((module) => callback(null, withPluralFallbacks(module.default)))
       .catch((error: unknown) => callback(error as Error, false));
   },
 };

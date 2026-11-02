@@ -137,6 +137,7 @@
       "title": "Masz już zainstalowane modele",
       "description_one": "Znaleźliśmy {{count}} model transkrypcji na Twoim urządzeniu. Kontynuować z nim czy pobrać nowy?",
       "description_other": "Znaleźliśmy {{count}} modeli transkrypcji na Twoim urządzeniu. Kontynuować z nimi czy pobrać nowy?",
+      "description_few": "Znaleźliśmy {{count}} modele transkrypcji na Twoim urządzeniu. Kontynuować z nimi czy pobrać nowy?",
       "continue": "Kontynuuj z tym, co mam",
       "downloadNew": "Pobierz nowy"
     },
@@ -1203,6 +1204,8 @@
     "minutesShort": "{{count}} min",
     "wordsOnDay_one": "{{count}} słowo",
     "wordsOnDay_other": "{{count}} słów",
+    "wordsOnDay_many": "{{count}} słów",
+    "wordsOnDay_few": "{{count}} słowa",
     "weekdayInitials": "P,W,Ś,C,P,S,N",
     "less": "Mniej",
     "more": "Więcej",

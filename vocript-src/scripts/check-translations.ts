@@ -76,6 +76,18 @@ function hasKeyPath(obj: TranslationData, keyPath: string[]): boolean {
   return true;
 }
 
+// English only has "one" and "other", but Russian, Polish, Czech, Ukrainian,
+// Arabic and Hebrew need more forms of the same key. Those are not stray keys.
+function isPluralFormOfReferenceKey(
+  reference: TranslationData,
+  keyPath: string[],
+): boolean {
+  const last = keyPath[keyPath.length - 1];
+  const match = last.match(/^(.+)_(zero|two|few|many)$/);
+  if (!match) return false;
+  return hasKeyPath(reference, [...keyPath.slice(0, -1), `${match[1]}_other`]);
+}
+
 function loadTranslationFile(lang: string): TranslationData | null {
   const filePath = path.join(LOCALES_DIR, lang, "translation.json");
 
@@ -129,7 +141,9 @@ function validateTranslations(): void {
     // Find extra keys (keys in language but not in reference)
     const langKeyPaths = getAllKeyPaths(langData);
     const extra = langKeyPaths.filter(
-      (keyPath) => !hasKeyPath(referenceData, keyPath),
+      (keyPath) =>
+        !hasKeyPath(referenceData, keyPath) &&
+        !isPluralFormOfReferenceKey(referenceData, keyPath),
     );
 
     results[lang] = {

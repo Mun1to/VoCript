@@ -1199,6 +1199,7 @@
     },
     "dayCount_one": "יום {{count}}",
     "dayCount_other": "{{count}} ימים",
+    "dayCount_two": "יומיים",
     "hoursShort": "{{count}} ש'",
     "minutesShort": "{{count}} דק'",
     "wordsOnDay_one": "מילה {{count}}",
