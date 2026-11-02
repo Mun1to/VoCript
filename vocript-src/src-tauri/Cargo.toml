@@ -1,6 +1,6 @@
 [package]
 name = "vocript"
-version = "3.7.11"
+version = "3.8.0"
 description = "VoCript"
 authors = ["cjpais"]
 edition = "2021"
