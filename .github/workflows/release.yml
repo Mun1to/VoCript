@@ -19,39 +19,41 @@ jobs:
 
     steps:
       - name: Descargar el código
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Instalar Bun
-        uses: oven-sh/setup-bun@v2
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
 
       - name: Instalar Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable branch, 2026-11-05
+        with:
+          toolchain: stable
 
       - name: Cache de Rust
-        uses: swatinem/rust-cache@v2
+        uses: swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
         with:
           workspaces: "vocript-src/src-tauri -> target"
 
       - name: Instalar LLVM (libclang para bindgen)
-        uses: KyleMayes/install-llvm-action@v2
+        uses: KyleMayes/install-llvm-action@ebc0426251bc40c7cd31162802432c68818ab8f0 # v2.0.9
         with:
           version: "18.1"
 
       - name: Instalar Vulkan SDK
-        uses: jakoch/install-vulkan-sdk-action@v1
+        uses: jakoch/install-vulkan-sdk-action@fb5af4caf51a5bc592315f6a0699398558f2b539 # v1
         with:
           vulkan_version: 1.4.350.0
           install_runtime: true
           cache: true
 
       - name: Instalar Ninja
-        uses: seanmiddleditch/gha-setup-ninja@v6
+        uses: seanmiddleditch/gha-setup-ninja@3b1f8f94a2f8254bd26914c4ab9474d4f0015f67 # v6
 
       # Activa el entorno de MSVC (cl.exe + INCLUDE/LIB) para que CMake/Ninja
       # puedan compilar whisper.cpp. Sin esto, cl.exe falla al compilar el test
       # de CMake en el runner de GitHub.
       - name: Activar entorno MSVC
-        uses: ilammy/msvc-dev-cmd@v1
+        uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
 
       - name: Instalar dependencias del frontend
         working-directory: vocript-src
@@ -63,6 +65,7 @@ jobs:
         run: |
           mkdir -p src-tauri/resources/models
           curl -L -o src-tauri/resources/models/silero_vad_v4.onnx https://blob.handy.computer/silero_vad_v4.onnx
+          echo "a35ebf52fd3ce5f1469b2a36158dba761bc47b973ea3382b3186ca15b1f5af28  src-tauri/resources/models/silero_vad_v4.onnx" | sha256sum -c -
 
       # El cuerpo de la Release lo escribe este job, pero quien firma el Mac es
       # build-macos. Las dos cosas miran lo mismo que tools/macos/preparar-firma.sh:
@@ -88,7 +91,7 @@ jobs:
           } >>"$GITHUB_OUTPUT"
 
       - name: Compilar, firmar y publicar la Release
-        uses: tauri-apps/tauri-action@v0
+        uses: tauri-apps/tauri-action@84b9d35b5fc46c1e45415bdb6144030364f7ebc5 # v0.6.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LIBCLANG_PATH: ${{ env.LLVM_PATH }}\bin
@@ -182,16 +185,18 @@ jobs:
 
     steps:
       - name: Descargar el código
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Instalar Bun
-        uses: oven-sh/setup-bun@v2
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
 
       - name: Instalar Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable branch, 2026-11-05
+        with:
+          toolchain: stable
 
       - name: Cache de Rust
-        uses: swatinem/rust-cache@v2
+        uses: swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
         with:
           workspaces: "vocript-src/src-tauri -> target"
 
@@ -223,9 +228,10 @@ jobs:
         run: |
           mkdir -p src-tauri/resources/models
           curl -L -o src-tauri/resources/models/silero_vad_v4.onnx https://blob.handy.computer/silero_vad_v4.onnx
+          echo "a35ebf52fd3ce5f1469b2a36158dba761bc47b973ea3382b3186ca15b1f5af28  src-tauri/resources/models/silero_vad_v4.onnx" | sha256sum -c -
 
       - name: Compilar, firmar y añadir a la Release
-        uses: tauri-apps/tauri-action@v0
+        uses: tauri-apps/tauri-action@84b9d35b5fc46c1e45415bdb6144030364f7ebc5 # v0.6.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # linuxdeploy y appimagetool son AppImages: necesitan FUSE para
@@ -291,16 +297,18 @@ jobs:
 
     steps:
       - name: Descargar el código
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Instalar Bun
-        uses: oven-sh/setup-bun@v2
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
 
       - name: Instalar Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable branch, 2026-11-05
+        with:
+          toolchain: stable
 
       - name: Cache de Rust
-        uses: swatinem/rust-cache@v2
+        uses: swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
         with:
           workspaces: "vocript-src/src-tauri -> target"
 
@@ -313,6 +321,7 @@ jobs:
         run: |
           mkdir -p src-tauri/resources/models
           curl -L -o src-tauri/resources/models/silero_vad_v4.onnx https://blob.handy.computer/silero_vad_v4.onnx
+          echo "a35ebf52fd3ce5f1469b2a36158dba761bc47b973ea3382b3186ca15b1f5af28  src-tauri/resources/models/silero_vad_v4.onnx" | shasum -a 256 -c -
 
       # Con los secretos de Apple, firma con Developer ID y notariza; sin ellos no
       # exporta nada y el build sale ad-hoc, como siempre. Las variables que lee
@@ -332,7 +341,7 @@ jobs:
         run: bash tools/macos/preparar-firma.sh
 
       - name: Compilar y añadir a la Release
-        uses: tauri-apps/tauri-action@v0
+        uses: tauri-apps/tauri-action@84b9d35b5fc46c1e45415bdb6144030364f7ebc5 # v0.6.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # El mismo cuidado que en Windows y Linux, por otra vía: aquí el
