@@ -91,7 +91,7 @@ jobs:
           } >>"$GITHUB_OUTPUT"
 
       - name: Compilar, firmar y publicar la Release
-        uses: tauri-apps/tauri-action@84b9d35b5fc46c1e45415bdb6144030364f7ebc5 # v0.6.2
+        uses: tauri-apps/tauri-action@1deb371b0cd8bd54025b384f1cd735e725c4060f # v1.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LIBCLANG_PATH: ${{ env.LLVM_PATH }}\bin
@@ -231,7 +231,7 @@ jobs:
           echo "a35ebf52fd3ce5f1469b2a36158dba761bc47b973ea3382b3186ca15b1f5af28  src-tauri/resources/models/silero_vad_v4.onnx" | sha256sum -c -
 
       - name: Compilar, firmar y añadir a la Release
-        uses: tauri-apps/tauri-action@84b9d35b5fc46c1e45415bdb6144030364f7ebc5 # v0.6.2
+        uses: tauri-apps/tauri-action@1deb371b0cd8bd54025b384f1cd735e725c4060f # v1.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # linuxdeploy y appimagetool son AppImages: necesitan FUSE para
@@ -341,7 +341,7 @@ jobs:
         run: bash tools/macos/preparar-firma.sh
 
       - name: Compilar y añadir a la Release
-        uses: tauri-apps/tauri-action@84b9d35b5fc46c1e45415bdb6144030364f7ebc5 # v0.6.2
+        uses: tauri-apps/tauri-action@1deb371b0cd8bd54025b384f1cd735e725c4060f # v1.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # El mismo cuidado que en Windows y Linux, por otra vía: aquí el
